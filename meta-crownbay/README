@@ -1,5 +1,27 @@
 This README file contains information on building the meta-crownbay
-BSP layer, and booting the images contained in the /binary directory.
+BSP layer using any of the supported machine configurations, and
+booting the images contained in the /binary directory.
+
+The meta-crownbay layer contains support for 2 different machine
+configurations, identical except for the fact that one ('crownbay')
+makes use of the Intel-proprietary EMGD 1.5 graphics driver, and the
+other ('crownbay-noemgd') does not.
+
+The default 'crownbay' configuration requires an extra manual step
+before building in order for the build to complete.  Please see
+section II below for details.
+
+The 'crownbay-noemgd' configuration doesn't require any special setup,
+but since it uses generic vesa, the graphics aren't as nice and don't
+perform as well as the 'crownbay', which does make use of the EMGD
+graphics driver.
+
+If you're only interested in booting the images in the /binary
+directory of a BSP tarball you've downloaded, there's nothing special
+to do - the appropriate images (for either normal or -noemgd) are
+already in the /binary directory depending on which BSP tarball you
+downloaded.
+
 Please see the corresponding sections below for details.
 
 
@@ -7,7 +29,8 @@ Table of Contents
 =================
 
   I. Building the meta-crownbay BSP layer
- II. Special notes for building the meta-crownbay BSP layer
+ II. Special notes for building the meta-crownbay BSP layer (with EMGD
+     graphics)
 III. Booting the images in /binary
 
 
@@ -31,9 +54,15 @@ bblayers.conf e.g.:
 
   yocto/meta-intel/meta-crownbay \
 
-To enable the crownbay layer, add the crownbay MACHINE to local.conf:
+To enable the crownbay (with EMGD graphics) layer, add the crownbay
+MACHINE to local.conf:
 
   MACHINE ?= "crownbay"
+
+To enable the crownbay-noemgd layer, add the crownbay-noemgd MACHINE
+to local.conf:
+
+  MACHINE ?= "crownbay-noemgd"
 
 You should then be able to build a crownbay image as such:
 
@@ -46,6 +75,7 @@ that below, in the section 'Booting the images from /binary').
 
 
 II. Special notes for building the meta-crownbay BSP layer
+    (with EMGD graphics)
 ==========================================================
 
 The meta-crownbay layer makes use of the proprietary Intel EMGD
