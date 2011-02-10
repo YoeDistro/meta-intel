@@ -1,0 +1,44 @@
+From 0b8fcb95dd4209d56e150d0b20133e728b22776c Mon Sep 17 00:00:00 2001
+From: Tom Zanussi <tom.zanussi@intel.com>
+Date: Mon, 7 Feb 2011 13:45:45 -0600
+Subject: [PATCH 1/2] init-live.sh: add 'coldplug' udev trigger
+
+Fixes [BUGID #693]
+
+The init-live.sh script starts udevd in init-live.sh:early_setup(),
+but doesn't account for the possibility that the root device may have
+already been registered by the kernel before udevd starts up.
+
+If the device is detected after udevd starts up, everything's fine -
+udevd gets the 'add' uevent for the device, the root image shows up at
+e.g. /media/sda/rootfs.img, and the boot continues.
+
+If however the device is detected before udevd starts up, udevd misses
+the 'add' uevent and the root image never shows up, causing it to stay
+in the 'waiting for removable media' loop forever.
+
+The 'udevadm trigger' command is meant to be used to avoid this
+situation, but init-live.sh doesn't use it.  Furthermore, since the
+default was changed in udev 152 from 'add' to 'change', the command
+needs to explicity name 'add' as the action.
+
+Signed-off-by: Tom Zanussi <tom.zanussi@intel.com>
+---
+ meta/recipes-core/initrdscripts/files/init-live.sh |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/meta/recipes-core/initrdscripts/files/init-live.sh b/meta/recipes-core/initrdscripts/files/init-live.sh
+index c96b1f4..f3e5145 100644
+--- a/init-live.sh
++++ b/init-live.sh
+@@ -11,6 +11,7 @@ early_setup() {
+     mount -t proc proc /proc
+     mount -t sysfs sysfs /sys
+     udevd --daemon
++    /sbin/udevadm trigger --action=add
+ }
+ 
+ read_args() {
+-- 
+1.7.0.4
+
