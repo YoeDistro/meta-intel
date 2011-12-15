@@ -33,6 +33,10 @@ Maintainers List (try to look for most precise areas first)
 
 		-----------------------------------
 
+CEDARTRAIL
+M:	Rahul Saxena <rahul.saxena@intel.com>
+F:	meta-cedartrail/
+
 COMMON
 M:	Tom Zanussi <tom.zanussi@intel.com>
 F:	common/recipes-core/
