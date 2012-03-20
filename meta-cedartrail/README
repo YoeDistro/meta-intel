@@ -2,13 +2,17 @@ This README file contains information on building the meta-cedartrail
 BSP layer, and booting the images contained in the /binary directory.
 Please see the corresponding sections below for details.
 
+The 'Cedar Trail' platform consists of the Cedarview (Intel® Atom™
+N2600, N2800 and D2700) processor, plus the Tiger Point
+(Intel® NM10 Express) Chipset. 
+
 
 Table of Contents
 =================
 
  I. Building the meta-cedartrail BSP layer
 II. Booting the images in /binary
-
+III. Miscellaneous Notes 
 
 I. Building the meta-cedartrail BSP layer
 =========================================
@@ -24,9 +28,27 @@ bblayers.conf e.g.:
 
   yocto/meta-intel/meta-cedartrail \
 
-To enable the cedartrail layer, add the cedartrail MACHINE to local.conf:
+The meta-cedartrail layer contains support for two different machine
+configurations. These configurations are identical except for the fact
+that the one prefixed with 'cedartrail' makes use of Intel' proprietary
+PowerVR Graphics/Media drivers to enable Graphics and Media acceleration
+in the processor, while the one prefixed with 'cedartrail-nonopvr' uses
+non-accelerated graphics driver (VESA).
+
+If you want to enable the layer that supports Power VR graphics add the
+following to the local.conf file:
 
   MACHINE ?= "cedartrail"
+
+Power VR Graphics user-space driver binaries are covered by a
+"Intel Free Distribution Binary License". The build of this driver
+can be enabled by adding the following line to the local.conf file:
+ PVR_LICENSE = "yes"
+
+If you want to enable the layer that does not support Power VR graphics
+add the following to the local.conf file:
+
+ MACHINE ?= "cedartrail-nopvr"
 
 You should then be able to build a cedartrail image as such:
 
@@ -81,3 +103,27 @@ the syslinux boot: prompt, or the boot: prompt contains strange
 characters), try doing this first:
 
 # dd if=/dev/zero of=/dev/sdf bs=1M count=512
+
+Miscellaneous Notes
+====================
+
+Video and Music Samples
+-----------------------
+This BSP includes recipes to download Ogg format video and
+music files that can be played-back with the Video and music players
+included in the sato images.  The sample files are installed in
+/home/Music and /home/Videos directories.  
+
+
+Adding Glxgears to image
+-------------------------
+Glxgears can be added to the generated image by adding "debug-tweaks"
+option to the extra image features variable in the default local.conf
+before building the BSP.
+
+e.g. to add Glxgears, locate the following line in local.conf
+EXTRA_IMAGE_FEATURES = "debug-tweaks"
+
+and change above line to..
+
+EXTRA_IMAGE_FEATURES = "debug-tweaks tools-testapps"
