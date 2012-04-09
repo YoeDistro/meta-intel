@@ -117,7 +117,7 @@ included in the sato images.  The sample files are installed in
 
 Adding Glxgears to image
 -------------------------
-Glxgears can be added to the generated image by adding "debug-tweaks"
+Glxgears can be added to the generated image by adding "tools-testapps"
 option to the extra image features variable in the default local.conf
 before building the BSP.
 
