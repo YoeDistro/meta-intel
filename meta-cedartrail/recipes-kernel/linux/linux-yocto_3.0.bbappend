@@ -20,4 +20,4 @@ SRCREV_meta_pn-linux-yocto_cedartrail ?= "bf5ee4945ee6d748e6abe16356f2357f76b5e2
 SRCREV_pvr_pn-linux-yocto_cedartrail ?= "7828ab82533828b924dbfad5158e274a8bb04df3"
 
 SRCREV_machine_pn-linux-yocto_cedartrail-nopvr ?= "1e79e03d115ed177882ab53909a4f3555e434833"
-SRCREV_meta_pn-linux-yocto_cedartrail-nopvr ?= "a4ac64fe873f08ef718e2849b88914725dc99c1c"
+SRCREV_meta_pn-linux-yocto_cedartrail-nopvr ?= "bf5ee4945ee6d748e6abe16356f2357f76b5e2f0"
