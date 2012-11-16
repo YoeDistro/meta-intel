@@ -7,7 +7,7 @@ to LICENSE_FLAGS_WHITELIST += \"license_emgd-driver-bin_1.14\" to your \
 local.conf in order to enable it in a build."
 LICENSE = "Intel-software-license-emgd-1.14 & Intel-user-space-graphics-driver-binary-license-emgd-1.14"
 LICENSE_FLAGS = "license_${PN}_${PV}"
-PR = "r2"
+PR = "r3"
 
 EMGD_LIC_DIR = "IEMGD_HEAD_Linux/License"
 EMGD_RPM_DIR = "IEMGD_HEAD_Linux/MeeGo1.2"
@@ -91,11 +91,41 @@ do_install () {
     install -d -m 0755                                    ${D}${includedir}/VG
     install -m 0755 ${S}/usr/include/VG/*.h               ${D}${includedir}/VG/
 
+    EMGD_SNAPSHOT="1.5.15.3226"
+    ln -sf libEGL.so.${EMGD_SNAPSHOT}                     ${D}${libdir}/libEGL.so.1
     ln -sf libEGL.so.1                                    ${D}${libdir}/libEGL.so
+    ln -sf libGLES_CM.so.${EMGD_SNAPSHOT}                 ${D}${libdir}/libGLES_CM.so.1
     ln -sf libGLES_CM.so.1                                ${D}${libdir}/libGLES_CM.so
+    ln -sf libGLESv2.so.${EMGD_SNAPSHOT}                  ${D}${libdir}/libGLESv2.so.2
     ln -sf libGLESv2.so.2                                 ${D}${libdir}/libGLESv2.so
+    ln -sf libOpenVG.so.${EMGD_SNAPSHOT}                  ${D}${libdir}/libOpenVG.so.1
     ln -sf libOpenVG.so.1                                 ${D}${libdir}/libOpenVG.so
+    ln -sf libOpenVGU.so.${EMGD_SNAPSHOT}                 ${D}${libdir}/libOpenVGU.so.1
     ln -sf libOpenVGU.so.1                                ${D}${libdir}/libOpenVGU.so
+    ln -sf libEMGD2d.so.${EMGD_SNAPSHOT}                  ${D}${libdir}/libEMGD2d.so
+    ln -sf libEMGDegl.so.${EMGD_SNAPSHOT}                 ${D}${libdir}/libEMGDegl.so
+    ln -sf libemgdglslcompiler.so.${EMGD_SNAPSHOT}        ${D}${libdir}/libemgdglslcompiler.so
+    ln -sf libEMGDOGL.so.${EMGD_SNAPSHOT}                 ${D}${libdir}/libEMGDOGL.so
+    ln -sf libemgdPVR2D_DRIWSEGL.so.${EMGD_SNAPSHOT}      ${D}${libdir}/libemgdPVR2D_DRIWSEGL.so
+    ln -sf libEMGDScopeServices.so.${EMGD_SNAPSHOT}       ${D}${libdir}/libEMGDScopeServices.so
+    ln -sf libemgdsrv_init.so.${EMGD_SNAPSHOT}            ${D}${libdir}/libemgdsrv_init.so
+    ln -sf libemgdsrv_um.so.${EMGD_SNAPSHOT}              ${D}${libdir}/libemgdsrv_um.so
+
+    #Replace duplicate files with symlinks
+    rm -f ${D}${libdir}/libmixvideo.so.0
+    ln -sf libmixvideo.so.0.10.9                          ${D}${libdir}/libmixvideo.so.0
+    rm -f ${D}${libdir}/libmixvbp_h264.so.0
+    ln -sf libmixvbp_h264.so.0.10.8                       ${D}${libdir}/libmixvbp_h264.so.0
+    rm -f ${D}${libdir}/libmixvbp.so.0
+    ln -sf libmixvbp.so.0.10.8                            ${D}${libdir}/libmixvbp.so.0
+    rm -f ${D}${libdir}/libmixvbp_vc1.so.0
+    ln -sf libmixvbp_vc1.so.0.10.8                        ${D}${libdir}/libmixvbp_vc1.so.0
+    rm -f ${D}${libdir}/libmixvbp_mpeg4.so.0
+    ln -sf libmixvbp_mpeg4.so.0.10.8                      ${D}${libdir}/libmixvbp_mpeg4.so.0
+    rm -f ${D}${libdir}/libmixcommon.so.0
+    ln -sf libmixcommon.so.0.10.8                         ${D}${libdir}/libmixcommon.so.0
+    rm -f ${D}${libdir}/libgstvabuffer.so.0
+    ln -sf libgstvabuffer.so.0.10.8                       ${D}${libdir}/libgstvabuffer.so.0
 }
 
 LEAD_SONAME = "libEGL.so"
