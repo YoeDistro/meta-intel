@@ -51,7 +51,7 @@ Table of Contents
 
  I. Building the meta-cedartrail BSP layer
 II. Booting the images in /binary
-
+III. Miscellaneous Notes
 
 I. Building the meta-cedartrail BSP layer
 =========================================
@@ -188,3 +188,28 @@ EXTRA_IMAGE_FEATURES = "debug-tweaks"
 and change above line to..
 
 EXTRA_IMAGE_FEATURES = "debug-tweaks tools-testapps"
+
+
+Work Around for VGA and LVDS Display issue in PVR driver
+--------------------------------------------------------
+
+The PVR driver has a issue that for some systems it causes
+it to incorrectly assume that a LVDS display is connected
+while infact a VGA display is connected and Vice Versa.
+If your VGA or LVDS display does not work with
+"cedartrail" MACHINE, then if you have connected a VGA display,
+add the following to the kernel command line:
+
+video=LVDS-1:d video=VGA-1:e
+
+If you have connected a LVDS display, add the following to
+the kernel command line:
+
+video=LVDS-1:e video=VGA-1:d
+
+The kernel boot command line can be updated before BSP build by
+editing the "APPEND +=..." line in  conf/machine/cedartrail.conf file.
+
+The kernel command line can also be edited after a image is built by
+editing the syslinux.cfg file in the USB flash device on which
+the image is installed.
