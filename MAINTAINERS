@@ -60,6 +60,10 @@ FRI2
 M:	Darren Hart <dvhart@linux.intel.com>
 F:	meta-fri2/
 
+HASWELL_WC
+M:	Ong Boon Leong <boon.leong.ong@intel.com>
+F:	meta-haswell-wc/
+
 JASPERFOREST
 M:	Nitin A Kamble<nitin.a.kamble@intel.com>
 F:	meta-jasperforest/
