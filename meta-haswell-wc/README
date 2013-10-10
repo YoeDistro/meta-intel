@@ -37,7 +37,7 @@ This layer depends on:
 
   URI: git://git.openembedded.org/openembedded-core
   layers: meta
-  branch: master
+  branch: dylan
 
   URI: git://git.yoctoproject.org/meta-intel
   layers: intel
