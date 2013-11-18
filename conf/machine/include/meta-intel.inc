@@ -22,3 +22,5 @@ XSERVER_IA32_EMGD = "emgd-driver-bin \
 XSERVER_IA32_MATROX_MGA = "xf86-video-mga \
            "
 
+XSERVER_IA32_ASPEED_AST = "xf86-video-ast \
+           "
