@@ -14,6 +14,7 @@ Communication Infrastructure.
 The Server Platform consists of Intel Xeon E5-2600 and E5-2400 Processors,
 plus the Intel Communication Chipset 89xx for Large-Scale Communications
 Infrastructure.
+(Ivy Bridge-EP/EN + Coleto Creek)
 (Sandy Bridge-EP/EN + Cave Creek)
 
 Both Platforms use Matrox graphics Card.
