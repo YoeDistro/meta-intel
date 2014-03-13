@@ -14,7 +14,7 @@ KERNEL_FEATURES_valleyisland-32 = "features/valleyisland-io/valleyisland-io \
 
 LINUX_VERSION_valleyisland-32 = "3.8.13"
 SRCREV_machine_valleyisland-32 ?= "6f3e338aa9496cf68ad03a98f66c2e98975829c7"
-SRCREV_meta_valleyisland-32 ?= "14441275c1195a1bd52a6455ecde006c4722d45f"
+SRCREV_meta_valleyisland-32 ?= "4134410f6467a55ea735c46feefc649ef643650a"
 
 #############################
 # MACHINE = valleyisland-64 #
@@ -28,6 +28,6 @@ KERNEL_FEATURES_valleyisland-64 = "features/valleyisland-io/valleyisland-io \
 
 LINUX_VERSION_valleyisland-64 = "3.8.13"
 SRCREV_machine_valleyisland-64 ?= "6f3e338aa9496cf68ad03a98f66c2e98975829c7"
-SRCREV_meta_valleyisland-64 ?= "14441275c1195a1bd52a6455ecde006c4722d45f"
+SRCREV_meta_valleyisland-64 ?= "4134410f6467a55ea735c46feefc649ef643650a"
 
 module_autoload_i2c-dev = "i2c-dev"
