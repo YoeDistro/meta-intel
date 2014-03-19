@@ -65,7 +65,7 @@ Patches
 Please submit any patches against this BSP to the Yocto mailing list
 (yocto@yoctoproject.org) and cc: the maintainer:
 
-Maintainer: Ong Boon Leong <boon.leong.ong@intel.com>
+Maintainer: Chan Wei Sern <wei.sern.chan@intel.com>
 
 Please see the meta-intel/MAINTAINERS file for more details.
 
@@ -76,7 +76,6 @@ Table of Contents
   I. Building the meta-crystalforest BSP layer
  II. Booting the images in /binary
 III. Enabling Intel DPDK and QuickAssist Technology
-IV.  Enabling libcrypto kernel module for QuickAssist Technology
 
 I. Building the meta-crystalforest BSP layer
 =======================================
