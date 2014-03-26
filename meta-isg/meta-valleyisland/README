@@ -22,6 +22,14 @@ Information on all Intel® embedded platforms can be found here:
 
   http://www.intel.com/p/en_US/embedded/hwsw/hardware
 
+Yocto Project Compatible
+========================
+
+This BSP is compatible with the Yocto Project as per the requirements
+listed here:
+
+  https://www.yoctoproject.org/webform/yocto-project-compatible-registration
+
 Dependencies
 ============
 
@@ -100,6 +108,14 @@ and KERNEL_FEATURES_valleyisland-64:
     KERNEL_FEATURES_valleyisland-64 = "features/valleyisland-io/valleyisland-io \
   -				       features/valleyisland-io/valleyisland-io-pci.scc \
 				      "
+
+The meta-valleyisland contains support for Intel High Definition Audio. However,
+HD Audio driver is dependent on gstreamer plugins and ffmpeg plugins to work properly.
+These plugins require additional license flags in order to be included in the build.
+
+Add "commercial" in the LICENSE_FLAGS_WHITELIST in local.conf. For example:
+
+  LICENSE_FLAGS_WHITELIST = "commercial"
 
 You should then be able to build a valleyisland image as such:
 
