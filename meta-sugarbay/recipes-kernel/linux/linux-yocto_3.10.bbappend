@@ -5,7 +5,7 @@ COMPATIBLE_MACHINE_sugarbay = "sugarbay"
 KMACHINE_sugarbay = "sugarbay"
 KBRANCH_sugarbay = "standard/common-pc-64/sugarbay"
 
-LINUX_VERSION = "3.10.19"
+LINUX_VERSION = "3.10.35"
 
-SRCREV_meta_sugarbay = "d9cd83c0292bd4e2a6754a96761027252e726a42"
-SRCREV_machine_sugarbay = "a9ec82e355130160f9094e670bd5be0022a84194"
+SRCREV_meta_sugarbay = "7df9ef8ee47dc9023044614210f4c1d9d916dd5f"
+SRCREV_machine_sugarbay = "cee957655fe67826b2e827e2db41f156fa8f0cc4"
