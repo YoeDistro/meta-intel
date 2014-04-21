@@ -9,8 +9,8 @@ KBRANCH_valleyisland-32 = "standard/base"
 
 KERNEL_FEATURES_append_valleyisland-32 = "features/valleyisland-io/valleyisland-io"
 
-LINUX_VERSION_valleyisland-32 = "3.10.34"
-SRCREV_machine_valleyisland-32 = "52f701a01977965b0809703135611dd750561319"
+LINUX_VERSION_valleyisland-32 = "3.10.35"
+SRCREV_machine_valleyisland-32 = "cee957655fe67826b2e827e2db41f156fa8f0cc4"
 SRCREV_meta_valleyisland-32 = "df3aa753c8826127fb5ad811d56d57168551d6e4"
 
 #############################
@@ -22,6 +22,6 @@ KBRANCH_valleyisland-64 = "standard/base"
 
 KERNEL_FEATURES_append_valleyisland-64 = "features/valleyisland-io/valleyisland-io"
 
-LINUX_VERSION_valleyisland-64 = "3.10.34"
-SRCREV_machine_valleyisland-64 = "52f701a01977965b0809703135611dd750561319"
+LINUX_VERSION_valleyisland-64 = "3.10.35"
+SRCREV_machine_valleyisland-64 = "cee957655fe67826b2e827e2db41f156fa8f0cc4"
 SRCREV_meta_valleyisland-64 = "df3aa753c8826127fb5ad811d56d57168551d6e4"
