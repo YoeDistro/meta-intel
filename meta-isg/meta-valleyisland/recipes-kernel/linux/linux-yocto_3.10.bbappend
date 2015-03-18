@@ -9,11 +9,10 @@ KBRANCH_valleyisland-32 = "standard/base"
 
 KERNEL_FEATURES_append_valleyisland-32 = " features/valleyisland-io/valleyisland-io \
 					   features/valleyisland-io/valleyisland-io-pci"
-
-LINUX_VERSION_valleyisland-32 = "3.10.40"
-SRCREV_machine_valleyisland-32 = "f53a6114b3a6e8c03ca4752de829887015f4c942"
-SRCREV_meta_valleyisland-32 = "90edb289dccfe838d4e364e1a5815447a6642b98"
-SRCREV_valleyisland-io_valleyisland-32 = "8ea4fb625f2654bbdd5dfcb9db67328d21ebe504"
+LINUX_VERSION_valleyisland-32 = "3.10.65"
+SRCREV_machine_valleyisland-32 = "ef1b96279e1a087a9d5b6a0601830d42ea47355c"
+SRCREV_meta_valleyisland-32 = "d5456dd830cad14bd844753b751b83744ced3793"
+SRCREV_valleyisland-io_valleyisland-32 = "0992d01f5f382f6da60004ef87f67ebd3ca13732"
 
 SRC_URI_valleyisland-32 = "git://git.yoctoproject.org/linux-yocto-3.10.git;protocol=git;nocheckout=1;branch=${KBRANCH},${KMETA},valleyisland-io-1.0;name=machine,meta,valleyisland-io"
 
@@ -27,10 +26,10 @@ KBRANCH_valleyisland-64 = "standard/base"
 KERNEL_FEATURES_append_valleyisland-64 = " features/valleyisland-io/valleyisland-io \
 					   features/valleyisland-io/valleyisland-io-pci"
 
-LINUX_VERSION_valleyisland-64 = "3.10.40"
-SRCREV_machine_valleyisland-64 = "f53a6114b3a6e8c03ca4752de829887015f4c942"
-SRCREV_meta_valleyisland-64 = "90edb289dccfe838d4e364e1a5815447a6642b98"
-SRCREV_valleyisland-io_valleyisland-64 = "8ea4fb625f2654bbdd5dfcb9db67328d21ebe504"
+LINUX_VERSION_valleyisland-64 = "3.10.65"
+SRCREV_machine_valleyisland-64 = "ef1b96279e1a087a9d5b6a0601830d42ea47355c"
+SRCREV_meta_valleyisland-64 = "d5456dd830cad14bd844753b751b83744ced3793"
+SRCREV_valleyisland-io_valleyisland-64 = "0992d01f5f382f6da60004ef87f67ebd3ca13732"
 
 SRC_URI_valleyisland-64 = "git://git.yoctoproject.org/linux-yocto-3.10.git;protocol=git;nocheckout=1;branch=${KBRANCH},${KMETA},valleyisland-io-1.0;name=machine,meta,valleyisland-io"
 
