@@ -1,0 +1,44 @@
+From 4b82cbb94e96d0bc982e98149ce971d886c7a937 Mon Sep 17 00:00:00 2001
+From: venkatasubramanian pattu <venkatasubramanianx.pattu@intel.com>
+Date: Mon, 6 Jul 2015 15:57:20 +0800
+Subject: [PATCH] Fix for cross-compilation issue
+
+This patch is used to fix the cross compilation issue.
+
+When compiling the stateless_multi_op_checksum_sample by default it takes
+the gcc compiler from host machine. Since we are working on the yocto recipe
+implementation we changed the path of the compiler from default gcc
+to cross-compiler.
+
+Upstream Status: Inappropriate
+
+Signed-off-by: venkatasubramanian pattu <venkatasubramanianx.pattu@intel.com>
+---
+ .../functional/dc/stateless_multi_op_checksum_sample/Makefile         | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/quickassist/lookaside/access_layer/src/sample_code/functional/dc/stateless_multi_op_checksum_sample/Makefile b/quickassist/lookaside/access_layer/src/sample_code/functional/dc/stateless_multi_op_checksum_sample/Makefile
+index c5cb7bb..c69ce08 100644
+--- a/quickassist/lookaside/access_layer/src/sample_code/functional/dc/stateless_multi_op_checksum_sample/Makefile
++++ b/quickassist/lookaside/access_layer/src/sample_code/functional/dc/stateless_multi_op_checksum_sample/Makefile
+@@ -98,7 +98,7 @@ else
+         ADDITIONAL_OBJECTS += $(ICP_BUILD_OUTPUT)/libicp_qa_al_s.so
+ endif
+ 
+-ADDITIONAL_OBJECTS += -L/usr/Lib -lpthread -lcrypto
++ADDITIONAL_OBJECTS += -lpthread -lcrypto
+ 
+ USER_SOURCE_FILES = ../../common/cpa_sample_utils.c cpa_dc_stateless_multi_op_checksum_sample.c
+ USER_SOURCE_FILES += ../../../performance/qae/linux/user_space/qae_mem_utils.c
+@@ -108,7 +108,7 @@ USER_INCLUDES= $(INCLUDES)
+ USER_INCLUDES+= -I../../../performance/qae/
+ 
+ default: clean
+-	gcc -Wall -O1 $(USER_INCLUDES)  -DUSER_SPACE \
++	$(CC) -Wall -O1 $(USER_INCLUDES)  -DUSER_SPACE \
+ 	$(USER_SOURCE_FILES) $(ADDITIONAL_OBJECTS) -o $(OUTPUT_NAME)
+ 
+ clean:
+-- 
+1.9.1
+
