@@ -1,0 +1,35 @@
+From f428c0198d61087ba031985c571574a099096e1c Mon Sep 17 00:00:00 2001
+From: venkatasubramanian pattu <venkatasubramanianx.pattu@intel.com>
+Date: Wed, 17 Jun 2015 14:34:05 +0800
+Subject: [PATCH] app: Enable the Dynamic Compression feature
+
+This Patch is used to enable the Dynamic Compression feature
+
+This will fix for qat applications failure.
+ERROR : dcStatelessSample(): cpaDcQueryCapabilities
+dcStatelessSample(): cpaDcGetSessionSize
+[error] dcCheckSessionData() - : Invalid API Param - Invalid huffType value,
+dynamic sessions not supported
+
+Upstream Status: Inappropriate
+
+Signed-off-by: venkatasubramanian pattu <venkatasubramanianx.pattu@intel.com>
+---
+ .../lookaside/access_layer/src/common/compression/include/dc_session.h  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/quickassist/lookaside/access_layer/src/common/compression/include/dc_session.h b/quickassist/lookaside/access_layer/src/common/compression/include/dc_session.h
+index da69433..2b755dc 100644
+--- a/quickassist/lookaside/access_layer/src/common/compression/include/dc_session.h
++++ b/quickassist/lookaside/access_layer/src/common/compression/include/dc_session.h
+@@ -80,7 +80,7 @@
+ #include "sal_qat_cmn_msg.h"
+
+ /* Defeature Dynamic Compression */
+-#define ICP_DC_DYN_NOT_SUPPORTED         (1)
++/*#define ICP_DC_DYN_NOT_SUPPORTED         (1) */
+
+ /* Maximum size of the state registers 64 bytes */
+ #define DC_QAT_STATE_REGISTERS_MAX_SIZE (64)
+--
+1.9.1
