@@ -1,0 +1,35 @@
+From 8f042b72e96f306196f92c39caa32d4cfbed3812 Mon Sep 17 00:00:00 2001
+From: venkatasubramanian pattu <venkatasubramanianx.pattu@intel.com>
+Date: Fri, 12 Jun 2015 17:13:21 +0800
+Subject: [PATCH] app: Enable the Dynamic Compression feature
+
+This Patch is used to enable the Dynamic Compression feature
+
+This will fix for qat applications failure.
+ERROR : dcStatelessSample(): cpaDcQueryCapabilities
+dcStatelessSample(): cpaDcGetSessionSize
+[error] dcCheckSessionData() - : Invalid API Param - Invalid huffType value,
+dynamic sessions not supported
+
+Upstream Status: Inappropriate
+
+Signed-off-by: venkatasubramanian pattu <venkatasubramanianx.pattu@intel.com>
+---
+ .../lookaside/access_layer/src/common/compression/include/dc_session.h  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/quickassist/lookaside/access_layer/src/common/compression/include/dc_session.h b/quickassist/lookaside/access_layer/src/common/compression/include/dc_session.h
+index b7dc943..7fda6bb 100755
+--- a/quickassist/lookaside/access_layer/src/common/compression/include/dc_session.h
++++ b/quickassist/lookaside/access_layer/src/common/compression/include/dc_session.h
+@@ -80,7 +80,7 @@
+ #include "sal_qat_cmn_msg.h"
+
+ /* Defeature Dynamic Compression */
+-#define ICP_DC_DYN_NOT_SUPPORTED         (1)
++/*#define ICP_DC_DYN_NOT_SUPPORTED         (1) */
+
+ /* Maximum number of intermediate buffers SGLs */
+ #define DC_MAX_NUM_INTERMEDIATE_BUFFERS (12)
+--
+1.9.1

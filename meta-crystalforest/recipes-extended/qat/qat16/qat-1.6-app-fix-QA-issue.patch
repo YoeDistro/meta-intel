@@ -1,0 +1,33 @@
+From 9f9529e41adf4aa3607b343da37f8af3f60ec31d Mon Sep 17 00:00:00 2001
+From: Sreeju Selvaraj <sreeju.armughanx.selvaraj@intel.com>
+Date: Thu, 30 Oct 2014 18:04:36 +0800
+Subject: [PATCH] app: fix QA issue
+
+This will fix the qat application build error:
+ERROR: QA Issue: The compile log indicates that host include
+and/or library paths were used
+
+Upstream Status: Inappropriate
+
+Signed-off-by: Sreeju Selvaraj <sreeju.armughanx.selvaraj@intel.com>
+Signed-off-by: venkatasubramanian pattu <venkatasubramanianx.pattu@intel.com>
+---
+ .../build_system/build_files/env_files/linux_2.6_user_space.mk         | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/quickassist/build_system/build_files/env_files/linux_2.6_user_space.mk b/quickassist/build_system/build_files/env_files/linux_2.6_user_space.mk
+index 2d6e2dc..4c4c1c9 100755
+--- a/quickassist/build_system/build_files/env_files/linux_2.6_user_space.mk
++++ b/quickassist/build_system/build_files/env_files/linux_2.6_user_space.mk
+@@ -72,8 +72,7 @@
+ #
+ #-------------------------------------------------------------
+
+-INCLUDES+=-I/usr/include \
+-          -I$(API_DIR)   \
++INCLUDES+=-I$(API_DIR)   \
+           -I$(OSAL_DIR)/include \
+           -I$(OSAL_DIR)/src/linux/user_space/include
+
+--
+1.9.1
