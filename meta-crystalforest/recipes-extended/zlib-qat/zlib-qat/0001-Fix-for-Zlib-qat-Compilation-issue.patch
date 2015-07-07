@@ -1,0 +1,54 @@
+From 9ba7bca8e30f76cdc9d667dd7b6d203314301edc Mon Sep 17 00:00:00 2001
+From: venkatasubramanian pattu <venkatasubramanianx.pattu@intel.com>
+Date: Thu, 11 Jun 2015 11:45:33 +0800
+Subject: [PATCH] Fix for Zlib-qat Compilation issue
+
+This patch is used to fix the compliation issue when QAT is enabled with
+Zlib.
+
+When compiling the Zlib-qat by default it takes the kernel source from the host machine .
+Since we are working on the yocto recipe implementation we need to change the path
+of the kernel source by exporting the variable (KERNEL_SOURCE_ROOT) in the main recipe.
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: venkatasubramanian pattu <venkatasubramanianx.pattu@intel.com>
+---
+ contrib/qat/qat_mem/Makefile | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
+
+diff --git a/contrib/qat/qat_mem/Makefile b/contrib/qat/qat_mem/Makefile
+index ddf5b59..0a521f2 100644
+--- a/contrib/qat/qat_mem/Makefile
++++ b/contrib/qat/qat_mem/Makefile
+@@ -61,16 +61,10 @@
+ #########################################################################
+ 
+ MODULENAME 	:= qat_mem
+-KDIR		:= /lib/modules/$(shell uname -r)/build
++KDIR		:= $(KERNEL_SOURCE_ROOT)
+ PWD		:= $(shell pwd)
+ 
+-ifeq ($(shell uname -r|grep -c grsec-WR), 1)
+-AUTO_CONF=/lib/modules/$(shell uname -r)/build/include/generated/autoconf.h
+-else
+-AUTO_CONF=/usr/src/kernels/$(shell uname -r)/include/linux/autoconf.h
+-endif
+-
+-CC		:= gcc -Wall -imacros $(AUTO_CONF)
++CC		:= gcc -Wall -imacros $(KERNEL_SOURCE_ROOT)/include/generated/autoconf.h
+ 
+ ifeq ($(KERNELRELEASE),)
+ all:	$(MODULENAME)_test
+@@ -80,6 +74,8 @@ else
+   obj-m	:= $(MODULENAME).o
+ endif
+ 
++modules_install:
++	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules_install
+ $(MODULENAME)_test: $(MODULENAME)_test.c
+ 	$(CC) -g -o $(MODULENAME)_test $(MODULENAME)_test.c
+ 
+-- 
+1.9.1
+
