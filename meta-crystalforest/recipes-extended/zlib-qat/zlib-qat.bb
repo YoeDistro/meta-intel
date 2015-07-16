@@ -19,6 +19,7 @@ DEPENDS += "cryptodev-linux pkgconfig qat16"
 SRC_URI = "http://www.zlib.net/zlib-${ZLIB_VERSION}.tar.gz;name=zlib \
 	   https://01.org/sites/default/files/page/zlib_shim_0.4.7-002_withdocumentation.zip;name=zlibqat \
 	   file://0001-Fix-for-Zlib-qat-Compilation-issue.patch \
+	   file://zlib-qat-qat_mem-use-the-right-compiler.patch \
 	  "
 
 SRC_URI[zlib.md5sum] = "44d667c142d7cda120332623eab69f40"
@@ -65,6 +66,7 @@ do_patch() {
 	cd ${S}
 	patch -p1  < ${WORKDIR}/zlib-1.2.8-qat.patch
 	patch -p1  < ${WORKDIR}/0001-Fix-for-Zlib-qat-Compilation-issue.patch
+	patch -p1  < ${WORKDIR}/zlib-qat-qat_mem-use-the-right-compiler.patch
 }
 
 do_configure() {

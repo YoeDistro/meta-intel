@@ -1,0 +1,31 @@
+From 22a4ef23792251c284d9766ab5ee87cbeeef2ec4 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anujx.mittal@intel.com>
+Date: Thu, 16 Jul 2015 11:05:38 +0800
+Subject: [PATCH] qat_mem: use the right compiler
+
+Upstream-Status: Inappropriate [Configuration]
+
+Use $(CC) instead of gcc directly. Makes sure that the
+right options are being passed for cross-compile.
+
+Signed-off-by: Anuj Mittal <anujx.mittal@intel.com>
+---
+ contrib/qat/qat_mem/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/contrib/qat/qat_mem/Makefile b/contrib/qat/qat_mem/Makefile
+index 0a521f2..2c7c8dc 100644
+--- a/contrib/qat/qat_mem/Makefile
++++ b/contrib/qat/qat_mem/Makefile
+@@ -64,7 +64,7 @@ MODULENAME 	:= qat_mem
+ KDIR		:= $(KERNEL_SOURCE_ROOT)
+ PWD		:= $(shell pwd)
+ 
+-CC		:= gcc -Wall -imacros $(KERNEL_SOURCE_ROOT)/include/generated/autoconf.h
++CC		:= $(CC) -Wall -imacros $(KERNEL_SOURCE_ROOT)/include/generated/autoconf.h
+ 
+ ifeq ($(KERNELRELEASE),)
+ all:	$(MODULENAME)_test
+-- 
+1.7.9.5
+
