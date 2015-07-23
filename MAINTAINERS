@@ -36,7 +36,7 @@ M:	Nitin A Kamble<nitin.a.kamble@intel.com>
 F:	meta-crownbay/
 
 CRYSTALFOREST
-M:      Ong Boon Leong <boon.leong.ong@intel.com>
+M:      Wu Chia Chuan <chia.chuan.wu@intel.com>
 F:      meta-crystalforest/
 
 EMENLOW
@@ -52,7 +52,7 @@ M:	Nitin A Kamble<nitin.a.kamble@intel.com>
 F:	meta-jasperforest/
 
 ROMLEY
-M:      Haw Foo Chien <foo.chien.haw@intel.com>
+M:      Wu Chia Chuan <chia.chuan.wu@intel.com>
 F:      meta-romley/
 
 SUGARBAY
