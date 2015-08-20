@@ -10,11 +10,11 @@ KERNEL_FEATURES_valleyisland-32 = " features/valleyisland-io/valleyisland-io.scc
 				    features/valleyisland-io/valleyisland-io-pci.scc"
 
 LINUX_VERSION_valleyisland-32 = "3.10.65"
-SRCREV_machine_valleyisland-32 = "e94c994f434ecf4f6e2c5398388f4fb733e93fc8"
-SRCREV_meta_valleyisland-32 = "1e670aaa446b3d6a72eb527bf9b8af04bc5a96ef"
-SRCREV_valleyisland-io_valleyisland-32 = "0992d01f5f382f6da60004ef87f67ebd3ca13732"
+SRCREV_machine_valleyisland-32 = "6d28dec479d475d4f3ab1682ee0d5e1e3afc22c7"
+SRCREV_meta_valleyisland-32 = "f90490d50fb51f7e1206c838731185670276d108"
+SRCREV_valleyisland-io_valleyisland-32 = "f15b3c66b653f8a021b0276f0d54451f9e713863"
 
-SRC_URI_valleyisland-32 = "git://git.yoctoproject.org/linux-yocto-3.10.git;protocol=git;nocheckout=1;branch=${KBRANCH},${KMETA},valleyisland-io-3.0;name=machine,meta,valleyisland-io"
+SRC_URI_valleyisland-32 = "git://git.yoctoproject.org/linux-yocto-3.10.git;protocol=git;nocheckout=1;branch=${KBRANCH},${KMETA},valleyisland-io-4.0;name=machine,meta,valleyisland-io"
 
 #############################
 # MACHINE = valleyisland-64 #
@@ -26,11 +26,11 @@ KERNEL_FEATURES_valleyisland-64 = " features/valleyisland-io/valleyisland-io.scc
 				    features/valleyisland-io/valleyisland-io-pci.scc"
 
 LINUX_VERSION_valleyisland-64 = "3.10.65"
-SRCREV_machine_valleyisland-64 = "e94c994f434ecf4f6e2c5398388f4fb733e93fc8"
-SRCREV_meta_valleyisland-64 = "1e670aaa446b3d6a72eb527bf9b8af04bc5a96ef"
-SRCREV_valleyisland-io_valleyisland-64 = "0992d01f5f382f6da60004ef87f67ebd3ca13732"
+SRCREV_machine_valleyisland-64 = "6d28dec479d475d4f3ab1682ee0d5e1e3afc22c7"
+SRCREV_meta_valleyisland-64 = "f90490d50fb51f7e1206c838731185670276d108"
+SRCREV_valleyisland-io_valleyisland-64 = "f15b3c66b653f8a021b0276f0d54451f9e713863"
 
-SRC_URI_valleyisland-64 = "git://git.yoctoproject.org/linux-yocto-3.10.git;protocol=git;nocheckout=1;branch=${KBRANCH},${KMETA},valleyisland-io-3.0;name=machine,meta,valleyisland-io"
+SRC_URI_valleyisland-64 = "git://git.yoctoproject.org/linux-yocto-3.10.git;protocol=git;nocheckout=1;branch=${KBRANCH},${KMETA},valleyisland-io-4.0;name=machine,meta,valleyisland-io"
 
 KERNEL_MODULE_AUTOLOAD_append_valleyisland-32 = " i2c-dev"
 KERNEL_MODULE_AUTOLOAD_append_valleyisland-64 = " i2c-dev"
