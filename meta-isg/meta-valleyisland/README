@@ -104,6 +104,18 @@ Add "commercial" in the LICENSE_FLAGS_WHITELIST in local.conf. For example:
 
   LICENSE_FLAGS_WHITELIST = "commercial"
 
+The meta-valleyisland contains support for Marvell 8897 Wireless/Bluetooth
+card. This require dependencies of meta-openembedded layer and add the layer
+dependencies to the BBLAYERS variable in order to build the BSP as below:
+$ git clone -b dizzy git://git.openembedded.org/meta-openembedded
+
+In bblayers.conf: Add BBLAYERS ?= "/path/meta-openembedded/meta-oe \"
+
+To support Marvell 8897 module in AP mode and STA mode, add "hostapd iw
+dhcp-client dhcp-server" in the CORE_IMAGE_EXTRA_INSTALL in local.conf. For
+example:
+CORE_IMAGE_EXTRA_INSTALL = "hostapd iw dhcp-client dhcp-server"
+
 You should then be able to build a valleyisland image as such:
 
   $ source oe-init-build-env
@@ -166,7 +178,7 @@ BIOS : EBC MF01X003
 Note : It is recommended to use the default settings of this BIOS version.
 
 Bayley Bay/ Bakersport CRB/ MinnowBoard MAX
-BIOS : ISG BIOS 092_032
+BIOS : ISG BIOS 093_041
 EC   : KSC v3.14
 
 Required settings in ISG BIOS
