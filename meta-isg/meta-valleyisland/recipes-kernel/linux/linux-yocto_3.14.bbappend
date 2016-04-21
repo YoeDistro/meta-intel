@@ -10,8 +10,8 @@ KBRANCH_valleyisland-64 = "standard/valleyisland"
 
 SRCREV_machine_valleyisland-32 = "b19dce5f446bf47c22898b3836c218d7d9d8cf09"
 SRCREV_machine_valleyisland-64 = "b19dce5f446bf47c22898b3836c218d7d9d8cf09"
-SRCREV_meta_valleyisland-32 = "dec54a3415030fb3df9e9b515af38b583723819e"
-SRCREV_meta_valleyisland-64 = "dec54a3415030fb3df9e9b515af38b583723819e"
+SRCREV_meta_valleyisland-32 = "189154c0ed2d77e211f3646e7b599a71e02d7fe1"
+SRCREV_meta_valleyisland-64 = "189154c0ed2d77e211f3646e7b599a71e02d7fe1"
 
 LINUX_VERSION_valleyisland-32 ?= "3.14.62"
 LINUX_VERSION_valleyisland-64 ?= "3.14.62"
