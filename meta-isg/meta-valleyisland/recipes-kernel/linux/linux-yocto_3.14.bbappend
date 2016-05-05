@@ -8,8 +8,8 @@ KMACHINE_valleyisland-64 = "valleyisland"
 KBRANCH_valleyisland-32 = "standard/valleyisland"
 KBRANCH_valleyisland-64 = "standard/valleyisland"
 
-SRCREV_machine_valleyisland-32 = "b19dce5f446bf47c22898b3836c218d7d9d8cf09"
-SRCREV_machine_valleyisland-64 = "b19dce5f446bf47c22898b3836c218d7d9d8cf09"
+SRCREV_machine_valleyisland-32 = "27d9a1914b084e886a28242d834df59a3a40b676"
+SRCREV_machine_valleyisland-64 = "27d9a1914b084e886a28242d834df59a3a40b676"
 SRCREV_meta_valleyisland-32 = "189154c0ed2d77e211f3646e7b599a71e02d7fe1"
 SRCREV_meta_valleyisland-64 = "189154c0ed2d77e211f3646e7b599a71e02d7fe1"
 
