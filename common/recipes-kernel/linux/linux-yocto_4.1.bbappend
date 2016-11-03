@@ -16,7 +16,7 @@ COMPATIBLE_MACHINE_corei7-64-intel-common = "${MACHINE}"
 KMACHINE_corei7-64-intel-common = "${@bb.utils.contains('BSP_SUBTYPE', 'leafhill', 'leafhill', 'intel-corei7-64', d)}"
 KBRANCH_corei7-64-intel-common = "${@bb.utils.contains('BSP_SUBTYPE', 'leafhill', 'standard/intel/4.1.27/leaf-hill', 'standard/intel/base', d)}"
 SRCREV_meta_corei7-64-intel-common ?= "68b5089eeffb5878a990d9eb418407c8e18a6f37"
-SRCREV_machine_corei7-64-intel-common ?= "${@bb.utils.contains('BSP_SUBTYPE', 'leafhill', '41fc98f785ad56f0df1b85ac039bd5e391697842', '9195020e5747fba069c19996fab079931584a7fb', d)}"
+SRCREV_machine_corei7-64-intel-common ?= "${@bb.utils.contains('BSP_SUBTYPE', 'leafhill', '6e06dacda21b3de803e5ca03b8d14e1021861b30', '9195020e5747fba069c19996fab079931584a7fb', d)}"
 KERNEL_FEATURES_append_corei7-64-intel-common = "${KERNEL_FEATURES_INTEL_COMMON} \
 						 ${@bb.utils.contains('AUDIO_FEATURES', 'ssp', '${KERNEL_FEATURES_LEAFHILL_AUDIO}', '', d)}"
 
