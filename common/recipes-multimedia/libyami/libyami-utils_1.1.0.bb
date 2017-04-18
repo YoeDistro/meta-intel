@@ -21,3 +21,10 @@ EXTRA_OECONF = " --enable-tests-gles --disable-md5"
 inherit autotools pkgconfig distro_features_check
 
 REQUIRED_DISTRO_FEATURES = "opengl"
+
+PACKAGECONFIG = "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)}"
+
+# --enable-x11 needs libva-x11
+# gles-tests fail to build without x11: see https://github.com/01org/libyami-utils/issues/91
+PACKAGECONFIG[x11] = "--enable-x11 --enable-tests-gles,--disable-x11 --disable-tests-gles, virtual/libx11"
+
