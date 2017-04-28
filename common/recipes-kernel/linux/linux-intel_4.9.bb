@@ -2,7 +2,7 @@
 require recipes-kernel/linux/linux-yocto.inc
 
 KBRANCH = "base"
-SRCREV_machine ?= "546a7815f226f9b6fb9c3271ce06c0eca9f37b1f"
+SRCREV_machine ?= "c291399d7669648717c4a3a75c493f753295eb74"
 SRCREV_meta ?= "803b8d600e45afa0375459bf599fe365571a3866"
 
 SRC_URI = "git://github.com/01org/linux-intel-4.9.git;protocol=https;name=machine;branch=${KBRANCH}; \

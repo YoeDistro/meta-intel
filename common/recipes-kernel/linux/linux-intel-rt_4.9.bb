@@ -11,7 +11,7 @@ python () {
 }
 
 KBRANCH = "base-rt"
-SRCREV_machine ?= "847b27d4831aa7271ec0ffc4c41cfca46491a305"
+SRCREV_machine ?= "f51f4b9a23e0bebb841124b1a96a5734abfeef27"
 SRCREV_meta ?= "803b8d600e45afa0375459bf599fe365571a3866"
 
 SRC_URI = "git://github.com/01org/linux-intel-4.9.git;protocol=https;name=machine;branch=${KBRANCH}; \
