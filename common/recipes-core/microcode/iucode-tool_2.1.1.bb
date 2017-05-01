@@ -29,3 +29,5 @@ inherit autotools
 BBCLASSEXTEND = "native"
 
 COMPATIBLE_HOST = "(i.86|x86_64).*-linux"
+
+UPSTREAM_CHECK_URI = "https://gitlab.com/iucode-tool/releases"

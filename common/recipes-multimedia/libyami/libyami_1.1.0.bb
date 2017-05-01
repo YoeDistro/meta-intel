@@ -22,3 +22,6 @@ DEPENDS = "libva"
 inherit autotools pkgconfig distro_features_check
 
 REQUIRED_DISTRO_FEATURES = "opengl"
+
+UPSTREAM_CHECK_URI = "https://github.com/01org/libyami/releases"
+UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)"

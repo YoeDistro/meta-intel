@@ -31,3 +31,5 @@ CONFFILES_${PN} = " \
                    ${sysconfdir}/thermald/thermal-conf.xml \
                    ${sysconfdir}/thermald/thermal-cpu-cdev-order.xml \
                   "
+
+UPSTREAM_CHECK_URI = "https://github.com/01org/thermal_daemon/releases"

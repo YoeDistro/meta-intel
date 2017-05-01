@@ -28,3 +28,5 @@ PACKAGECONFIG = "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)}"
 # gles-tests fail to build without x11: see https://github.com/01org/libyami-utils/issues/91
 PACKAGECONFIG[x11] = "--enable-x11 --enable-tests-gles,--disable-x11 --disable-tests-gles, virtual/libx11"
 
+UPSTREAM_CHECK_URI = "http://github.com/01org/libyami-utils/releases"
+UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)"
