@@ -9,7 +9,7 @@ SRC_URI = "git://github.com/01org/linux-intel-4.9.git;protocol=https;name=machin
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-4.9;destsuffix=${KMETA}"
 
 LINUX_VERSION ?= "4.9.20"
-LINUX_VERSION_EXTENSION ?= "-intel-pk-${LINUX_KERNEL_TYPE}"
+LINUX_VERSION_EXTENSION = "-intel-pk-${LINUX_KERNEL_TYPE}"
 
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
