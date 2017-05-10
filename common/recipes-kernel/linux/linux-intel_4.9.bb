@@ -11,13 +11,12 @@ SRC_URI = "git://github.com/01org/linux-intel-4.9.git;protocol=https;name=machin
 LINUX_VERSION ?= "4.9.20"
 LINUX_VERSION_EXTENSION = "-intel-pk-${LINUX_KERNEL_TYPE}"
 
-
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
 KMETA = "kernel-meta"
 KCONF_BSP_AUDIT_LEVEL = "2"
 
-KERNEL_FEATURES_INTEL_COMMON = ""
+KERNEL_FEATURES_INTEL_COMMON ?= ""
 
 COMPATIBLE_MACHINE_core2-32-intel-common = "${MACHINE}"
 KMACHINE_core2-32-intel-common = "intel-core2-32"

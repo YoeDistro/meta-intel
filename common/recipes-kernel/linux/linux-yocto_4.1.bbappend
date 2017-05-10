@@ -6,6 +6,8 @@ SRCREV_MACHINE_INTEL_COMMON = "d2d93ffb422b65a8b66f3d24b4cd0652bec9e224"
 
 KBRANCH_INTEL_COMMON = "standard/intel/base"
 
+KERNEL_FEATURES_INTEL_COMMON ?= ""
+
 LINUX_VERSION_core2-32-intel-common = "${LINUX_VERSION_INTEL_COMMON}"
 COMPATIBLE_MACHINE_core2-32-intel-common = "${MACHINE}"
 KMACHINE_core2-32-intel-common = "intel-core2-32"

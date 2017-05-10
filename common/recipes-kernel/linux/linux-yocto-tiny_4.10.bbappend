@@ -1,5 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
+KERNEL_FEATURES_INTEL_COMMON ?= ""
+
 COMPATIBLE_MACHINE_i586-nlp-32-intel-common = "${MACHINE}"
 COMPATIBLE_MACHINE_core2-32-intel-common = "${MACHINE}"
 COMPATIBLE_MACHINE_corei7-64-intel-common = "${MACHINE}"

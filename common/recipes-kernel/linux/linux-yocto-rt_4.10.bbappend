@@ -1,4 +1,4 @@
-KERNEL_FEATURES_INTEL_COMMON = ""
+KERNEL_FEATURES_INTEL_COMMON ?= ""
 
 COMPATIBLE_MACHINE_core2-32-intel-common = "${MACHINE}"
 KMACHINE_core2-32-intel-common = "intel-core2-32"
