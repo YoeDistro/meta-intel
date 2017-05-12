@@ -9,14 +9,14 @@ LICENSE_append = " & ISC"
 
 inherit autotools gtk-doc
 
-DEPENDS += "libdrm libpciaccess cairo udev glib-2.0 libxv libx11 libxext libxrandr"
+DEPENDS += "libdrm libpciaccess cairo udev glib-2.0 libxv libx11 libxext libxrandr procps"
 RDEPENDS_${PN} += "bash"
 RDEPENDS_${PN}-tests += "bash"
 
 PACKAGE_BEFORE_PN = "${PN}-benchmarks ${PN}-tests"
 
-SRC_URI[md5sum] = "95ae60c2c0e56736273edc406f8277c8"
-SRC_URI[sha256sum] = "c6be6d8311a939dd7ebb4639a2605bdbe711a4d3c77c8273a83f2050c2723ae1"
+SRC_URI[md5sum] = "6a746774c80d5bcfa0aa7f9c20f72190"
+SRC_URI[sha256sum] = "df77f91b5a8bdd590f1128a36b7616bc292f18ecb98e77c9c4467574fb67e4ee"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[libunwind] = "--with-libunwind,--without-libunwind,libunwind,libunwind"
