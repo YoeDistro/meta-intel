@@ -21,15 +21,11 @@ Dependencies
 This layer depends on:
 
   URI: git://git.openembedded.org/bitbake
-  branch: master
+  branch: 1.34
 
   URI: git://git.openembedded.org/openembedded-core
   layers: meta
-  branch: master
-
-  URI: git://git.yoctoproject.org/meta-intel
-  layers: intel
-  branch: master
+  branch: pyro
 
 
 Table of Contents
@@ -41,6 +37,7 @@ Table of Contents
      b. Booting the intel-common BSP images
      c. Booting the intel-quark BSP image on a Galileo board
   III. Technical Miscellany
+     Benefits of using meta-intel
      The intel-common kernel package architecture
      Intel-specific machine features
   IV. Tested Hardware
@@ -149,7 +146,7 @@ You should then be able to build an image as such:
   $ source oe-init-build-env
   $ bitbake core-image-sato
 
-At the end of a successful build, you should have a live image that
+At the end of a successful build, you should have an image that
 you can boot from a USB flash drive (see instructions on how to do
 that below, in the section 'Booting the intel-common BSP images').
 
@@ -176,12 +173,11 @@ The BSP /binary directory or build contains bootable live images,
 which can be used to directly boot Yocto off of a USB flash drive.
 
 Under Linux, insert a USB flash drive.  Assuming the USB flash drive
-takes device /dev/sdf, use dd to copy the live image to it.  For
-example:
+takes device /dev/sdf, use dd to copy the image to it. For example:
 
-# dd if=core-image-sato-intel-corei7-64.hddimg of=/dev/sdf
-# sync
-# eject /dev/sdf
+    $ dd if=core-image-sato-intel-corei7-64.wic of=/dev/sdf
+    $ sync
+    $ eject /dev/sdf
 
 This should give you a bootable USB flash device.  Insert the device
 into a bootable USB socket on the target, and power on.  This should
@@ -200,7 +196,7 @@ If you find you're getting corrupt images on the USB (it doesn't show
 the syslinux boot: prompt, or the boot: prompt contains strange
 characters), try doing this first:
 
-# dd if=/dev/zero of=/dev/sdf bs=1M count=512
+    $ dd if=/dev/zero of=/dev/sdf bs=1M count=512
 
 c. Booting the intel-quark BSP image on a Galileo board
 -------------------------------------------------------
@@ -212,55 +208,77 @@ find the bootable image in the build/tmp/deploy/images/xxx directory,
 where again 'xxx' refers to the machine name used in the build.
 
 The Galileo board can boot off of either an SD card or USB storage
-media that has a special disk layout.  The 'wic' tool can be used to
+media that has a special disk layout. The 'wic' tool can be used to
 create directly bootable images for either of the two formats via the
-following steps.
+following steps. As of meta-intel 6.0-morty-2.2 or newer, wic images are
+created automatically during build time, and the manual use of wic is
+not necessary. By default, the galileodisk-sd wic kickstart file is used,
+which targets SD cards. This can be changed by setting the WKS_FILE to
+something else in local.conf, such as the following:
 
-If you haven't already, you need to build parted-native. (You will get
-an error message when running the wic script if you haven't.)
+WKS_FILE = “galileodisk-usb”
 
-    $ bitbake parted-native
+If your build is successful, a .wic image will be created in the usual
+deploy directory. Write this image to an SD card:
 
-Use the wic script to create an SD card image:
+    $ sudo dd if=/path/to/image/image-name.wic of=/dev/your_sd_dev
+    $ sync
+    $ sudo eject /dev/your_sd_dev
 
-    $ wic list images
-       galileodisk-sd        Create an Galileo Gen 1/2 disk image (SD card)
-       galileodisk-usb       Create an Galileo Gen 1/2 disk image (USB Storage)
-       mkgummidisk           Create an EFI disk image
+Insert the SD card into the Galileo and power on.
 
-Assuming you want to boot the 'core-image-minimal' image for SD card media:
-
-     $ wic create galileodisk-sd -e core-image-minimal
-
-If successful, the wic script generates the image and prints its location:
-
-       Info: The new image(s) can be found here:
-         /var/tmp/wic/build/galileodisk-sd-201604211444-mmcblk0.direct
-       ...
-
-Write the output image to an SD Card
-
-     $ sudo dd if=/path/to/image/galileodisk-sd-*-mmcblk0.direct of=/dev/your_sd_dev
- 
-Insert the SD Card into the reference platform and power on.
-
-To create a direct-boot image for USB storage media, simply specify
-galileodisk-usb instead of galileodisk-sd in the "wic create ..."
-command, then write the output image to USB storage media and boot it.
-
-Actually, Galileo board can boot off with an image in hddimg format
-from USB drives too. But only live-boot, no installation, is supported
-at this point. An image in hddimg format is generated when you build
-quark BSP. You can follow the procedure in II.b to use dd command to
-prepare your USB drive, then press F7 key as what board prompts when it
-boots. Galileo should show a boot option menu for you to choose the
-UEFI USB boot option for the drive to boot the system. If the board
+The Galileo board can boot from an hddimg formatted USB drive as well,
+but currently only live-boot, and not installation, is supported.
+An image in hddimg format is generated when you build the quark BSP.
+You can follow the procedure in II.b to use dd command to prepare your USB
+drive, then press F7 key during startup to bring up the boot option menu.
+Choose the UEFI USB boot option for the drive to boot the system. If the board
 already passes this stage and show a grub boot menu, you can press 'c'
 key and then type "quit" in grub shell. The board should come back to
 the UEFI boot menu.
 
 III. Technical Miscellany
 =========================
+
+Benefits of using meta-intel
+----------------------------
+
+Using meta-intel has the following benefits over a generic BSP:
+
+tune flags
+++++++++++
+intel-* MACHINEs each have different compilation flags appropriate for their
+targeted hardware sets. intel-corei7-64 has tune flags appropriate for modern
+64-bit Intel Core i microarchitecture, and includes instruction sets up to
+SSE4.2. intel-core2-32 has tune flags appropriate for legacy 32-bit Intel Core2
+microarchitecture, and includes instruction sets up to SSE3. intel-quark
+contains a subset of the intel-core2-32 instruction set, as quark does not
+support prefix locking instructions.
+
+linux-intel kernel
+++++++++++++++++++
+The linux-intel kernel is an initiative to bring better Intel(R) hardware
+support to the current LTS linux kernel. It contains a base LTS kernel with
+additional backports from upstream Intel drivers. In addition, a default kernel
+config containing most features found on Intel boards is supplied via the
+yocto-kernel-cache.
+
+graphics stack
+++++++++++++++
+Meta-intel provides the latest Intel Graphics Linux Stack drivers to support
+Intel hardware as defined by the https://01.org/linuxgraphics.
+
+Other software
+++++++++++++++
+  * intel ucode - provides the latest microcode updates for Intel processors
+
+  * thermald - which proactively controls thermal, using P-states, T-states, and
+the Intel power clamp driver.
+(https://01.org/linux-thermal-daemon/documentation/introduction-thermal-daemon)
+
+  * RMC - Runtime Machine Configuration, which allows the bootload to determine
+board and CPU information in order to set specific kernel command line
+information at startup.
 
 The intel-common kernel package architecture
 --------------------------------------------
@@ -295,9 +313,9 @@ that BSP.
 To make these features available for your machine, you will need to:
 
   1. include a configuration line such as the below in bblayers.conf
-	BBLAYERS += "<local path>/meta-intel"
+       BBLAYERS += "<local path>/meta-intel"
   2. include the following line in the machine configuration file
-	require conf/machine/include/meta-intel.inc
+       require conf/machine/include/meta-intel.inc
 
 Once the above requirements are met, the machine features provided by
 the meta-intel layer will be available for the BSP to use.
@@ -314,7 +332,7 @@ These machine features can be included by listing them in the
 MACHINE_FEATURES variable in the machine configuration file.  For
 example:
 
-	MACHINE_FEATURES += "intel-ucode"
+    MACHINE_FEATURES += "intel-ucode"
 
 Machine feature details
 +++++++++++++++++++++++
@@ -369,7 +387,7 @@ Machine feature details
        the fri2 BSP, the cpuid can be determined as such:
 
          [root@fri2 ~]# iucode_tool -S
-	 iucode_tool: system has processor(s) with signature 0x00020661
+         iucode_tool: system has processor(s) with signature 0x00020661
 
        Given that output, a suitable UCODE_FILTER_PARAMETERS variable
        definition could be specified in the machine configuration as
@@ -390,25 +408,20 @@ Machine feature details
 IV. Tested Hardware
 ===================
 
-Of the BSPs currently included in meta-intel, the following have
-passed initial testing with the intel-common BSPs:
+The following undergo regular basic testing with their respective MACHINE types.
+Note that both 64-bit and 32-bit firmware is available for the MinnowBoard
+Turbot, so it is tested against both intel-corei7-64 and intel-core2-32.
 
 intel-corei7-64:
-
-    crystalforest-server
-    crystalforest-gladden
-    haswell-wc
-    nuc (Ivy Bridge and Haswell, manual audio config required)
-    sugarbay
+    NUC6i5SYH
+    MinnowBoard Turbot
+    Braswell RVP
 
 intel-core2-32:
+    MinnowBoard Turbot
 
-    <currently under test>
-
-If you are interested in a BSP not listed here, chances are we are
-currently working on resolving some configuration issues with it.
-Please check the bugzilla and check in with us on the meta-intel
-mailing list.
+Intel-quark:
+    Galileo 2
 
 
 V. Guidelines for submitting patches
