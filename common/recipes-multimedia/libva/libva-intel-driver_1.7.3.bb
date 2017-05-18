@@ -31,3 +31,5 @@ PACKAGECONFIG[wayland] = "--enable-wayland,--disable-wayland,wayland wayland-nat
 FILES_${PN} += "${libdir}/dri/*.so"
 FILES_${PN}-dev += "${libdir}/dri/*.la"
 FILES_${PN}-dbg += "${libdir}/dri/.debug"
+
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.\d+)*)"
