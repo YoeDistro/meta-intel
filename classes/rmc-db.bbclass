@@ -60,7 +60,6 @@ rmc_generate_db () {
 		# For all board dirs in a topdir:
 		CUR_BOARD_DIRS=$(find ${topdir}/* -type d)
 		for board_dir in ${CUR_BOARD_DIRS}; do
-			# FIXME: we shall fail when having more than one .fp file
 			CUR_FINGERPRINT=$(find ${board_dir}/ -name "*.fp")
 
 			# disallow a board directory without any fingerprint file in it.
@@ -77,12 +76,13 @@ rmc_generate_db () {
 				continue
 			fi
 
-			CUR_TAG=$(echo "${board_dir}"|sed  's/\//-/g')
-			CUR_RECORD=${RMC_DB_DIR}/rmc${CUR_TAG}.rec
-
-			rmc -R -f ${CUR_FINGERPRINT} -b ${CUR_FILES} -o ${CUR_RECORD}
-
-			RMC_RECORDS="${RMC_RECORDS} ${CUR_RECORD}"
+			for fp in ${CUR_FINGERPRINT}; do
+				fullname=$(basename ${fp})
+				CUR_TAG="${fullname%.*}"
+				CUR_RECORD=${RMC_DB_DIR}/${CUR_TAG}.rec
+				rmc -R -f ${fp} -b ${CUR_FILES} -o ${CUR_RECORD}
+				RMC_RECORDS="${RMC_RECORDS} ${CUR_RECORD}"
+			done
 		done
 	done
 
