@@ -21,8 +21,8 @@ DEPENDS_append_libc-musl = " argp-standalone"
 SRC_URI = "https://gitlab.com/iucode-tool/releases/raw/master/iucode-tool_${PV}.tar.xz"
 SRC_URI_append_libc-musl = " file://0001-Makefile.am-Add-arg-parse-library-for-MUSL-support.patch"
 
-SRC_URI[md5sum] = "306d20b43da847812af4bf973f46045d"
-SRC_URI[sha256sum] = "8f94ec73f5d4d1a6801aaa894fa1c6544d9b27aec16e1a00e18e8241c7e0f6ba"
+SRC_URI[md5sum] = "c6f131a0b69443f5498782a2335973fa"
+SRC_URI[sha256sum] = "01f1c02ba6935e0ac8440fb594c2ef57ce4437fcbce539e3ef329f55a6fd71ab"
 
 inherit autotools
 
