@@ -9,6 +9,7 @@ SRC_URI[dpdk-dev-libibverbs.md5sum] = "65234ee278eb437a7069326f37cd4d86"
 SRC_URI[dpdk-dev-libibverbs.sha256sum] = "a6471515556cb8d10ad471bb7efb8cf760b248a28aceb57d4534d50d572f56cd"
 
 COMPATIBLE_MACHINE = "intel-corei7-64"
+COMPATIBLE_HOST_libc-musl_class-target = "null"
 
 S = "${WORKDIR}/${PN}-libibverbs-${PV}"
 COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
