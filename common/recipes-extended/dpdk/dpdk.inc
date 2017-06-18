@@ -14,6 +14,8 @@ SRC_URI = "http://fast.dpdk.org/rel/${BP}.tar.gz;name=dpdk \
 	  "
 
 COMPATIBLE_MACHINE = "intel-corei7-64"
+COMPATIBLE_HOST_libc-musl_class-target = "null"
+
 
 # dpdk example apps dpdk_qat and vhost have dependancy on fuse and qat.
 # fuse is in meta-filesystems and qat is not yet upstreamed.
