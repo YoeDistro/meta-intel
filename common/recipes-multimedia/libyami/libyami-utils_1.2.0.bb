@@ -7,12 +7,9 @@ BUGTRACKER = "https://github.com/01org/libyami-utils/issues/new"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=e3fc50a88d0a364313df4b21ef20c29e"
 
-SRC_URI = "https://github.com/01org/libyami-utils/archive/${PV}.tar.gz"
-
-SRC_URI[md5sum] = "7473e643e09296c20ed1286743906004"
-SRC_URI[sha256sum] = "66865408b63d09a80f1305828898c9cb5e7d57585b944b08148c92d774ba8dcd"
-
-S = "${WORKDIR}/libyami-utils-${PV}"
+SRC_URI = "https://github.com/01org/libyami-utils/archive/${PV}.tar.gz;downloadfilename=${BP}.tar.gz"
+SRC_URI[md5sum] = "b4637f1a384e3de20076bf01ca2515d3"
+SRC_URI[sha256sum] = "3dbaedc797bf2d0e03879bfdbea462c3ec2aac89b49c1ed55cbff1be2590d1e8"
 
 DEPENDS = "libva libyami"
 
