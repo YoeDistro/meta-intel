@@ -2,6 +2,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 KERNEL_FEATURES_INTEL_COMMON += "features/amt/mei/mei.scc"
 KERNEL_FEATURES_LEAFHILL_AUDIO += "bsp/leafhill/snd_ssp_intel.scc"
+KERNEL_FEATURES_LEAFHILL_PWM += "bsp/leafhill/pwm_leafhill.scc"
 
 LINUX_VERSION_core2-32-intel-common = "4.1.26"
 COMPATIBLE_MACHINE_core2-32-intel-common = "${MACHINE}"
@@ -19,6 +20,8 @@ SRCREV_meta_corei7-64-intel-common ?= "c3de59fdaf93a3aaaf90adb4505e323b54dae51f"
 SRCREV_machine_corei7-64-intel-common ?= "${@bb.utils.contains('BSP_SUBTYPE', 'leafhill', '0417f3b89474742be646a109140ff695dcf96d4c', '9195020e5747fba069c19996fab079931584a7fb', d)}"
 KERNEL_FEATURES_append_corei7-64-intel-common = "${KERNEL_FEATURES_INTEL_COMMON} \
 						 ${@bb.utils.contains('AUDIO_FEATURES', 'ssp', '${KERNEL_FEATURES_LEAFHILL_AUDIO}', '', d)}"
+
+KERNEL_FEATURES_append_corei7-64-intel-common = "${@bb.utils.contains('BSP_SUBTYPE', 'leafhill', '${KERNEL_FEATURES_LEAFHILL_PWM}', '', d)}"
 
 # Quark / X1000 BSP Info
 LINUX_VERSION_i586-nlp-32-intel-common = "4.1.26"
