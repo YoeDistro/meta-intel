@@ -28,14 +28,13 @@ EXTRA_OEMAKE = "RMC_INSTALL_PREFIX=${D}/${prefix} \
                 RMC_INSTALL_HEADER_PATH=${D}${includedir}/rmc"
 
 SECURITY_CFLAGS_remove_class-target = "-fstack-protector-strong"
+
 do_compile_class-target() {
 	oe_runmake
-	oe_runmake -f Makefile.efi
 }
 
 do_install() {
 	oe_runmake install
-	oe_runmake -f Makefile.efi install
 }
 
 do_install_class-native() {

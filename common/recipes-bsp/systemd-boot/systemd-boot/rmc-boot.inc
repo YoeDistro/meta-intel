@@ -1,4 +1,4 @@
-DEPENDS_append_intel-x86-common = " rmc"
+DEPENDS_append_intel-x86-common = " rmc rmc-efi"
 
 EXTRA_OEMAKE_append_intel-x86-common = ' EFI_LDFLAGS="-L${STAGING_DIR_HOST}/usr/lib" EFI_CFLAGS="-I${STAGING_INCDIR}/rmc -DRMC_EFI"'
 
