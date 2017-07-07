@@ -37,6 +37,8 @@ MACHINE_EXTRA_RRECOMMENDS_append = " kernel-modules linux-firmware thermald"
 # merge the microcode data in the final initrd image.
 INITRD_LIVE_prepend = "${@bb.utils.contains('MACHINE_FEATURES', 'intel-ucode', '${DEPLOY_DIR_IMAGE}/microcode.cpio ', '', d)}"
 
+DISK_SIGNATURE_UUID ??= "deadbeef-dead-beef-dead-beefdeadbeef"
+
 EFI_PROVIDER ?= "rmc-boot"
 
 # Add general MACHINEOVERRIDE for meta-intel
