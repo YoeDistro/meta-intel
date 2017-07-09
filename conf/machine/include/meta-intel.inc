@@ -38,7 +38,6 @@ MACHINE_EXTRA_RRECOMMENDS_append = " kernel-modules linux-firmware thermald"
 INITRD_LIVE_prepend = "${@bb.utils.contains('MACHINE_FEATURES', 'intel-ucode', '${DEPLOY_DIR_IMAGE}/microcode.cpio ', '', d)}"
 
 EFI_PROVIDER ?= "rmc-boot"
-EFI_PROVIDER_x86_64_x32-intel-common ?= "systemd-boot"
 
 # Add general MACHINEOVERRIDE for meta-intel
 MACHINEOVERRIDES =. "intel-x86-common:"
