@@ -13,7 +13,10 @@ SRC_URI = "http://software.intel.com/sites/default/files/${BPN}-${PV}.tar.gz \
            file://0001-Include-sys-select.h-for-fd_set.patch \
            file://0002-Use-proper-netinet-in.h-API.patch \
            file://0003-Fix-device-file-referance-to-dev-mei0-remove-select.patch \
+           file://0004-Intel-AMT-ME-real-time-notification-infra.patch \
            "
+
+FILES_${PN} += "${datadir}/xml/AMTAlerts.xml"
 
 COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
