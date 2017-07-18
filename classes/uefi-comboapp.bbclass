@@ -83,27 +83,14 @@ python create_uefiapps () {
     create_uefiapp(d, uuid=uuid)
 }
 
-sign_uefiapps () {
-    if ${@ bb.utils.contains('IMAGE_FEATURES', 'secureboot', 'true', 'false', d) } &&
-       [ -f ${UEFIAPP_SIGNING_KEY} ] && [ -f ${UEFIAPP_SIGNING_CERT} ]; then
-        for i in `find ${DEPLOY_DIR_IMAGE}/ -name '${IMAGE_LINK_NAME}.boot*.efi'`; do
-            sbsign --key ${UEFIAPP_SIGNING_KEY} --cert ${UEFIAPP_SIGNING_CERT} $i
-            sbverify --cert ${UEFIAPP_SIGNING_CERT} $i.signed
-            mv $i.signed $i
-        done
-    fi
-}
-
 # This is intentionally split into different parts. This way, derived
 # classes or images can extend the individual parts. We can also use
 # whatever language (shell script or Python) is more suitable.
 python do_uefiapp() {
     bb.build.exec_func('create_uefiapps', d)
-    bb.build.exec_func('sign_uefiapps', d)
 }
 
 do_uefiapp[vardeps] += "APPEND DISK_SIGNATURE_UUID INITRD_LIVE KERNEL_IMAGETYPE IMAGE_LINK_NAME"
-do_uefiapp[depends] += "${@ bb.utils.contains('IMAGE_FEATURES', 'secureboot', 'sbsigntool-native:do_populate_sysroot', '', d) }"
 
 uefiapp_deploy_at() {
     dest=$1
@@ -126,26 +113,6 @@ do_uefiapp_deploy[depends] += "${PN}:do_uefiapp"
 
 # This decides when/how we add our tasks to the image
 python () {
-    import os
-    import hashlib
-
-    secureboot = bb.utils.contains('IMAGE_FEATURES', 'secureboot', True, False, d)
-    # Ensure that if the signing key or cert change, we rerun the uefiapp process
-    if secureboot:
-        for varname in ('UEFIAPP_SIGNING_CERT', 'UEFIAPP_SIGNING_KEY'):
-            filename = d.getVar(varname)
-            if filename is None:
-                bb.fatal('%s is not set.' % varname)
-            if not os.path.isfile(filename):
-                bb.fatal('%s=%s is not a file.' % (varname, filename))
-            with open(filename, 'rb') as f:
-                data = f.read()
-            hash = hashlib.sha256(data).hexdigest()
-            d.setVar('%s_HASH' % varname, hash)
-
-            # Must reparse and thus rehash on file changes.
-            bb.parse.mark_dependency(d, filename)
-
     image_fstypes = d.getVar('IMAGE_FSTYPES', True)
     initramfs_fstypes = d.getVar('INITRAMFS_FSTYPES', True)
 
@@ -155,7 +122,11 @@ python () {
         bb.build.addtask('uefiapp_deploy', 'do_image', 'do_rootfs', d)
 }
 
-do_uefiapp[vardeps] += "UEFIAPP_SIGNING_CERT_HASH UEFIAPP_SIGNING_KEY_HASH"
+SIGN_AFTER ?= "do_uefiapp"
+SIGN_BEFORE ?= "do_uefiapp_deploy"
+SIGNING_DIR ?= "${DEPLOY_DIR_IMAGE}"
+SIGNING_BINARIES ?= "${IMAGE_LINK_NAME}.boot*.efi"
+inherit uefi-sign
 
 # Legacy hddimg support below this line
 efi_hddimg_populate() {
