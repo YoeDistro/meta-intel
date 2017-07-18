@@ -32,12 +32,13 @@ do_uefiapp[depends] += "${@ '${INITRD_IMAGE}:do_image_complete' if d.getVar('INI
 #   - the kernel
 #   - an initramfs (optional)
 
-python do_uefiapp() {
+def create_uefiapp(d, uuid=None, app_suffix=''):
     import glob, re
     from subprocess import check_call
 
     build_dir = d.getVar('B')
     deploy_dir_image = d.getVar('DEPLOY_DIR_IMAGE')
+    image_link_name = d.getVar('IMAGE_LINK_NAME')
 
     cmdline = '%s/cmdline.txt' % build_dir
     linux = '%s/%s' % (deploy_dir_image, d.getVar('KERNEL_IMAGETYPE'))
@@ -45,8 +46,9 @@ python do_uefiapp() {
 
     stub_path = '%s/linux*.efi.stub' % deploy_dir_image
     stub = glob.glob(stub_path)[0]
-    app = re.sub(r"\S*(ia32|x64)(.efi)\S*", r"boot\1\2", os.path.basename(stub))
-    executable = '%s/%s' % (deploy_dir_image, app)
+    m = re.match(r"\S*(ia32|x64)(.efi)\S*", os.path.basename(stub))
+    app = "boot%s%s%s" % (m.group(1), app_suffix, m.group(2))
+    executable = '%s/%s.%s' % (deploy_dir_image, image_link_name, app)
 
     if d.getVar('INITRD_LIVE'):
         with open(initrd, 'wb') as dst:
@@ -57,7 +59,6 @@ python do_uefiapp() {
     else:
         initrd_cmd = ""
 
-    uuid = d.getVar('DISK_SIGNATURE_UUID')
     root = 'root=PARTUUID=%s' % uuid if uuid else ''
 
     with open(cmdline, 'w') as f:
@@ -70,21 +71,22 @@ python do_uefiapp() {
         (cmdline, linux, initrd_cmd, stub, executable)
 
     check_call(objcopy_cmd, shell=True)
+
+python create_uefiapps () {
+    # We must clean up anything that matches the expected output pattern, to ensure that
+    # the next steps do not accidentally use old files.
+    import glob
+    pattern = d.expand('${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.boot*.efi')
+    for old_efi in glob.glob(pattern):
+        os.unlink(old_efi)
+    uuid = d.getVar('DISK_SIGNATURE_UUID')
+    create_uefiapp(d, uuid=uuid)
 }
 
-do_uefiapp[vardeps] += "APPEND DISK_SIGNATURE_UUID INITRD_LIVE KERNEL_IMAGETYPE"
-
-do_uefiapp_deploy() {
-    rm -rf ${IMAGE_ROOTFS}/boot/*
-    mkdir -p ${IMAGE_ROOTFS}/boot/EFI/BOOT
-    cp  --preserve=timestamps ${DEPLOY_DIR_IMAGE}/boot*.efi ${IMAGE_ROOTFS}/boot/EFI/BOOT/
-}
-
-do_uefiapp_deploy[depends] += "${PN}:do_uefiapp"
-
-do_uefiapp_sign() {
-    if [ -f ${UEFIAPP_SIGNING_KEY} ] && [ -f ${UEFIAPP_SIGNING_CERT} ]; then
-        for i in `find ${DEPLOY_DIR_IMAGE}/ -name 'boot*.efi'`; do
+sign_uefiapps () {
+    if ${@ bb.utils.contains('IMAGE_FEATURES', 'secureboot', 'true', 'false', d) } &&
+       [ -f ${UEFIAPP_SIGNING_KEY} ] && [ -f ${UEFIAPP_SIGNING_CERT} ]; then
+        for i in `find ${DEPLOY_DIR_IMAGE}/ -name '${IMAGE_LINK_NAME}.boot*.efi'`; do
             sbsign --key ${UEFIAPP_SIGNING_KEY} --cert ${UEFIAPP_SIGNING_CERT} $i
             sbverify --cert ${UEFIAPP_SIGNING_CERT} $i.signed
             mv $i.signed $i
@@ -92,8 +94,35 @@ do_uefiapp_sign() {
     fi
 }
 
-do_uefiapp_sign[depends] += "${PN}:do_uefiapp_deploy \
-                             sbsigntool-native:do_populate_sysroot"
+# This is intentionally split into different parts. This way, derived
+# classes or images can extend the individual parts. We can also use
+# whatever language (shell script or Python) is more suitable.
+python do_uefiapp() {
+    bb.build.exec_func('create_uefiapps', d)
+    bb.build.exec_func('sign_uefiapps', d)
+}
+
+do_uefiapp[vardeps] += "APPEND DISK_SIGNATURE_UUID INITRD_LIVE KERNEL_IMAGETYPE IMAGE_LINK_NAME"
+do_uefiapp[depends] += "${@ bb.utils.contains('IMAGE_FEATURES', 'secureboot', 'sbsigntool-native:do_populate_sysroot', '', d) }"
+
+uefiapp_deploy_at() {
+    dest=$1
+    for i in ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.boot*.efi; do
+        target=`basename $i`
+        target=`echo $target | sed -e 's/${IMAGE_LINK_NAME}.//'`
+        cp  --preserve=timestamps -r $i $dest/$target
+    done
+}
+
+do_uefiapp_deploy() {
+    rm -rf ${IMAGE_ROOTFS}/boot/*
+    dest=${IMAGE_ROOTFS}/boot/EFI/BOOT
+    mkdir -p $dest
+    uefiapp_deploy_at $dest
+}
+
+do_uefiapp_deploy[depends] += "${PN}:do_uefiapp"
+
 
 # This decides when/how we add our tasks to the image
 python () {
@@ -124,17 +153,13 @@ python () {
     if initramfs_fstypes not in image_fstypes:
         bb.build.addtask('uefiapp', 'do_image', 'do_rootfs', d)
         bb.build.addtask('uefiapp_deploy', 'do_image', 'do_rootfs', d)
-        # Only sign if secureboot is enabled
-        if secureboot:
-            bb.build.addtask('uefiapp_sign', 'do_image', 'do_rootfs', d)
 }
 
 do_uefiapp[vardeps] += "UEFIAPP_SIGNING_CERT_HASH UEFIAPP_SIGNING_KEY_HASH"
 
 # Legacy hddimg support below this line
 efi_hddimg_populate() {
-    DEST=$1
-    cp  --preserve=timestamps -r ${DEPLOY_DIR_IMAGE}/boot*.efi ${DEST}/
+    uefiapp_deploy_at "$1"
 }
 
 build_efi_cfg() {
