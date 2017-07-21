@@ -4,17 +4,17 @@ EXTRA_OEMAKE = "LD=${STAGING_BINDIR_NATIVE}/${HOST_SYS}/${TARGET_PREFIX}ld AR=${
 
 KERNEL_FEATURES_INTEL_COMMON ?= ""
 
-LINUX_VERSION_i586-nlp-32-intel-common = "4.4.60"
-LINUX_VERSION_core2-32-intel-common = "4.4.60"
-LINUX_VERSION_corei7-64-intel-common = "4.4.60"
+LINUX_VERSION_i586-nlp-32-intel-common = "4.4.76"
+LINUX_VERSION_core2-32-intel-common = "4.4.76"
+LINUX_VERSION_corei7-64-intel-common = "4.4.76"
 
-SRCREV_meta_i586-nlp-32-intel-common = "d6733af2080f8c0775569adc0826eb0c8954fc5e"
-SRCREV_meta_core2-32-intel-common = "d6733af2080f8c0775569adc0826eb0c8954fc5e"
-SRCREV_meta_corei7-64-intel-common = "d6733af2080f8c0775569adc0826eb0c8954fc5e"
+SRCREV_meta_i586-nlp-32-intel-common = "fbb3579c4011befe15368fea05f600d37b3444ba"
+SRCREV_meta_core2-32-intel-common = "fbb3579c4011befe15368fea05f600d37b3444ba"
+SRCREV_meta_corei7-64-intel-common = "fbb3579c4011befe15368fea05f600d37b3444ba"
 
-SRCREV_machine_i586-nlp-32-intel-common = "79917ebe5d2fc3a1c87348e1febff1533386260d"
-SRCREV_machine_core2-32-intel-common = "79917ebe5d2fc3a1c87348e1febff1533386260d"
-SRCREV_machine_corei7-64-intel-common = "79917ebe5d2fc3a1c87348e1febff1533386260d"
+SRCREV_machine_i586-nlp-32-intel-common = "e9dc501067f713483b6a8ec2698f2218715bf0bc"
+SRCREV_machine_core2-32-intel-common = "e9dc501067f713483b6a8ec2698f2218715bf0bc"
+SRCREV_machine_corei7-64-intel-common = "e9dc501067f713483b6a8ec2698f2218715bf0bc"
 
 COMPATIBLE_MACHINE_i586-nlp-32-intel-common = "${MACHINE}"
 COMPATIBLE_MACHINE_core2-32-intel-common = "${MACHINE}"
