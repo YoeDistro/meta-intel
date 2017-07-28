@@ -18,9 +18,9 @@ index 18b41b9..c7c2beb 100644
 --- a/examples/Makefile
 +++ b/examples/Makefile
 @@ -43,6 +43,7 @@ DIRS-$(CONFIG_RTE_LIBRTE_DISTRIBUTOR) += distributor
- ifneq ($(ICP_ROOT),)
- DIRS-y += dpdk_qat
- endif
+ DIRS-$(CONFIG_RTE_LIBRTE_PMD_BOND) += bond
+ DIRS-y += cmdline
+ DIRS-$(CONFIG_RTE_LIBRTE_DISTRIBUTOR) += distributor
 +DEPDIRS-y += examples/ethtool/lib
  DIRS-y += ethtool
  DIRS-y += exception_path

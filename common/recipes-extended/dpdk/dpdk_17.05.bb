@@ -1,12 +1,11 @@
 include dpdk.inc
 
 SRC_URI += "\
-            file://dpdk-16.04-add-config-variable-to-enable-disable-dpdk_qat.patch \
             file://dpdk-16.04-dpdk-enable-ip_fragmentation-in-common_base-config.patch \
             "
 
-SRC_URI[dpdk.md5sum] = "9ac25cffecbf550e145c45e53db03a3d"
-SRC_URI[dpdk.sha256sum] = "b07b546e910095174bdb6152bb0d7ce057cc4b79aaa74771aeee4e8a7219fb38"
+SRC_URI[dpdk.md5sum] = "39c4e1110dd1ef9dab33edbae820f939"
+SRC_URI[dpdk.sha256sum] = "763bfb7e1765efcc949e79d645dc9f1ebd16591431ba0db5ce22becd928dcd0a"
 
 export EXAMPLES_BUILD_DIR = "${RTE_TARGET}"
 export ARCHDIR = "generic"

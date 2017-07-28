@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPL;md5=751419260aa954499f7abaabaa882bbe"
 SRC_URI = "http://fast.dpdk.org/rel/${BP}.tar.gz;name=dpdk \
 	   file://dpdk-16.04-add-RTE_KERNELDIR_OUT-to-split-kernel-bu.patch \
 	   file://dpdk-16.07-add-sysroot-option-within-app-makefile.patch \
-	   file://dpdk-16.04-point-to-the-right-include-and-lib-path.patch \
 	   file://dpdk-16.04-Fix-for-misleading-indentation-error.patch \
 	   file://dpdk-16.04-dpdk-fix-compilation-with-dynamic-libs.patch \
 	   file://dpdk-16.07-dpdk-fix-for-parellel-make-issue.patch \
@@ -61,7 +60,7 @@ def get_dpdk_target_mach(bb, d):
         "mohonpeak64":    "atm",
         "mohonpeak32":    "atm",
         "crystalforest":  "ivb",
-        "intel_corei7_64": "hsw",
+        "intel_corei7_64": "atm",
     }
 
     if target_arch in multiarch_options :
