@@ -2,6 +2,7 @@ include dpdk.inc
 
 SRC_URI += "\
             file://dpdk-16.04-dpdk-enable-ip_fragmentation-in-common_base-config.patch \
+            file://0001-examples-Fix-maybe-uninitialized-warning.patch \
             "
 
 SRC_URI[dpdk.md5sum] = "39c4e1110dd1ef9dab33edbae820f939"

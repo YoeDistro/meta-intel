@@ -1,0 +1,44 @@
+From 3924f5df5aca5ba23abbe9a84173280ede8be2dd Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Tue, 1 Aug 2017 20:18:46 -0700
+Subject: [PATCH] examples: Fix maybe-uninitialized warning
+
+Initialize arrays to 0, makes compiler happy about
+
+error: 'vals[0]' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ examples/qos_sched/args.c   | 2 +-
+ examples/vhost/virtio_net.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/examples/qos_sched/args.c b/examples/qos_sched/args.c
+index 476a0ee..fd601c3 100644
+--- a/examples/qos_sched/args.c
++++ b/examples/qos_sched/args.c
+@@ -241,7 +241,7 @@ static int
+ app_parse_flow_conf(const char *conf_str)
+ {
+ 	int ret;
+-	uint32_t vals[5];
++	uint32_t vals[5] = {0};
+ 	struct flow_conf *pconf;
+ 	uint64_t mask;
+ 
+diff --git a/examples/vhost/virtio_net.c b/examples/vhost/virtio_net.c
+index cc2c3d8..16b5392 100644
+--- a/examples/vhost/virtio_net.c
++++ b/examples/vhost/virtio_net.c
+@@ -327,7 +327,7 @@ vs_dequeue_pkts(struct vhost_dev *dev, uint16_t queue_id,
+ {
+ 	struct vhost_queue *queue;
+ 	struct rte_vhost_vring *vr;
+-	uint32_t desc_indexes[MAX_PKT_BURST];
++	uint32_t desc_indexes[MAX_PKT_BURST] = {0};
+ 	uint32_t used_idx;
+ 	uint32_t i = 0;
+ 	uint16_t free_entries;
+-- 
+2.13.3
+
