@@ -1,0 +1,17 @@
+Use CC to do the linking, helps in linking with gold or bfd linker
+
+Upstream-Status: Inappropriate [OE-Specific]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Index: QAT1.6/quickassist/build_system/build_files/OS/linux_2.6.mk
+===================================================================
+--- QAT1.6.orig/quickassist/build_system/build_files/OS/linux_2.6.mk
++++ QAT1.6/quickassist/build_system/build_files/OS/linux_2.6.mk
+@@ -89,7 +89,7 @@ EXTRA_CFLAGS+= -Wno-div-by-zero -Wfloat-
+ endif
+ 
+ 
+-LIB_SHARED_FLAGS+=-shared -soname $(LIB_SHARED)
++LIB_SHARED_FLAGS+=-shared -Wl,-soname,$(LIB_SHARED)
+ LIB_STATIC_FLAGS=
+ EXE_FLAGS?=
+ 

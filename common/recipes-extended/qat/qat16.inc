@@ -60,7 +60,7 @@ do_unpack2() {
 addtask unpack2 after do_unpack before do_patch
 
 do_compile () {
-        export LD="${LD} --hash-style=gnu"
+        export LD="${CC} -Wl,--hash-style=gnu -nostartfiles -nodefaultlibs"
         export MACHINE="${TARGET_ARCH}"
         cd ${S}/quickassist
         oe_runmake

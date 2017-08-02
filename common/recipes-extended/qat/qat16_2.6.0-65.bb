@@ -3,6 +3,7 @@ include qat16.inc
 SRC_URI += "https://01.org/sites/default/files/page/qatmux.l.2.6.0-60.tgz;name=qat \
             file://qat16_2.6.0-65-qat-add-install-target-to-makefiles.patch \
             file://qat16_2.6.0-65-qat-override-CC-LD-AR-only-when-it-is-not-define.patch \
+            file://use-CC-for-LD.patch \
            "
 
 SRC_URI_append_libc-musl = " file://0001-OsalServices-Only-use-bits-time-with-GLIBC.patch"
