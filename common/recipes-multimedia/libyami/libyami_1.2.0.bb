@@ -6,7 +6,7 @@ HOMEPAGE = "https://github.com/01org/libyami"
 BUGTRACKER = "https://github.com/01org/libyami/issues/new"
 
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=3b83ef96387f14655fc854ddc3c6bd57"
+LIC_FILES_CHKSUM = "file://LICENSE.md;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRC_URI = "https://github.com/01org/libyami/archive/${PV}.tar.gz;downloadfilename=${BP}.tar.gz"
 SRC_URI[md5sum] = "2e2ed3bd900866476eced140799ee48b"
