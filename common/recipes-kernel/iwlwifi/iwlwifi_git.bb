@@ -26,11 +26,8 @@ do_configure() {
 MODULES_INSTALL_TARGET="install"
 do_install_append() {
 	## install configs and service scripts
-	install -d ${D}${sbindir} ${D}${sysconfdir}/modprobe.d
+	install -d ${D}${sysconfdir}/modprobe.d
 	install -m 0644 ${WORKDIR}/iwlwifi.conf ${D}${sysconfdir}/modprobe.d
-
-	## this gets generated for no good reason. delete it.
-	rm -rf ${D}/usr
 }
 
 SYSTEMD_AUTO_ENABLE_${PN} = "enable"
