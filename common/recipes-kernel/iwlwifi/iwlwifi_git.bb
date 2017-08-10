@@ -1,5 +1,5 @@
-SUMMARY = "Intel Wireless LinuxCore 24 kernel driver"
-DESCRIPTION = "Intel Wireless LinuxCore 24 kernel driver"
+SUMMARY = "Intel Wireless LinuxCore kernel driver"
+DESCRIPTION = "Intel Wireless LinuxCore kernel driver"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 
@@ -11,6 +11,7 @@ inherit module
 
 PV = "30"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/backport-iwlwifi;branch=release/LinuxCore${PV}"
+SRC_URI += "file://0001-Makefile.real-skip-host-install-scripts.patch"
 SRC_URI += "file://iwlwifi.conf"
 
 SRCREV = "${AUTOREV}"
