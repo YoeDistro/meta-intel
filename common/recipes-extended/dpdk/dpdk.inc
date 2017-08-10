@@ -38,7 +38,7 @@ inherit module
 
 export MODULE_DIR="/lib/modules/${KERNEL_VERSION}/kernel/drivers/net"
 export RTE_SDK = "${S}"
-export RTE_TARGET="${@bb.utils.contains("TUNE_FEATURES", "corei7", "x86_64-native-linuxapp-gcc", "i686-native-linuxapp-gcc", d)}"
+export RTE_TARGET="${@bb.utils.contains("TUNE_FEATURES", "m64", "x86_64-native-linuxapp-gcc", "i686-native-linuxapp-gcc", d)}"
 
 export ICP_ROOT = "${PKG_CONFIG_SYSROOT_DIR}/usr/include"
 export ICP_LIB_ROOT= "${PKG_CONFIG_SYSROOT_DIR}/usr/lib"
