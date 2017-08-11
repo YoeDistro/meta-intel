@@ -2,7 +2,7 @@
 require linux-intel.inc
 
 KBRANCH = "base"
-SRCREV_machine ?= "6f51d2bc29cdce8d86a408393a90c0decdea9384"
+SRCREV_machine ?= "e3650c213b06488500c005f3075407fe1218c51b"
 SRCREV_meta ?= "e8095d45e15f02ffc953312bb41a57554b25a439"
 
 # For Crystalforest and Romley

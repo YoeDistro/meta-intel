@@ -11,7 +11,7 @@ python () {
 }
 
 KBRANCH = "base-rt"
-SRCREV_machine ?= "01f6cf04125c1f9ff4416063d6ed3267a6e2b58d"
+SRCREV_machine ?= "3ccf317abeba2f5219fdb2b8055599c263b4b8f2"
 SRCREV_meta ?= "e8095d45e15f02ffc953312bb41a57554b25a439"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
