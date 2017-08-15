@@ -1,0 +1,56 @@
+From 08944074f9d9525a57e88a4990dd833d0999b8df Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 12 Aug 2017 09:36:55 -0700
+Subject: [PATCH 4/4] Fix clang warnings
+
+../../../../../../../workspace/sources/dpdk-dev-libibverbs/examples/intf.c:1221:11: error: comparison of array 'ctx->dev_name' not equal to a null pointer is always true [-Werror,-Wtautological-pointer-compare]
+        if (ctx->dev_name != NULL) {
+            ~~~~~^~~~~~~~    ~~~~
+../../../../../../../workspace/sources/dpdk-dev-libibverbs/examples/intf.c:1893:13: error: comparison of unsigned expression < 0 is always false [-Werror,-Wtautological-compare]
+                        if (size < 0 || size > MAX_MSG_SIZE)
+                            ~~~~ ^ ~
+../../../../../../../workspace/sources/dpdk-dev-libibverbs/examples/intf.c:1901:12: error: comparison of unsigned enum expression < 0 is always false [-Werror,-Wtautological-compare]
+                        if (mtu < 0)
+                            ~~~ ^ ~
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+Upstream-Status: Pending
+
+ examples/intf.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/examples/intf.c b/examples/intf.c
+index 8d158ee..1f1af50 100644
+--- a/examples/intf.c
++++ b/examples/intf.c
+@@ -1218,7 +1218,7 @@ int create_resources(struct intf_context *ctx)
+ 		return 1;
+ 	}
+ 
+-	if (!ctx->dev_name) {
++	if (!ctx->dev_name[0]) {
+ 		ctx->ib_dev = *dev_list;
+ 		if (!ctx->ib_dev) {
+ 			fprintf(stderr, "No IB devices found\n");
+@@ -1828,7 +1828,7 @@ int parse_input(struct intf_input *input, struct intf_input *default_input, int
+ 	char *ib_devname = NULL;
+ 	char *vrbs_intf = NULL;
+ 	char *cpus_str = NULL;
+-	unsigned long long size;
++	long long size;
+ 
+ 	memcpy(input, default_input, sizeof(*input));
+ 
+@@ -1898,7 +1898,7 @@ int parse_input(struct intf_input *input, struct intf_input *default_input, int
+ 
+ 		case 'm':
+ 			mtu = mtu_to_enum(strtol(optarg, NULL, 0));
+-			if (mtu < 0)
++			if ((int)mtu < 0)
+ 				goto print_usage;
+ 			input->ib_data.mtu = mtu;
+ 			break;
+-- 
+2.14.1
+
