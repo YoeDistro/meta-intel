@@ -7,7 +7,9 @@ BUGTRACKER = "https://github.com/01org/libyami-utils/issues/new"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=e3fc50a88d0a364313df4b21ef20c29e"
 
-SRC_URI = "https://github.com/01org/libyami-utils/archive/${PV}.tar.gz;downloadfilename=${BP}.tar.gz"
+SRC_URI = "https://github.com/01org/libyami-utils/archive/${PV}.tar.gz;downloadfilename=${BP}.tar.gz \
+           file://0001-Fix-build-with-clang.patch \
+           "
 SRC_URI[md5sum] = "b4637f1a384e3de20076bf01ca2515d3"
 SRC_URI[sha256sum] = "3dbaedc797bf2d0e03879bfdbea462c3ec2aac89b49c1ed55cbff1be2590d1e8"
 
