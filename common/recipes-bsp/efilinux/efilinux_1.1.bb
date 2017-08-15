@@ -9,7 +9,10 @@ inherit deploy
 SRCREV = "a995826f9e43f1134baea61610eafd8c173bb776"
 PV = "1.1+git${SRCPV}"
 
-SRC_URI = "git://git.kernel.org/pub/scm/boot/efilinux/efilinux.git"
+SRC_URI = "git://git.kernel.org/pub/scm/boot/efilinux/efilinux.git \
+           file://0001-Disable-address-of-packed-member-warning.patch \
+           file://0002-initialize-char-pointers.patch \
+           "
 
 S = "${WORKDIR}/git"
 
