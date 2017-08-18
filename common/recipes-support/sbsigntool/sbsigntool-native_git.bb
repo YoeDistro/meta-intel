@@ -27,7 +27,7 @@ SRCREV_sbsigntools  ?= "efbb550858e7bd3f43e64228d22aea440ef6a14d"
 SRCREV_ccan         ?= "b1f28e17227f2320d07fe052a8a48942fe17caa5"
 SRCREV_FORMAT       =  "sbsigntools_ccan"
 
-DEPENDS = "binutils-native gnu-efi-native help2man-native openssl-native util-linux-native"
+DEPENDS = "binutils-native gnu-efi-native help2man-native openssl10-native util-linux-native"
 
 PV = "0.8-git${SRCPV}"
 
