@@ -1672,7 +1672,7 @@ index 0000000..06bfd97
 --- /dev/null
 +++ b/src/notifyDesktop.sh
 @@ -0,0 +1,10 @@
-+#!/bin/bash
++#!/bin/sh
 +# get list of current users
 +for x in $(who | sort -u -k1,1 | awk '{print $1}'); do
 +  # send message to anyone on display 0
