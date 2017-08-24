@@ -28,6 +28,7 @@ EXTRA_OEMAKE = "RMC_INSTALL_PREFIX=${D}/${prefix} \
                 RMC_INSTALL_HEADER_PATH=${D}${includedir}/rmc"
 
 SECURITY_CFLAGS_remove_class-target = "-fstack-protector-strong"
+SECURITY_CFLAGS_append_class-target = " -fno-stack-protector"
 
 do_compile_class-target() {
 	oe_runmake
