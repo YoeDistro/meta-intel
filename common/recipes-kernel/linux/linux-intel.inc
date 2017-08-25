@@ -2,8 +2,13 @@ require recipes-kernel/linux/linux-yocto.inc
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/linux-intel:"
 
-SRC_URI = "git://github.com/01org/linux-intel-4.9.git;protocol=https;name=machine;branch=${KBRANCH}; \
-           git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-4.9;destsuffix=${KMETA}"
+KERNEL_CONFIG_URI ?= " \
+                     git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-4.9;destsuffix=${KMETA} \
+	           "
+SRC_URI = " \
+           git://github.com/01org/linux-intel-4.9.git;protocol=https;name=machine;branch=${KBRANCH}; \
+           ${KERNEL_CONFIG_URI} \
+	  "
 
 SRC_URI_append_core2-32-intel-common = " file://disable_skylake_sound.cfg"
 
