@@ -46,3 +46,6 @@ do_compile_kernelmodules_append() {
 }
 
 RDEPENDS_kernel-modules += "iwlwifi"
+
+KERNEL_MODULE_PROBECONF_corei7-64-intel-common += "snd-soc-skl"
+module_conf_snd-soc-skl_corei7-64-intel-common = "blacklist snd-soc-skl"
