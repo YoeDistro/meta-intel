@@ -25,6 +25,7 @@ do_configure() {
 }
 
 MODULES_INSTALL_TARGET="install"
+
 do_install_append() {
 	## install configs and service scripts
 	install -d ${D}${sysconfdir}/modprobe.d
@@ -37,3 +38,5 @@ RDEPENDS_${PN} = "linux-firmware-iwlwifi"
 
 KERNEL_MODULE_AUTOLOAD_append_core2-32-intel-common = " iwlwifi"
 KERNEL_MODULE_AUTOLOAD_append_corei7-64-intel-common = " iwlwifi"
+
+KERNEL_MODULE_PACKAGE_PREFIX = "backport-iwlwifi"
