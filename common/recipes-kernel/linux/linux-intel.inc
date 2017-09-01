@@ -39,13 +39,5 @@ KERNEL_FEATURES_append_i586-nlp-32-intel-common = "features/qat/qat.scc"
 KERNEL_FEATURES_append = " ${KERNEL_EXTRA_FEATURES}"
 KERNEL_FEATURES_append = " ${@bb.utils.contains("TUNE_FEATURES", "mx32", " cfg/x32.scc", "" ,d)}"
 
-do_compile_kernelmodules_append() {
-	rm -rf ${B}/drivers/net/wireless/intel/iwlwifi
-	rm -rf ${B}/net/mac80211
-	rm -rf ${B}/net/wireless
-}
-
-RDEPENDS_kernel-modules += "iwlwifi"
-
 KERNEL_MODULE_PROBECONF_corei7-64-intel-common += "snd-soc-skl"
 module_conf_snd-soc-skl_corei7-64-intel-common = "blacklist snd-soc-skl"
