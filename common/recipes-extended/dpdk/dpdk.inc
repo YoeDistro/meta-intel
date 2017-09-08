@@ -65,7 +65,7 @@ def get_dpdk_target_mach(bb, d):
 
     if target_arch in multiarch_options :
             return multiarch_options[target_arch]
-    return ""
+    return "default"
 
 do_configure () {
 	#############################################################
