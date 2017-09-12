@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS_prepend_intel-x86-common := "${THISDIR}/${PN}:"
 
 python() {
     # When we add more kernels for linux-intel, we may have to add a Version check
