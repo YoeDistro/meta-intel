@@ -13,11 +13,9 @@ DEPENDS_append_toolchain-clang = " openmp"
 LICENSE = "GPL-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ea8831610e926e2e469075b52bf08848"
 
-SRC_URI = "https://github.com/01org/thermal_daemon/archive/v${PV}.tar.gz"
-SRC_URI[md5sum] = "d0cdba81b75d8dd304c10bf4663fb201"
-SRC_URI[sha256sum] = "c63ae1b031f2b4ce037441e7e9910d05405b540fe6668e156d32c56d5dfa7492"
-
-S = "${WORKDIR}/thermal_daemon-${PV}"
+SRC_URI = "git://github.com/intel/thermal_daemon/"
+SRCREV = "5f1be4d9d6f3b27d2c9884f833ca05cdcb4428e0"
+S = "${WORKDIR}/git"
 
 inherit pkgconfig autotools systemd
 
