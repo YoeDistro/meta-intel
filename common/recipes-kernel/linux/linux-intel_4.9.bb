@@ -2,8 +2,8 @@
 require linux-intel.inc
 
 KBRANCH = "base"
-SRCREV_machine ?= "750f82327361c57162741f6b6326f142a4c1367e"
-SRCREV_meta ?= "6acae6f7200af17b3c2be5ecab2cffdc59a02b35"
+SRCREV_machine ?= "2d533948da0a7c53a0a662d3764be166ba996d93"
+SRCREV_meta ?= "3ddaed3671efc2936efbebf4c5216e11b9dfd55d"
 
 # For Crystalforest and Romley
 KERNEL_MODULE_AUTOLOAD_append_core2-32-intel-common = " uio"
