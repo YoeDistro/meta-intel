@@ -122,4 +122,4 @@ FILES_${PN} =+ "\
 		${OPENSSL_PREFIX}${base_libdir}/ssl/openssl.cnf \
 		"
 
-COMPATIBLE_MACHINE = "intel-corei7-64"
+COMPATIBLE_MACHINE = "null"
