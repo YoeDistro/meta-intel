@@ -12,7 +12,10 @@ SRC_URI = "http://fast.dpdk.org/rel/${BP}.tar.gz;name=dpdk \
 	   file://dpdk-17.02-dpdk-fix-installation-warning-and-issue.patch \
 	  "
 
-COMPATIBLE_MACHINE = "intel-corei7-64"
+# A machine needs to enable this using:
+# COMPATIBLE_MACHINE_pn-dpdk-dev-libibverbs = "<machine name>"
+
+COMPATIBLE_MACHINE = "null"
 COMPATIBLE_HOST_libc-musl_class-target = "null"
 
 
@@ -55,16 +58,9 @@ export ICP_LAC_API_DIR = "${STAGING_DIR_TARGET}${includedir}/lac"
 # process mapping. The supported target machine is listed under
 # dpdk/mk/machine
 def get_dpdk_target_mach(bb, d):
-    target_arch = d.getVar('MACHINE_ARCH', True)
-    multiarch_options = {
-        "mohonpeak64":    "atm",
-        "mohonpeak32":    "atm",
-        "crystalforest":  "ivb",
-        "intel_corei7_64": "atm",
-    }
-
-    if target_arch in multiarch_options :
-            return multiarch_options[target_arch]
+    target_arch = d.getVar('DPDK_TARGET_MACHINE', True)
+    if target_arch:
+            target_arch
     return "default"
 
 do_configure () {
