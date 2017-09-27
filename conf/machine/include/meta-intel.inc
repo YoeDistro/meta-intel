@@ -40,6 +40,7 @@ INITRD_LIVE_prepend = "${@bb.utils.contains('MACHINE_FEATURES', 'intel-ucode', '
 DISK_SIGNATURE_UUID ??= "deadbeef-dead-beef-dead-beefdeadbeef"
 
 EFI_PROVIDER ?= "rmc-boot"
+EFI_PROVIDER_x86-x32 = "grub-efi"
 
 # Add general MACHINEOVERRIDE for meta-intel
 MACHINEOVERRIDES =. "intel-x86-common:"
