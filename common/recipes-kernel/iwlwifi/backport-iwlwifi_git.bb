@@ -14,7 +14,7 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/backport-iwlwif
 SRC_URI += "file://0001-Makefile.real-skip-host-install-scripts.patch"
 SRC_URI += "file://iwlwifi.conf"
 
-SRCREV = "${AUTOREV}"
+SRCREV = "b31221a99488021300e7f89d2ecf9bdd2bc52dd2"
 
 S = "${WORKDIR}/git"
 
