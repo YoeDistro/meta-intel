@@ -11,13 +11,13 @@ python () {
 }
 
 KBRANCH = "base-rt"
-SRCREV_machine ?= "cd65d037683c92be2c7dedc846f4bfd9ef84ecf4"
-SRCREV_meta ?= "299f12a06ca1d6fd90b24450dae3b9f257a536be"
+SRCREV_machine ?= "fc08e0615edccfb4d297c07531451cb7905fb4f4"
+SRCREV_meta ?= "3ddaed3671efc2936efbebf4c5216e11b9dfd55d"
 
 SRC_URI = "git://github.com/01org/linux-intel-4.9.git;protocol=https;name=machine;branch=${KBRANCH}; \
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-4.9;destsuffix=${KMETA}"
 
-LINUX_VERSION ?= "4.9.30"
+LINUX_VERSION ?= "4.9.47"
 LINUX_VERSION_EXTENSION ?= "-intel-pk-${LINUX_KERNEL_TYPE}"
 
 
