@@ -9,12 +9,20 @@ LIC_FILES_CHKSUM = "file://${S}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 inherit module
 
+# For some iwfwifi LinuxCore supported wireless chips, the best/latest
+# firmware blobs are found in the iwlwifi's linux-firmware.git fork.
+#
+# See: https://wireless.wiki.kernel.org/en/users/drivers/iwlwifi/core_release
+#
+# When updating this recipe, ensure that the proper firmware is included from
+# either the linux-firmware or iwlwifi-firmware repos.
+
 PV = "30"
+SRCREV = "b31221a99488021300e7f89d2ecf9bdd2bc52dd2"
+
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/backport-iwlwifi;branch=release/LinuxCore${PV}"
 SRC_URI += "file://0001-Makefile.real-skip-host-install-scripts.patch"
 SRC_URI += "file://iwlwifi.conf"
-
-SRCREV = "b31221a99488021300e7f89d2ecf9bdd2bc52dd2"
 
 S = "${WORKDIR}/git"
 
