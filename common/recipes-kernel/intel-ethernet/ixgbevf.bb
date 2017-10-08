@@ -9,9 +9,11 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/${PN}-${PV}/COPYING;md5=b234ee4d69f5fce448
 PV = "4.1.2"
 PR = "r0"
 
-SRC_URI  = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/${PV}/ixgbevf-${PV}.tar.gz"
-SRC_URI += "file://0001-ixgbevf-src-Makefile-change-make-install-to-make.patch"
-SRC_URI += "file://0002-ixgbevf_common.patch"
+SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/${PV}/ixgbevf-${PV}.tar.gz \
+           file://0001-ixgbevf-src-Makefile-change-make-install-to-make.patch \
+           file://0002-ixgbevf_common.patch \
+           file://0001-ixgbevf-skip-host-depmod.patch \
+           "
 
 SRC_URI[md5sum] = "f02ec46369d1ca949a1e9d2e0eb74d5f"
 SRC_URI[sha256sum] = "ab2824541f8a2d8f7b7d26ccbb46359ef551c5d4625fb333014e2b8023ac3ab6"
