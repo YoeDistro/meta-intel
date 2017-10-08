@@ -9,8 +9,10 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/${PN}-${PV}/COPYING;md5=b234ee4d69f5fce448
 PV = "5.1.3"
 PR = "r0"
 
-SRC_URI  = "https://sourceforge.net/projects/e1000/files/ixgbe%20stable/${PV}/ixgbe-${PV}.tar.gz"
-SRC_URI += "file://0001-ixgbe-src-Makefile-change-make-install-to-make.patch"
+SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbe%20stable/${PV}/ixgbe-${PV}.tar.gz \
+           file://0001-ixgbe-src-Makefile-change-make-install-to-make.patch \
+           file://0001-ixgbe-skip-host-depmod.patch \
+           "
 
 SRC_URI[md5sum] = "ae35ed547aa6a5087672c3f70ce1e676"
 SRC_URI[sha256sum] = "9f537d79bddf0a087a17af632d57812d26d26bcfebbd4bdcf10df656ff055bb4"
