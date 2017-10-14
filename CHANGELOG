@@ -1,6 +1,50 @@
 This file will only list major changes that occur within a release.
 For a full list of changes, view the git log of the repository.
 
+Rocko Release 11/2017
+=====================
+
+Moved qat support to separate layer
+-----------------------------------
+Quick Assist Technology (QAT) is more middleware and should not be part of the
+core BSP. The new layer can be found here:
+https://git.yoctoproject.org/cgit/cgit.cgi/meta-intel-qat/
+
+Moved dpdk support to separate layer
+------------------------------------
+We had some requests to make DPDK standalone so that it could be included
+without bringing in anything else from meta-intel, as it is not specific to
+Intel(R) hardware. The new layer is located here:
+https://git.yoctoproject.org/cgit/cgit.cgi/meta-dpdk/
+
+Added support for out-of-tree iwlwifi drivers
+---------------------------------------------
+Backport-iwlwifi out-of-tree wifi modules are now available via meta-intel.
+Backport-iwlwifi brings the latest iwlwifi drivers to almost any kernel
+Note that mac80211 and cfg80211 backports are also necessary, which will most
+likely cause incompatibility with other in-tree wifi drivers.
+See https://wireless.wiki.kernel.org/en/users/drivers/iwlwifi for more info.
+
+Added support for out-of-tree ixgbe drivers
+-------------------------------------------
+The out-of-tree ixgbe drivers bring ixgbe support to nearly any kernel. See
+here: http://www.intel.com/network/connectivity/products/server_adapters.htm
+
+Added an implementation of Secure Boot
+--------------------------------------
+meta-intel now supports a simple Secure Boot implementation. This implementation
+consists of a single binary consisting of an EFI stub, the kernel, an
+initrd, and a kernel command line. The binary is then signed via keys defined by
+the variables SECUREBOOT_SIGNING_KEY and SECUREBOOT_SIGNING_CERT. These keys
+should match the keys embedded in your hardware's firmware.
+See documentation/secureboot/README for more information on this feature.
+
+Improved Yocto Project Compatibility status
+-------------------------------------------
+The common layer should now be considered Yocto Project compatible - it should
+no longer modify OE-core values when adding the layer to your bblayers.conf.
+The meta-tlk layer is still not Yocto Project compatible, however.
+
 Pyro Release 5/2017
 ===================
 
