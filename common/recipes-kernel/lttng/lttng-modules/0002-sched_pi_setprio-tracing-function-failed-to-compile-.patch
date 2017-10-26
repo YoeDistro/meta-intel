@@ -1,0 +1,55 @@
+From 97c079142cc7386e32d34a129c2734ab05ea2f09 Mon Sep 17 00:00:00 2001
+From: Priyalee Kushwaha <priyalee.kushwaha@intel.com>
+Date: Wed, 7 Jun 2017 09:39:59 -0700
+Subject: [PATCH] sched_pi_setprio : tracing function failed to compile with RT
+ patches
+
+sched_pi_setprio tracing function shows compilation failure with
+4.9.30 kernel with RT patches. one of RT patch redefines
+sched_pi_setprio in kernel.
+
+Upstream-Status: Backport
+
+Signed-off-by: Dwane Pottratz <dwane.pottratz@intel.com>
+Signed-off-by: Kushwaha, Priyalee <priyalee.kushwaha@intel.com>
+Signed-off-by: Weight, Russell H <russell.h.weight@intel.com>
+---
+ instrumentation/events/lttng-module/sched.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/instrumentation/events/lttng-module/sched.h b/instrumentation/events/lttng-module/sched.h
+index 0738ff0..8d117c6 100644
+--- a/instrumentation/events/lttng-module/sched.h
++++ b/instrumentation/events/lttng-module/sched.h
+@@ -545,6 +545,20 @@ LTTNG_TRACEPOINT_EVENT(sched_stat_runtime,
+  * Tracepoint for showing priority inheritance modifying a tasks
+  * priority.
+  */
++#ifdef CONFIG_PREEMPT_RT_BASE
++LTTNG_TRACEPOINT_EVENT(sched_pi_setprio,
++
++	TP_PROTO(struct task_struct *tsk,  struct task_struct *pi_task),
++
++	TP_ARGS(tsk, pi_task),
++	TP_FIELDS(
++		ctf_array_text(char, comm, tsk->comm, TASK_COMM_LEN)
++		ctf_integer(pid_t, tid, tsk->pid)
++		ctf_integer(int, oldprio, tsk->prio - MAX_RT_PRIO)
++		ctf_integer(int, newprio, pi_task ? pi_task->prio : tsk->prio)
++	)
++)
++#else
+ LTTNG_TRACEPOINT_EVENT(sched_pi_setprio,
+ 
+ 	TP_PROTO(struct task_struct *tsk, int newprio),
+@@ -559,6 +573,7 @@ LTTNG_TRACEPOINT_EVENT(sched_pi_setprio,
+ 	)
+ )
+ #endif
++#endif
+ 
+ #endif /* LTTNG_TRACE_SCHED_H */
+ 
+-- 
+2.10.0
+
