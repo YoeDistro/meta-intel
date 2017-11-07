@@ -27,10 +27,6 @@ Please keep this list in alphabetical order.
 Maintainers List (try to look for most precise areas first)
 
 		-----------------------------------
-COMMON
-M:	Saul Wold <sgw@linux.intel.com>
-F:	common/
 
-TLK
 M:	Saul Wold <sgw@linux.intel.com>
-F:	meta-tlk/
+F: 	*
