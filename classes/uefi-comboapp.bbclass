@@ -101,14 +101,14 @@ uefiapp_deploy_at() {
     done
 }
 
-do_uefiapp_deploy() {
+fakeroot do_uefiapp_deploy() {
     rm -rf ${IMAGE_ROOTFS}/boot/*
     dest=${IMAGE_ROOTFS}/boot/EFI/BOOT
     mkdir -p $dest
     uefiapp_deploy_at $dest
 }
 
-do_uefiapp_deploy[depends] += "${PN}:do_uefiapp"
+do_uefiapp_deploy[depends] += "${PN}:do_uefiapp virtual/fakeroot-native:do_populate_sysroot"
 
 
 # This decides when/how we add our tasks to the image
