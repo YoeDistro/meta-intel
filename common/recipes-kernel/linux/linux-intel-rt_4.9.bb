@@ -10,8 +10,11 @@ python () {
         raise bb.parse.SkipPackage("Set PREFERRED_PROVIDER_virtual/kernel to linux-intel-rt to enable it")
 }
 
-KBRANCH = "base-rt"
-SRCREV_machine ?= "44f76edc2079f1551be33b8ab473349d00f814a7"
-SRCREV_meta ?= "3d5b27b2d138b71052a1d17a5cca73aa0ec75328"
+KBRANCH = "4.9/yocto/base-rt"
+KMETA_BRANCH = "yocto-4.9"
+
+LINUX_VERSION ?= "4.9.61"
+SRCREV_machine ?= "8eb1a43e7232c412673aaaeb968b02122e42de4d"
+SRCREV_meta ?= "3e7fedea919b2c59801ceca25f57a23710ebadcd"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
