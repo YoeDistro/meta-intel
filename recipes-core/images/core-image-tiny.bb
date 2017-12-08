@@ -34,4 +34,3 @@ python() {
 
 WKS_FILE_intel-corei7-64 = "core-image-tiny.wks.in"
 WKS_FILE_intel-core2-32 = "core-image-tiny.wks.in"
-WKS_FILE_intel-quark = "mktinygalileodisk.wks"
