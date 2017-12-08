@@ -33,9 +33,8 @@ Table of Contents
 
   I. Overview
   II. Building and booting meta-intel BSP layers
-     a. Building the intel-common and quark BSP layers
+     a. Building the intel-common BSP layers
      b. Booting the intel-common BSP images
-     c. Booting the intel-quark BSP image on a Galileo board
   III. Technical Miscellany
      Benefits of using meta-intel
      The intel-common kernel package architecture
@@ -49,8 +48,7 @@ I. Overview
 
 This is the location for Intel-maintained BSPs.
 
-For details on the intel-common and intel-quark BSPs, see the
-information below.
+For details on the intel-common, see the information below.
 
 For all others, please see the README files contained in the
 individual BSP layers for BSP-specific information.
@@ -87,24 +85,22 @@ II. Building and booting meta-intel BSP layers
 The following sections contain information on building and booting the
 BSPs contained in the meta-intel layer.
 
-Note that these instructions specifically cover the intel-common and
-quark BSPs, which may or may not be applicable to other BSPs contained
-in this layer - if a given BSP contains its own README, that version
-should be used instead, and these instructions can be ignored.
+Note that these instructions specifically cover the intel-common, which
+may or may not be applicable to other BSPs contained in this layer - if
+a given BSP contains its own README, that version should be used instead,
+and these instructions can be ignored.
 
-a. Building the intel-common and quark BSP layers
+a. Building the intel-common BSP layers
 -------------------------------------------------
 
 In order to build an image with BSP support for a given release, you
 need to download the corresponding BSP tarball from the 'Board Support
 Package (BSP) Downloads' page of the Yocto Project website (or
 equivalently, check out the appropriate branch from the meta-intel git
-repository, see below).  For the intel-common and quark BSPs, those
-tarballs would correspond to the following choices in the BSP
-downloads section:
+repository, see below).  For the intel-common BSPs, those tarballs would
+correspond to the following choices in the BSP downloads section:
 
  - Intel-core2-32 Intel® Common Core BSP (Intel-core2-32)
- - Intel-core2-32 Intel® Common Core BSP (Intel-quark)
  - Intel-corei7-64 Intel® Common Core BSP (Intel-corei7-64)
 
 The intel-* BSPs, also known as the intel-common BSPs, provide a few
@@ -136,10 +132,6 @@ where 'xxx' is replaced by one of the following BSP names:
 
    This BSP is optimized for Nehalem and later Core and Xeon CPUs as
    well as Silvermont and later Atom CPUs, such as the Baytrail SoCs.
-
- - intel-quark
-
-   This BSP is optimized for Quark-based systems.
 
 You should then be able to build an image as such:
 
@@ -198,45 +190,6 @@ characters), try doing this first:
 
     $ dd if=/dev/zero of=/dev/sdf bs=1M count=512
 
-c. Booting the intel-quark BSP image on a Galileo board
--------------------------------------------------------
-
-If you downloaded the BSP tarball, you will find bootable images in
-the /binary directory.  If you've built your own image, either from
-the downloaded BSP layer or from the meta-intel git repository, you'll
-find the bootable image in the build/tmp/deploy/images/xxx directory,
-where again 'xxx' refers to the machine name used in the build.
-
-The Galileo board can boot off of either an SD card or USB storage
-media that has a special disk layout. The 'wic' tool can be used to
-create directly bootable images for either of the two formats via the
-following steps. As of meta-intel 6.0-morty-2.2 or newer, wic images are
-created automatically during build time, and the manual use of wic is
-not necessary. By default, the galileodisk-sd wic kickstart file is used,
-which targets SD cards. This can be changed by setting the WKS_FILE to
-something else in local.conf, such as the following:
-
-WKS_FILE = “galileodisk-usb”
-
-If your build is successful, a .wic image will be created in the usual
-deploy directory. Write this image to an SD card:
-
-    $ sudo dd if=/path/to/image/image-name.wic of=/dev/your_sd_dev
-    $ sync
-    $ sudo eject /dev/your_sd_dev
-
-Insert the SD card into the Galileo and power on.
-
-The Galileo board can boot from an hddimg formatted USB drive as well,
-but currently only live-boot, and not installation, is supported.
-An image in hddimg format is generated when you build the quark BSP.
-You can follow the procedure in II.b to use dd command to prepare your USB
-drive, then press F7 key during startup to bring up the boot option menu.
-Choose the UEFI USB boot option for the drive to boot the system. If the board
-already passes this stage and show a grub boot menu, you can press 'c'
-key and then type "quit" in grub shell. The board should come back to
-the UEFI boot menu.
-
 III. Technical Miscellany
 =========================
 
@@ -251,9 +204,7 @@ intel-* MACHINEs each have different compilation flags appropriate for their
 targeted hardware sets. intel-corei7-64 has tune flags appropriate for modern
 64-bit Intel Core i microarchitecture, and includes instruction sets up to
 SSE4.2. intel-core2-32 has tune flags appropriate for legacy 32-bit Intel Core2
-microarchitecture, and includes instruction sets up to SSE3. intel-quark
-contains a subset of the intel-core2-32 instruction set, as quark does not
-support prefix locking instructions.
+microarchitecture, and includes instruction sets up to SSE3.
 
 linux-intel kernel
 ++++++++++++++++++
@@ -415,13 +366,9 @@ Turbot, so it is tested against both intel-corei7-64 and intel-core2-32.
 intel-corei7-64:
     NUC6i5SYH
     MinnowBoard Turbot
-    Braswell RVP
 
 intel-core2-32:
     MinnowBoard Turbot
-
-Intel-quark:
-    Galileo 2
 
 
 V. Guidelines for submitting patches
