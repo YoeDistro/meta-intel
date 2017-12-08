@@ -24,16 +24,6 @@ SRCREV_machine_corei7-64-intel-common ?= "${@bb.utils.contains('INTEL_MACHINE_SU
 KBRANCH_corei7-64-intel-common = "${@bb.utils.contains('INTEL_MACHINE_SUBTYPE', 'broxton-m', 'standard/intel/bxt-rebase;rebaseable=1', '${KBRANCH_INTEL_COMMON}', d)}"
 KERNEL_FEATURES_append_corei7-64-intel-common = "${KERNEL_FEATURES_INTEL_COMMON}"
 
-# Quark / X1000 BSP Info
-LINUX_VERSION_i586-nlp-32-intel-common = "${LINUX_VERSION_INTEL_COMMON}"
-COMPATIBLE_MACHINE_i586-nlp-32-intel-common = "${MACHINE}"
-KMACHINE_i586-nlp-32-intel-common = "intel-quark"
-KBRANCH_i586-nlp-32-intel-common = "${KBRANCH_INTEL_COMMON}"
-SRCREV_meta_i586-nlp-32-intel-common ?= "${SRCREV_META_INTEL_COMMON}"
-SRCREV_machine_i586-nlp-32-intel-common ?= "${SRCREV_MACHINE_INTEL_COMMON}"
-KERNEL_FEATURES_append_i586-nlp-32-intel-common = ""
-
-
 # For Crystalforest and Romley
 KERNEL_MODULE_AUTOLOAD_append_core2-32-intel-common = " uio"
 KERNEL_MODULE_AUTOLOAD_append_corei7-64-intel-common = " uio"

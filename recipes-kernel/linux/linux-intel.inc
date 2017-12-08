@@ -22,7 +22,7 @@ KCONF_BSP_AUDIT_LEVEL = "2"
 
 KERNEL_FEATURES_INTEL_COMMON ?= ""
 
-COMPATIBLE_MACHINE ?= "(intel-corei7-64|intel-core2-32|intel-quark)"
+COMPATIBLE_MACHINE ?= "(intel-corei7-64|intel-core2-32)"
 COMPATIBLE_MACHINE_intel-x86-common = "${MACHINE}"
 
 KMACHINE_core2-32-intel-common = "intel-core2-32"
@@ -30,9 +30,6 @@ KERNEL_FEATURES_append_core2-32-intel-common = "${KERNEL_FEATURES_INTEL_COMMON}"
 
 KMACHINE_corei7-64-intel-common = "intel-corei7-64"
 KERNEL_FEATURES_append_corei7-64-intel-common = "${KERNEL_FEATURES_INTEL_COMMON}"
-
-KMACHINE_i586-nlp-32-intel-common = "intel-quark"
-KERNEL_FEATURES_append_i586-nlp-32-intel-common = "features/qat/qat.scc"
 
 # Functionality flags
 KERNEL_FEATURES_append = " ${KERNEL_EXTRA_FEATURES}"
