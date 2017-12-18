@@ -14,7 +14,7 @@ KBRANCH = "4.9/yocto/base-rt"
 KMETA_BRANCH = "yocto-4.9"
 
 LINUX_VERSION ?= "4.9.61"
-SRCREV_machine ?= "8eb1a43e7232c412673aaaeb968b02122e42de4d"
-SRCREV_meta ?= "3e7fedea919b2c59801ceca25f57a23710ebadcd"
+SRCREV_machine ?= "530f7b58f610e99c0dc8f6d2e5695561b442f694"
+SRCREV_meta ?= "4553798a3e73b0791f4d5065ec5ad4b45027914f"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
