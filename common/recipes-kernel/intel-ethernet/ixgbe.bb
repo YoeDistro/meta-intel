@@ -43,3 +43,12 @@ FILES_${PN}-script += "/etc/network/set_irq_affinity"
 
 #Ignore "ERROR: QA Issue: ixgbe: Files/directories were installed but not shipped"
 INSANE_SKIP_${PN} = "installed-vs-shipped"
+
+# Support for 4.14 not yet available
+python () {
+    if d.getVar("PREFERRED_PROVIDER_virtual/kernel") == "linux-intel" and \
+       d.getVar("PREFERRED_VERSION_linux-intel") == "4.14%" or \
+       d.getVar("PREFERRED_PROVIDER_virtual/kernel") == "linux-intel-rt" and \
+       d.getVar("PREFERRED_VERSION_linux-intel-rt") == "4.14%":
+        raise bb.parse.SkipPackage("out of tree ixgbe not yet available for Linux Kernel 4.14 or newer")
+}
