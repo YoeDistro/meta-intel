@@ -5,8 +5,8 @@ KBRANCH = "4.9/yocto/base"
 KMETA_BRANCH = "yocto-4.9"
 
 LINUX_VERSION ?= "4.9.61"
-SRCREV_machine ?= "03469c2e703e40ed42ed72f415fd27c7d7f7f8cf"
-SRCREV_meta ?= "3e7fedea919b2c59801ceca25f57a23710ebadcd"
+SRCREV_machine ?= "6838fc62f81f59330f720062249b4830f0161fbd"
+SRCREV_meta ?= "4553798a3e73b0791f4d5065ec5ad4b45027914f"
 
 # For Crystalforest and Romley
 KERNEL_MODULE_AUTOLOAD_append_core2-32-intel-common = " uio"
