@@ -4,9 +4,9 @@ require linux-intel.inc
 KBRANCH = "4.9/yocto/base"
 KMETA_BRANCH = "yocto-4.9"
 
-LINUX_VERSION ?= "4.9.61"
-SRCREV_machine ?= "6838fc62f81f59330f720062249b4830f0161fbd"
-SRCREV_meta ?= "4553798a3e73b0791f4d5065ec5ad4b45027914f"
+LINUX_VERSION ?= "4.9.76"
+SRCREV_machine ?= "6e69421d3972a9bec8c33ef15d42e0190b73c803"
+SRCREV_meta ?= "a2dfb1610d9dad34652a3c27c6c9d8751ed67af6"
 
 # For Crystalforest and Romley
 KERNEL_MODULE_AUTOLOAD_append_core2-32-intel-common = " uio"
