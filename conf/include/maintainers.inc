@@ -20,4 +20,3 @@ RECIPE_MAINTAINER_pn-rmc-db = "Stephano Cetola <stephano.cetola@linux.intel.com>
 RECIPE_MAINTAINER_pn-thermald = "California Sullivan <california.l.sullivan@intel.com>"
 RECIPE_MAINTAINER_pn-va-intel = "Anuj Mittal <anuj.mittal@intel.com>"
 RECIPE_MAINTAINER_pn-xf86-video-ast = "Anuj Mittal <anuj.mittal@intel.com>"
-RECIPE_MAINTAINER_pn-xf86-video-mga = "Anuj Mittal <anuj.mittal@intel.com>"
