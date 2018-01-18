@@ -1,0 +1,82 @@
+From 4fbb4b9c12d1944e5d60bc4f3d0cbd0bf7bed36d Mon Sep 17 00:00:00 2001
+From: Thierry Reding <treding@nvidia.com>
+Date: Thu, 12 Oct 2017 10:33:37 +0200
+Subject: [PATCH] lib: Fix compilation on non-x86
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The meson build avoids the failure by excluding the igt_x86.c file from
+the compilation. autotools being what they are don't support that in an
+easy way, so just use the preprocessor to avoid the duplicate function
+definitions.
+
+Since igt_x86.c will now be ignored for non-x86 builds, the meson work-
+around can be removed.
+
+Upstream-Status: backport.
+
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ lib/igt_x86.c   | 2 ++
+ lib/igt_x86.h   | 2 +-
+ lib/meson.build | 5 +----
+ 3 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/lib/igt_x86.c b/lib/igt_x86.c
+index 0f0963ce..0ed3c6f1 100644
+--- a/lib/igt_x86.c
++++ b/lib/igt_x86.c
+@@ -93,6 +93,7 @@
+ 
+ #define has_YMM 0x1
+ 
++#if defined(__x86_64__) || defined(__i386__)
+ unsigned igt_x86_features(void)
+ {
+ 	unsigned max = __get_cpuid_max(BASIC_CPUID, 0);
+@@ -172,3 +173,4 @@ char *igt_x86_features_to_string(unsigned features, char *line)
+ 
+ 	return ret;
+ }
++#endif
+diff --git a/lib/igt_x86.h b/lib/igt_x86.h
+index d6dcfa10..27b7f0fd 100644
+--- a/lib/igt_x86.h
++++ b/lib/igt_x86.h
+@@ -40,7 +40,7 @@
+ #define AVX	0x80
+ #define AVX2	0x100
+ 
+-#if defined(__x86_64__)
++#if defined(__x86_64__) || defined(__i386__)
+ unsigned igt_x86_features(void);
+ char *igt_x86_features_to_string(unsigned features, char *line);
+ #else
+diff --git a/lib/meson.build b/lib/meson.build
+index b31c68e4..ddf93ec6 100644
+--- a/lib/meson.build
++++ b/lib/meson.build
+@@ -64,6 +64,7 @@ lib_sources = [
+ 	'igt_syncobj.c',
+ 	'igt_sysfs.c',
+ 	'igt_vgem.c',
++	'igt_x86.c',
+ 	'instdone.c',
+ 	'intel_batchbuffer.c',
+ 	'intel_chipset.c',
+@@ -96,10 +97,6 @@ lib_sources = [
+ 	'igt_kmod.c',
+ ]
+ 
+-if ['x86', 'x86_64'].contains(host_machine.cpu_family())
+-    lib_sources += 'igt_x86.c'
+-endif
+-
+ lib_deps = [
+ 	cairo,
+ 	glib,
+-- 
+2.14.3
+

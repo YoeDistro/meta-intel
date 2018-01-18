@@ -9,6 +9,8 @@ LICENSE_append = " & ISC"
 
 inherit autotools gtk-doc
 
+SRC_URI += "file://0001-lib-Fix-compilation-on-non-x86.patch"
+
 DEPENDS += "libdrm libpciaccess cairo udev glib-2.0 libxv libx11 libxext libxrandr procps"
 RDEPENDS_${PN} += "bash"
 RDEPENDS_${PN}-tests += "bash"
