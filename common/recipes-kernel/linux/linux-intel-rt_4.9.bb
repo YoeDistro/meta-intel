@@ -10,13 +10,13 @@ python () {
         raise bb.parse.SkipPackage("Set PREFERRED_PROVIDER_virtual/kernel to linux-intel-rt to enable it")
 }
 
-KBRANCH = "base-rt"
+KBRANCH = "4.9/yocto/base-rt"
 SRCREV_machine ?= "44f76edc2079f1551be33b8ab473349d00f814a7"
 SRCREV_meta ?= "cdbd35c54b6a62e4fd543164f1dcdf92c85cff2d"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/linux-intel:"
 
-SRC_URI = "git://github.com/01org/linux-intel-4.9.git;protocol=https;name=machine;branch=${KBRANCH}; \
+SRC_URI = "git://github.com/intel/linux-intel-lts.git;protocol=https;name=machine;branch=${KBRANCH}; \
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-4.9;destsuffix=${KMETA}"
 
 SRC_URI_append_core2-32-intel-common = " file://disable_skylake_sound.cfg"
