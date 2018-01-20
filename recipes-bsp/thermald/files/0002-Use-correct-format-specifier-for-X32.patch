@@ -1,0 +1,87 @@
+From fa6cfd59e52be6a45a067cc770adc62437295085 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Thu, 18 Jan 2018 14:29:09 +0800
+Subject: [PATCH 2/2] Use correct format specifier for X32
+
+time_t in x32 is of long long type. Using %ld specifier leads
+to errors like:
+
+| ../git/src/thd_model.cpp: In member function 'unsigned int cthd_model::update_set_point(unsigned int)':
+| ../git/src/thermald.h:74:68: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'time_t {aka long long int}' [-Werror=format=]
+|  #define thd_log_info(...) g_log(NULL, G_LOG_LEVEL_INFO, __VA_ARGS__)
+|                                                                     ^
+| ../git/src/thd_model.cpp:112:3: note: in expansion of macro 'thd_log_info'
+|    thd_log_info("update_pid %ld %ld %d %g %d\n", now, last_time, error,
+|    ^~~~~~~~~~~~
+
+Use the correct format specifier based on the address model.
+
+Upstream-Status: Submitted [https://github.com/intel/thermal_daemon/pull/147]
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ src/thd_model.cpp      | 14 ++++++++++++++
+ src/thd_trip_point.cpp |  6 ++++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/src/thd_model.cpp b/src/thd_model.cpp
+index 5f1d0d7..46b95dc 100644
+--- a/src/thd_model.cpp
++++ b/src/thd_model.cpp
+@@ -109,8 +109,14 @@ unsigned int cthd_model::update_set_point(unsigned int curr_temp) {
+ 		/*Compute PID Output*/
+ 		output = kp * error + ki * err_sum + kd * d_err;
+ 		_setpoint = max_temp - (unsigned int) output;
++
++#if defined __x86_64__ && defined __ILP32__
++		thd_log_info("update_pid %lld %lld %d %g %d\n", now, last_time, error,
++				output, _setpoint);
++#else
+ 		thd_log_info("update_pid %ld %ld %d %g %d\n", now, last_time, error,
+ 				output, _setpoint);
++#endif
+ 		if ((_setpoint < 0) || (abs(set_point - _setpoint) > max_compensation))
+ 			set_point -= max_compensation;
+ 		else
+@@ -134,10 +140,18 @@ void cthd_model::add_sample(int temperature) {
+ 	updated_set_point = false;
+ 	if (trend_increase_start == 0 && temperature > hot_zone) {
+ 		trend_increase_start = tm;
++#if defined __x86_64__ && defined __ILP32__
++		thd_log_debug("Trend increase start %lld\n", trend_increase_start);
++#else
+ 		thd_log_debug("Trend increase start %ld\n", trend_increase_start);
++#endif
+ 	} else if (trend_increase_start && temperature < hot_zone) {
+ 		int _set_point;
++#if defined __x86_64__ && defined __ILP32__
++		thd_log_debug("Trend increase stopped %lld\n", trend_increase_start);
++#else
+ 		thd_log_debug("Trend increase stopped %ld\n", trend_increase_start);
++#endif
+ 		trend_increase_start = 0;
+ 		_set_point = read_set_point(); // Restore set point to a calculated max
+ 		if (_set_point > set_point) {
+diff --git a/src/thd_trip_point.cpp b/src/thd_trip_point.cpp
+index dd1b881..170adcf 100644
+--- a/src/thd_trip_point.cpp
++++ b/src/thd_trip_point.cpp
+@@ -132,9 +132,15 @@ bool cthd_trip_point::thd_trip_point_check(int id, unsigned int read_temp,
+ 				time_t tm;
+ 				time(&tm);
+ 				if ((tm - cdevs[i].last_op_time) < cdevs[i].sampling_priod) {
++#if defined __x86_64__ && defined __ILP32__
++					thd_log_info("Too early to act index %d tm %lld\n",
++							cdev->thd_cdev_get_index(),
++							tm - cdevs[i].last_op_time);
++#else
+ 					thd_log_info("Too early to act index %d tm %ld\n",
+ 							cdev->thd_cdev_get_index(),
+ 							tm - cdevs[i].last_op_time);
++#endif
+ 					break;
+ 				}
+ 				cdevs[i].last_op_time = tm;
+-- 
+2.7.4
+

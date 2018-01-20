@@ -13,8 +13,11 @@ DEPENDS_append_toolchain-clang = " openmp"
 LICENSE = "GPL-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ea8831610e926e2e469075b52bf08848"
 
-SRC_URI = "git://github.com/intel/thermal_daemon/"
-SRCREV = "5f1be4d9d6f3b27d2c9884f833ca05cdcb4428e0"
+SRC_URI = "git://github.com/intel/thermal_daemon/ \
+           file://0001-Include-poll.h-instead-of-sys-poll.h.patch \
+           file://0002-Use-correct-format-specifier-for-X32.patch \
+           "
+SRCREV = "c0d224b7b5cf62d384f5ad0a29bfaaba4bdc4ac1"
 S = "${WORKDIR}/git"
 
 inherit pkgconfig autotools systemd

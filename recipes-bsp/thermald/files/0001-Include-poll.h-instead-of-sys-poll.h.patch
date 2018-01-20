@@ -1,0 +1,36 @@
+From b3de44c28cd930d68c17638575d46e590679f9fe Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Thu, 18 Jan 2018 10:10:40 +0800
+Subject: [PATCH] Include poll.h instead of sys/poll.h
+
+POSIX specifies poll.h to be the correct header name [1]. Also fixes
+a warning when built with musl.
+
+ | <sysroot>/usr/include/sys/poll.h:1:2: warning: #warning redirecting incorrect #include <sys/poll.h> to <poll.h> [-Werror=cpp]
+ | #warning redirecting incorrect #include <sys/poll.h> to <poll.h>
+
+[1] http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/poll.h.html
+
+Upstream-Status: Submitted [https://github.com/intel/thermal_daemon/pull/147]
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ src/thd_kobj_uevent.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/thd_kobj_uevent.h b/src/thd_kobj_uevent.h
+index d30ea5c..aa8e33f 100644
+--- a/src/thd_kobj_uevent.h
++++ b/src/thd_kobj_uevent.h
+@@ -28,7 +28,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
+-#include <sys/poll.h>
++#include <poll.h>
+ #include <sys/socket.h>
+ #include <sys/types.h>
+ #include <unistd.h>
+-- 
+2.7.4
+
