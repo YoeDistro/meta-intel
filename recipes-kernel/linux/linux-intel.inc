@@ -7,6 +7,7 @@ KERNEL_CONFIG_URI ?= " \
 	           "
 SRC_URI = " \
            git://github.com/intel/linux-intel-lts.git;protocol=https;name=machine;branch=${KBRANCH}; \
+           file://0001-menuconfig-check-lxdiaglog.sh-Allow-specification-of.patch \
            ${KERNEL_CONFIG_URI} \
 	  "
 
