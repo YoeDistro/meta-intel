@@ -4,8 +4,8 @@ require linux-intel.inc
 KBRANCH = "4.9/yocto/base"
 KMETA_BRANCH = "yocto-4.9"
 
-LINUX_VERSION ?= "4.9.76"
-SRCREV_machine ?= "6e69421d3972a9bec8c33ef15d42e0190b73c803"
+LINUX_VERSION ?= "4.9.77"
+SRCREV_machine ?= "d7f2f7269253c2be1c1000d49d2bded4ba70407a"
 SRCREV_meta ?= "a2dfb1610d9dad34652a3c27c6c9d8751ed67af6"
 
 # For Crystalforest and Romley
