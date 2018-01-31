@@ -14,13 +14,6 @@ PREFERRED_PROVIDER_virtual/kernel_poky-tiny ?= "linux-intel"
 PREFERRED_VERSION_linux-intel_linuxstdbase ?= "4.9%"
 PREFERRED_VERSION_linux-intel ?= "4.14%"
 
-# for Xserver older than 1.13.0
-OLD_XSERVER_X86_EXT = "xserver-xorg-extension-dri \
-           xserver-xorg-extension-dri2 \
-           xserver-xorg-extension-extmod \
-           xserver-xorg-extension-dbe \
-           "
-
 XSERVER_X86_ASPEED_AST = "xf86-video-ast \
            "
 
