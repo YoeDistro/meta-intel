@@ -10,7 +10,7 @@ DEPENDS = "dbus dbus-glib dbus-glib-native libxml2 glib-2.0 glib-2.0-native"
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES','systemd','systemd','',d)}"
 DEPENDS_append_libc-musl = " argp-standalone"
 DEPENDS_append_toolchain-clang = " openmp"
-LICENSE = "GPL-2.0"
+LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ea8831610e926e2e469075b52bf08848"
 
 SRC_URI = "git://github.com/intel/thermal_daemon/ \
