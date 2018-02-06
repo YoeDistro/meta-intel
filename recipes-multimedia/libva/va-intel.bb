@@ -7,9 +7,9 @@ S = "${WORKDIR}"
 PR = "r1"
 
 def map_valibs(d):
-    # The intel implementation requires the libva-intel-driver package
+    # The intel implementation requires the intel-vaapi-driver package
     if bb.utils.contains('MACHINE_FEATURES', 'va-impl-intel', "1", "0", d) == "1":
-       return "libva libva-intel-driver"
+       return "libva intel-vaapi-driver"
     # All meta-intel video acceleration requires libva
     return "libva"
 
