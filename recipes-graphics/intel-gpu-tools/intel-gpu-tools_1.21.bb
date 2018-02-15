@@ -9,19 +9,16 @@ LICENSE_append = " & ISC"
 
 inherit autotools gtk-doc
 
-SRC_URI += "file://0001-lib-Fix-compilation-on-non-x86.patch"
+SRC_URI = "${XORG_MIRROR}/individual/app/${BP}.tar.xz"
 
-DEPENDS += "libdrm libpciaccess cairo udev glib-2.0 libxv libx11 libxext libxrandr procps"
+DEPENDS += "libdrm libpciaccess cairo udev glib-2.0 libxv libx11 libxext libxrandr procps libunwind"
 RDEPENDS_${PN} += "bash"
 RDEPENDS_${PN}-tests += "bash"
 
 PACKAGE_BEFORE_PN = "${PN}-benchmarks ${PN}-tests"
 
-SRC_URI[md5sum] = "3b77a6a23274afe363bd5c942fe42562"
-SRC_URI[sha256sum] = "2fffe7a66789f56f301e6b60a3afe21556f34acbad8b7b29c8f3dd41f0b148e8"
-
-PACKAGECONFIG ??= ""
-PACKAGECONFIG[libunwind] = "--with-libunwind,--without-libunwind,libunwind,libunwind"
+SRC_URI[md5sum] = "94125e46d528b67b060ba98f3c2e3bee"
+SRC_URI[sha256sum] = "d9af6e7a24cb22e5b6ff8db03a0e6b230f08c17908cedee59e8795d74e18703f"
 
 EXTRA_OECONF = "--disable-nouveau --disable-shader-debugger"
 COMPATIBLE_HOST = "(x86_64.*|i.86.*)-linux"
