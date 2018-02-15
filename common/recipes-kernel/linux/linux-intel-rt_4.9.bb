@@ -11,8 +11,8 @@ python () {
 }
 
 KBRANCH = "4.9/yocto/base-rt"
-SRCREV_machine ?= "44f76edc2079f1551be33b8ab473349d00f814a7"
-SRCREV_meta ?= "cdbd35c54b6a62e4fd543164f1dcdf92c85cff2d"
+SRCREV_machine ?= "ae1aee65fd27590eff2c308ad5661a13d023641d"
+SRCREV_meta ?= "a2dfb1610d9dad34652a3c27c6c9d8751ed67af6"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/linux-intel:"
 
@@ -21,7 +21,7 @@ SRC_URI = "git://github.com/intel/linux-intel-lts.git;protocol=https;name=machin
 
 SRC_URI_append_core2-32-intel-common = " file://disable_skylake_sound.cfg"
 
-LINUX_VERSION ?= "4.9.56"
+LINUX_VERSION ?= "4.9.77"
 LINUX_VERSION_EXTENSION ?= "-intel-pk-${LINUX_KERNEL_TYPE}"
 
 
