@@ -1,7 +1,7 @@
-From a3c4fc8c2847fe289a617bcba1d905f580f0e18d Mon Sep 17 00:00:00 2001
+From b780c67c780bae2f834d73017044680fabca4268 Mon Sep 17 00:00:00 2001
 From: Jianxun Zhang <jianxun.zhang@linux.intel.com>
 Date: Wed, 1 Jun 2016 16:32:22 -0700
-Subject: [PATCH 2/3] sd-boot: Load board-specific boot entries from RMC
+Subject: [PATCH 3/5] sd-boot: Load board-specific boot entries from RMC
  database
 
 RMC provides a centralized database file on ESP. The DB contains
@@ -38,15 +38,16 @@ bootloader skips loading any boot entries from ESP.
 Upstream-Status: Pending
 
 Signed-off-by: Jianxun Zhang <jianxun.zhang@linux.intel.com>
+Signed-off-by: California Sullivan <california.l.sullivan@intel.com>
 ---
- src/boot/efi/boot.c | 147 +++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 145 insertions(+), 2 deletions(-)
+ src/boot/efi/boot.c | 148 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 146 insertions(+), 2 deletions(-)
 
 diff --git a/src/boot/efi/boot.c b/src/boot/efi/boot.c
-index 30c1ead..d1b029b 100644
+index b9c7c8394..93cfaf193 100644
 --- a/src/boot/efi/boot.c
 +++ b/src/boot/efi/boot.c
-@@ -15,6 +15,7 @@
+@@ -16,6 +16,7 @@
  
  #include <efi.h>
  #include <efilib.h>
@@ -54,7 +55,7 @@ index 30c1ead..d1b029b 100644
  
  #include "console.h"
  #include "disk.h"
-@@ -33,6 +34,9 @@ static const char __attribute__((used)) magic[] = "#### LoaderInfo: systemd-boot
+@@ -35,6 +36,9 @@ static const char __attribute__((used)) magic[] = "#### LoaderInfo: systemd-boot
  
  static const EFI_GUID global_guid = EFI_GLOBAL_VARIABLE;
  
@@ -64,7 +65,7 @@ index 30c1ead..d1b029b 100644
  enum loader_type {
          LOADER_UNDEFINED,
          LOADER_EFI,
-@@ -1702,6 +1706,136 @@ static VOID config_free(Config *config) {
+@@ -1684,6 +1688,136 @@ static VOID config_free(Config *config) {
          FreePool(config->entry_oneshot);
  }
  
@@ -201,7 +202,7 @@ index 30c1ead..d1b029b 100644
  EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *sys_table) {
          CHAR16 *s;
          CHAR8 *b;
-@@ -1714,6 +1848,7 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *sys_table) {
+@@ -1696,6 +1830,7 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *sys_table) {
          UINT64 init_usec;
          BOOLEAN menu = FALSE;
          CHAR16 uuid[37];
@@ -209,16 +210,17 @@ index 30c1ead..d1b029b 100644
  
          InitializeLib(image, sys_table);
          init_usec = time_usec();
-@@ -1745,6 +1880,8 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *sys_table) {
-                 return EFI_LOAD_ERROR;
+@@ -1736,6 +1871,9 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *sys_table) {
+                 }
          }
  
 +        /* Initialize rmc before loading any config */
 +        rmc_initialize(root_dir, sys_table, &rmc_db, &rmc_fp);
- 
++
          /* the filesystem path to this image, to prevent adding ourselves to the menu */
          loaded_image_path = DevicePathToStr(loaded_image->FilePath);
-@@ -1753,11 +1890,15 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *sys_table) {
+         efivar_set(L"LoaderImageIdentifier", loaded_image_path, FALSE);
+@@ -1743,11 +1881,15 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *sys_table) {
          ZeroMem(&config, sizeof(Config));
          config_load_defaults(&config, root_dir);
  
@@ -236,7 +238,7 @@ index 30c1ead..d1b029b 100644
  
          /* sort entries after version number */
          config_sort_entries(&config);
-@@ -1851,6 +1992,8 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *sys_table) {
+@@ -1841,6 +1983,8 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *sys_table) {
  out:
          FreePool(loaded_image_path);
          config_free(&config);
@@ -246,5 +248,5 @@ index 30c1ead..d1b029b 100644
          uefi_call_wrapper(BS->CloseProtocol, 4, image, &LoadedImageProtocol, image, NULL);
          return err;
 -- 
-2.7.4
+2.14.3
 

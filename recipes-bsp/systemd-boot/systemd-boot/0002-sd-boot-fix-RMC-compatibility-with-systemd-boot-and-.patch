@@ -1,0 +1,62 @@
+From af977853ab722194c4754e6693f430f50a42190f Mon Sep 17 00:00:00 2001
+From: California Sullivan <california.l.sullivan@intel.com>
+Date: Tue, 20 Mar 2018 10:08:14 -0700
+Subject: [PATCH 2/5] sd-boot: fix RMC compatibility with systemd-boot and
+ meson
+
+With autotools swapped out for meson a number of things need to be
+changed.
+
+Upstream-Status: Pending
+
+Signed-off-by: California Sullivan <california.l.sullivan@intel.com>
+---
+ meson_options.txt        | 2 ++
+ src/boot/efi/meson.build | 4 +++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/meson_options.txt b/meson_options.txt
+index 39822d6cd..d8a480401 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -279,6 +279,8 @@ option('efi-ldsdir', type : 'string',
+        description : 'path to the EFI lds directory')
+ option('efi-includedir', type : 'string', value : '/usr/include/efi',
+        description : 'path to the EFI header directory')
++option('rmc-includedir', type : 'string', value : '/usr/include/rmc',
++       description : 'path to the RMC header directory')
+ option('tpm-pcrindex', type : 'string', value : '8',
+        description : 'TPM PCR register number to use')
+ 
+diff --git a/src/boot/efi/meson.build b/src/boot/efi/meson.build
+index 9f9ec4911..266ff928f 100644
+--- a/src/boot/efi/meson.build
++++ b/src/boot/efi/meson.build
+@@ -83,6 +83,7 @@ if have_gnu_efi
+         efi_conf.set_quoted('EFI_MACHINE_TYPE_NAME', EFI_MACHINE_TYPE_NAME)
+         efi_conf.set10('ENABLE_TPM', get_option('tpm'))
+         efi_conf.set('SD_TPM_PCR', get_option('tpm-pcrindex'))
++        efi_conf.set('RMC_EFI', 'true')
+ 
+         efi_config_h = configure_file(
+                 output : 'efi_config.h',
+@@ -121,6 +122,7 @@ if have_gnu_efi
+                         '-Wsign-compare',
+                         '-Wno-missing-field-initializers',
+                         '-isystem', efi_incdir,
++                        '-isystem', get_option('rmc-includedir'),
+                         '-isystem', join_paths(efi_incdir, gnu_efi_arch),
+                         '-include', efi_config_h]
+         if efi_arch == 'x86_64'
+@@ -191,7 +193,7 @@ if have_gnu_efi
+                         output : tuple[0],
+                         command : efi_ld.split() + ['-o', '@OUTPUT@'] +
+                                   efi_ldflags + tuple[2] +
+-                                  ['-lefi', '-lgnuefi', libgcc_file_name])
++                                  ['-lefi', '-lgnuefi', '-lrmcefi', libgcc_file_name])
+ 
+                 test('no-undefined-symbols-' + tuple[0],
+                      no_undefined_symbols,
+-- 
+2.14.3
+

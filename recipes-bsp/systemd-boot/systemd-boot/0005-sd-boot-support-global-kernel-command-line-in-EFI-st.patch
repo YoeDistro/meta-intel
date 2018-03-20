@@ -1,7 +1,7 @@
-From 4cb9c65ea9c0eba3ba04d036dccd4a5ab3d2547b Mon Sep 17 00:00:00 2001
+From 405a77233dde990fa7815d1546dc5a6b5a608479 Mon Sep 17 00:00:00 2001
 From: Mikko Ylinen <mikko.ylinen@intel.com>
 Date: Fri, 27 Jan 2017 13:31:45 +0200
-Subject: [PATCH] sd-boot: support global kernel command line in EFI stub
+Subject: [PATCH 5/5] sd-boot: support global kernel command line in EFI stub
 
 This change integrates rmc into EFI stub and supports a
 global fragment (RMC KBOOTPARAM) that is appended to the
@@ -14,15 +14,16 @@ Implements [YOCTO #10924].
 Upstream-status: Pending
 
 Signed-off-by: Mikko Ylinen <mikko.ylinen@intel.com>
+Signed-off-by: California Sullivan <california.l.sullivan@intel.com>
 ---
  src/boot/efi/stub.c | 33 +++++++++++++++++++++++++++++++++
  1 file changed, 33 insertions(+)
 
 diff --git a/src/boot/efi/stub.c b/src/boot/efi/stub.c
-index 1e250f34f..f3865199f 100644
+index 540ca5985..11047477b 100644
 --- a/src/boot/efi/stub.c
 +++ b/src/boot/efi/stub.c
-@@ -13,6 +13,7 @@
+@@ -14,6 +14,7 @@
  
  #include <efi.h>
  #include <efilib.h>
@@ -30,7 +31,7 @@ index 1e250f34f..f3865199f 100644
  
  #include "disk.h"
  #include "graphics.h"
-@@ -48,6 +49,9 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *sys_table) {
+@@ -49,6 +50,9 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *sys_table) {
          UINTN cmdline_len;
          CHAR16 uuid[37];
          EFI_STATUS err;
@@ -40,7 +41,7 @@ index 1e250f34f..f3865199f 100644
  
          InitializeLib(image, sys_table);
  
-@@ -112,6 +116,35 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *sys_table) {
+@@ -109,6 +113,35 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *sys_table) {
  #endif
          }
  
@@ -77,5 +78,5 @@ index 1e250f34f..f3865199f 100644
          if (disk_get_part_uuid(loaded_image->DeviceHandle, uuid) == EFI_SUCCESS)
                  efivar_set(L"LoaderDevicePartUUID", uuid, FALSE);
 -- 
-2.11.0
+2.14.3
 
