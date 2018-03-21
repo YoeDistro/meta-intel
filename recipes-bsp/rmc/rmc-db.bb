@@ -17,6 +17,8 @@ inherit rmc-db
 RMC_BOARD_DATA_DIRS ?= "${THISDIR}/boards/"
 RMC_DB_DIR = "${WORKDIR}/db"
 
+FILES_${PN} = "/boot/rmc.db"
+
 # Let sstate be aware of change in any added board directories
 do_generate_rmc_db[file-checksums] = "${@get_rmc_top_dirs_list(d)}"
 
@@ -45,5 +47,16 @@ do_deploy () {
 		echo "Warning: no RMC central database found, skip deployment."
 	fi
 }
+
+do_install () {
+	install -d ${D}/boot
+	if [ -f ${RMC_DB_DIR}/rmc.db ]; then
+		install -m 0400 ${RMC_DB_DIR}/rmc.db ${D}/boot/
+	else
+		rm -f ${D}/rmc.db
+		echo "Warning: no RMC central database found, skip installation."
+	fi
+}
+do_install[depends] += "${PN}:do_generate_rmc_db"
 
 addtask deploy after do_generate_rmc_db
