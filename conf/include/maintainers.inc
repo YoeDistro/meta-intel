@@ -2,7 +2,6 @@
 
 RECIPE_MAINTAINER_pn-core-image-rt = "Stephano Cetola <stephano.cetola@linux.intel.com>"
 RECIPE_MAINTAINER_pn-core-image-rt-sdk = "Stephano Cetola <stephano.cetola@linux.intel.com>"
-RECIPE_MAINTAINER_pn-efilinux = "California Sullivan <california.l.sullivan@intel.com>"
 RECIPE_MAINTAINER_pn-gma500-gfx-check = "Anuj Mittal <anuj.mittal@intel.com>"
 RECIPE_MAINTAINER_pn-intel-gpu-tools = "Anuj Mittal <anuj.mittal@intel.com>"
 RECIPE_MAINTAINER_pn-intel-microcode = "California Sullivan <california.l.sullivan@intel.com>"
