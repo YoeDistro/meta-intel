@@ -1,10 +1,10 @@
 require recipes-kernel/linux/linux-yocto.inc
+require recipes-kernel/linux/meta-intel-compat-kernel.inc
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/linux-intel:"
 
-KERNEL_CONFIG_URI ?= " \
-                     git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=${KMETA_BRANCH};destsuffix=${KMETA} \
-	           "
+KERNEL_CONFIG_URI ?= "git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=${KMETA_BRANCH};destsuffix=${KMETA}"
+
 SRC_URI = " \
            git://github.com/intel/linux-intel-lts.git;protocol=https;name=machine;branch=${KBRANCH}; \
            file://0001-menuconfig-check-lxdiaglog.sh-Allow-specification-of.patch \
@@ -13,7 +13,6 @@ SRC_URI = " \
 
 SRC_URI_append_core2-32-intel-common = " file://disable_skylake_sound.cfg"
 
-
 LINUX_VERSION_EXTENSION ?= "-intel-pk-${LINUX_KERNEL_TYPE}"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
@@ -21,17 +20,7 @@ PV = "${LINUX_VERSION}+git${SRCPV}"
 KMETA = "kernel-meta"
 KCONF_BSP_AUDIT_LEVEL = "2"
 
-KERNEL_FEATURES_INTEL_COMMON ?= ""
-
 COMPATIBLE_MACHINE ?= "(intel-corei7-64|intel-core2-32)"
-COMPATIBLE_MACHINE_intel-x86-common = "${MACHINE}"
 
-KMACHINE_core2-32-intel-common = "intel-core2-32"
-KERNEL_FEATURES_append_core2-32-intel-common = "${KERNEL_FEATURES_INTEL_COMMON}"
-
-KMACHINE_corei7-64-intel-common = "intel-corei7-64"
-KERNEL_FEATURES_append_corei7-64-intel-common = "${KERNEL_FEATURES_INTEL_COMMON}"
-
-# Functionality flags
 KERNEL_FEATURES_append = " ${KERNEL_EXTRA_FEATURES}"
 KERNEL_FEATURES_append = " ${@bb.utils.contains("TUNE_FEATURES", "mx32", " cfg/x32.scc", "" ,d)}"
