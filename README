@@ -165,9 +165,21 @@ The BSP /binary directory or build contains bootable live images,
 which can be used to directly boot Yocto off of a USB flash drive.
 
 Under Linux, insert a USB flash drive.  Assuming the USB flash drive
-takes device /dev/sdf, use dd to copy the image to it. For example:
+takes device /dev/sdf, use dd to copy the image to it.  Before the image
+can be burned onto a USB drive, it should be un-mounted. Some Linux distros
+may automatically mount a USB drive when it is plugged in. Using USB device
+/dev/sdf as an example, find all mounted partitions:
 
-    $ dd if=core-image-sato-intel-corei7-64.wic of=/dev/sdf
+    $ mount | grep sdf
+
+and un-mount those that are mounted, for example:
+
+    $ umount /dev/sdf1
+    $ umount /dev/sdf2
+
+Now burn the image onto the USB drive:
+
+    $ sudo dd if=core-image-sato-intel-corei7-64.wic of=/dev/sdf status=progress
     $ sync
     $ eject /dev/sdf
 
