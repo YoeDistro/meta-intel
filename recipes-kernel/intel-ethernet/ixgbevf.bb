@@ -6,7 +6,7 @@ SECTION = "kernel/network"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/${PN}-${PV}/COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-PV = "4.1.2"
+PV = "4.3.4"
 PR = "r0"
 
 SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/${PV}/ixgbevf-${PV}.tar.gz \
@@ -15,8 +15,8 @@ SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/${PV}/i
            file://0001-ixgbevf-skip-host-depmod.patch \
            "
 
-SRC_URI[md5sum] = "f02ec46369d1ca949a1e9d2e0eb74d5f"
-SRC_URI[sha256sum] = "ab2824541f8a2d8f7b7d26ccbb46359ef551c5d4625fb333014e2b8023ac3ab6"
+SRC_URI[md5sum] = "9459bf9ac4b2b827bee2ff147d192622"
+SRC_URI[sha256sum] = "63a6568be16347e19bae74238d739cd7ffa83a6236c6d8e25d2539d46cb25f88"
 
 S = "${WORKDIR}/${PN}-${PV}/src"
 SCRIPT_DIR = "${WORKDIR}/${PN}-${PV}/scripts"
@@ -44,12 +44,3 @@ FILES_${PN}-script += "/etc/network/set_irq_affinity"
 
 #Ignore "ERROR: QA Issue: ixgbe: Files/directories were installed but not shipped"
 INSANE_SKIP_${PN} = "installed-vs-shipped"
-
-# Support for 4.14 not yet available
-python () {
-    if d.getVar("PREFERRED_PROVIDER_virtual/kernel") == "linux-intel" and \
-       d.getVar("PREFERRED_VERSION_linux-intel") == "4.14%" or \
-       d.getVar("PREFERRED_PROVIDER_virtual/kernel") == "linux-intel-rt" and \
-       d.getVar("PREFERRED_VERSION_linux-intel-rt") == "4.14%":
-        raise bb.parse.SkipPackage("Out of tree ixgbevf not yet available for Linux Kernel 4.14 or newer")
-}
