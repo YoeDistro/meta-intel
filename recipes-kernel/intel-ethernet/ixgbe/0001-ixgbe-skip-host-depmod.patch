@@ -1,6 +1,6 @@
-From e32eab62e3f79ddd40946ca698d9e650bd7d9b2d Mon Sep 17 00:00:00 2001
+From 5f87ef7ed60bc9762467184ed0a6d000b80713d9 Mon Sep 17 00:00:00 2001
 From: sweeaun <swee.aun.khor@intel.com>
-Date: Sat, 7 Oct 2017 20:49:36 -0700
+Date: Sun, 8 Apr 2018 17:21:52 +0800
 Subject: [PATCH] ixgbe: skip host depmod
 
 Upstream-Status: Inappropriate [Cross-Compile]
@@ -14,10 +14,10 @@ Signed-off-by: sweeaun <swee.aun.khor@intel.com>
  1 file changed, 2 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index fa92f81..b39283a 100644
+index 545489a..07e422f 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -141,8 +141,6 @@ modules_install: default manfile
+@@ -141,8 +141,6 @@ install: default manfile
  	@install -D -m 644 ${DRIVER}.${MANSECTION}.gz ${INSTALL_MOD_PATH}${MANDIR}/man${MANSECTION}/${DRIVER}.${MANSECTION}.gz
  	@echo "Installing modules..."
  	@+$(call devkernelbuild,modules_install)
