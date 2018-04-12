@@ -46,8 +46,6 @@ do_install_append() {
 	install -m 0644 ${WORKDIR}/iwlwifi.conf ${D}${sysconfdir}/modprobe.d
 }
 
-SYSTEMD_AUTO_ENABLE_${PN} = "enable"
-
 RDEPENDS_${PN} = "linux-firmware-iwlwifi"
 
 KERNEL_MODULE_AUTOLOAD_append_core2-32-intel-common = " iwlwifi"
