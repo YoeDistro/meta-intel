@@ -17,12 +17,15 @@ RDEPENDS_${PN}-tests += "bash"
 
 PACKAGE_BEFORE_PN = "${PN}-benchmarks ${PN}-tests"
 
-SRC_URI[md5sum] = "94125e46d528b67b060ba98f3c2e3bee"
-SRC_URI[sha256sum] = "d9af6e7a24cb22e5b6ff8db03a0e6b230f08c17908cedee59e8795d74e18703f"
+SRC_URI[md5sum] = "965c591b23a132084113c2a0604f537a"
+SRC_URI[sha256sum] = "3d66c1dc5110712ca4d22199b3ce9853f261be1690064edf87e69e5392e39a5c"
 
 EXTRA_OECONF = "--disable-nouveau --disable-shader-debugger"
 COMPATIBLE_HOST = "(x86_64.*|i.86.*)-linux"
 COMPATIBLE_HOST_libc-musl_class-target = "null"
+
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[audio] = "--enable-audio,--disable-audio,alsa-lib gsl"
 
 gputools_sysroot_preprocess() {
 	rm -f ${SYSROOT_DESTDIR}${libdir}/pkgconfig/intel-gen4asm.pc
