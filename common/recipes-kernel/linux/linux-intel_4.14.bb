@@ -1,6 +1,6 @@
 require linux-intel.inc
 
-KBRANCH = "4.14/yocto/base"
+KBRANCH = "4.14/base"
 KMETA_BRANCH = "yocto-4.14"
 
 # Fix for 32-bit perf issue. Remove when patch is backported to 4.14.
@@ -8,8 +8,8 @@ SRC_URI_append = " file://0001-perf-x86-32-explicitly-include-errno.h.patch"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "4.14.33"
-SRCREV_machine ?= "636e5363ed33230bde98389dc4abecd4184b8bca"
+LINUX_VERSION ?= "4.14.35"
+SRCREV_machine ?= "3cdbdf1887a9bb3ea528ea1ae3d9c115a5153635"
 SRCREV_meta ?= "245d701df6c3691a078a268eff54009959beb842"
 
 # For Crystalforest and Romley
