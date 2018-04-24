@@ -9,7 +9,7 @@ python () {
         raise bb.parse.SkipPackage("Set PREFERRED_PROVIDER_virtual/kernel to linux-intel-rt to enable it")
 }
 
-KBRANCH = "4.14/yocto/base-rt"
+KBRANCH = "4.14/preempt-rt"
 KMETA_BRANCH = "yocto-4.14"
 
 # Fix for 32-bit perf issue. Remove when patch is backported to 4.14.
@@ -17,8 +17,8 @@ SRC_URI_append = " file://0001-perf-x86-32-explicitly-include-errno.h.patch"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "4.14.29"
-SRCREV_machine ?= "c580716ae72c2bcb2202641e69e1b72d01ee4581"
+LINUX_VERSION ?= "4.14.34"
+SRCREV_machine ?= "c40b54f7eae42ac6ef28b324900c1c99e719e449"
 SRCREV_meta ?= "245d701df6c3691a078a268eff54009959beb842"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
