@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/intel/thermal_daemon/ \
            file://0001-Include-poll.h-instead-of-sys-poll.h.patch \
            file://0002-Use-correct-format-specifier-for-X32.patch \
            "
-SRCREV = "c0d224b7b5cf62d384f5ad0a29bfaaba4bdc4ac1"
+SRCREV = "855c91c91b3b5b52c02cb1adc0dd940f8a39df1b"
 S = "${WORKDIR}/git"
 
 inherit pkgconfig autotools systemd
