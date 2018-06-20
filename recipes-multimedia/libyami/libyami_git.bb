@@ -18,10 +18,10 @@ SRC_URI = "git://github.com/intel/libyami.git;branch=apache \
            file://0007-Delete-unused-variables.patch \
            file://0008-NalUnit-is-declared-in-different-namespace.patch \
            file://0009-Fix-clang-warnings.patch \
-           file://0001-Makefile.am-point-to-build-dir-for-generated-headers.patch \
 "
-SRCREV = "0192c3c041e02e8eb753e9e3e02bfc7b55756ce2"
+SRCREV = "49f32de0e537577927b98deb551e16a7fa89d892"
 S = "${WORKDIR}/git"
+PV = "1.3.0+git${SRCPV}"
 
 PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "x11", "x11", "", d)}"
 PACKAGECONFIG[x11] = "--enable-x11,--disable-x11,virtual/libx11 libxrandr libxrender"
@@ -31,5 +31,4 @@ inherit autotools pkgconfig distro_features_check
 
 REQUIRED_DISTRO_FEATURES = "opengl"
 
-UPSTREAM_CHECK_URI = "https://github.com/intel/libyami/releases"
-UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)"
+UPSTREAM_CHECK_COMMITS = "1"
