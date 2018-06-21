@@ -1,4 +1,4 @@
-From b7e66182788cd925570bb4c310e21fbcd3185040 Mon Sep 17 00:00:00 2001
+From f2e6d2ecfea635ab952649156e31ca893d4b1a47 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 12 Aug 2017 08:49:20 -0700
 Subject: [PATCH] Fix build with clang
@@ -11,9 +11,9 @@ and
 psnr.cpp:225:17: error: bool literal returned from 'main' [-Werror,-Wmain]
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
 Upstream-Status: Pending
 
+---
  tests/decodehelp.cpp    | 2 +-
  tests/encodehelp.h      | 2 +-
  tests/vpp.cpp           | 2 +-
@@ -22,12 +22,12 @@ Upstream-Status: Pending
  5 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/tests/decodehelp.cpp b/tests/decodehelp.cpp
-index a69eab6..2d96598 100644
+index b27b977..62cca63 100644
 --- a/tests/decodehelp.cpp
 +++ b/tests/decodehelp.cpp
-@@ -70,7 +70,7 @@ bool processCmdLine(int argc, char** argv, DecodeParameter* parameters)
-         {"capi", no_argument, NULL, 0},
-         {NULL, no_argument, NULL, 0}};
+@@ -81,7 +81,7 @@ bool processCmdLine(int argc, char** argv, DecodeParameter* parameters)
+         { NULL, no_argument, NULL, 0 }
+     };
  
 -    char opt;
 +    int opt;
@@ -35,10 +35,10 @@ index a69eab6..2d96598 100644
          switch (opt) {
          case 'h':
 diff --git a/tests/encodehelp.h b/tests/encodehelp.h
-index 57ccd77..76df801 100644
+index 63580a4..651ec08 100644
 --- a/tests/encodehelp.h
 +++ b/tests/encodehelp.h
-@@ -107,7 +107,7 @@ static VideoRateControl string_to_rc_mode(char *str)
+@@ -109,7 +109,7 @@ static VideoRateControl string_to_rc_mode(char *str)
  
  static bool process_cmdline(int argc, char *argv[])
  {
@@ -61,10 +61,10 @@ index 5a60c0a..52da43b 100644
              { "help", no_argument, NULL, 'h' },
              { "sharpening", required_argument, NULL, 's' },
 diff --git a/tests/yamitranscode.cpp b/tests/yamitranscode.cpp
-index 4cb72aa..2fc6725 100755
+index 6207209..00164ce 100755
 --- a/tests/yamitranscode.cpp
 +++ b/tests/yamitranscode.cpp
-@@ -95,7 +95,7 @@ static VideoRateControl string_to_rc_mode(char *str)
+@@ -100,7 +100,7 @@ static VideoRateControl string_to_rc_mode(char *str)
  
  static bool processCmdLine(int argc, char *argv[], TranscodeParams& para)
  {
@@ -94,6 +94,3 @@ index 5cc24c9..68bd668 100644
              case 'i':
                  filename1 = optarg;
                  break;
--- 
-2.14.1
-

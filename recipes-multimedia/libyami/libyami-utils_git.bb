@@ -10,12 +10,13 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=e3fc50a88d0a364313df4b21ef20c29e"
 SRC_URI = "git://github.com/intel/libyami-utils.git \
            file://0001-Fix-build-with-clang.patch \
            "
-SRCREV = "d9c62f6a0653aa2e59cd2af9a3c80d82122d2149"
+SRCREV = "06f0e45a34d85fa4f4858ec369adc0c7ed333469"
 S = "${WORKDIR}/git"
+PV = "1.3.0+git${SRCPV}"
 
 DEPENDS = "libva libyami"
 
-EXTRA_OECONF = "--enable-tests-gles --disable-md5"
+EXTRA_OECONF = "--disable-md5"
 
 inherit autotools pkgconfig distro_features_check
 
@@ -25,7 +26,6 @@ PACKAGECONFIG = "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)}"
 
 # --enable-x11 needs libva-x11
 # gles-tests fail to build without x11: see https://github.com/intel/libyami-utils/issues/91
-PACKAGECONFIG[x11] = "--enable-x11 --enable-tests-gles,--disable-x11 --disable-tests-gles, virtual/libx11"
+PACKAGECONFIG[x11] = "--enable-x11 --enable-egl,--disable-x11 --disable-egl, virtual/libx11"
 
-UPSTREAM_CHECK_URI = "http://github.com/intel/libyami-utils/releases"
-UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)"
+UPSTREAM_CHECK_COMMITS = "1"
