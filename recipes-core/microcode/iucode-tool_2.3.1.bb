@@ -14,15 +14,15 @@ BUGTRACKER = "https://bugs.debian.org/cgi-bin/pkgreport.cgi?ordering=normal;arch
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
-                    file://iucode_tool.c;beginline=1;endline=15;md5=5d8e3639c3b6a80e7d5e0e073933da16"
+                    file://iucode_tool.c;beginline=1;endline=15;md5=71eeab3190360ff0267101b570874756"
 
 DEPENDS_append_libc-musl = " argp-standalone"
 
 SRC_URI = "https://gitlab.com/iucode-tool/releases/raw/master/iucode-tool_${PV}.tar.xz"
 SRC_URI_append_libc-musl = " file://0001-Makefile.am-Add-arg-parse-library-for-MUSL-support.patch"
 
-SRC_URI[md5sum] = "c6f131a0b69443f5498782a2335973fa"
-SRC_URI[sha256sum] = "01f1c02ba6935e0ac8440fb594c2ef57ce4437fcbce539e3ef329f55a6fd71ab"
+SRC_URI[md5sum] = "63b33cc0ea1f8c73b443412abbf39d6f"
+SRC_URI[sha256sum] = "12b88efa4d0d95af08db05a50b3dcb217c0eb2bfc67b483779e33d498ddb2f95"
 
 inherit autotools
 
