@@ -2,7 +2,7 @@ include openssl-qat.inc
 
 OPENSSL_VERSION = "1.0.1async"
 
-SRC_URI  += "git://opensslfoundation.com/openssl-async.git;branch=OpenSSL_1_0_1-async;rev=asynch_v0.4.9-009 \
+SRC_URI  += "git://github.com/RIFTIO/openssl-async.git;protocol=https;branch=OpenSSL_1_0_1-async;rev=asynch_v0.4.9-009 \
              file://openssl-qat_0.4.9-009-openssl_qat-add-version-script.patch \
              file://openssl-qat_0.4.9-009-openssl_qat-add-openssl-async-specific-symbols.patch \
              "
