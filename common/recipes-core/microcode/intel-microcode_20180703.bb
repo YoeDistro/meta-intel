@@ -13,12 +13,12 @@ DESCRIPTION = "The microcode data file contains the latest microcode\
 LICENSE = "Intel-Microcode-License"
 LIC_FILES_CHKSUM = "file://Intel-Microcode-License;md5=9052c0dbf7250dc0bef70bd8212b0573"
 
-SRC_URI = "https://downloadmirror.intel.com/27776/eng/microcode-${PV}.tgz \
+SRC_URI = "https://downloadmirror.intel.com/27945/eng/microcode-${PV}.tgz \
            file://Intel-Microcode-License \
            "
 
-SRC_URI[md5sum] = "99c80f9229554953a868127cda44e7e3"
-SRC_URI[sha256sum] = "f0d2492f4561e2559f6c9471b231cb8262d45762c0e7cccf787be5c189b4e2d6"
+SRC_URI[md5sum] = "873f2bdd7c0edf317f416f54fee74b42"
+SRC_URI[sha256sum] = "4a1a346fdf48e1626d4c9d0d47bbbc6a4052f56e359c85a3dd2d10fd555e5938"
 DEPENDS = "iucode-tool-native"
 S = "${WORKDIR}"
 
