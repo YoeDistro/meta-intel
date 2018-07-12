@@ -239,10 +239,6 @@ Other software
 the Intel power clamp driver.
 (https://01.org/linux-thermal-daemon/documentation/introduction-thermal-daemon)
 
-  * RMC - Runtime Machine Configuration, which allows the bootload to determine
-board and CPU information in order to set specific kernel command line
-information at startup.
-
 The intel-common kernel package architecture
 --------------------------------------------
 

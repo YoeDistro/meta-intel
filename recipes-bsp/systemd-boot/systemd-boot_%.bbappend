@@ -13,6 +13,3 @@ do_compile_append_intel-x86-common() {
 do_deploy_append_intel-x86-common() {
 	install ${B}/src/boot/efi/linux*.efi.stub ${DEPLOYDIR}
 }
-
-# includes rmc-boot.inc if rmc-boot is the EFI_PROVIDER
-include systemd-boot/${EFI_PROVIDER}.inc
