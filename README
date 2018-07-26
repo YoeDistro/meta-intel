@@ -155,14 +155,10 @@ repository at the same location.
 b. Booting the intel-common BSP images
 --------------------------------------
 
-If you downloaded the BSP tarball, you will find bootable images in
-the /binary directory.  If you've built your own image, either from
-the downloaded BSP layer or from the meta-intel git repository, you'll
-find the bootable image in the build/tmp/deploy/images/xxx directory,
-where again 'xxx' refers to the machine name used in the build.
-
-The BSP /binary directory or build contains bootable live images,
-which can be used to directly boot Yocto off of a USB flash drive.
+If you've built your own image, either from the downloaded BSP layer
+or from the meta-intel git repository, you'll find the bootable
+image in the build/tmp/deploy/images/xxx directory, where again
+'xxx' refers to the machine name used in the build.
 
 Under Linux, insert a USB flash drive.  Assuming the USB flash drive
 takes device /dev/sdf, use dd to copy the image to it.  Before the image

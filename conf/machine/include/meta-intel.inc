@@ -4,11 +4,6 @@
 # to use them.
 #
 
-#
-# XSERVER subcomponents, used to build the XSERVER variable
-#
-
-# Soft set linux-yocto as preferred kernel like x86-base.inc
 PREFERRED_PROVIDER_virtual/kernel ?= "linux-intel"
 PREFERRED_PROVIDER_virtual/kernel_poky-tiny ?= "linux-intel"
 PREFERRED_VERSION_linux-intel_linuxstdbase ?= "4.9%"
