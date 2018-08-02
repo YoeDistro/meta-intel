@@ -10,11 +10,11 @@ DEPENDS += "elfutils-native openssl-native util-linux-native"
 
 LINUX_VERSION ?= "4.14.59"
 SRCREV_machine ?= "a36b9969b6b2c9321d9c6e907b47211be0f4b99c"
-SRCREV_meta ?= "d64aec9793d558ff49993ff6076be6d4daf101c2"
+SRCREV_meta ?= "8a3be7d783a39b56796e1d5197cb9f757e38f22f"
 
 # For Crystalforest and Romley
 KERNEL_MODULE_AUTOLOAD_append_core2-32-intel-common = " uio"
 KERNEL_MODULE_AUTOLOAD_append_corei7-64-intel-common = " uio"
 
 # Functionality flags
-KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc"
+KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc features/security/security.scc"
