@@ -1,0 +1,36 @@
+From 8af11c1cdd8fa08217e702b57cf96e9030db52b2 Mon Sep 17 00:00:00 2001
+From: Saul Wold <sgw@linux.intel.com>
+Date: Tue, 28 Mar 2017 15:06:08 -0700
+Subject: [PATCH] ver_linux: Use /usr/bin/awk instead of /bin/awk
+
+Most Linux distributions contain awk in /usr/bin by default,
+not in /bin. This script's suggested use is for creating version
+information for bug reporting.
+
+This has been tested on a number of different distributions,
+including Fedora, Ubuntu, OpenSUSE, Debian, Centos, Arch Linuxi,
+and Poky!
+
+Upstream-Status: Backport
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+Reviewed-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Reviewed-by: Mark Gross <mgross@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ scripts/ver_linux | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/ver_linux b/scripts/ver_linux
+index 430b201f3e25..b51de8a7e2a3 100755
+--- a/scripts/ver_linux
++++ b/scripts/ver_linux
+@@ -1,4 +1,4 @@
+-#!/bin/awk -f
++#!/usr/bin/awk -f
+ # Before running this script please ensure that your PATH is
+ # typical as you use for compilation/installation. I use
+ # /bin /sbin /usr/bin /usr/sbin /usr/local/bin, but it may
+-- 
+2.17.1
+
