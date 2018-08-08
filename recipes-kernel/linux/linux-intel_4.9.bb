@@ -4,10 +4,8 @@ require linux-intel.inc
 KBRANCH = "4.9/yocto/base"
 KMETA_BRANCH = "yocto-4.9"
 
-SRC_URI_append = " file://0001-ver_linux-point-to-usr-bin-awk.patch"
-
 LINUX_VERSION ?= "4.9.116"
-SRCREV_machine ?= "521a610f0eab91e6f8c36c88916338e2cb36aa1c"
+SRCREV_machine ?= "36a5f3d10a2e660653cb2d237754081b8fd5af31"
 SRCREV_meta ?= "5e993963afb54bdc82a02077c29ecdbc0b12368e"
 
 # For Crystalforest and Romley
