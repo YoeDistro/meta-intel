@@ -3,7 +3,7 @@ require recipes-kernel/linux/linux-yocto.inc
 
 KBRANCH = "4.9/yocto/base"
 
-SRCREV_machine ?= "9116ef3dfd570cb565989926233ebcaf03ad76fb"
+SRCREV_machine ?= "36a5f3d10a2e660653cb2d237754081b8fd5af31"
 SRCREV_meta ?= "5e993963afb54bdc82a02077c29ecdbc0b12368e"
 
 SRC_URI = "git://github.com/intel/linux-intel-lts.git;protocol=https;name=machine;branch=${KBRANCH}; \
@@ -11,7 +11,7 @@ SRC_URI = "git://github.com/intel/linux-intel-lts.git;protocol=https;name=machin
 
 SRC_URI_append_core2-32-intel-common = " file://disable_skylake_sound.cfg"
 
-LINUX_VERSION ?= "4.9.113"
+LINUX_VERSION ?= "4.9.116"
 LINUX_VERSION_EXTENSION = "-intel-pk-${LINUX_KERNEL_TYPE}"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
