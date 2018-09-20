@@ -17,8 +17,8 @@ RDEPENDS_${PN}-tests += "bash"
 
 PACKAGE_BEFORE_PN = "${PN}-benchmarks ${PN}-tests"
 
-SRC_URI[md5sum] = "965c591b23a132084113c2a0604f537a"
-SRC_URI[sha256sum] = "3d66c1dc5110712ca4d22199b3ce9853f261be1690064edf87e69e5392e39a5c"
+SRC_URI[md5sum] = "04c1f10d6fd85e079271540b0ea786e9"
+SRC_URI[sha256sum] = "4d4b086c513bace5c23d0889de3f42ac3ebd3d968c64dedae6e28e006a499ad0"
 
 EXTRA_OECONF = "--disable-nouveau --disable-shader-debugger"
 COMPATIBLE_HOST = "(x86_64.*|i.86.*)-linux"
