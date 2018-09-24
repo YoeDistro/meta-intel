@@ -14,10 +14,9 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ea8831610e926e2e469075b52bf08848"
 
 SRC_URI = "git://github.com/intel/thermal_daemon/ \
-           file://0001-Include-poll.h-instead-of-sys-poll.h.patch \
-           file://0002-Use-correct-format-specifier-for-X32.patch \
+           file://0001-Use-correct-format-specifier-for-size_t.patch \
            "
-SRCREV = "855c91c91b3b5b52c02cb1adc0dd940f8a39df1b"
+SRCREV = "517c0e5f92d49aeeef3a22b04caf40d588216827"
 S = "${WORKDIR}/git"
 
 inherit pkgconfig autotools systemd
