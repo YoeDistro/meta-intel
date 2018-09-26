@@ -11,7 +11,7 @@ inherit autotools gtk-doc
 
 SRC_URI = "${XORG_MIRROR}/individual/app/${BP}.tar.xz"
 
-DEPENDS += "libdrm libpciaccess cairo udev glib-2.0 libxv libx11 libxext libxrandr procps libunwind"
+DEPENDS += "libdrm libpciaccess cairo udev glib-2.0 libxv libx11 libxext libxrandr procps libunwind kmod openssl"
 RDEPENDS_${PN} += "bash"
 RDEPENDS_${PN}-tests += "bash"
 
