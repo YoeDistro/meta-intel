@@ -13,15 +13,13 @@ SRC_URI = "git://github.com/intel/libyami.git;branch=apache \
            file://0002-typecast-index-from-size_t-to-int.patch \
            file://0003-Add-Wno-invalid-offsetof-to-compiler-commandline.patch \
            file://0004-Typecast-POWER32SUB2-to-uint8_t.patch \
-           file://0005-move-c-definitions-out-of-extern-C-block.patch \
            file://0006-Avoid-namespace-conflicts-by-adding-explicit-using-n.patch \
            file://0007-Delete-unused-variables.patch \
            file://0008-NalUnit-is-declared-in-different-namespace.patch \
            file://0009-Fix-clang-warnings.patch \
 "
-SRCREV = "49f32de0e537577927b98deb551e16a7fa89d892"
+SRCREV = "fb48083de91f837ddbf599dd4b5ad1eb1239e1cf"
 S = "${WORKDIR}/git"
-PV = "1.3.0+git${SRCPV}"
 
 PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "x11", "x11", "", d)}"
 PACKAGECONFIG[x11] = "--enable-x11,--disable-x11,virtual/libx11 libxrandr libxrender"
@@ -30,5 +28,3 @@ DEPENDS = "libva"
 inherit autotools pkgconfig distro_features_check
 
 REQUIRED_DISTRO_FEATURES = "opengl"
-
-UPSTREAM_CHECK_COMMITS = "1"
