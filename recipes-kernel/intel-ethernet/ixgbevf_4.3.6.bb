@@ -15,8 +15,8 @@ SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/${PV}/$
            file://0001-Makefile-check-for-CONFIG_IXGBEVF-instead.patch \
            "
 
-SRC_URI[md5sum] = "cdd9c52f034223c114d4b10345d11fe9"
-SRC_URI[sha256sum] = "f2ae017462bd1ea8082710580ec3dadfc322a0b2ecd4a576a16f0a4b622e5968"
+SRC_URI[md5sum] = "fc53be00bf5e71939a9a39e9802d5b77"
+SRC_URI[sha256sum] = "61ac4e93808fa4316b044bae40f2a1dc40e4d9ae9a1785a753cdfc79b515d695"
 
 S = "${WORKDIR}/${BP}/src"
 MODULES_INSTALL_TARGET = "install"
