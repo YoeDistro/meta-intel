@@ -11,8 +11,8 @@ SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbe%20stable/${PV}/${B
            file://0001-ixgbe-skip-host-depmod.patch \
            "
 
-SRC_URI[md5sum] = "7d02dd0173bc8a2a043b0c87817d6c37"
-SRC_URI[sha256sum] = "1a38ae395f18cd4ce3c57f17beb22282171196115baa744b3a53cb7a80ead32b"
+SRC_URI[md5sum] = "bc607eb17d119014ce51695177cb27f5"
+SRC_URI[sha256sum] = "bdc7c71ebc6d1e836bd5bb495174ea89f1472b5a8f3597b93ecdedb5aa739052"
 
 S = "${WORKDIR}/${BP}/src"
 MODULES_INSTALL_TARGET = "install"
