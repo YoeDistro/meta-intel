@@ -33,10 +33,10 @@ gputools_sysroot_preprocess() {
 SYSROOT_PREPROCESS_FUNCS += "gputools_sysroot_preprocess"
 
 FILES_${PN} += "${libdir}/intel_aubdump.so"
-FILES_${PN}-benchmarks += "${libexecdir}/intel-gpu-tools/benchmarks"
+FILES_${PN}-benchmarks += "${libexecdir}/${BPN}/benchmarks"
 FILES_${PN}-tests += "\
-		${libexecdir}/intel-gpu-tools/*\
-		${datadir}/intel-gpu-tools/1080p-right.png\
-		${datadir}/intel-gpu-tools/1080p-left.png\
-		${datadir}/intel-gpu-tools/pass.png\
-		${datadir}/intel-gpu-tools/test-list.txt"
+		${libexecdir}/${BPN}/*\
+		${datadir}/${BPN}/1080p-right.png\
+		${datadir}/${BPN}/1080p-left.png\
+		${datadir}/${BPN}/pass.png\
+		${datadir}/${BPN}/test-list.txt"
