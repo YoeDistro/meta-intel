@@ -21,11 +21,11 @@ Dependencies
 This layer depends on:
 
   URI: git://git.openembedded.org/bitbake
-  branch: 1.38
+  branch: master
 
   URI: git://git.openembedded.org/openembedded-core
   layers: meta
-  branch: sumo
+  branch: master
 
 
 Table of Contents
