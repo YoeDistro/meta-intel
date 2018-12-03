@@ -5,14 +5,14 @@ PCI Express* 10 Gigabit Network Connections."
 HOMEPAGE = "https://sourceforge.net/projects/e1000/"
 SECTION = "kernel/network"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/${BP}/COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/${BP}/COPYING;md5=a216b4192dc6b777b6f0db560e9a8417"
 
 SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbe%20stable/${PV}/${BP}.tar.gz \
            file://0001-ixgbe-skip-host-depmod.patch \
            "
 
-SRC_URI[md5sum] = "bc607eb17d119014ce51695177cb27f5"
-SRC_URI[sha256sum] = "bdc7c71ebc6d1e836bd5bb495174ea89f1472b5a8f3597b93ecdedb5aa739052"
+SRC_URI[md5sum] = "678514cb0e24f1c11d53d156a9845e64"
+SRC_URI[sha256sum] = "1c1386e4eb0b4526d2edeb04cac657e1d74c2e5cef3f2d00a26a23926744ef1a"
 
 S = "${WORKDIR}/${BP}/src"
 MODULES_INSTALL_TARGET = "install"
