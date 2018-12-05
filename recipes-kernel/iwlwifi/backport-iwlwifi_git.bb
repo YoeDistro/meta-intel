@@ -52,3 +52,5 @@ KERNEL_MODULE_AUTOLOAD_append_core2-32-intel-common = " iwlwifi"
 KERNEL_MODULE_AUTOLOAD_append_corei7-64-intel-common = " iwlwifi"
 
 KERNEL_MODULE_PACKAGE_PREFIX = "backport-iwlwifi"
+
+EXCLUDE_FROM_WORLD = "1"
