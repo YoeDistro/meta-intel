@@ -14,8 +14,8 @@ COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 DEPENDS = "libva libdrm"
 
 SRC_URI = "https://github.com/intel/${BPN}/releases/download/${PV}/${BPN}-${PV}.tar.bz2"
-SRC_URI[md5sum] = "e296c52fa1cb5c3d53a6cc994ce0a66c"
-SRC_URI[sha256sum] = "e8a5f54694eb76aad42653b591030b8a53b1513144c09a80defb3d8d8c875c18"
+SRC_URI[md5sum] = "9d835d1a3f7a9ef394f0f4c348cd4b3e"
+SRC_URI[sha256sum] = "5c2e5deab024a0a6ae81dfe77ef455542a88d824eda7bfd07684337407ecdfe3"
 
 UPSTREAM_CHECK_URI = "https://github.com/intel/intel-vaapi-driver/releases"
 
