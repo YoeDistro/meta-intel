@@ -20,13 +20,9 @@ inherit module
 PV = "30"
 SRCREV = "b31221a99488021300e7f89d2ecf9bdd2bc52dd2"
 
-# Add a patch for Intel's Production Kernel as it's got a backport of HRTimers
-PK_PATCH = "${@bb.utils.contains('PREFERRED_PROVIDER_virtual/kernel','linux-intel','file://0001-hrtimer-fix-version-numbers-because-production-kerne.patch','',d)}"
-
 SRC_URI = " \
            git://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/backport-iwlwifi;branch=release/LinuxCore${PV} \
            file://0001-Makefile.real-skip-host-install-scripts.patch \
-           ${PK_PATCH} \
            file://iwlwifi.conf \
           "
 
