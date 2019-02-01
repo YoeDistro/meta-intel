@@ -23,6 +23,8 @@ SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;branch=intel-m
 SRCREV = "00f9ae5dd6e2bff4da2aaa5b39df4f75588405de"
 S = "${WORKDIR}/git"
 
+UPSTREAM_CHECK_GITTAGREGEX = "^intel-media-(?P<pver>(?!600\..*)\d+(\.\d+)+)$"
+
 inherit cmake pkgconfig
 
 MEDIA_DRIVER_ARCH_x86    = "32"
