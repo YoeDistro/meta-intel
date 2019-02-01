@@ -14,6 +14,8 @@ SRCREV = "e52096b67adeba76c76007a00924b76152a3f5d6"
 
 S = "${WORKDIR}/git"
 
+UPSTREAM_CHECK_GITTAGREGEX = "^intel-gmmlib-(?P<pver>(\d+(\.\d+)+))$"
+
 inherit pkgconfig cmake
 
 EXTRA_OECMAKE += "-DRUN_TEST_SUITE=OFF"
