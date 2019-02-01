@@ -26,6 +26,8 @@ SRC_URI = " \
 SRCREV = "2e946771649c47525fcbbea057e2a2c1072e173e"
 S = "${WORKDIR}/git"
 
+UPSTREAM_CHECK_GITTAGREGEX = "^intel-mediasdk-(?P<pver>(\d+(\.\d+)+))$"
+
 inherit cmake pkgconfig
 
 EXTRA_OECMAKE += "-DMFX_INCLUDE=${S}/api/include -DBUILD_SAMPLES=OFF"
