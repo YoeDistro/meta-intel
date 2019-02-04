@@ -16,11 +16,11 @@ COMPATIBLE_HOST = '(x86_64).*-linux'
 
 DEPENDS += "libva gmmlib"
 
-SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;branch=intel-media-18.3 \
+SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;branch=intel-media-18.4 \
            file://0001-linux-fix-build-when-using-musl.patch \
            "
 
-SRCREV = "00f9ae5dd6e2bff4da2aaa5b39df4f75588405de"
+SRCREV = "1d28de1af9e26d75aba663acd1d7d28d70591e76"
 S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^intel-media-(?P<pver>(?!600\..*)\d+(\.\d+)+)$"
