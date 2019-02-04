@@ -20,10 +20,10 @@ PACKAGECONFIG[dri3] 	= "-DENABLE_X11_DRI3=ON, -DENABLE_X11_DRI3=OFF"
 PACKAGECONFIG[wayland]	= "-DENABLE_WAYLAND=ON, -DENABLE_WAYLAND=OFF, wayland wayland-native"
 
 SRC_URI = " \
-            git://github.com/Intel-Media-SDK/MediaSDK.git;protocol=https;branch=${BPN}-18.3 \
+            git://github.com/Intel-Media-SDK/MediaSDK.git;protocol=https;branch=${BPN}-18.4 \
             "
 
-SRCREV = "2e946771649c47525fcbbea057e2a2c1072e173e"
+SRCREV = "7d35bc514df86e661e3b8db26ca449c8e32b41bc"
 S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^intel-mediasdk-(?P<pver>(\d+(\.\d+)+))$"
