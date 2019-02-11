@@ -8,6 +8,7 @@ PREFERRED_PROVIDER_virtual/kernel ?= "linux-intel"
 PREFERRED_PROVIDER_virtual/kernel_poky-tiny ?= "linux-intel"
 PREFERRED_VERSION_linux-intel_linuxstdbase ?= "4.9%"
 PREFERRED_VERSION_linux-intel ?= "4.14%"
+PREFERRED_VERSION_linux-intel-rt ?= "4.14%"
 
 XSERVER_X86_ASPEED_AST = "xf86-video-ast \
            "
