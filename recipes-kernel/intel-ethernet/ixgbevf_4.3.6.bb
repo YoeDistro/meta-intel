@@ -18,6 +18,9 @@ SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/${PV}/$
 SRC_URI[md5sum] = "fc53be00bf5e71939a9a39e9802d5b77"
 SRC_URI[sha256sum] = "61ac4e93808fa4316b044bae40f2a1dc40e4d9ae9a1785a753cdfc79b515d695"
 
+UPSTREAM_CHECK_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/"
+UPSTREAM_CHECK_REGEX = "ixgbevf%20stable/(?P<pver>\d+(\.\d+)+)/"
+
 S = "${WORKDIR}/${BP}/src"
 MODULES_INSTALL_TARGET = "install"
 
