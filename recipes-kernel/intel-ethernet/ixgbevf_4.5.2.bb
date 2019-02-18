@@ -8,15 +8,14 @@ The guest OS loading this driver must support MSI-X interrupts."
 HOMEPAGE = "https://sourceforge.net/projects/e1000/"
 SECTION = "kernel/network"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/${BP}/COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/${BP}/COPYING;md5=a216b4192dc6b777b6f0db560e9a8417"
 
 SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/${PV}/${BP}.tar.gz \
            file://0001-ixgbevf-skip-host-depmod.patch \
-           file://0001-Makefile-check-for-CONFIG_IXGBEVF-instead.patch \
            "
 
-SRC_URI[md5sum] = "fc53be00bf5e71939a9a39e9802d5b77"
-SRC_URI[sha256sum] = "61ac4e93808fa4316b044bae40f2a1dc40e4d9ae9a1785a753cdfc79b515d695"
+SRC_URI[md5sum] = "5f6d8fd847ccd00a9a8be9a1f989a56b"
+SRC_URI[sha256sum] = "5b1d5b6b511b2d2c337b02d0f058fed8036ccbe5097460e60d367808d42bc304"
 
 UPSTREAM_CHECK_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/"
 UPSTREAM_CHECK_REGEX = "ixgbevf%20stable/(?P<pver>\d+(\.\d+)+)/"
