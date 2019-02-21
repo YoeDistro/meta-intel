@@ -21,15 +21,16 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPLv3;md5=9eef91148a9b14ec7f9df333daebc746 \
 # not been maintained and many patches have been backported in this repo.
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/jejb/sbsigntools.git;protocol=https;name=sbsigntools \
            git://github.com/rustyrussell/ccan.git;protocol=https;destsuffix=git/lib/ccan.git;name=ccan \
+           file://0001-configure-Fixup-build-dependencies-for-cross-compili.patch \
           "
 
-SRCREV_sbsigntools  ?= "efbb550858e7bd3f43e64228d22aea440ef6a14d"
+SRCREV_sbsigntools  ?= "216dbd3331a7e14ff79cc4dd68c29896f1152ae4"
 SRCREV_ccan         ?= "b1f28e17227f2320d07fe052a8a48942fe17caa5"
 SRCREV_FORMAT       =  "sbsigntools_ccan"
 
-DEPENDS = "binutils-native gnu-efi-native help2man-native openssl10-native util-linux-native"
+DEPENDS = "binutils-native gnu-efi-native help2man-native openssl-native util-linux-native"
 
-PV = "0.8-git${SRCPV}"
+PV = "0.9.2-git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
@@ -37,6 +38,8 @@ inherit native autotools pkgconfig
 
 do_configure_prepend() {
 	cd ${S}
+
+	sed -i s#RECIPE_SYSROOT#${RECIPE_SYSROOT_NATIVE}#g configure.ac
 
 	if [ ! -e lib/ccan ]; then
 
