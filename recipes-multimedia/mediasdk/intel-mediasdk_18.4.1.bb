@@ -23,7 +23,7 @@ SRC_URI = " \
             git://github.com/Intel-Media-SDK/MediaSDK.git;protocol=https;branch=${BPN}-18.4 \
             "
 
-SRCREV = "7d35bc514df86e661e3b8db26ca449c8e32b41bc"
+SRCREV = "16652e74ce5f5546f1aaf911cce1a4fbd33d10bb"
 S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^intel-mediasdk-(?P<pver>(\d+(\.\d+)+))$"
