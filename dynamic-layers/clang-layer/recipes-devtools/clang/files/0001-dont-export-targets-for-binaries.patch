@@ -1,0 +1,66 @@
+From 7bbd0058362ac3bb5edd7a82d43e1785810776b3 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Fri, 29 Mar 2019 08:56:53 +0800
+Subject: [PATCH] dont export targets for binaries
+
+The projects using LLVM cmake modules look for target binaries in
+sysroot as a result which isn't desirable in this case and isn't needed
+either.
+
+Upstream-Status: Inappropriate [cross-compile specific] 
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ llvm/cmake/modules/AddLLVM.cmake  | 9 ---------
+ llvm/cmake/modules/TableGen.cmake | 6 ------
+ 2 files changed, 15 deletions(-)
+
+diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
+index 0df6845..b79f4fa 100644
+--- a/llvm/cmake/modules/AddLLVM.cmake
++++ b/llvm/cmake/modules/AddLLVM.cmake
+@@ -866,12 +866,6 @@ macro(add_llvm_tool name)
+ 
+   if ( ${name} IN_LIST LLVM_TOOLCHAIN_TOOLS OR NOT LLVM_INSTALL_TOOLCHAIN_ONLY)
+     if( LLVM_BUILD_TOOLS )
+-      if(${name} IN_LIST LLVM_DISTRIBUTION_COMPONENTS OR
+-          NOT LLVM_DISTRIBUTION_COMPONENTS)
+-        set(export_to_llvmexports EXPORT LLVMExports)
+-        set_property(GLOBAL PROPERTY LLVM_HAS_EXPORTS True)
+-      endif()
+-
+       install(TARGETS ${name}
+               ${export_to_llvmexports}
+               RUNTIME DESTINATION ${LLVM_TOOLS_INSTALL_DIR}
+@@ -884,9 +878,6 @@ macro(add_llvm_tool name)
+       endif()
+     endif()
+   endif()
+-  if( LLVM_BUILD_TOOLS )
+-    set_property(GLOBAL APPEND PROPERTY LLVM_EXPORTS ${name})
+-  endif()
+   set_target_properties(${name} PROPERTIES FOLDER "Tools")
+ endmacro(add_llvm_tool name)
+ 
+diff --git a/llvm/cmake/modules/TableGen.cmake b/llvm/cmake/modules/TableGen.cmake
+index 3c84ae7..141219f 100644
+--- a/llvm/cmake/modules/TableGen.cmake
++++ b/llvm/cmake/modules/TableGen.cmake
+@@ -164,14 +164,8 @@ macro(add_tablegen target project)
+   endif()
+ 
+   if (${project} STREQUAL LLVM AND NOT LLVM_INSTALL_TOOLCHAIN_ONLY)
+-    if(${target} IN_LIST LLVM_DISTRIBUTION_COMPONENTS OR
+-        NOT LLVM_DISTRIBUTION_COMPONENTS)
+-      set(export_to_llvmexports EXPORT LLVMExports)
+-    endif()
+-
+     install(TARGETS ${target}
+             ${export_to_llvmexports}
+             RUNTIME DESTINATION ${LLVM_TOOLS_INSTALL_DIR})
+   endif()
+-  set_property(GLOBAL APPEND PROPERTY LLVM_EXPORTS ${target})
+ endmacro()
+-- 
+2.7.4
+
