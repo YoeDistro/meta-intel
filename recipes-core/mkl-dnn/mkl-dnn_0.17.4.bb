@@ -13,6 +13,8 @@ S = "${WORKDIR}/git"
 SRCREV = "722901c9aaefa579698df778d061d4848ab8c3e3"
 SRC_URI = "git://github.com/intel/mkl-dnn.git;branch=rls-v0.17"
 
+UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>(\d+(\.\d+)+))$"
+
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST_libc-musl = 'null'
 
