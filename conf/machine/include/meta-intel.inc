@@ -6,6 +6,12 @@
 
 PREFERRED_PROVIDER_virtual/kernel ?= "linux-intel"
 PREFERRED_PROVIDER_virtual/kernel_poky-tiny ?= "linux-intel"
+
+# Only use the Intel-tuned zlib for target builds to improve reuse
+PREFERRED_PROVIDER_zlib = "zlib-intel"
+PREFERRED_PROVIDER_zlib-native = "zlib-native"
+PREFERRED_PROVIDER_nativesdk-zlib = "nativesdk-zlib"
+
 PREFERRED_VERSION_linux-intel_linuxstdbase ?= "4.19%"
 PREFERRED_VERSION_linux-intel ?= "4.19%"
 PREFERRED_VERSION_linux-intel-rt ?= "4.19%"
