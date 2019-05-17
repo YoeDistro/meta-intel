@@ -368,7 +368,8 @@ Turbot, so it is tested against both intel-corei7-64 and intel-core2-32.
 
 intel-corei7-64:
     NUC6i5SYH
-    MinnowBoard Turbot
+    NUC7i7BNH
+    Coffee Lake-H
 
 intel-core2-32:
     MinnowBoard Turbot
