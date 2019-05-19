@@ -1,0 +1,66 @@
+From 55026979d71852aa2cf5e19bb4adb2db98affd1e Mon Sep 17 00:00:00 2001
+From: Michael Jeanson <mjeanson@efficios.com>
+Date: Mon, 18 Mar 2019 16:20:32 -0400
+Subject: [PATCH 1/5] Fix: mm: create the new vm_fault_t type (v5.1)
+
+See upstream commit:
+
+  commit 3d3539018d2cbd12e5af4a132636ee7fd8d43ef0
+  Author: Souptick Joarder <jrdr.linux@gmail.com>
+  Date:   Thu Mar 7 16:31:14 2019 -0800
+
+    mm: create the new vm_fault_t type
+
+    Page fault handlers are supposed to return VM_FAULT codes, but some
+    drivers/file systems mistakenly return error numbers.  Now that all
+    drivers/file systems have been converted to use the vm_fault_t return
+    type, change the type definition to no longer be compatible with 'int'.
+    By making it an unsigned int, the function prototype becomes
+    incompatible with a function which returns int.  Sparse will detect any
+    attempts to return a value which is not a VM_FAULT code.
+
+    VM_FAULT_SET_HINDEX and VM_FAULT_GET_HINDEX values are changed to avoid
+    conflict with other VM_FAULT codes.
+
+Upstream-Status: Backport [http://git.lttng.org/?p=lttng-modules.git;a=commit;h=2ca0c84f0b4a915c555a0b83102d94ac941619ca]
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ lib/ringbuffer/ring_buffer_mmap.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/lib/ringbuffer/ring_buffer_mmap.c b/lib/ringbuffer/ring_buffer_mmap.c
+index 4b1b7b3..6592a82 100644
+--- a/lib/ringbuffer/ring_buffer_mmap.c
++++ b/lib/ringbuffer/ring_buffer_mmap.c
+@@ -32,7 +32,11 @@
+ /*
+  * fault() vm_op implementation for ring buffer file mapping.
+  */
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,1,0))
++static vm_fault_t lib_ring_buffer_fault_compat(struct vm_area_struct *vma, struct vm_fault *vmf)
++#else
+ static int lib_ring_buffer_fault_compat(struct vm_area_struct *vma, struct vm_fault *vmf)
++#endif
+ {
+ 	struct lib_ring_buffer *buf = vma->vm_private_data;
+ 	struct channel *chan = buf->backend.chan;
+@@ -65,7 +69,13 @@ static int lib_ring_buffer_fault_compat(struct vm_area_struct *vma, struct vm_fa
+ 	return 0;
+ }
+ 
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,11,0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,1,0))
++static vm_fault_t lib_ring_buffer_fault(struct vm_fault *vmf)
++{
++	struct vm_area_struct *vma = vmf->vma;
++	return lib_ring_buffer_fault_compat(vma, vmf);
++}
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(4,11,0))
+ static int lib_ring_buffer_fault(struct vm_fault *vmf)
+ {
+ 	struct vm_area_struct *vma = vmf->vma;
+-- 
+2.17.0
+
