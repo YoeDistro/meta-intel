@@ -1,0 +1,40 @@
+From f01796214bbde31e37b0593e547ad9436fdd02ba Mon Sep 17 00:00:00 2001
+From: Petri Latvala <petri.latvala@intel.com>
+Date: Wed, 9 Jan 2019 14:28:29 +0200
+Subject: [PATCH] lib/fb: Fix rgb24 to nv12 conversion
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+A typo fix in 1x2 pixel block conversion code, revealed by GCC 9
+
+Fixes: 1c7ef3890045 ("lib: Use igt_matrix for ycbcr<->rgb conversion")
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=109257
+Reported-by: Martin Liska <mliska@suse.cz>
+Signed-off-by: Petri Latvala <petri.latvala@intel.com>
+Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+
+Upstream-Status: Backport
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ lib/igt_fb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/igt_fb.c b/lib/igt_fb.c
+index 8244e517..5cd1829a 100644
+--- a/lib/igt_fb.c
++++ b/lib/igt_fb.c
+@@ -1779,7 +1779,7 @@ static void convert_rgb24_to_nv12(struct fb_convert *cvt)
+ 			struct igt_vec4 yuv[2];
+ 
+ 			read_rgb(&rgb[0], &rgb24[j * 8 + 0]);
+-			read_rgb(&rgb[2], &rgb24[j * 8 + 0 + rgb24_stride]);
++			read_rgb(&rgb[1], &rgb24[j * 8 + 0 + rgb24_stride]);
+ 
+ 			yuv[0] = igt_matrix_transform(&m, &rgb[0]);
+ 			yuv[1] = igt_matrix_transform(&m, &rgb[1]);
+-- 
+2.20.1
+

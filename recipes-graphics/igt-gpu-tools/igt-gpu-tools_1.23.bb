@@ -9,7 +9,9 @@ LICENSE_append = " & ISC"
 
 inherit autotools gtk-doc
 
-SRC_URI = "${XORG_MIRROR}/individual/app/${BP}.tar.xz"
+SRC_URI = "${XORG_MIRROR}/individual/app/${BP}.tar.xz \
+           file://0001-lib-fb-Fix-rgb24-to-nv12-conversion.patch \
+           "
 
 DEPENDS += "libdrm libpciaccess cairo udev glib-2.0 libxv libx11 libxext libxrandr procps libunwind kmod openssl"
 RDEPENDS_${PN} += "bash"
