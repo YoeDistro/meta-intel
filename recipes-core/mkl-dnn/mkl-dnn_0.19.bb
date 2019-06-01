@@ -10,8 +10,8 @@ SECTION = "lib"
 inherit pkgconfig cmake
 
 S = "${WORKDIR}/git"
-SRCREV = "7de7e5d02bf687f971e7668963649728356e0c20"
-SRC_URI = "git://github.com/intel/mkl-dnn.git;branch=rls-v0.18"
+SRCREV = "41bee20d7eb4a67feeeeb8d597b3598994eb1959"
+SRC_URI = "git://github.com/intel/mkl-dnn.git;branch=rls-v0.19"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>(\d+(\.\d+)+))$"
 
