@@ -10,8 +10,8 @@ SRC_URI_append = " file://0001-perf-x86-32-explicitly-include-errno.h.patch \
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "4.14.101"
-SRCREV_machine ?= "b886a5ba841c5fd546da47fa4c3811081bee29d1"
+LINUX_VERSION ?= "4.14.110"
+SRCREV_machine ?= "f93147df5d96922347d0a4143ad06ae5d45d1caf"
 SRCREV_meta ?= "bc35d5bd224ab031440a69f9806d839db382f05c"
 
 # For Crystalforest and Romley
