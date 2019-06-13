@@ -17,6 +17,7 @@ SRC_URI = "git://github.com/intel/libyami.git;branch=apache \
            file://0007-Delete-unused-variables.patch \
            file://0008-NalUnit-is-declared-in-different-namespace.patch \
            file://0009-Fix-clang-warnings.patch \
+           file://0010-h26xparser-Fix-build-error-with-GCC9.patch \
 "
 SRCREV = "fb48083de91f837ddbf599dd4b5ad1eb1239e1cf"
 S = "${WORKDIR}/git"
