@@ -1,0 +1,76 @@
+From c3e985e0e82e9b4c2cc8d4dbfd8ff7890daa50e0 Mon Sep 17 00:00:00 2001
+From: "Wesierski, Lukasz" <lukasz.wesierski@intel.com>
+Date: Thu, 6 Jun 2019 21:00:00 -0700
+Subject: [PATCH] Fix for the gcc-9 issue.
+
+Fixes #91
+
+Change-Id: I8149771d6add9645126cb94584f46485c256a488
+
+Upstream-Status: Backport
+[https://github.com/intel/intel-graphics-compiler/commit/b95b2220ddd1d50b718cae6829d832a14ff60790]
+
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ IGC/AdaptorOCL/cif/cif/common/cif.h |  8 ++++++++
+ IGC/common/LLVMWarningsPop.hpp      |  4 ++++
+ IGC/common/LLVMWarningsPush.hpp     | 10 ++++++++++
+ 3 files changed, 22 insertions(+)
+
+diff --git a/IGC/AdaptorOCL/cif/cif/common/cif.h b/IGC/AdaptorOCL/cif/cif/common/cif.h
+index 99d67d5a..00352964 100644
+--- a/IGC/AdaptorOCL/cif/cif/common/cif.h
++++ b/IGC/AdaptorOCL/cif/cif/common/cif.h
+@@ -310,6 +310,14 @@ struct InterfacesList {
+         requestedInterfaceId, std::forward<DefaultValueT>(defaultValue), std::forward<Args>(args)...);
+   }
+ 
++  /// Calls Callable::Call with all contained interfaces (sequentially, one at a time) as template parameters.
++  /// Arguments will be forwarded as regular function parameters to Callable::Call.
++  template <typename Callable, typename RetType, typename DefaultValueT>
++  static RetType forwardToOne(InterfaceId_t requestedInterfaceId, DefaultValueT &&defaultValue) {
++    return forwardToOneImpl<0, RetType, Callable, DefaultValueT, InterfacePack<SupportedInterfaces...>>(
++        requestedInterfaceId, std::forward<DefaultValueT>(defaultValue));
++  }
++
+   /// Calls Callable::Call with all contained interfaces (sequentially, one at a time) as template parameters.
+   /// Arguments will be forwarded as regular function parameters to Callable::Call.
+   template <typename Callable, typename... Args>
+diff --git a/IGC/common/LLVMWarningsPop.hpp b/IGC/common/LLVMWarningsPop.hpp
+index 9875acb8..f8e405d2 100644
+--- a/IGC/common/LLVMWarningsPop.hpp
++++ b/IGC/common/LLVMWarningsPop.hpp
+@@ -57,3 +57,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ #ifdef _MSC_VER
+ #   pragma  warning( pop )
+ #endif
++
++#if defined(__linux__)
++#   pragma GCC diagnostic pop
++#endif
+diff --git a/IGC/common/LLVMWarningsPush.hpp b/IGC/common/LLVMWarningsPush.hpp
+index bab4a5e1..aca8db34 100644
+--- a/IGC/common/LLVMWarningsPush.hpp
++++ b/IGC/common/LLVMWarningsPush.hpp
+@@ -55,8 +55,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ #   pragma warning( push )
+ #endif
+ 
++#if defined(__linux__)
++#   pragma GCC diagnostic push
++#endif
++
+ #include <llvm/Config/llvm-config.h>
+ 
++#if defined(__linux__)
++#    if __GNUC__ > 8
++#        pragma GCC diagnostic ignored "-Winit-list-lifetime"
++#    endif
++#endif
++
+ #if defined( _WIN32 ) || defined( _WIN64 )
+ 
+ // 'inline' : used more than once
+-- 
+2.17.0
+
