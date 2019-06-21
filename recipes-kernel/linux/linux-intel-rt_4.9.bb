@@ -13,8 +13,8 @@ python () {
 KBRANCH = "4.9/yocto/base-rt"
 KMETA_BRANCH = "yocto-4.9"
 
-LINUX_VERSION ?= "4.9.84"
-SRCREV_machine ?= "33b17c3a62dc470c849f85ce2a90cfa90e96bcf5"
+LINUX_VERSION ?= "4.9.146"
+SRCREV_machine ?= "bc2342621494c9c1b28ce29110fb95c80a17a1be"
 SRCREV_meta ?= "bae5cc4e973f60baa35ed227ba0c3bdda4d16e87"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
