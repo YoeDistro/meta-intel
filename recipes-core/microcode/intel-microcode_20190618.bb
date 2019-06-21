@@ -45,10 +45,10 @@ do_compile() {
 }
 
 do_install() {
-	install -d ${D}${base_libdir}/firmware/intel-ucode/
-	install ${WORKDIR}/microcode_${PV}.bin ${D}${base_libdir}/firmware/intel-ucode/
-	cd ${D}${base_libdir}/firmware/intel-ucode/
-	ln -sf microcode_${PV}.bin microcode.bin
+	install -d ${D}${nonarch_base_libdir}/firmware/intel-ucode/
+	${STAGING_DIR_NATIVE}${sbindir_native}/iucode_tool \
+	--write-firmware=${D}${nonarch_base_libdir}/firmware/intel-ucode \
+	${S}/intel-ucode/* ${S}/intel-ucode-with-caveats/*
 }
 
 do_deploy() {
@@ -63,6 +63,6 @@ addtask deploy before do_build after do_compile
 
 PACKAGES = "${PN}"
 
-FILES_${PN} = "${base_libdir}"
+FILES_${PN} = "${nonarch_base_libdir}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^microcode-(?P<pver>(\d+)[a-z])$"
