@@ -1,0 +1,15 @@
+#!/bin/sh
+
+cd tests
+./api-c
+if [ $? -eq 0 ]; then
+  echo 'PASS: api-c'
+else
+  echo 'FAIL: api-c'
+fi
+./test_c_symbols-c
+if [ $? -eq 0 ]; then
+  echo 'PASS: test_c_symbols-c'
+else
+  echo 'FAIL: test_c_symbols-c'
+fi
