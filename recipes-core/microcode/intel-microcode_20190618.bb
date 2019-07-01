@@ -65,4 +65,4 @@ PACKAGES = "${PN}"
 
 FILES_${PN} = "${nonarch_base_libdir}"
 
-UPSTREAM_CHECK_GITTAGREGEX = "^microcode-(?P<pver>(\d+)[a-z])$"
+UPSTREAM_CHECK_GITTAGREGEX = "^microcode-(?P<pver>(\d+)[a-z]*)$"
