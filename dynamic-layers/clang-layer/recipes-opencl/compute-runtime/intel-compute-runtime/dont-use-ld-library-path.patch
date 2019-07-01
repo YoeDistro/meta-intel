@@ -1,0 +1,43 @@
+From 2475dfc1350f73a243c9fc223a9f06af85321d56 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Tue, 2 Jul 2019 08:36:34 +0800
+Subject: [PATCH] don't use LD_LIBRARY_PATH for native offline compiler
+
+Let us supply the correct path for it to be able to find the correct
+libraries.
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+
+---
+ runtime/built_ins/kernels/CMakeLists.txt | 2 +-
+ runtime/scheduler/scheduler_binary.cmake | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/runtime/built_ins/kernels/CMakeLists.txt b/runtime/built_ins/kernels/CMakeLists.txt
+index 5dc9fe1b..e258847d 100644
+--- a/runtime/built_ins/kernels/CMakeLists.txt
++++ b/runtime/built_ins/kernels/CMakeLists.txt
+@@ -51,7 +51,7 @@ function(compile_builtin gen_type platform_type builtin)
+     if(DEFINED IGDRCL__IGC_LIBRARY_PATH)
+       set(cloc_cmd_prefix LD_LIBRARY_PATH=${IGDRCL__IGC_LIBRARY_PATH} $<TARGET_FILE:ocloc>)
+     else()
+-      set(cloc_cmd_prefix LD_LIBRARY_PATH=$<TARGET_FILE_DIR:ocloc> $<TARGET_FILE:ocloc>)
++      set(cloc_cmd_prefix ocloc)
+     endif()
+   endif()
+   list(APPEND __cloc__options__ "-cl-kernel-arg-info")
+diff --git a/runtime/scheduler/scheduler_binary.cmake b/runtime/scheduler/scheduler_binary.cmake
+index 1b12592b..ed9f375d 100644
+--- a/runtime/scheduler/scheduler_binary.cmake
++++ b/runtime/scheduler/scheduler_binary.cmake
+@@ -37,7 +37,7 @@ function(compile_kernel target gen_type platform_type kernel)
+     if(DEFINED IGDRCL__IGC_LIBRARY_PATH)
+       set(cloc_cmd_prefix LD_LIBRARY_PATH=${IGDRCL__IGC_LIBRARY_PATH} $<TARGET_FILE:ocloc>)
+     else()
+-      set(cloc_cmd_prefix LD_LIBRARY_PATH=$<TARGET_FILE_DIR:ocloc> $<TARGET_FILE:ocloc>)
++      set(cloc_cmd_prefix ocloc)
+     endif()
+   endif()
+   list(APPEND __cloc__options__ "-cl-kernel-arg-info")
