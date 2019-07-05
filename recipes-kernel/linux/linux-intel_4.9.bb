@@ -8,8 +8,8 @@ SRC_URI_append = " \
                    file://0001-menuconfig-check-lxdiaglog.sh-Allow-specification-of.patch \
                    "
 
-LINUX_VERSION ?= "4.9.180"
-SRCREV_machine ?= "179a9cd71bbb9e153856c8e4bb44812a1ee8f8b6"
+LINUX_VERSION ?= "4.9.183"
+SRCREV_machine ?= "107e98ee74a588750a5a80ffe11f52628295e461"
 SRCREV_meta ?= "f9e90afd4e47920e990dacb73cd6508917ca5422"
 
 # For Crystalforest and Romley
