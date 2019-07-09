@@ -42,8 +42,8 @@ do_install_append () {
         install -m 755 ${B}/bin_linux/smoketest ${D}${bindir}
         install -m 755 ${B}/bin_linux/bist ${D}${bindir}
 
-        install -d ${D}${libdir}/dal/smoketest/applets
-        cp -r ${S}/test/smoketest/applets/* ${D}${libdir}/dal/smoketest/applets/
+        install -d ${D}${libdir}/dal/applets
+        cp -r ${S}/test/smoketest/applets/* ${D}${libdir}/dal/applets/
 }
 
 PACKAGES =+ "${PN}-test"
@@ -61,5 +61,5 @@ FILES_${PN} = "\
 
 FILES_${PN}-test = "\
                      ${bindir} \
-                     ${libdir}/dal/smoketest/applets \
+                     ${libdir}/dal/applets \
                      "
