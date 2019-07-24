@@ -14,6 +14,9 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=6aab5363823095ce682b155fef0231f0 \
 # Only for 64 bit until this is resolved: https://github.com/intel/media-driver/issues/356
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
+inherit distro_features_check
+REQUIRED_DISTRO_FEATURES = "opengl"
+
 DEPENDS += "libva gmmlib"
 
 SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;branch=intel-media-19.2 \
