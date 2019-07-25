@@ -55,6 +55,7 @@ FILES_${PN} = "\
                 ${sysconfdir} \
                 ${libdir} \
                 ${libdir}/dal/applets \
+                ${nonarch_libdir}/tmpfiles.d \
                 ${systemd_system_unitdir} \
                 ${localstatedir}/cache/dal/applet_repository \
                 "
