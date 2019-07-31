@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=ea8831610e926e2e469075b52bf08848"
 SRC_URI = "git://github.com/intel/thermal_daemon/ \
            file://0001-Use-correct-format-specifier-for-size_t.patch \
            "
-SRCREV = "517c0e5f92d49aeeef3a22b04caf40d588216827"
+SRCREV = "7f573b681a25b5ffbe81103ba9fdcf7fec0f2884"
 S = "${WORKDIR}/git"
 
 inherit pkgconfig autotools systemd

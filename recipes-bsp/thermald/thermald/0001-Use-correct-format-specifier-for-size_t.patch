@@ -1,37 +1,45 @@
-From bb7631163c8f3f44d0dc83690765cdb799664fd5 Mon Sep 17 00:00:00 2001
+From dcdaf523393a6e7c07b5a510c573223722b0289b Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
-Date: Wed, 26 Sep 2018 10:34:15 +0800
+Date: Thu, 1 Aug 2019 08:15:52 +0800
 Subject: [PATCH] Use correct format specifier for size_t
 
 %zu instead of %lu, otherwise on 32 bit:
 
-| ../git/src/thd_zone.cpp: In member function 'void cthd_zone::sort_and_update_poll_trip()':
-| ../git/src/thd_zone.cpp:106:16: error: format '%lu' expects argument of type 'long unsigned int', but argument 4 has type 'std::vector<cthd_trip_point>::size_type' {aka 'unsigned int'} [-Werror=format=]
-|   thd_log_debug("sort_and_update_poll_trip: trip_points_size =%lu\n",
-|                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-|     trip_points.size());
+| In file included from ../git/src/thd_common.h:27,
+|                  from ../git/src/thd_zone.h:30,
+|                  from ../git/src/thd_zone.cpp:34:
+| ../git/src/thd_zone.cpp: In member function 'void cthd_zone::update_highest_trip_temp(cthd_trip_point&)':
+| ../git/src/thd_zone.cpp:322:16: error: format '%lu' expects argument of type 'long unsigned int', but argument 4 has type 'std::vector<cthd_trip_point>::size_type' {aka 'unsigned int'} [-Werror=format=]
+|   322 |   thd_log_info("trip_points.size():%lu\n", trip_points.size());
+|       |                ^~~~~~~~~~~~~~~~~~~~~~~~~~  ~~~~~~~~~~~~~~~~~~
+|       |                                                            |
+|       |                                                            std::vector<cthd_trip_point>::size_type {aka unsigned int}
+| ../git/src/thermald.h:82:57: note: in definition of macro 'thd_log_info'
+|    82 | #define thd_log_info(...) g_log(NULL, G_LOG_LEVEL_INFO, __VA_ARGS__)
+|       |                                                         ^~~~~~~~~~~
+| ../git/src/thd_zone.cpp:322:38: note: format string is defined here
+|   322 |   thd_log_info("trip_points.size():%lu\n", trip_points.size());
+|       |                                    ~~^
+|       |                                      |
+|       |                                      long unsigned int
+|       |                                    %u
 
-Upstream-Status: Submitted
-[https://github.com/intel/thermal_daemon/pull/165]
-
+Upstream-Status: Submitted [https://github.com/intel/thermal_daemon/pull/198]
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
  src/thd_zone.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/thd_zone.cpp b/src/thd_zone.cpp
-index b7edf9e..cb7b8e8 100644
+index dd485d9..eb81d61 100644
 --- a/src/thd_zone.cpp
 +++ b/src/thd_zone.cpp
-@@ -103,7 +103,7 @@ int cthd_zone::read_user_set_psv_temp() {
- }
- 
- void cthd_zone::sort_and_update_poll_trip() {
--	thd_log_debug("sort_and_update_poll_trip: trip_points_size =%lu\n",
-+	thd_log_debug("sort_and_update_poll_trip: trip_points_size =%zu\n",
- 			trip_points.size());
+@@ -319,7 +319,7 @@ void cthd_zone::add_trip(cthd_trip_point &trip) {
+ void cthd_zone::update_highest_trip_temp(cthd_trip_point &trip)
+ {
  	if (trip_points.size()) {
- 		unsigned int polling_trip = 0;
--- 
-2.17.1
-
+-		thd_log_info("trip_points.size():%lu\n", trip_points.size());
++		thd_log_info("trip_points.size():%zu\n", trip_points.size());
+ 		for (unsigned int j = trip_points.size() - 1;; --j) {
+ 			if (trip_points[j].get_trip_type() == trip.get_trip_type()) {
+ 				thd_log_info("updating existing trip temp \n");
