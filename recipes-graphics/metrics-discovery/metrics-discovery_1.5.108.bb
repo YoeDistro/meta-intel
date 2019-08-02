@@ -2,13 +2,13 @@ SUMMARY  = "Intel Metrics Discovery Application Programming Interface"
 DESCRIPTION = "This software is a user mode library that provides access to \
 GPU performance data."
 LICENSE  = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE.md;md5=5ac9e51fb25f5d5b10a1bea412a4b74c"
+LIC_FILES_CHKSUM = "file://LICENSE.md;md5=8c5c9ac8ffd04a5614befdf63fba6ba8"
 SECTION = "lib"
 
 inherit pkgconfig cmake
 
 S = "${WORKDIR}/git"
-SRCREV = "ac8d17cfd7f33aefea353dfc4eda65f6beb0a9ae"
+SRCREV = "a495db4682b7318bc82b1cccfb17fafdf2e3a2ff"
 SRC_URI = "git://github.com/intel/metrics-discovery.git"
 
 EXTRA_OECMAKE += "-DMD_PLATFORM=linux"
