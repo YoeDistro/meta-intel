@@ -6,11 +6,10 @@ You can use it as memory/performance/whatever profiler."
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://sea_itt_lib/Copyright.txt;md5=7d54dfc8860742fb06b9c5ad28f41fcd"
 
-SRC_URI = "\
-	git://github.com/intel/IntelSEAPI.git;protocol=https \
-	file://0001-CMakeLists.txt-set-output-directory-path.patch \
-"
-SRCREV="36bff07521afffc0c0f7db79252338954ca7e6dd"
+SRC_URI = "git://github.com/intel/IntelSEAPI.git;protocol=https \
+           file://0001-CMakeLists.txt-set-output-directory-path.patch \
+           "
+SRCREV = "488651b6bf0da6f15fb33e64a1dcdb63f8bee910"
 S = "${WORKDIR}/git"
 
 inherit pkgconfig cmake
