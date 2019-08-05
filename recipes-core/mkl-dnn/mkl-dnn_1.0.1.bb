@@ -2,19 +2,19 @@ SUMMARY  = "Intel Math Kernel Library for Deep Neural Networks"
 DESCRIPTION = "This software is a user mode library that accelerates\
 deep-learning applications and frameworks on Intel architecture."
 LICENSE  = "Apache-2.0 & BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=afa44a3d001cc203032135324f9636b7 \
+LIC_FILES_CHKSUM = "file://LICENSE;md5=a34303951205b8c53485477c74052380 \
 	file://tests/gtests/gtest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
-	file://src/cpu/xbyak/COPYRIGHT;md5=03532861dad9003cc2c17f14fc7a4efa"
+	file://src/cpu/xbyak/COPYRIGHT;md5=03532861dad9003cc2c17f14fc7a4efa \
+	file://src/cpu/jit_utils/jitprofiling/LICENSE.BSD;md5=e671ff178b24a95a382ba670503c66fb"
 SECTION = "lib"
 
 inherit pkgconfig cmake ptest
 
 S = "${WORKDIR}/git"
-SRCREV = "027de7603662a569366e15132ac80298902b96b8"
-SRC_URI = "git://github.com/intel/mkl-dnn.git;branch=rls-v0.19 \
+SRCREV = "61b9663bcd58ece1b96b930bed73d6545f41d656"
+SRC_URI = "git://github.com/intel/mkl-dnn.git;branch=rls-v1.0 \
         file://run-ptest \
 "
-PV = "0.19+git${SRCPV}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>(\d+(\.\d+)+))$"
 
