@@ -1,6 +1,5 @@
 FILESEXTRAPATHS_prepend_intel-x86-common := "${THISDIR}/files:"
 
-DEPENDS_append = " opencl-clang-native"
 LLVM_TARGETS_TO_BUILD = "X86"
 
 do_install_append_intel-x86-common() {
