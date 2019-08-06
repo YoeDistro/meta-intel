@@ -18,16 +18,12 @@ REQUIRED_DISTRO_FEATURES= "systemd"
 
 FILES_${PN} += "${datadir}/dbus-1/system-services/*.service"
 
-FILES_${PN} += "${libdir}/libLms*.so"
-FILES_SOLIBSDEV = ""
-INSANE_SKIP_${PN} += "dev-so"
-
 S = "${WORKDIR}/git"
 
 SYSTEMD_SERVICE_${PN} = "lms.service"
 
 SRC_URI = "git://github.com/intel/lms.git"
-SRCREV = "f7c374745ae7efb3ed7860fdc3f8abbb52dc9f8f"
+SRCREV = "f90fa51f07514b7644cc57846c90e46b146b23ae"
 
 SRC_URI_append = " file://lms_drop_rpath_${PV}.diff"
 
