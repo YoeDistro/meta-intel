@@ -10,6 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=3cb331af679cd8f968bf799a9c55b46e"
 
 # Only for 64 bit until media-driver issues aren't fixed
 COMPATIBLE_HOST = '(x86_64).*-linux'
+COMPATIBLE_HOST_x86-x32 = "null"
 
 inherit distro_features_check
 REQUIRED_DISTRO_FEATURES = "opengl"
