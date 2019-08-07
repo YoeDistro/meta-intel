@@ -14,6 +14,8 @@ SRCREV = "e834bcd677382fbebb7749ccbd678d86a82bffd3"
 
 S = "${WORKDIR}/git"
 
+COMPATIBLE_HOST_x86-x32 = "null"
+
 UPSTREAM_CHECK_GITTAGREGEX = "^intel-gmmlib-(?P<pver>(\d+(\.\d+)+))$"
 
 inherit pkgconfig cmake
