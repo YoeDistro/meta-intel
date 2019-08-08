@@ -25,3 +25,5 @@ DEPENDS_class-target = " flex-native bison-native clang clang-cross-x86_64"
 
 EXTRA_OECMAKE = "-DIGC_PREFERRED_LLVM_VERSION=8.0.0 -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python2"
 EXTRA_OECMAKE += "-DCOMMON_CLANG_LIBRARY_NAME=common_clang"
+
+UPSTREAM_CHECK_GITTAGREGEX = "^igc-(?P<pver>(?!19\..*)\d+(\.\d+)+)$"
