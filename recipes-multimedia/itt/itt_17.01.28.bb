@@ -21,9 +21,10 @@ EXTRA_OECMAKE += "${@oe.utils.conditional('TARGET_ARCH','x86_64','','-DFORCE_32=
 COMPATIBLE_HOST_libc-musl_class-target = "null"
 
 do_install() {
-     install -d -m 755 ${D}${libdir} ${D}${includedir}
+     install -d -m 755 ${D}${libdir} ${D}${includedir}/ittnotify
      install -m 644 ${S}/bin/*.a ${D}${libdir}
-     install -m 644 ${S}/ittnotify/include/ittnotify.h ${D}${includedir}
+     cp -r ${S}/ittnotify/include/* ${D}${includedir}/ittnotify
+     cp -r ${S}/ittnotify/src/ittnotify/*.h ${D}${includedir}/ittnotify
 }
 
 RDEPENDS_${PN}-dev_remove = "${PN} (= ${EXTENDPKGV})"
