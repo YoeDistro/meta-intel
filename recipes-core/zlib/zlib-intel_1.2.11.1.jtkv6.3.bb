@@ -14,3 +14,5 @@ S = "${WORKDIR}/git"
 
 RPROVIDES_${PN} += "zlib"
 RPROVIDES_${PN}-ptest += "zlib-ptest"
+
+UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>(\d+(\.\d+)+)_jtkv(\d+(\.\d+)+))$"
