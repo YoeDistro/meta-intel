@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=e3fc50a88d0a364313df4b21ef20c29e"
 SRC_URI = "git://github.com/intel/libyami-utils.git \
            file://0001-Fix-build-with-clang.patch \
            "
-SRCREV = "7e801b5cc3066b176c2dccffda0af8d762184650"
+SRCREV = "c3d25b64b05aeb0c4eecc140aef617cfeced6b8e"
 S = "${WORKDIR}/git"
 
 DEPENDS = "libva libyami"
