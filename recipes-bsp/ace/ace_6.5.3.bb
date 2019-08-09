@@ -1,6 +1,8 @@
+SUMMARY = "C++ framework for implementing distributed and networked applications"
 DESCRIPTION = "C++ network programming framework that implements many core \
 patterns for concurrent communication software"
 LICENSE = "ACE-TAO-CIAO"
+HOMEPAGE = "http://www.dre.vanderbilt.edu/~schmidt/ACE.html"
 LIC_FILES_CHKSUM = "file://COPYING;md5=407a202d1b887b998dc9480442840630"
 
 DEPENDS += "openssl gperf-native"
