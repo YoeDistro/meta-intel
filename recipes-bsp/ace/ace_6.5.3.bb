@@ -9,6 +9,7 @@ DEPENDS += "openssl gperf-native"
 
 SRC_URI = "ftp://download.dre.vanderbilt.edu/previous_versions/ACE-${PV}.tar.bz2 \
            file://ace_config.patch \
+           file://config_linux.patch \
           "
 
 SRC_URI[md5sum] = "4cc5f109ebd17cd56f0539d1b47d16b3"
