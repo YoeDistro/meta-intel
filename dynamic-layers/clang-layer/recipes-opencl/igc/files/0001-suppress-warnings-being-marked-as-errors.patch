@@ -1,0 +1,34 @@
+From 68d99547e620f097b5fca7315d52d411ffc75984 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Fri, 16 Aug 2019 15:49:39 +0800
+Subject: [PATCH] suppress warnings being marked as errors
+
+Otherwise when building with clang-8:
+
+| clang-8: error: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Werror,-Wdeprecated]
+
+Also see:
+https://github.com/intel/intel-graphics-compiler/issues/106
+
+Upstream-Status: Inappropriate
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ IGC/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/IGC/CMakeLists.txt b/IGC/CMakeLists.txt
+index 7ff05f3..5deac46 100644
+--- a/IGC/CMakeLists.txt
++++ b/IGC/CMakeLists.txt
+@@ -2763,7 +2763,7 @@ foreach(_compilerFlagName IN ITEMS "CMAKE_CXX_FLAGS" "CMAKE_C_FLAGS")
+           -march=corei7
+           -mstackrealign
+           -fms-extensions
+-          -Werror
++          -Wno-error
+           -Wno-unused-parameter
+           -Wno-missing-field-initializers
+           -Wwrite-strings
+-- 
+2.7.4
+
