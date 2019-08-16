@@ -9,12 +9,12 @@ SRC_URI = "git://github.com/intel/opencl-clang.git;branch=ocl-open-80;protocol=h
            file://point-to-correct-llvm-tblgen.patch \
            "
 
-SRCREV = "daf5e4dd718477ae8cf89a283c653939d9182f15"
+SRCREV = "94af090661d7c953c516c97a25ed053c744a0737"
 
 S = "${WORKDIR}/git"
 
 inherit cmake
-DEPENDS += "clang clang-native"
+DEPENDS += "clang"
 
 DEPENDS_append_class-target = " opencl-clang-native"
 LDFLAGS_append_class-native = " -fuse-ld=lld"
@@ -33,3 +33,5 @@ do_install_append_class-native() {
 }
 
 BBCLASSEXTEND = "native nativesdk"
+
+TOOLCHAIN_class-native = "clang"
