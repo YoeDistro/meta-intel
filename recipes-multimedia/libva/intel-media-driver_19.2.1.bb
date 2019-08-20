@@ -20,6 +20,7 @@ REQUIRED_DISTRO_FEATURES = "opengl"
 DEPENDS += "libva gmmlib"
 
 SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;branch=intel-media-19.2 \
+           file://0001-dont-mark-implicit-function-declaration-warnings-as-.patch \
            "
 
 SRCREV = "9b648d81fb43f70c49304011371279713cb13ccc"
@@ -34,7 +35,11 @@ inherit cmake pkgconfig
 MEDIA_DRIVER_ARCH_x86    = "32"
 MEDIA_DRIVER_ARCH_x86-64 = "64"
 
-EXTRA_OECMAKE += "-DMEDIA_RUN_TEST_SUITE=OFF -DARCH=${MEDIA_DRIVER_ARCH}"
+EXTRA_OECMAKE += " \
+                   -DMEDIA_RUN_TEST_SUITE=OFF \
+                   -DARCH=${MEDIA_DRIVER_ARCH} \
+                   -DMEDIA_BUILD_FATAL_WARNINGS=OFF \
+                   "
 
 # See: https://github.com/intel/media-driver/issues/358
 FILES_${PN} += " \

@@ -1,0 +1,35 @@
+From 676b76e16ba6468d95c452eb891e34fcfc498c07 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Wed, 21 Aug 2019 08:21:39 +0800
+Subject: [PATCH] dont mark implicit-function-declaration warnings as errors
+
+Otherwise, when building with gcc 9.2:
+
+| cc1plus: error: '-Werror=' argument
+|'-Werror=implicit-function-declaration' is not valid for C++ [-Werror]
+
+Also see:
+https://github.com/intel/media-driver/issues/712
+
+Upstream-Status: Pending
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ media_driver/cmake/linux/media_compile_flags_linux.cmake | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/media_driver/cmake/linux/media_compile_flags_linux.cmake b/media_driver/cmake/linux/media_compile_flags_linux.cmake
+index 9253b2d6..d2cdb34e 100755
+--- a/media_driver/cmake/linux/media_compile_flags_linux.cmake
++++ b/media_driver/cmake/linux/media_compile_flags_linux.cmake
+@@ -32,7 +32,6 @@ set(MEDIA_COMPILER_FLAGS_COMMON
+     -Wno-overflow
+     -Wno-parentheses
+     -Wno-delete-incomplete
+-    -Werror=implicit-function-declaration
+     -Werror=address
+     -Werror=format-security
+     -Werror=non-virtual-dtor
+-- 
+2.21.0
+
