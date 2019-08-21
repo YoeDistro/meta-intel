@@ -17,8 +17,8 @@ SRC_URI_append = " file://0001-perf-x86-32-explicitly-include-errno.h.patch"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "4.14.126"
-SRCREV_machine ?= "926a97a073b7c7a22387ad7663644e0cdf3ec032"
+LINUX_VERSION ?= "4.14.134"
+SRCREV_machine ?= "09a421a9b2ba044daf4ab9ea2f54a33cf7a2fac1"
 SRCREV_meta ?= "bc35d5bd224ab031440a69f9806d839db382f05c"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
