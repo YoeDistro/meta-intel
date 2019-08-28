@@ -11,8 +11,8 @@ SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbe%20stable/${PV}/${B
            file://0001-ixgbe-skip-host-depmod.patch \
            "
 
-SRC_URI[md5sum] = "afe9838253205157a79a6a6c30abfba9"
-SRC_URI[sha256sum] = "7e5d3fefe429dfdc989da4478e176ef95808d250cb616bd8400374c3831a7ee3"
+SRC_URI[md5sum] = "990321b97c58b5cbf86e6b1e095d9cbf"
+SRC_URI[sha256sum] = "d6a5129b7be0a25bed65843be37e4ac913deab4ca169b215521088e10eb03ef1"
 
 UPSTREAM_CHECK_URI = "https://sourceforge.net/projects/e1000/files/ixgbe%20stable/"
 UPSTREAM_CHECK_REGEX = "ixgbe%20stable/(?P<pver>\d+(\.\d+)+)/"
