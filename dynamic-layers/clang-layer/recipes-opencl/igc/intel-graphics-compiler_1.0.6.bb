@@ -26,6 +26,8 @@ COMPATIBLE_HOST_libc-musl = "null"
 DEPENDS += " flex-native bison-native clang opencl-clang"
 DEPENDS_append_class-target = " clang-cross-x86_64"
 
+RDEPENDS_${PN} += "opencl-clang"
+
 EXTRA_OECMAKE = "-DIGC_PREFERRED_LLVM_VERSION=8.0.0 -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python2"
 
 LDFLAGS_append_class-native = " -fuse-ld=lld"
