@@ -22,6 +22,8 @@ S = "${WORKDIR}/git"
 DEPENDS += " intel-graphics-compiler gmmlib clang"
 DEPENDS_append_class-target = " intel-compute-runtime-native"
 
+RDEPENDS_${PN} += " intel-graphics-compiler gmmlib"
+
 inherit cmake pkgconfig
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
