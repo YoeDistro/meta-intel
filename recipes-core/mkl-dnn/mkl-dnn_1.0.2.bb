@@ -11,7 +11,7 @@ SECTION = "lib"
 inherit pkgconfig cmake ptest
 
 S = "${WORKDIR}/git"
-SRCREV = "61b9663bcd58ece1b96b930bed73d6545f41d656"
+SRCREV = "3289d3c06e07b55fdbec927461bd89f8989eff5d"
 SRC_URI = "git://github.com/intel/mkl-dnn.git;branch=rls-v1.0 \
         file://run-ptest \
 "
