@@ -151,6 +151,17 @@ a BSP tarball at the top level of your yocto build tree, you can
 equivalently check out the appropriate branch from the meta-intel
 repository at the same location.
 
+intel-mediasdk
+++++++++++++++
+Intel® Media SDK docs and sample test files are currently hosted
+using git-lfs. The git-lfs setup is required in order to build
+the intel-mediasdk package successfully. To setup git-lfs, information
+can be found at https://github.com/git-lfs/git-lfs/wiki/Installation
+Once git-lfs setup is done. Add below to local.conf file:
+
+    HOSTTOOLS_NONFATAL += "git-lfs"
+
+
 b. Booting the intel-common BSP images
 --------------------------------------
 
