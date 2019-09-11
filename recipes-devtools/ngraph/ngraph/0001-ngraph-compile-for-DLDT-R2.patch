@@ -1,0 +1,141 @@
+From 73e9f605f8ce28c3ef9461c3a85d7dfe7814b867 Mon Sep 17 00:00:00 2001
+From: Erin Park <erin.park@intel.com>
+Date: Wed, 11 Sep 2019 11:15:13 +0800
+Subject: [PATCH] ngraph compile for DLDT R2
+
+Upstream-Status: Pending [Taken from Clear Linux with changes to install
+binaries/headers to generic locations]
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ src/CMakeLists.txt        |  8 ++++--
+ src/ngraph.cmake          | 54 +++++++++++++++++++++++++++++++++++++++
+ src/ngraph/CMakeLists.txt | 21 +++++++++++----
+ 3 files changed, 76 insertions(+), 7 deletions(-)
+ create mode 100644 src/ngraph.cmake
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index c791436d7..c18473572 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -14,14 +14,18 @@
+ # limitations under the License.
+ # ******************************************************************************
+ 
++cmake_minimum_required(VERSION 3.7.2 FATAL_ERROR)
++
++project(ngraph)
++
++include(ngraph.cmake)
++
+ add_definitions(-DIN_NGRAPH_LIBRARY)
+ 
+ include_directories(ngraph)
+ 
+ add_subdirectory(resource)
+ 
+-add_subdirectory(ngraph)
+-
+ if (NGRAPH_TOOLS_ENABLE)
+     add_subdirectory(tools)
+     message(STATUS "tools enabled")
+diff --git a/src/ngraph.cmake b/src/ngraph.cmake
+new file mode 100644
+index 000000000..a0060e08e
+--- /dev/null
++++ b/src/ngraph.cmake
+@@ -0,0 +1,54 @@
++# ******************************************************************************
++# Copyright 2017-2019 Intel Corporation
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++# ******************************************************************************
++
++set (CMAKE_CXX_STANDARD 11)
++set (CMAKE_CXX_STANDARD_REQUIRED ON)
++if (NOT("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
++    set (CMAKE_CXX_FLAGS "-std=c11 ${CMAKE_CXX_FLAGS}")
++endif()
++if (WIN32)
++    add_definitions(-DNOMINMAX)
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W0 /EHsc /MP")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
++    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4308")
++endif()
++
++set(NGRAPH_TOOLS_ENABLE FALSE)
++set(NGRAPH_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ngraph")
++include_directories("${CMAKE_CURRENT_SOURCE_DIR}"
++    "${NGRAPH_SOURCE_DIR}")
++
++add_definitions(-DPROJECT_ROOT_DIR="${NGRAPH_SOURCE_DIR}")
++
++set(NGRAPH_INSTALL_LIB "${CMAKE_INSTALL_PREFIX}")
++
++if (HAS_MAYBE_UNINITIALIZED)
++        if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
++            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-uninitialized")
++            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-uninitialized")
++        else()
++            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-maybe-uninitialized -Wno-return-type")
++            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-maybe-uninitialized -Wno-return-type")
++        endif()
++endif()
++# WA for GCC 7.0
++if (UNIX)
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-return-type")
++    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-return-type")
++endif()
++add_subdirectory(${NGRAPH_SOURCE_DIR})
++
+diff --git a/src/ngraph/CMakeLists.txt b/src/ngraph/CMakeLists.txt
+index 2a9b84549..781855941 100644
+--- a/src/ngraph/CMakeLists.txt
++++ b/src/ngraph/CMakeLists.txt
+@@ -574,17 +574,28 @@ endif()
+ #-----------------------------------------------------------------------------------------------
+ 
+ # nGraph
+-install(FILES ${CMAKE_BINARY_DIR}/VERSION DESTINATION ${CMAKE_INSTALL_PREFIX})
+-install(TARGETS ngraph DESTINATION ${NGRAPH_INSTALL_LIB})  # libngraph.so
++#install(FILES ${CMAKE_BINARY_DIR}/VERSION DESTINATION ${CMAKE_INSTALL_PREFIX})
++#install(TARGETS ngraph DESTINATION ${NGRAPH_INSTALL_LIB})  # libngraph.so
++#install(DIRECTORY
++#    ${CMAKE_CURRENT_SOURCE_DIR}/
++#    DESTINATION "${NGRAPH_INSTALL_INCLUDE}/ngraph"
++#    FILES_MATCHING
++#        PATTERN "*.hpp"
++#        PATTERN "*.h"
++#)
++#install(FILES ${CMAKE_BINARY_DIR}/src/ngraph/version.hpp
++#    DESTINATION "${NGRAPH_INSTALL_INCLUDE}/ngraph")
++
++install(TARGETS ngraph DESTINATION ${CMAKE_INSTALL_LIBDIR})  # libngraph.so
+ install(DIRECTORY
+     ${CMAKE_CURRENT_SOURCE_DIR}/
+-    DESTINATION "${NGRAPH_INSTALL_INCLUDE}/ngraph"
++    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/ngraph"
+     FILES_MATCHING
+         PATTERN "*.hpp"
+         PATTERN "*.h"
+ )
+-install(FILES ${CMAKE_BINARY_DIR}/src/ngraph/version.hpp
+-    DESTINATION "${NGRAPH_INSTALL_INCLUDE}/ngraph")
++install(FILES ${CMAKE_BINARY_DIR}/ngraph/version.hpp
++    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ngraph)
+ 
+ set(CPACK_GENERATOR "DEB")
+ set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+-- 
+2.21.0
+
