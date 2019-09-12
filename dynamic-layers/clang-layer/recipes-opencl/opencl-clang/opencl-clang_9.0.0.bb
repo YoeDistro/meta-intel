@@ -5,11 +5,11 @@ DESCRIPTION = "Common clang has OpenCL-oriented API and is capable \
 LICENSE = "NCSA"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=e8a15bf1416762a09ece07e44c79118c"
 
-SRC_URI = "git://github.com/intel/opencl-clang.git;branch=ocl-open-80;protocol=https \
+SRC_URI = "git://github.com/intel/opencl-clang.git;branch=ocl-open-90;protocol=https \
            file://point-to-correct-llvm-tblgen.patch \
            "
 
-SRCREV = "94af090661d7c953c516c97a25ed053c744a0737"
+SRCREV = "6f8c329bea44321aef1a1716dd206c1f7bed23cf"
 
 S = "${WORKDIR}/git"
 
