@@ -1,7 +1,7 @@
-From f56b781c244347158467a01aef65d2787afd1366 Mon Sep 17 00:00:00 2001
-From: Anuj Mittal <anuj.mittal@intel.com>
-Date: Sat, 17 Aug 2019 21:25:06 +0800
-Subject: [PATCH] comment out dump functions
+From 15a23e549636626cf32b062a5308a29cc53ce360 Mon Sep 17 00:00:00 2001
+From: Naveen Saini <naveen.kumar.saini@intel.com>
+Date: Wed, 21 Aug 2019 17:29:00 +0800
+Subject: [PATCH 2/4] comment out dump functions
 
 Otherwise it leads to errors when linking with lld:
 
@@ -30,15 +30,16 @@ Otherwise it leads to errors when linking with lld:
 Upstream-Status: Submitted [https://github.com/intel/intel-graphics-compiler/pull/105]
 
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
 ---
  IGC/Compiler/CISACodeGen/PreRAScheduler.cpp | 6 ++++++
  1 file changed, 6 insertions(+)
 
 diff --git a/IGC/Compiler/CISACodeGen/PreRAScheduler.cpp b/IGC/Compiler/CISACodeGen/PreRAScheduler.cpp
-index 587e491..4effa80 100644
+index 62e89c0c..ba01af01 100644
 --- a/IGC/Compiler/CISACodeGen/PreRAScheduler.cpp
 +++ b/IGC/Compiler/CISACodeGen/PreRAScheduler.cpp
-@@ -178,8 +178,10 @@ namespace IGC{
+@@ -178,8 +178,10 @@ namespace IGC {
              AU.addRequired<RegisterEstimator>();
          }
  
@@ -79,8 +80,8 @@ index 587e491..4effa80 100644
  }
 +#endif
  
- bool PreRAScheduler::runOnFunction(Function &F) {
-     CodeGenContext *ctx = getAnalysis<CodeGenContextWrapper>().getCodeGenContext();
+ bool PreRAScheduler::runOnFunction(Function& F) {
+     CodeGenContext* ctx = getAnalysis<CodeGenContextWrapper>().getCodeGenContext();
 -- 
-2.7.4
+2.17.1
 

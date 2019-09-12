@@ -9,12 +9,11 @@ LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc
 
 SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https \
            file://0001-skip-execution-of-ElfPackager.patch \
-           file://0001-suppress-warnings-being-marked-as-errors.patch \
-           file://0001-Fix-for-the-gcc-9-issue.patch \
-           file://0001-comment-out-dump-functions.patch \
-           "
+           file://0002-comment-out-dump-functions.patch \
+           file://0003-Fix-for-buildbreak-when-using-clang-9-compiler.patch \
+          "
 
-SRCREV = "ebfc688126900a821e407a96417800919b793447"
+SRCREV = "5f96c6db35ffa238fd84314c99a53e6708322d65"
 
 S = "${WORKDIR}/git"
 
@@ -28,7 +27,7 @@ DEPENDS_append_class-target = " clang-cross-x86_64"
 
 RDEPENDS_${PN} += "opencl-clang"
 
-EXTRA_OECMAKE = "-DIGC_PREFERRED_LLVM_VERSION=8.0.0 -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python2"
+EXTRA_OECMAKE = "-DIGC_PREFERRED_LLVM_VERSION=9.0.0 -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3"
 
 LDFLAGS_append_class-native = " -fuse-ld=lld"
 TOOLCHAIN_class-native = "clang"
