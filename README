@@ -34,6 +34,7 @@ Table of Contents
   II. Building and booting meta-intel BSP layers
      a. Building the intel-common BSP layers
      b. Booting the intel-common BSP images
+     c. Building the installer image
   III. Technical Miscellany
      Benefits of using meta-intel
      The intel-common kernel package architecture
@@ -196,6 +197,32 @@ the syslinux boot: prompt, or the boot: prompt contains strange
 characters), try doing this first:
 
     $ dd if=/dev/zero of=/dev/sdf bs=1M count=512
+
+c. Building the installer image
+-----------------------------------------------
+
+If you plan to install your image to your target machine, you can build a wic
+based installer image instead of default wic image. To build it, you need to
+add below configuration to local.conf :
+
+  WKS_FILE = "image-installer.wks.in"
+  IMAGE_FSTYPES_append = " ext4"
+  IMAGE_TYPEDEP_wic = "ext4"
+  INITRD_IMAGE_LIVE="core-image-minimal-initramfs"
+  do_image_wic[depends] += "${INITRD_IMAGE_LIVE}:do_image_complete"
+  do_rootfs[depends] += "virtual/kernel:do_deploy"
+  IMAGE_BOOT_FILES_append = "\
+      ${KERNEL_IMAGETYPE} \
+      microcode.cpio \
+      ${IMGDEPLOYDIR}/${IMAGE_BASENAME}-${MACHINE}.ext4;rootfs.img \
+      ${@bb.utils.contains('EFI_PROVIDER', 'grub-efi', 'grub-efi-bootx64.efi;EFI/BOOT/bootx64.efi', '', d)} \
+      ${@bb.utils.contains('EFI_PROVIDER', 'grub-efi', '${IMAGE_ROOTFS}/boot/EFI/BOOT/grub.cfg;EFI/BOOT/grub.cfg', '', d)} \
+      ${@bb.utils.contains('EFI_PROVIDER', 'systemd-boot', 'systemd-bootx64.efi;EFI/BOOT/bootx64.efi', '', d)} \
+      ${@bb.utils.contains('EFI_PROVIDER', 'systemd-boot', '${IMAGE_ROOTFS}/boot/loader/loader.conf;loader/loader.conf ', '', d)} \
+      ${@bb.utils.contains('EFI_PROVIDER', 'systemd-boot', '${IMAGE_ROOTFS}/boot/loader/entries/boot.conf;loader/entries/boot.conf', '', d)} "
+
+Burn the wic image onto USB flash device, insert the device to target machine
+and power on. This should start the installation process.
 
 III. Technical Miscellany
 =========================
