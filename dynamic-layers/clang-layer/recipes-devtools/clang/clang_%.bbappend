@@ -8,5 +8,3 @@ do_install_append_intel-x86-common() {
 
 LIBCPLUSPLUS = ""
 
-# undefined reference to `__atomic_load' on i*86.
-COMPATIBLE_HOST = '(x86_64).*-linux'
