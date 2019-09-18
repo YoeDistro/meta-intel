@@ -42,4 +42,5 @@ FILES_${PN} += "${libdir}/intel-opencl/libigdrcl.so"
 
 BBCLASSEXTEND = "native nativesdk"
 
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 EXCLUDE_FROM_WORLD = "1"
