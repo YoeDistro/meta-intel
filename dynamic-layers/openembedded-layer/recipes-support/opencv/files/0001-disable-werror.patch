@@ -1,0 +1,82 @@
+From 434cf332e8c368b626d230b79e8dccecf2b0525b Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Tue, 20 Aug 2019 19:39:37 +0800
+Subject: [PATCH] disable werror
+
+This shouldn't be enabled and leads to multiple errors when compiling cldnn.
+
+Upstream-Status: Submitted
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+
+---
+ inference-engine/cmake/os_flags.cmake                    | 2 +-
+ inference-engine/samples/CMakeLists.txt                  | 1 -
+ inference-engine/thirdparty/clDNN/CMakeLists.txt         | 2 --
+ inference-engine/thirdparty/mkl-dnn/cmake/platform.cmake | 1 -
+ inference-engine/tools/CMakeLists.txt                    | 2 --
+ 5 files changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/inference-engine/cmake/os_flags.cmake b/inference-engine/cmake/os_flags.cmake
+index 29608ea..2c189d8 100644
+--- a/inference-engine/cmake/os_flags.cmake
++++ b/inference-engine/cmake/os_flags.cmake
+@@ -28,7 +28,7 @@ if (WIN32)
+     endif()
+ 
+ else()
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Werror=return-type ")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type ")
+     if (APPLE)
+         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=unused-command-line-argument")
+     elseif(UNIX)
+diff --git a/inference-engine/samples/CMakeLists.txt b/inference-engine/samples/CMakeLists.txt
+index a8a9946..8ac5454 100644
+--- a/inference-engine/samples/CMakeLists.txt
++++ b/inference-engine/samples/CMakeLists.txt
+@@ -68,7 +68,6 @@ if (WIN32)
+         set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275 /wd4267") #disable some warnings
+     endif()
+ else()
+-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror") #treating warnings as errors
+     if (APPLE)
+         set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=unused-command-line-argument")
+     elseif(UNIX)
+diff --git a/inference-engine/thirdparty/clDNN/CMakeLists.txt b/inference-engine/thirdparty/clDNN/CMakeLists.txt
+index 624d95c..5646ff1 100644
+--- a/inference-engine/thirdparty/clDNN/CMakeLists.txt
++++ b/inference-engine/thirdparty/clDNN/CMakeLists.txt
+@@ -757,8 +757,6 @@ foreach(__CLDNN_CompilerFlagName IN ITEMS "CMAKE_CXX_FLAGS" "CMAKE_C_FLAGS")
+         MultiProcessorCompilation
+         DeadCodeEliminate
+         ExtensionsEnabled
+-        TreatWarnAsErrorEnabled
+-        WarnLevel4
+         NoFastMath
+         StackProtector
+     )
+diff --git a/inference-engine/thirdparty/mkl-dnn/cmake/platform.cmake b/inference-engine/thirdparty/mkl-dnn/cmake/platform.cmake
+index a541215..bed8a59 100644
+--- a/inference-engine/thirdparty/mkl-dnn/cmake/platform.cmake
++++ b/inference-engine/thirdparty/mkl-dnn/cmake/platform.cmake
+@@ -63,7 +63,6 @@ if(MSVC)
+     endif()
+ elseif(UNIX OR MINGW)
+     append(CMAKE_CCXX_FLAGS "-Wall -Wno-unknown-pragmas")
+-    append_if_product(CMAKE_CCXX_FLAGS "-Werror")
+     append(CMAKE_CCXX_FLAGS "-fvisibility=internal")
+     append(CMAKE_C_FLAGS "-std=c99")
+     append(CMAKE_CXX_FLAGS "-std=c++11 -fvisibility-inlines-hidden")
+diff --git a/inference-engine/tools/CMakeLists.txt b/inference-engine/tools/CMakeLists.txt
+index 13ab365..feacf33 100644
+--- a/inference-engine/tools/CMakeLists.txt
++++ b/inference-engine/tools/CMakeLists.txt
+@@ -23,8 +23,6 @@ endif()
+ 
+ if (WIN32)
+     # add_compile_options("/WX")
+-else()
+-    add_compile_options("-Werror")
+ endif()
+ 
+ add_subdirectory(vpu)

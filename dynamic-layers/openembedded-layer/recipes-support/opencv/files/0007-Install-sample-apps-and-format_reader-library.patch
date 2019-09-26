@@ -1,0 +1,130 @@
+From d96a9413face4e8540400848d9a25a5458bad74a Mon Sep 17 00:00:00 2001
+From: "Brett T. Warden" <brett.t.warden@intel.com>
+Date: Mon, 28 Jan 2019 13:58:03 -0800
+Subject: [PATCH] Install sample apps and format_reader library
+
+Make sure that we install format_reader library as well.
+
+Upstream-Status: Submitted
+
+Signed-off-by: Chin Huat Ang <chin.huat.ang@intel.com>
+---
+ inference-engine/samples/classification_sample/CMakeLists.txt           | 1 +
+ inference-engine/samples/classification_sample_async/CMakeLists.txt     | 1 +
+ inference-engine/samples/common/format_reader/CMakeLists.txt            | 1 +
+ inference-engine/samples/hello_autoresize_classification/CMakeLists.txt | 1 +
+ inference-engine/samples/hello_classification/CMakeLists.txt            | 1 +
+ inference-engine/samples/hello_request_classification/CMakeLists.txt    | 1 +
+ inference-engine/samples/object_detection_sample_ssd/CMakeLists.txt     | 1 +
+ inference-engine/samples/style_transfer_sample/CMakeLists.txt           | 1 +
+ inference-engine/samples/validation_app/CMakeLists.txt                  | 1 +
+ 9 files changed, 9 insertions(+)
+
+diff --git a/inference-engine/samples/classification_sample/CMakeLists.txt b/inference-engine/samples/classification_sample/CMakeLists.txt
+index 1dab0c9..b2c67ea 100644
+--- a/inference-engine/samples/classification_sample/CMakeLists.txt
++++ b/inference-engine/samples/classification_sample/CMakeLists.txt
+@@ -16,6 +16,7 @@ link_directories(${LIB_FOLDER})
+ 
+ # Create library file from sources.
+ add_executable(${TARGET_NAME} ${SRC})
++install(TARGETS ${TARGET_NAME} DESTINATION bin)
+ 
+ set_target_properties(${TARGET_NAME} PROPERTIES "CMAKE_CXX_FLAGS" "${CMAKE_CXX_FLAGS} -fPIE"
+ COMPILE_PDB_NAME ${TARGET_NAME})
+diff --git a/inference-engine/samples/classification_sample_async/CMakeLists.txt b/inference-engine/samples/classification_sample_async/CMakeLists.txt
+index 9e37440..3fc0082 100644
+--- a/inference-engine/samples/classification_sample_async/CMakeLists.txt
++++ b/inference-engine/samples/classification_sample_async/CMakeLists.txt
+@@ -16,6 +16,7 @@ link_directories(${LIB_FOLDER})
+ 
+ # Create library file from sources.
+ add_executable(${TARGET_NAME} ${SRC})
++install(TARGETS ${TARGET_NAME} DESTINATION bin)
+ 
+ set_target_properties(${TARGET_NAME} PROPERTIES "CMAKE_CXX_FLAGS" "${CMAKE_CXX_FLAGS} -fPIE"
+ COMPILE_PDB_NAME ${TARGET_NAME})
+diff --git a/inference-engine/samples/common/format_reader/CMakeLists.txt b/inference-engine/samples/common/format_reader/CMakeLists.txt
+index e3ecd58..cc30fec 100644
+--- a/inference-engine/samples/common/format_reader/CMakeLists.txt
++++ b/inference-engine/samples/common/format_reader/CMakeLists.txt
+@@ -35,6 +35,7 @@ source_group("include" FILES ${LIBRARY_HEADERS})
+ 
+ # Create library file from sources.
+ add_library(${TARGET_NAME} SHARED ${MAIN_SRC} ${LIBRARY_HEADERS})
++install(TARGETS ${TARGET_NAME} DESTINATION lib)
+ target_link_libraries(${TARGET_NAME} ${OpenCV_LIBRARIES})
+ 
+ if(CMAKE_VERSION VERSION_LESS "2.8.11")
+diff --git a/inference-engine/samples/hello_autoresize_classification/CMakeLists.txt b/inference-engine/samples/hello_autoresize_classification/CMakeLists.txt
+index 01deda6..5ef2900 100644
+--- a/inference-engine/samples/hello_autoresize_classification/CMakeLists.txt
++++ b/inference-engine/samples/hello_autoresize_classification/CMakeLists.txt
+@@ -21,6 +21,7 @@ link_directories(${LIB_FOLDER})
+ 
+ # Create library file from sources.
+ add_executable(${TARGET_NAME} ${SRC})
++install(TARGETS ${TARGET_NAME} DESTINATION bin)
+ 
+ set_target_properties(${TARGET_NAME} PROPERTIES "CMAKE_CXX_FLAGS" "${CMAKE_CXX_FLAGS} -fPIE"
+                       COMPILE_PDB_NAME ${TARGET_NAME})
+diff --git a/inference-engine/samples/hello_classification/CMakeLists.txt b/inference-engine/samples/hello_classification/CMakeLists.txt
+index 845f7e9..276be87 100644
+--- a/inference-engine/samples/hello_classification/CMakeLists.txt
++++ b/inference-engine/samples/hello_classification/CMakeLists.txt
+@@ -23,6 +23,7 @@ link_directories(${LIB_FOLDER})
+ 
+ # Create library file from sources.
+ add_executable(${TARGET_NAME} ${SRC})
++install(TARGETS ${TARGET_NAME} DESTINATION bin)
+ 
+ if(WIN32)
+ 	# This target supports UNICODE on Windows
+diff --git a/inference-engine/samples/hello_request_classification/CMakeLists.txt b/inference-engine/samples/hello_request_classification/CMakeLists.txt
+index c7dbb1e..3e5ab8f 100644
+--- a/inference-engine/samples/hello_request_classification/CMakeLists.txt
++++ b/inference-engine/samples/hello_request_classification/CMakeLists.txt
+@@ -23,6 +23,7 @@ link_directories(${LIB_FOLDER})
+ 
+ # Create library file from sources.
+ add_executable(${TARGET_NAME} ${SRC})
++install(TARGETS ${TARGET_NAME} DESTINATION bin)
+ 
+ set_target_properties(${TARGET_NAME} PROPERTIES "CMAKE_CXX_FLAGS" "${CMAKE_CXX_FLAGS} -fPIE"
+ COMPILE_PDB_NAME ${TARGET_NAME})
+diff --git a/inference-engine/samples/object_detection_sample_ssd/CMakeLists.txt b/inference-engine/samples/object_detection_sample_ssd/CMakeLists.txt
+index 436edc2..adba758 100644
+--- a/inference-engine/samples/object_detection_sample_ssd/CMakeLists.txt
++++ b/inference-engine/samples/object_detection_sample_ssd/CMakeLists.txt
+@@ -21,6 +21,7 @@ link_directories(${LIB_FOLDER})
+ 
+ # Create library file from sources.
+ add_executable(${TARGET_NAME} ${MAIN_SRC} ${MAIN_HEADERS})
++install(TARGETS ${TARGET_NAME} DESTINATION bin)
+ 
+ add_dependencies(${TARGET_NAME} gflags)
+ 
+diff --git a/inference-engine/samples/style_transfer_sample/CMakeLists.txt b/inference-engine/samples/style_transfer_sample/CMakeLists.txt
+index ac2a170..d8e624b 100644
+--- a/inference-engine/samples/style_transfer_sample/CMakeLists.txt
++++ b/inference-engine/samples/style_transfer_sample/CMakeLists.txt
+@@ -22,6 +22,7 @@ link_directories(${LIB_FOLDER})
+ 
+ # Create library file from sources.
+ add_executable(${TARGET_NAME} ${MAIN_SRC} ${MAIN_HEADERS})
++install(TARGETS ${TARGET_NAME} DESTINATION bin)
+ 
+ add_dependencies(${TARGET_NAME} gflags)
+ 
+diff --git a/inference-engine/samples/validation_app/CMakeLists.txt b/inference-engine/samples/validation_app/CMakeLists.txt
+index 87b337c..07f48b7 100644
+--- a/inference-engine/samples/validation_app/CMakeLists.txt
++++ b/inference-engine/samples/validation_app/CMakeLists.txt
+@@ -36,6 +36,7 @@ link_directories(${LIB_FOLDER})
+ 
+ # Create library file from sources.
+ add_executable(${TARGET_NAME} ${MAIN_SRC} ${MAIN_HEADERS})
++install(TARGETS ${TARGET_NAME} DESTINATION bin)
+ 
+ set_target_properties(${TARGET_NAME} PROPERTIES "CMAKE_CXX_FLAGS" "${CMAKE_CXX_FLAGS} -fPIE" 
+ COMPILE_PDB_NAME ${TARGET_NAME})
