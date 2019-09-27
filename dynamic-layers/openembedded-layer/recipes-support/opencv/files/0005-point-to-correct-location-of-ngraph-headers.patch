@@ -1,0 +1,39 @@
+From 8335bac5c53b6cfe611a1c4987ca47aa6a60549f Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Fri, 27 Sep 2019 23:06:18 +0800
+Subject: [PATCH] point to correct location of ngraph headers
+
+Upstream-Status: Pending
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ inference-engine/src/inference_engine/CMakeLists.txt | 2 +-
+ inference-engine/tests/unit/CMakeLists.txt           | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/inference-engine/src/inference_engine/CMakeLists.txt b/inference-engine/src/inference_engine/CMakeLists.txt
+index c0c803d..a4425fd 100644
+--- a/inference-engine/src/inference_engine/CMakeLists.txt
++++ b/inference-engine/src/inference_engine/CMakeLists.txt
+@@ -99,7 +99,7 @@ target_include_directories(${TARGET_NAME} PUBLIC
+ target_include_directories(${TARGET_NAME} SYSTEM PRIVATE "${IE_MAIN_SOURCE_DIR}/thirdparty/pugixml/src")
+ target_include_directories(${TARGET_NAME} SYSTEM PRIVATE "${IE_MAIN_SOURCE_DIR}/thirdparty/ngraph/src")
+ target_include_directories(${TARGET_NAME} SYSTEM PRIVATE "${IE_MAIN_SOURCE_DIR}/thirdparty/ocv")
+-include_directories(${TARGET_NAME} "/usr/include/ngraph")
++include_directories(${TARGET_NAME} "${NGRAPH_INCLUDES}")
+ 
+ if(ENABLE_MKL_DNN)
+     target_include_directories(${TARGET_NAME} SYSTEM PRIVATE "${IE_MAIN_SOURCE_DIR}/thirdparty/mkl-dnn/src/cpu/xbyak")
+diff --git a/inference-engine/tests/unit/CMakeLists.txt b/inference-engine/tests/unit/CMakeLists.txt
+index d83e088..29115d2 100644
+--- a/inference-engine/tests/unit/CMakeLists.txt
++++ b/inference-engine/tests/unit/CMakeLists.txt
+@@ -85,7 +85,8 @@ target_include_directories(${TARGET_NAME} PRIVATE
+         ${IE_MAIN_SOURCE_DIR}/src/extension
+         ${IE_MAIN_SOURCE_DIR}/src/extension/common
+         ${IE_MAIN_SOURCE_DIR}/thirdparty/ngraph/src
+-        "${CMAKE_CURRENT_SOURCE_DIR}/mocks")
++        "${CMAKE_CURRENT_SOURCE_DIR}/mocks"
++        ${NGRAPH_INCLUDES})
+ 
+ set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_PDB_NAME ${TARGET_NAME})
+ 

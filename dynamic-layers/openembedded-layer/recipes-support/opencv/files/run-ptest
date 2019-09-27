@@ -1,0 +1,5 @@
+#!/bin/sh
+
+./InferenceEngineUnitTests |sed \
+  -e 's|\[.*OK.*\]\(.*\)|PASS:\1|' \
+  -e 's|\[.*FAILED.*\]\(.*\)|FAIL:\1|'

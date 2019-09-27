@@ -1,0 +1,259 @@
+From d751c5330eb512c0deb49d640b50d921b7466f89 Mon Sep 17 00:00:00 2001
+From: Erin Park <erin.park@intel.com>
+Date: Wed, 11 Sep 2019 10:33:58 -0700
+Subject: [PATCH] R2 Install DLDT headers, libs, sample Apps
+
+-Libraries to /usr/lib64
+-Headers to /usr/include
+-Sample Apps executable to /usr/bin
+-Sample Apps source code to /usr/share/doc/inference_engine
+-Python library to /usr/lib/python3.7/site-packages
+-plugins.xml to /usr/share/openvino/inference-engine
+-Create targets_cpu_extension.cmake
+
+Upstream-Status: Pending [Taken from Clear Linux with changes to install
+libs at CMAKE_INSTALL_LIBDIR instead of hardcoded lib64]
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+
+---
+ inference-engine/CMakeLists.txt                    |  2 ++
+ inference-engine/cmake/config.cmake.in             |  1 +
+ inference-engine/ie_bridges/python/CMakeLists.txt  |  2 +-
+ .../src/openvino/inference_engine/CMakeLists.txt   |  4 +++-
+ inference-engine/samples/CMakeLists.txt            |  9 +--------
+ .../samples/common/format_reader/CMakeLists.txt    |  2 ++
+ inference-engine/src/CMakeLists.txt                |  4 +++-
+ inference-engine/src/extension/CMakeLists.txt      |  5 ++++-
+ inference-engine/src/hetero_plugin/CMakeLists.txt  |  1 +
+ .../src/inference_engine/CMakeLists.txt            | 22 +++++++++++++++++++---
+ .../src/inference_engine/ie_util_internal.cpp      |  7 ++++---
+ inference-engine/src/mkldnn_plugin/CMakeLists.txt  |  1 +
+ .../src/vpu/myriad_plugin/CMakeLists.txt           |  2 ++
+ inference-engine/tests/unit/CMakeLists.txt         |  2 ++
+ 14 files changed, 46 insertions(+), 18 deletions(-)
+
+diff --git a/inference-engine/CMakeLists.txt b/inference-engine/CMakeLists.txt
+index 5ee8f53..734fb45 100644
+--- a/inference-engine/CMakeLists.txt
++++ b/inference-engine/CMakeLists.txt
+@@ -67,3 +67,5 @@ if (ENABLE_PYTHON)
+ endif()
+ 
+ add_cpplint_report_target()
++
++install(DIRECTORY samples DESTINATION share/doc/inference_engine)
+diff --git a/inference-engine/cmake/config.cmake.in b/inference-engine/cmake/config.cmake.in
+index d9a6918..8e406be 100644
+--- a/inference-engine/cmake/config.cmake.in
++++ b/inference-engine/cmake/config.cmake.in
+@@ -7,6 +7,7 @@ if(DEFINED IE_MAIN_SOURCE_DIR AND TARGET inference_engine)
+     set(InferenceEngine_LIBRARIES inference_engine)
+ else()
+     include("${CMAKE_CURRENT_LIST_DIR}/targets.cmake")
++    include("${CMAKE_CURRENT_LIST_DIR}/targets_cpu_extension.cmake")
+     get_target_property(InferenceEngine_INCLUDE_DIRS IE::inference_engine INTERFACE_INCLUDE_DIRECTORIES)
+     set(InferenceEngine_LIBRARIES IE::inference_engine)
+ endif()
+diff --git a/inference-engine/ie_bridges/python/CMakeLists.txt b/inference-engine/ie_bridges/python/CMakeLists.txt
+index 9fca214..1d21443 100644
+--- a/inference-engine/ie_bridges/python/CMakeLists.txt
++++ b/inference-engine/ie_bridges/python/CMakeLists.txt
+@@ -49,4 +49,4 @@ find_package (InferenceEngine REQUIRED)
+ 
+ set (PYTHON_BRIDGE_SRC_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
+ add_subdirectory (src/openvino/inference_engine)
+-add_subdirectory (src/openvino/tools/statistics_collector)
++#add_subdirectory (src/openvino/tools/statistics_collector)
+diff --git a/inference-engine/ie_bridges/python/src/openvino/inference_engine/CMakeLists.txt b/inference-engine/ie_bridges/python/src/openvino/inference_engine/CMakeLists.txt
+index 1f46013..d6cd112 100644
+--- a/inference-engine/ie_bridges/python/src/openvino/inference_engine/CMakeLists.txt
++++ b/inference-engine/ie_bridges/python/src/openvino/inference_engine/CMakeLists.txt
+@@ -29,4 +29,6 @@ ADD_CUSTOM_COMMAND (TARGET ${TARGET_NAME}
+     COMMAND ${CMAKE_COMMAND} -E copy ${PYTHON_BRIDGE_SRC_ROOT}/src/openvino/inference_engine/__init__.py ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/__init__.py
+     COMMAND ${CMAKE_COMMAND} -E copy ${PYTHON_BRIDGE_SRC_ROOT}/requirements.txt ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/../../requirements.txt
+     COMMAND ${CMAKE_COMMAND} -E copy ${PYTHON_BRIDGE_SRC_ROOT}/src/openvino/__init__.py ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/../__init__.py
+-)
+\ No newline at end of file
++)
++
++install(DIRECTORY ${PYTHON_BRIDGE_OUTPUT_DIRECTORY} DESTINATION lib/${PYTHON_VERSION}/site-packages/)
+diff --git a/inference-engine/samples/CMakeLists.txt b/inference-engine/samples/CMakeLists.txt
+index 3802624..dd7b679 100644
+--- a/inference-engine/samples/CMakeLists.txt
++++ b/inference-engine/samples/CMakeLists.txt
+@@ -39,14 +39,6 @@ if(NOT(UNIX))
+     set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${IE_MAIN_SAMPLES_DIR}/${BIN_FOLDER})
+     set (LIBRARY_OUTPUT_DIRECTORY ${IE_MAIN_SAMPLES_DIR}/${BIN_FOLDER})
+     set (LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_DIRECTORY}) # compatibility issue: linux uses LIBRARY_OUTPUT_PATH, windows uses LIBRARY_OUTPUT_DIRECTORY
+-else ()
+-    set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${IE_MAIN_SAMPLES_DIR}/${BIN_FOLDER}/${CMAKE_BUILD_TYPE}/lib)
+-    set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${IE_MAIN_SAMPLES_DIR}/${BIN_FOLDER}/${CMAKE_BUILD_TYPE}/lib)
+-    set (CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY ${IE_MAIN_SAMPLES_DIR}/${BIN_FOLDER}/${CMAKE_BUILD_TYPE})
+-    set (CMAKE_PDB_OUTPUT_DIRECTORY ${IE_MAIN_SAMPLES_DIR}/${BIN_FOLDER}/${CMAKE_BUILD_TYPE})
+-    set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${IE_MAIN_SAMPLES_DIR}/${BIN_FOLDER}/${CMAKE_BUILD_TYPE})
+-    set (LIBRARY_OUTPUT_DIRECTORY ${IE_MAIN_SAMPLES_DIR}/${BIN_FOLDER}/${CMAKE_BUILD_TYPE}/lib)
+-    set (LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_DIRECTORY}/lib)
+ endif()
+ 
+ if (WIN32)
+@@ -188,6 +180,7 @@ macro(ie_add_sample)
+     if(COMMAND add_cpplint_target AND NOT IE_SAMPLE_EXCLUDE_CPPLINT)
+         add_cpplint_target(${IE_SAMPLE_NAME}_cpplint FOR_TARGETS ${IE_SAMPLE_NAME})
+     endif()
++    install(TARGETS ${IE_SAMPLE_NAME} DESTINATION bin)
+ endmacro()
+ 
+ 
+diff --git a/inference-engine/samples/common/format_reader/CMakeLists.txt b/inference-engine/samples/common/format_reader/CMakeLists.txt
+index c4011c4..2322c3c 100644
+--- a/inference-engine/samples/common/format_reader/CMakeLists.txt
++++ b/inference-engine/samples/common/format_reader/CMakeLists.txt
+@@ -43,3 +43,5 @@ set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_PDB_NAME ${TARGET_NAME})
+ 
+ export(TARGETS ${TARGET_NAME} NAMESPACE IE::
+        APPEND FILE "${CMAKE_BINARY_DIR}/targets_developer.cmake")
++
++install(TARGETS ${TARGET_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+diff --git a/inference-engine/src/CMakeLists.txt b/inference-engine/src/CMakeLists.txt
+index bd1793f..986040c 100644
+--- a/inference-engine/src/CMakeLists.txt
++++ b/inference-engine/src/CMakeLists.txt
+@@ -37,8 +37,10 @@ set(InferenceEngine_SRC_DIRS ${CMAKE_SOURCE_DIR}/src)
+ function(set_target_cpu_flags TARGET_NAME)
+ endfunction()
+ 
+-add_subdirectory(extension EXCLUDE_FROM_ALL)
++add_subdirectory(extension)
+ add_library(IE::ie_cpu_extension ALIAS ie_cpu_extension)
+ 
+ file(GLOB_RECURSE EXTENSION_SOURCES extension/*.cpp extension/*.hpp extension/*.h)
+ add_cpplint_target(ie_cpu_extension_cpplint FOR_SOURCES ${EXTENSION_SOURCES})
++
++install(DIRECTORY extension DESTINATION share/doc/inference_engine)
+diff --git a/inference-engine/src/extension/CMakeLists.txt b/inference-engine/src/extension/CMakeLists.txt
+index 799a62d..fb14ebe 100644
+--- a/inference-engine/src/extension/CMakeLists.txt
++++ b/inference-engine/src/extension/CMakeLists.txt
+@@ -49,7 +49,7 @@ set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME "cpu_extension")
+ 
+ target_link_libraries(${TARGET_NAME} PRIVATE ${InferenceEngine_LIBRARIES})
+ 
+-target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
++target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+ set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_PDB_NAME ${TARGET_NAME})
+ 
+ set_target_cpu_flags(${TARGET_NAME})
+@@ -61,3 +61,6 @@ if (IE_MAIN_SOURCE_DIR)
+     export(TARGETS ${TARGET_NAME} NAMESPACE IE:: APPEND FILE "${CMAKE_BINARY_DIR}/targets_developer.cmake")
+ endif()
+ 
++set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/InferenceEngine)
++install(TARGETS ${TARGET_NAME} EXPORT ${TARGET_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
++install(EXPORT ${TARGET_NAME} DESTINATION ${ConfigPackageLocation} NAMESPACE IE:: FILE targets_cpu_extension.cmake)
+diff --git a/inference-engine/src/hetero_plugin/CMakeLists.txt b/inference-engine/src/hetero_plugin/CMakeLists.txt
+index 91eb189..abc0748 100644
+--- a/inference-engine/src/hetero_plugin/CMakeLists.txt
++++ b/inference-engine/src/hetero_plugin/CMakeLists.txt
+@@ -21,3 +21,4 @@ target_link_libraries(${TARGET_NAME} PRIVATE inference_engine)
+ set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_PDB_NAME ${TARGET_NAME})
+ 
+ add_cpplint_target(${TARGET_NAME}_cpplint FOR_TARGETS ${TARGET_NAME})
++install(TARGETS ${TARGET_NAME} EXPORT ${TARGET_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+diff --git a/inference-engine/src/inference_engine/CMakeLists.txt b/inference-engine/src/inference_engine/CMakeLists.txt
+index 37a0744..c0c803d 100644
+--- a/inference-engine/src/inference_engine/CMakeLists.txt
++++ b/inference-engine/src/inference_engine/CMakeLists.txt
+@@ -90,7 +90,9 @@ if(WIN32)
+ endif()
+ 
+ # Properties->C/C++->General->Additional Include Directories
+-target_include_directories(${TARGET_NAME} PUBLIC ${PUBLIC_HEADERS_DIR}
++target_include_directories(${TARGET_NAME} PUBLIC
++                                          $<BUILD_INTERFACE:${IE_MAIN_SOURCE_DIR}/include>
++                                          $<INSTALL_INTERFACE:include/${TARGET_NAME}>
+                                           PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}"
+                                                   "${IE_MAIN_SOURCE_DIR}/src/dumper")
+ 
+@@ -114,7 +116,9 @@ add_library(${TARGET_NAME}_s STATIC
+ set_ie_threading_interface_for(${TARGET_NAME}_s)
+ 
+ # Properties->C/C++->General->Additional Include Directories
+-target_include_directories(${TARGET_NAME}_s PUBLIC  "${PUBLIC_HEADERS_DIR}"
++target_include_directories(${TARGET_NAME}_s PUBLIC
++                                            $<BUILD_INTERFACE:${IE_MAIN_SOURCE_DIR}/include>
++                                            $<INSTALL_INTERFACE:include/${TARGET_NAME}>
+                                             PUBLIC  "${CMAKE_CURRENT_SOURCE_DIR}"
+                                             PRIVATE "${IE_MAIN_SOURCE_DIR}/src/dumper")
+ 
+@@ -146,7 +150,8 @@ target_link_libraries(${TARGET_NAME}_s PRIVATE fluid
+ add_cpplint_target(${TARGET_NAME}_cpplint FOR_TARGETS ${TARGET_NAME})
+ 
+ ie_register_plugins(MAIN_TARGET ${TARGET_NAME}
+-                    POSSIBLE_PLUGINS clDNNPlugin dliaPlugin GNAPlugin MKLDNNPlugin myriadPlugin)
++                    P  $<BUILD_INTERFACE:${IE_MAIN_SOURCE_DIR}/include>
+++                                          $<INSTALL_INTERFACE:include/${TARGET_NAME}>OSSIBLE_PLUGINS clDNNPlugin dliaPlugin GNAPlugin MKLDNNPlugin myriadPlugin)
+ 
+ # export targets
+ export(TARGETS ${TARGET_NAME} NAMESPACE IE:: FILE "${CMAKE_BINARY_DIR}/targets.cmake")
+@@ -177,3 +182,14 @@ configure_file(
+     "${CMAKE_SOURCE_DIR}/cmake/share/InferenceEngineConfig-version.cmake.in"
+     "${CMAKE_BINARY_DIR}/InferenceEngineDeveloperPackageConfig-version.cmake"
+     COPYONLY)
++
++set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/InferenceEngine)
++install(TARGETS ${TARGET_NAME} EXPORT ${TARGET_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
++install(EXPORT ${TARGET_NAME} DESTINATION ${ConfigPackageLocation} NAMESPACE IE:: FILE targets.cmake)
++install(DIRECTORY ${PUBLIC_HEADERS_DIR}/ DESTINATION include/${TARGET_NAME} FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
++install(FILES
++    "${CMAKE_BINARY_DIR}/InferenceEngineConfig.cmake"
++    "${CMAKE_BINARY_DIR}/InferenceEngineConfig-version.cmake"
++    DESTINATION ${ConfigPackageLocation})
++
++install(FILES "$<TARGET_FILE_DIR:${TARGET_NAME}>/plugins.xml" DESTINATION /usr/share/openvino/inference-engine)
+diff --git a/inference-engine/src/inference_engine/ie_util_internal.cpp b/inference-engine/src/inference_engine/ie_util_internal.cpp
+index 489ab24..2defd56 100644
+--- a/inference-engine/src/inference_engine/ie_util_internal.cpp
++++ b/inference-engine/src/inference_engine/ie_util_internal.cpp
+@@ -755,9 +755,10 @@ std::string getIELibraryPath() {
+     GetModuleFileNameA(hm, (LPSTR)ie_library_path, sizeof(ie_library_path));
+     return getPathName(ie_library_path);
+ #else
+-    Dl_info info;
+-    dladdr(reinterpret_cast<void *>(getIELibraryPath), &info);
+-    return getPathName(info.dli_fname);
++    //Dl_info info;
++    //dladdr(reinterpret_cast<void *>(getIELibraryPath), &info);
++    //return getPathName(info.dli_fname);
++    return  "/usr/share/openvino/inference-engine";
+ #endif
+ }
+ 
+diff --git a/inference-engine/src/mkldnn_plugin/CMakeLists.txt b/inference-engine/src/mkldnn_plugin/CMakeLists.txt
+index d767724..80d33e6 100644
+--- a/inference-engine/src/mkldnn_plugin/CMakeLists.txt
++++ b/inference-engine/src/mkldnn_plugin/CMakeLists.txt
+@@ -69,3 +69,4 @@ target_compile_definitions(test_${TARGET_NAME} PUBLIC -DMKLDNN_THR=${MKLDNN_THR}
+ target_link_libraries(test_${TARGET_NAME} PRIVATE inference_engine_s mkldnn)
+ 
+ set_target_properties(test_${TARGET_NAME} PROPERTIES COMPILE_PDB_NAME test_${TARGET_NAME})
++install(TARGETS ${TARGET_NAME} EXPORT ${TARGET_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+diff --git a/inference-engine/src/vpu/myriad_plugin/CMakeLists.txt b/inference-engine/src/vpu/myriad_plugin/CMakeLists.txt
+index b51f1a6..c005473 100644
+--- a/inference-engine/src/vpu/myriad_plugin/CMakeLists.txt
++++ b/inference-engine/src/vpu/myriad_plugin/CMakeLists.txt
+@@ -36,3 +36,5 @@ if (LINUX)
+         COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/../vpu_custom_kernels
+                                                      $<TARGET_FILE_DIR:${TARGET_NAME}>/vpu_custom_kernels)
+ endif()
++
++install(TARGETS ${TARGET_NAME} EXPORT ${TARGET_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+diff --git a/inference-engine/tests/unit/CMakeLists.txt b/inference-engine/tests/unit/CMakeLists.txt
+index d83e088..641bef7 100644
+--- a/inference-engine/tests/unit/CMakeLists.txt
++++ b/inference-engine/tests/unit/CMakeLists.txt
+@@ -116,3 +116,5 @@ add_test(NAME ${TARGET_NAME}
+         COMMAND ${TARGET_NAME})
+ 
+ add_dependencies(${TARGET_NAME} mock_engine)
++
++install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})

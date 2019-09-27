@@ -1,6 +1,6 @@
-From e58226a399be7cf2cc6d91b66facb65d7dfb5018 Mon Sep 17 00:00:00 2001
+From f4533f5bfce9daee08a4fea61736315fbe4ad6db Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
-Date: Tue, 20 Aug 2019 15:40:18 +0800
+Date: Fri, 27 Sep 2019 11:34:36 +0800
 Subject: [PATCH] Supply firmware at build time
 
 We'd like to supply firmware when fetching the sources. Disable runtime
@@ -9,22 +9,21 @@ fetching and point to fetched firmware instead.
 Upstream-Status: Submitted
 
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
-
 ---
  inference-engine/cmake/dependencies.cmake | 18 ------------------
  1 file changed, 18 deletions(-)
 
 diff --git a/inference-engine/cmake/dependencies.cmake b/inference-engine/cmake/dependencies.cmake
-index 64435ca..217fbc9 100644
+index d493426..666ace6 100644
 --- a/inference-engine/cmake/dependencies.cmake
 +++ b/inference-engine/cmake/dependencies.cmake
-@@ -37,24 +37,6 @@ else()
-     set(MODELS_BRANCH "master")
+@@ -22,24 +22,6 @@ if(COMMAND get_linux_name)
+     get_linux_name(LINUX_OS_NAME)
  endif()
  
 -if (ENABLE_MYRIAD)
 -    RESOLVE_DEPENDENCY(VPU_FIRMWARE_MA2450
--            ARCHIVE_UNIFIED firmware_ma2450_491.zip
+-            ARCHIVE_UNIFIED firmware_ma2450_676.zip
 -            TARGET_PATH "${TEMP}/vpu/firmware/ma2450"
 -            ENVIRONMENT "VPU_FIRMWARE_MA2450"
 -            FOLDER)
@@ -32,12 +31,12 @@ index 64435ca..217fbc9 100644
 -endif ()
 -
 -if (ENABLE_MYRIAD)
--    RESOLVE_DEPENDENCY(VPU_FIRMWARE_MA2480
--            ARCHIVE_UNIFIED firmware_ma2480_mdk_R7_9.zip
--            TARGET_PATH "${TEMP}/vpu/firmware/ma2480"
--            ENVIRONMENT "VPU_FIRMWARE_MA2480"
+-    RESOLVE_DEPENDENCY(VPU_FIRMWARE_MA2X8X
+-            ARCHIVE_UNIFIED firmware_ma2x8x_mdk_R8_9.zip
+-            TARGET_PATH "${TEMP}/vpu/firmware/ma2x8x"
+-            ENVIRONMENT "VPU_FIRMWARE_MA2X8X"
 -            FOLDER)
--    debug_message(STATUS "ma2480=" ${VPU_FIRMWARE_MA2480})
+-    debug_message(STATUS "ma2x8x=" ${VPU_FIRMWARE_MA2X8X})
 -endif ()
 -
  ## enable cblas_gemm from OpenBLAS package

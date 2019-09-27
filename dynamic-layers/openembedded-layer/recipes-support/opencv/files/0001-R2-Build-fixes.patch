@@ -1,0 +1,236 @@
+From 3d7373487eacf4e3283183bbc9a771cb4b97c7ab Mon Sep 17 00:00:00 2001
+From: Erin Park <erin.park@intel.com>
+Date: Wed, 11 Sep 2019 09:04:23 -0700
+Subject: [PATCH] R2 Build fixes
+
+-linux os-release name search
+-Use system libraries for (OMP/TBB)
+-Use system libraries for ngraph, ade, puigxml, gflags
+-Turn on ENABLE_PYTHON
+
+Upstream-Status: Pending [Taken from Clear Linux]
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ inference-engine/CMakeLists.txt               |  4 +++
+ inference-engine/cmake/dependencies.cmake     | 32 +++++++++++--------
+ .../cmake/developer_package.cmake             | 12 +++----
+ inference-engine/cmake/ie_parallel.cmake      | 10 +++---
+ inference-engine/cmake/linux_name.cmake       |  2 +-
+ inference-engine/samples/CMakeLists.txt       |  2 --
+ .../src/inference_engine/CMakeLists.txt       |  5 +--
+ inference-engine/thirdparty/CMakeLists.txt    |  7 ----
+ 8 files changed, 38 insertions(+), 36 deletions(-)
+
+diff --git a/inference-engine/CMakeLists.txt b/inference-engine/CMakeLists.txt
+index 0d449c9..5ee8f53 100644
+--- a/inference-engine/CMakeLists.txt
++++ b/inference-engine/CMakeLists.txt
+@@ -59,6 +59,10 @@ add_cpplint_target(sample_cpplint
+     EXCLUDE_PATTERNS "thirdparty/*" "pugixml/*")
+ 
+ if (ENABLE_PYTHON)
++    set(InferenceEngine_DIR "${CMAKE_BINARY_DIR}")
++
++    #to be able to link
++    set (LIB_FOLDER ${IE_MAIN_SOURCE_DIR}/${BIN_FOLDER}/${CMAKE_BUILD_TYPE}/lib)
+     add_subdirectory(ie_bridges/python)
+ endif()
+ 
+diff --git a/inference-engine/cmake/dependencies.cmake b/inference-engine/cmake/dependencies.cmake
+index 00a5b8e..d493426 100644
+--- a/inference-engine/cmake/dependencies.cmake
++++ b/inference-engine/cmake/dependencies.cmake
+@@ -71,11 +71,11 @@ if (WIN32)
+             ENVIRONMENT "OMP"
+             VERSION_REGEX ".*_([a-z]*_([a-z0-9]+\\.)*[0-9]+).*")
+ elseif(LINUX)
+-    RESOLVE_DEPENDENCY(OMP
+-            ARCHIVE_LIN "iomp.tgz"
+-            TARGET_PATH "${TEMP}/omp"
+-            ENVIRONMENT "OMP"
+-            VERSION_REGEX ".*_([a-z]*_([a-z0-9]+\\.)*[0-9]+).*")
++#    RESOLVE_DEPENDENCY(OMP
++#            ARCHIVE_LIN "iomp.tgz"
++#            TARGET_PATH "${TEMP}/omp"
++#            ENVIRONMENT "OMP"
++#            VERSION_REGEX ".*_([a-z]*_([a-z0-9]+\\.)*[0-9]+).*")
+ else(APPLE)
+     RESOLVE_DEPENDENCY(OMP
+             ARCHIVE_MAC "iomp_20190130_mac.tgz"
+@@ -83,8 +83,11 @@ else(APPLE)
+             ENVIRONMENT "OMP"
+             VERSION_REGEX ".*_([a-z]*_([a-z0-9]+\\.)*[0-9]+).*")
+ endif()
+-log_rpath_from_dir(OMP "${OMP}/lib")
+-debug_message(STATUS "intel_omp=" ${OMP})
++
++if (OMP)
++    log_rpath_from_dir(OMP "${OMP}/lib")
++    debug_message(STATUS "intel_omp=" ${OMP})
++endif ()
+ endif ()
+ 
+ ## TBB package
+@@ -97,10 +100,10 @@ if (WIN32)
+             ENVIRONMENT "TBBROOT"
+             VERSION_REGEX ".*_([a-z]*_([a-z0-9]+\\.)*[0-9]+).*")
+ elseif(LINUX)
+-    RESOLVE_DEPENDENCY(TBB
+-            ARCHIVE_LIN "tbb2019_20181010_lin.tgz"
+-            TARGET_PATH "${TEMP}/tbb"
+-            ENVIRONMENT "TBBROOT")
++#    RESOLVE_DEPENDENCY(TBB
++#            ARCHIVE_LIN "tbb2019_20181010_lin.tgz"
++#            TARGET_PATH "${TEMP}/tbb"
++#            ENVIRONMENT "TBBROOT")
+ else(APPLE)
+     RESOLVE_DEPENDENCY(TBB
+             ARCHIVE_MAC "tbb2019_20190414_mac.tgz"
+@@ -108,8 +111,11 @@ else(APPLE)
+             ENVIRONMENT "TBBROOT"
+             VERSION_REGEX ".*_([a-z]*_([a-z0-9]+\\.)*[0-9]+).*")
+ endif()
+-log_rpath_from_dir(TBB "${TBB}/lib")
+-debug_message(STATUS "tbb=" ${TBB})
++
++if (TBB)
++    log_rpath_from_dir(TBB "${TBB}/lib")
++    debug_message(STATUS "tbb=" ${TBB})
++endif ()
+ endif ()
+ 
+ if (ENABLE_OPENCV)
+diff --git a/inference-engine/cmake/developer_package.cmake b/inference-engine/cmake/developer_package.cmake
+index 52e0fef..06ba167 100644
+--- a/inference-engine/cmake/developer_package.cmake
++++ b/inference-engine/cmake/developer_package.cmake
+@@ -95,12 +95,12 @@ if(NOT UNIX)
+     set(LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_ROOT}/${BIN_FOLDER})
+     set(LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_DIRECTORY}) # compatibility issue: linux uses LIBRARY_OUTPUT_PATH, windows uses LIBRARY_OUTPUT_DIRECTORY
+ else()
+-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_ROOT}/${BIN_FOLDER}/${IE_BUILD_CONFIGURATION}/lib)
+-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_ROOT}/${BIN_FOLDER}/${IE_BUILD_CONFIGURATION}/lib)
+-    set(CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY ${OUTPUT_ROOT}/${BIN_FOLDER}/${IE_BUILD_CONFIGURATION})
+-    set(CMAKE_PDB_OUTPUT_DIRECTORY ${OUTPUT_ROOT}/${BIN_FOLDER}/${IE_BUILD_CONFIGURATION})
+-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_ROOT}/${BIN_FOLDER}/${IE_BUILD_CONFIGURATION})
+-    set(LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_ROOT}/${BIN_FOLDER}/${IE_BUILD_CONFIGURATION}/lib)
++    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${BIN_FOLDER}/${IE_BUILD_CONFIGURATION}/lib)
++    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${BIN_FOLDER}/${IE_BUILD_CONFIGURATION}/lib)
++    set(CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${BIN_FOLDER}/${IE_BUILD_CONFIGURATION})
++    set(CMAKE_PDB_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${BIN_FOLDER}/${IE_BUILD_CONFIGURATION})
++    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${BIN_FOLDER}/${IE_BUILD_CONFIGURATION})
++    set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${BIN_FOLDER}/${IE_BUILD_CONFIGURATION}/lib)
+     set(LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_DIRECTORY}/lib)
+ endif()
+ 
+diff --git a/inference-engine/cmake/ie_parallel.cmake b/inference-engine/cmake/ie_parallel.cmake
+index 8265701..9d4a884 100644
+--- a/inference-engine/cmake/ie_parallel.cmake
++++ b/inference-engine/cmake/ie_parallel.cmake
+@@ -22,9 +22,9 @@ function(set_ie_threading_interface_for TARGET_NAME)
+         endif ()
+ 
+         if (NOT TBB_INCLUDE_DIRS OR NOT TBB_LIBRARIES_RELEASE)
+-            find_path(TBB_INCLUDE_DIRS tbb/tbb.h ${incl_path} NO_DEFAULT_PATH)
+-            find_library(TBB_LIBRARIES_RELEASE tbb ${lib_rel_path} NO_DEFAULT_PATH)
+-            find_library(TBB_LIBRARIES_DEBUG tbb_debug ${lib_dbg_path} NO_DEFAULT_PATH)
++            find_path(TBB_INCLUDE_DIRS tbb/tbb.h)
++            find_library(TBB_LIBRARIES_RELEASE tbb)
++            find_library(TBB_LIBRARIES_DEBUG tbb)
+             ext_message(STATUS "TBB include: ${TBB_INCLUDE_DIRS}")
+             ext_message(STATUS "TBB Release lib: ${TBB_LIBRARIES_RELEASE}")
+             ext_message(STATUS "TBB Debug lib: ${TBB_LIBRARIES_DEBUG}")
+@@ -78,8 +78,8 @@ function(set_ie_threading_interface_for TARGET_NAME)
+         endif ()
+ 
+         if (NOT OMP_LIBRARIES_RELEASE)
+-            find_library(OMP_LIBRARIES_RELEASE ${omp_lib_name} ${lib_rel_path} NO_DEFAULT_PATH)
+-            find_library(OMP_LIBRARIES_DEBUG ${omp_lib_name} ${lib_dbg_path} NO_DEFAULT_PATH)
++            find_library(OMP_LIBRARIES_RELEASE ${omp_lib_name})
++            find_library(OMP_LIBRARIES_DEBUG ${omp_lib_name})
+             ext_message(STATUS "OMP Release lib: ${OMP_LIBRARIES_RELEASE}")
+             ext_message(STATUS "OMP Debug lib: ${OMP_LIBRARIES_DEBUG}")
+         endif ()
+diff --git a/inference-engine/cmake/linux_name.cmake b/inference-engine/cmake/linux_name.cmake
+index 6713808..7e5e47a 100644
+--- a/inference-engine/cmake/linux_name.cmake
++++ b/inference-engine/cmake/linux_name.cmake
+@@ -5,7 +5,7 @@
+ if (LINUX)
+     function(get_linux_name res_var)
+         if (NOT EXISTS "/etc/lsb-release")
+-            execute_process(COMMAND find -L /etc/ -maxdepth 1 -type f -name *-release -exec cat {} \;
++            execute_process(COMMAND find /usr/lib/ /etc/ -maxdepth 1 -type f -name *-release -exec cat {} \;
+                     OUTPUT_VARIABLE release_data RESULT_VARIABLE result)
+             set(name_regex "NAME=\"([^ \"\n]*).*\"\n")
+             set(version_regex "VERSION=\"([0-9]+(\\.[0-9]+)?)[^\n]*\"")
+diff --git a/inference-engine/samples/CMakeLists.txt b/inference-engine/samples/CMakeLists.txt
+index d354f64..3802624 100644
+--- a/inference-engine/samples/CMakeLists.txt
++++ b/inference-engine/samples/CMakeLists.txt
+@@ -91,8 +91,6 @@ set (GFLAGS_IS_SUBPROJECT TRUE)
+ set (HAVE_SYS_STAT_H 1)
+ set (HAVE_INTTYPES_H 1)
+ 
+-add_subdirectory(thirdparty/gflags)
+-
+ if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+ endif()
+diff --git a/inference-engine/src/inference_engine/CMakeLists.txt b/inference-engine/src/inference_engine/CMakeLists.txt
+index f3514ed..37a0744 100644
+--- a/inference-engine/src/inference_engine/CMakeLists.txt
++++ b/inference-engine/src/inference_engine/CMakeLists.txt
+@@ -97,12 +97,13 @@ target_include_directories(${TARGET_NAME} PUBLIC ${PUBLIC_HEADERS_DIR}
+ target_include_directories(${TARGET_NAME} SYSTEM PRIVATE "${IE_MAIN_SOURCE_DIR}/thirdparty/pugixml/src")
+ target_include_directories(${TARGET_NAME} SYSTEM PRIVATE "${IE_MAIN_SOURCE_DIR}/thirdparty/ngraph/src")
+ target_include_directories(${TARGET_NAME} SYSTEM PRIVATE "${IE_MAIN_SOURCE_DIR}/thirdparty/ocv")
++include_directories(${TARGET_NAME} "/usr/include/ngraph")
+ 
+ if(ENABLE_MKL_DNN)
+     target_include_directories(${TARGET_NAME} SYSTEM PRIVATE "${IE_MAIN_SOURCE_DIR}/thirdparty/mkl-dnn/src/cpu/xbyak")
+ endif()
+ 
+-set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_PDB_NAME ${TARGET_NAME})
++set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_PDB_NAME ${TARGET_NAME} SOVERSION 1)
+ 
+ # Static library used for unit tests which are always built
+ 
+@@ -132,7 +133,7 @@ if(WIN32)
+     target_compile_definitions(${TARGET_NAME}_s PRIVATE -DNOMINMAX)
+ endif()
+ 
+-set_target_properties(${TARGET_NAME}_s PROPERTIES COMPILE_PDB_NAME ${TARGET_NAME}_s)
++set_target_properties(${TARGET_NAME}_s PROPERTIES COMPILE_PDB_NAME ${TARGET_NAME}_s SOVERSION 1)
+ 
+ target_link_libraries(${TARGET_NAME}_s PRIVATE fluid
+                                        PRIVATE ngraph
+diff --git a/inference-engine/thirdparty/CMakeLists.txt b/inference-engine/thirdparty/CMakeLists.txt
+index 5a4b259..7208a0f 100644
+--- a/inference-engine/thirdparty/CMakeLists.txt
++++ b/inference-engine/thirdparty/CMakeLists.txt
+@@ -7,12 +7,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+   set(CMAKE_CC_FLAGS "${CMAKE_CC_FLAGS} -Wno-unknown-warning-option -Wno-inconsistent-missing-override -Wno-pass-failed")
+ endif()
+ 
+-add_subdirectory(pugixml)
+-export(TARGETS pugixml NAMESPACE IE:: APPEND FILE "${CMAKE_BINARY_DIR}/targets.cmake")
+-export(TARGETS pugixml NAMESPACE IE:: APPEND FILE "${CMAKE_BINARY_DIR}/targets_developer.cmake")
+-
+ add_subdirectory(stb_lib)
+-add_subdirectory(ade)
+ 
+ if (ENABLE_CLDNN)
+     set(CLDNN__OUTPUT_BIN_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+@@ -40,8 +35,6 @@ if (UNIX OR APPLE AND ${CMAKE_BUILD_TYPE} STREQUAL "Release")
+     add_definitions(-fvisibility=default)
+ endif()
+ 
+-include(ngraph.cmake)
+-
+ if (UNIX OR APPLE AND ${CMAKE_BUILD_TYPE} STREQUAL "Release")
+     remove_definitions(-fvisibility=default)
+     add_definitions(-fvisibility=hidden)
+-- 
+2.23.0
+

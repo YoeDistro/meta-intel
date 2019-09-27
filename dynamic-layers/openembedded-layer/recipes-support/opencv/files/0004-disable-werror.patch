@@ -1,40 +1,40 @@
-From 434cf332e8c368b626d230b79e8dccecf2b0525b Mon Sep 17 00:00:00 2001
+From 68d6b80eb9cc87ff3598958b8a7f52b688b9436f Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
-Date: Tue, 20 Aug 2019 19:39:37 +0800
+Date: Fri, 27 Sep 2019 20:32:08 +0800
 Subject: [PATCH] disable werror
 
-This shouldn't be enabled and leads to multiple errors when compiling cldnn.
+This shouldn't be enabled and leads to multiple errors when compiling
+cldnn and samples.
 
-Upstream-Status: Submitted
+Upstream-Status: Pending
 
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
-
 ---
- inference-engine/cmake/os_flags.cmake                    | 2 +-
+ inference-engine/cmake/os_flags.cmake                    | 1 -
  inference-engine/samples/CMakeLists.txt                  | 1 -
+ inference-engine/src/extension/CMakeLists.txt            | 1 -
  inference-engine/thirdparty/clDNN/CMakeLists.txt         | 2 --
  inference-engine/thirdparty/mkl-dnn/cmake/platform.cmake | 1 -
- inference-engine/tools/CMakeLists.txt                    | 2 --
- 5 files changed, 1 insertion(+), 7 deletions(-)
+ inference-engine/tools/CMakeLists.txt                    | 1 -
+ 6 files changed, 7 deletions(-)
 
 diff --git a/inference-engine/cmake/os_flags.cmake b/inference-engine/cmake/os_flags.cmake
-index 29608ea..2c189d8 100644
+index 6a5442f..a14a1ae 100644
 --- a/inference-engine/cmake/os_flags.cmake
 +++ b/inference-engine/cmake/os_flags.cmake
-@@ -28,7 +28,7 @@ if (WIN32)
+@@ -48,7 +48,6 @@ if (WIN32)
+         set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${DEBUG_SYMBOLS_LINKER_FLAGS}")
      endif()
- 
  else()
 -    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Werror=return-type ")
-+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type ")
      if (APPLE)
          set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=unused-command-line-argument")
      elseif(UNIX)
 diff --git a/inference-engine/samples/CMakeLists.txt b/inference-engine/samples/CMakeLists.txt
-index a8a9946..8ac5454 100644
+index dd7b679..828abe6 100644
 --- a/inference-engine/samples/CMakeLists.txt
 +++ b/inference-engine/samples/CMakeLists.txt
-@@ -68,7 +68,6 @@ if (WIN32)
+@@ -59,7 +59,6 @@ if (WIN32)
          set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275 /wd4267") #disable some warnings
      endif()
  else()
@@ -42,11 +42,23 @@ index a8a9946..8ac5454 100644
      if (APPLE)
          set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=unused-command-line-argument")
      elseif(UNIX)
+diff --git a/inference-engine/src/extension/CMakeLists.txt b/inference-engine/src/extension/CMakeLists.txt
+index fb14ebe..228bb8c 100644
+--- a/inference-engine/src/extension/CMakeLists.txt
++++ b/inference-engine/src/extension/CMakeLists.txt
+@@ -25,7 +25,6 @@ if (WIN32)
+         set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275 /wd4267") #disable some warnings
+     endif()
+ else()
+-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+ endif()
+ 
+ if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
 diff --git a/inference-engine/thirdparty/clDNN/CMakeLists.txt b/inference-engine/thirdparty/clDNN/CMakeLists.txt
-index 624d95c..5646ff1 100644
+index 5957791..6007be4 100644
 --- a/inference-engine/thirdparty/clDNN/CMakeLists.txt
 +++ b/inference-engine/thirdparty/clDNN/CMakeLists.txt
-@@ -757,8 +757,6 @@ foreach(__CLDNN_CompilerFlagName IN ITEMS "CMAKE_CXX_FLAGS" "CMAKE_C_FLAGS")
+@@ -758,8 +758,6 @@ foreach(__CLDNN_CompilerFlagName IN ITEMS "CMAKE_CXX_FLAGS" "CMAKE_C_FLAGS")
          MultiProcessorCompilation
          DeadCodeEliminate
          ExtensionsEnabled
@@ -68,15 +80,14 @@ index a541215..bed8a59 100644
      append(CMAKE_C_FLAGS "-std=c99")
      append(CMAKE_CXX_FLAGS "-std=c++11 -fvisibility-inlines-hidden")
 diff --git a/inference-engine/tools/CMakeLists.txt b/inference-engine/tools/CMakeLists.txt
-index 13ab365..feacf33 100644
+index fddfa28..a714fc1 100644
 --- a/inference-engine/tools/CMakeLists.txt
 +++ b/inference-engine/tools/CMakeLists.txt
-@@ -23,8 +23,6 @@ endif()
- 
+@@ -24,7 +24,6 @@ endif()
  if (WIN32)
      # add_compile_options("/WX")
--else()
+ else()
 -    add_compile_options("-Werror")
  endif()
  
- add_subdirectory(vpu)
+ if (ENABLE_OPENCV)
