@@ -13,6 +13,7 @@ SRC_URI = "git://github.com/opencv/dldt.git;protocol=git;branch=2019 \
            file://0003-Supply-firmware-at-build-time.patch;patchdir=../ \
            file://0004-disable-werror.patch;patchdir=../ \
            file://0005-point-to-correct-location-of-ngraph-headers.patch;patchdir=../ \
+           file://0001-Install-clDNN-plugin-to-CMAKE_INSTALL_LIBDIR.patch;patchdir=../ \
            file://run-ptest \
            "
 SRCREV = "ba6e22b1b5ee4cbefcc30e8d9493cddb0bb3dfdf"
