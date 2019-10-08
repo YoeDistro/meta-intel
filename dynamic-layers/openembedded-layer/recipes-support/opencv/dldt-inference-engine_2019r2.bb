@@ -27,7 +27,7 @@ SRC_URI[ma2x8x.sha256sum] = "93640eb13e235d3f71a83cd503c36ff8a63235349e1f528d903
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://../LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
-inherit cmake ptest
+inherit cmake ptest python3native
 
 S = "${WORKDIR}/git/inference-engine"
 
@@ -38,7 +38,7 @@ EXTRA_OECMAKE += " \
                   -DENABLE_SAMPLES_CORE=1 \
                   -DENABLE_PLUGIN_RPATH=0 \
                   -DENABLE_GNA=0 \
-                  -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 \
+                  -DPYTHON_EXECUTABLE=${PYTHON} \
                   -DTHREADING=TBB \
                   -DCMAKE_INSTALL_LOCAL_ONLY=OFF \
                   -DCMAKE_BUILD_TYPE=DebugWithRelInfo \
@@ -65,6 +65,7 @@ COMPATIBLE_HOST_libc-musl = "null"
 
 PACKAGECONFIG ?= ""
 PACKAGECONFIG[opencl] = "-DENABLE_CLDNN=1, -DENABLE_CLDNN=0, opencl-icd-loader, opencl-icd-loader intel-compute-runtime"
+PACKAGECONFIG[python3] = "-DENABLE_PYTHON=ON -DPYTHON_LIBRARY=${PYTHON_LIBRARY} -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR}, -DENABLE_PYTHON=OFF, python3-cython-native, python3"
 
 do_install_ptest_base_prepend() {
         # While not a Makefile based project that strictly falls into the category of
@@ -73,9 +74,6 @@ do_install_ptest_base_prepend() {
         touch ${WORKDIR}/Makefile
         mv ${D}${bindir}/InferenceEngineUnitTests ${D}${PTEST_PATH}/
 }
-
-# Move inference engine samples into a separate package
-PACKAGES =+ "${PN}-samples"
 
 FILES_${PN}-dev = "${includedir} \
                    ${libdir}/cmake \
@@ -86,4 +84,12 @@ FILES_${PN} += "${libdir}/lib*${SOLIBSDEV} \
                 ${datadir}/openvino \
                 "
 
+# Move inference engine samples into a separate package
+PACKAGES =+ "${PN}-samples"
+
 FILES_${PN}-samples = "${bindir}"
+
+# Package for inference engine python API
+PACKAGES =+ "${PN}-${PYTHON_PN}"
+
+FILES_${PN}-${PYTHON_PN} = "${PYTHON_SITEPACKAGES_DIR}/openvino"
