@@ -1,0 +1,34 @@
+From 8c11096a0e5cf980309692ae3e272108da5f2b4e Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Wed, 9 Oct 2019 11:36:56 -0700
+Subject: [PATCH] md_internal.h: Replace string.h with <string> C++ header API
+
+This helps in compiling with libc++/Clang
+Fixes
+usr/include/c++/v1/type_traits:1561:38: error: implicit instantiation of undefined template 'std::__1::hash<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >'
+: public integral_constant<bool, __is_empty(_Tp)> {};
+^
+
+Upstream-Status: Submitted [https://github.com/intel/metrics-discovery/pull/14]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ instrumentation/metrics_discovery/common/md_internal.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/instrumentation/metrics_discovery/common/md_internal.cpp b/instrumentation/metrics_discovery/common/md_internal.cpp
+index f9571ac..0767e81 100644
+--- a/instrumentation/metrics_discovery/common/md_internal.cpp
++++ b/instrumentation/metrics_discovery/common/md_internal.cpp
+@@ -27,8 +27,8 @@
+ \*****************************************************************************/
+ #include "md_internal.h"
+ 
+-#include <string.h>
+ #include <stdlib.h>
++#include <string>
+ #include <new>
+ #include <unordered_map>
+ 
+-- 
+2.23.0
+

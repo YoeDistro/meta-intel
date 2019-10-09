@@ -9,7 +9,9 @@ inherit pkgconfig cmake
 
 S = "${WORKDIR}/git"
 SRCREV = "a495db4682b7318bc82b1cccfb17fafdf2e3a2ff"
-SRC_URI = "git://github.com/intel/metrics-discovery.git"
+SRC_URI = "git://github.com/intel/metrics-discovery.git \
+           file://0001-md_internal.h-Replace-string.h-with-string-C-header-.patch \
+          "
 
 EXTRA_OECMAKE += "-DMD_PLATFORM=linux"
 EXTRA_OECMAKE += "-DMD_LIBDRM_SRC=${STAGING_INCDIR}"
