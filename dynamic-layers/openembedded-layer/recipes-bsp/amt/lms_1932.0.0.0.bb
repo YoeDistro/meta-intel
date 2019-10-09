@@ -8,6 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=2ee41112a44fe7014dce33e26468ba93"
 
 COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
+COMPATIBLE_HOST_libc-musl = "null"
+
 inherit cmake systemd
 
 DEPENDS = "metee ace xerces-c libnl libxml2 glib-2.0 glib-2.0-native connman"
