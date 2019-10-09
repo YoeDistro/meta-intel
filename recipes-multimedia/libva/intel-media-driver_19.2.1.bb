@@ -41,6 +41,10 @@ EXTRA_OECMAKE += " \
                    -DMEDIA_BUILD_FATAL_WARNINGS=OFF \
                    "
 
+do_configure_prepend_toolchain-clang() {
+    sed -i -e '/-fno-tree-pre/d' ${S}/media_driver/cmake/linux/media_compile_flags_linux.cmake
+}
+
 # See: https://github.com/intel/media-driver/issues/358
 FILES_${PN} += " \
                  ${libdir}/dri/ \
