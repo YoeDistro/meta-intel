@@ -17,7 +17,6 @@ inherit cmake
 DEPENDS += "clang"
 
 DEPENDS_append_class-target = " opencl-clang-native"
-LDFLAGS_append_class-native = " -fuse-ld=lld"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST_libc-musl = "null"
@@ -33,5 +32,3 @@ do_install_append_class-native() {
 }
 
 BBCLASSEXTEND = "native nativesdk"
-
-TOOLCHAIN_class-native = "clang"
