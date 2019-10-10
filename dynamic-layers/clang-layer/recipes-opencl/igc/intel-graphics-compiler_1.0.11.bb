@@ -29,9 +29,6 @@ RDEPENDS_${PN} += "opencl-clang"
 
 EXTRA_OECMAKE = "-DIGC_PREFERRED_LLVM_VERSION=9.0.0 -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3"
 
-LDFLAGS_append_class-native = " -fuse-ld=lld"
-TOOLCHAIN_class-native = "clang"
-
 BBCLASSEXTEND = "native nativesdk"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^igc-(?P<pver>(?!19\..*)\d+(\.\d+)+)$"
