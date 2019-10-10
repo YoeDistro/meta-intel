@@ -35,9 +35,6 @@ EXTRA_OECMAKE = " \
                  -DCCACHE_ALLOWED=FALSE \
                  "
 
-LDFLAGS_append_class-native = " -fuse-ld=lld"
-TOOLCHAIN_class-native = "clang"
-
 FILES_${PN} += "${libdir}/intel-opencl/libigdrcl.so"
 
 BBCLASSEXTEND = "native nativesdk"
