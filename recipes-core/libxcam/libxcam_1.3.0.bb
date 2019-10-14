@@ -7,9 +7,8 @@ SECTION = "lib"
 inherit autotools pkgconfig
 
 S = "${WORKDIR}/git"
-SRCREV = "28769ade4793006c8db9a1720359c310fa1e0d6a"
-SRC_URI = "git://github.com/intel/libxcam.git;branch=1.2.2 \
-           file://0001-modules-vulkan-point-to-correct-location-of-spv-shad.patch \
+SRCREV = "90f386c44fdfc550d0c81697cf070b3249bef4dd"
+SRC_URI = "git://github.com/intel/libxcam.git;branch=1.3.0 \
            "
 
 COMPATIBLE_HOST_libc-musl = "null"
