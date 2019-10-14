@@ -1,28 +1,32 @@
-SUMMARY  = "Intel Math Kernel Library for Deep Neural Networks"
+SUMMARY  = "Deep Neural Network Library"
 DESCRIPTION = "This software is a user mode library that accelerates\
 deep-learning applications and frameworks on Intel architecture."
-LICENSE  = "Apache-2.0 & BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=a34303951205b8c53485477c74052380 \
-	file://tests/gtests/gtest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
-	file://src/cpu/xbyak/COPYRIGHT;md5=03532861dad9003cc2c17f14fc7a4efa \
-	file://src/cpu/jit_utils/jitprofiling/LICENSE.BSD;md5=e671ff178b24a95a382ba670503c66fb"
+LICENSE  = "Apache-2.0 & BSD-3-Clause & BSL-1.0"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=477df9cc728dd9c63128c0f3525f4649 \
+                    file://tests/gtests/gtest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
+                    file://src/cpu/xbyak/COPYRIGHT;md5=3b9bf048d063d54cdb28964db558bcc7 \
+                    file://src/cpu/jit_utils/jitprofiling/LICENSE.BSD;md5=e671ff178b24a95a382ba670503c66fb \
+                    file://cmake/Copyright.txt;md5=622747147b46f22e1953876a7cba3323 \
+                    file://doc/assets/mathjax/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57 \
+                    file://src/common/LICENSE_1_0;md5=e4224ccaecb14d942c71d31bef20d78c \
+                    "
 SECTION = "lib"
 
 inherit pkgconfig cmake ptest
 
 S = "${WORKDIR}/git"
-SRCREV = "3289d3c06e07b55fdbec927461bd89f8989eff5d"
-SRC_URI = "git://github.com/intel/mkl-dnn.git;branch=rls-v1.0 \
-        file://run-ptest \
-"
+SRCREV = "dc6c0f3897c910a6ccba7f1db1f8d6f318c04f16"
+SRC_URI = "git://github.com/intel/mkl-dnn.git;branch=rls-v1.1 \
+           file://run-ptest \
+           "
 
 UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>(\d+(\.\d+)+))$"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST_libc-musl = 'null'
 
-EXTRA_OECMAKE += "-DMKLDNN_LIBRARY_TYPE=SHARED"
-EXTRA_OECMAKE += "-DMKLDNN_THREADING=OMP"
+EXTRA_OECMAKE += "-DDNNL_LIBRARY_TYPE=SHARED"
+EXTRA_OECMAKE += "-DDNNL_THREADING=OMP"
 EXTRA_OECMAKE += "-DWITH_EXAMPLE=ON"
 EXTRA_OECMAKE += "-DWITH_TEST=ON"
 EXTRA_OECMAKE += "-DARCH_OPT_FLAGS=''"
