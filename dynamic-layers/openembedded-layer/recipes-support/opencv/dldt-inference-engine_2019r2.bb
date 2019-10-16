@@ -14,6 +14,7 @@ SRC_URI = "git://github.com/opencv/dldt.git;protocol=git;branch=2019 \
            file://0004-disable-werror.patch;patchdir=../ \
            file://0005-point-to-correct-location-of-ngraph-headers.patch;patchdir=../ \
            file://0001-Install-clDNN-plugin-to-CMAKE_INSTALL_LIBDIR.patch;patchdir=../ \
+           file://0001-mock_engine-install-to-CMAKE_INSTALL_LIBDIR.patch;patchdir=../ \
            file://run-ptest \
            "
 SRCREV = "ba6e22b1b5ee4cbefcc30e8d9493cddb0bb3dfdf"
@@ -73,6 +74,7 @@ do_install_ptest_base_prepend() {
         # Create a dummy Makefile so installation doesn't fail.
         touch ${WORKDIR}/Makefile
         mv ${D}${bindir}/InferenceEngineUnitTests ${D}${PTEST_PATH}/
+	mv ${D}${libdir}/libmock_engine.so ${D}${PTEST_PATH}/
 }
 
 FILES_${PN}-dev = "${includedir} \
