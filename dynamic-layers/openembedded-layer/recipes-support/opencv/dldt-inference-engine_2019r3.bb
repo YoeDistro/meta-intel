@@ -8,14 +8,13 @@ SRC_URI = "git://github.com/opencv/dldt.git;protocol=git;branch=2019 \
            file://0001-R2-Build-fixes.patch;patchdir=../ \
            file://0002-R2-Install-DLDT-headers-libs-sample-Apps.patch;patchdir=../ \
            file://0003-use-GNUInstallDirs-on-nix.patch;patchdir=../ \
-           file://0003-Supply-firmware-at-build-time.patch;patchdir=../ \
            file://0004-disable-werror.patch;patchdir=../ \
            file://0005-point-to-correct-location-of-ngraph-headers.patch;patchdir=../ \
-           file://0001-Install-clDNN-plugin-to-CMAKE_INSTALL_LIBDIR.patch;patchdir=../ \
-           file://0001-mock_engine-install-to-CMAKE_INSTALL_LIBDIR.patch;patchdir=../ \
+           file://0006-Install-clDNN-plugin-to-CMAKE_INSTALL_LIBDIR.patch;patchdir=../ \
+           file://0007-Install-mock_engine-to-CMAKE_INSTALL_LIBDIR.patch;patchdir=../ \
            file://run-ptest \
            "
-SRCREV = "ba6e22b1b5ee4cbefcc30e8d9493cddb0bb3dfdf"
+SRCREV = "1c794d971cdd3c94de5ea4a6c9588eac63f4cc57"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://../LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"

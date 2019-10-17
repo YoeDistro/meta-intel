@@ -1,7 +1,7 @@
-From 68d6b80eb9cc87ff3598958b8a7f52b688b9436f Mon Sep 17 00:00:00 2001
+From 1ca4d5de754c6ee90f685f2706f657800cad8386 Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Fri, 27 Sep 2019 20:32:08 +0800
-Subject: [PATCH] disable werror
+Subject: [PATCH 4/7] disable werror
 
 This shouldn't be enabled and leads to multiple errors when compiling
 cldnn and samples.
@@ -9,6 +9,7 @@ cldnn and samples.
 Upstream-Status: Pending
 
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+Signed-off-by: Chin Huat Ang <chin.huat.ang@intel.com>
 ---
  inference-engine/cmake/os_flags.cmake                    | 1 -
  inference-engine/samples/CMakeLists.txt                  | 1 -
@@ -19,19 +20,19 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  6 files changed, 7 deletions(-)
 
 diff --git a/inference-engine/cmake/os_flags.cmake b/inference-engine/cmake/os_flags.cmake
-index 6a5442f..a14a1ae 100644
+index ad15859..d471246 100644
 --- a/inference-engine/cmake/os_flags.cmake
 +++ b/inference-engine/cmake/os_flags.cmake
-@@ -48,7 +48,6 @@ if (WIN32)
+@@ -47,7 +47,6 @@ if (WIN32)
          set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${DEBUG_SYMBOLS_LINKER_FLAGS}")
      endif()
  else()
 -    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Werror=return-type ")
      if (APPLE)
          set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=unused-command-line-argument")
-     elseif(UNIX)
+         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-function")
 diff --git a/inference-engine/samples/CMakeLists.txt b/inference-engine/samples/CMakeLists.txt
-index dd7b679..828abe6 100644
+index 25f9f23..9aa5d5a 100644
 --- a/inference-engine/samples/CMakeLists.txt
 +++ b/inference-engine/samples/CMakeLists.txt
 @@ -59,7 +59,6 @@ if (WIN32)
@@ -55,10 +56,10 @@ index fb14ebe..228bb8c 100644
  
  if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
 diff --git a/inference-engine/thirdparty/clDNN/CMakeLists.txt b/inference-engine/thirdparty/clDNN/CMakeLists.txt
-index 5957791..6007be4 100644
+index 03e5bad..b9a3f5d 100644
 --- a/inference-engine/thirdparty/clDNN/CMakeLists.txt
 +++ b/inference-engine/thirdparty/clDNN/CMakeLists.txt
-@@ -758,8 +758,6 @@ foreach(__CLDNN_CompilerFlagName IN ITEMS "CMAKE_CXX_FLAGS" "CMAKE_C_FLAGS")
+@@ -760,8 +760,6 @@ foreach(__CLDNN_CompilerFlagName IN ITEMS "CMAKE_CXX_FLAGS" "CMAKE_C_FLAGS")
          MultiProcessorCompilation
          DeadCodeEliminate
          ExtensionsEnabled
@@ -80,7 +81,7 @@ index a541215..bed8a59 100644
      append(CMAKE_C_FLAGS "-std=c99")
      append(CMAKE_CXX_FLAGS "-std=c++11 -fvisibility-inlines-hidden")
 diff --git a/inference-engine/tools/CMakeLists.txt b/inference-engine/tools/CMakeLists.txt
-index fddfa28..a714fc1 100644
+index 3d80df3..b6cb7d8 100644
 --- a/inference-engine/tools/CMakeLists.txt
 +++ b/inference-engine/tools/CMakeLists.txt
 @@ -24,7 +24,6 @@ endif()
@@ -91,3 +92,6 @@ index fddfa28..a714fc1 100644
  endif()
  
  if (ENABLE_OPENCV)
+-- 
+2.7.4
+
