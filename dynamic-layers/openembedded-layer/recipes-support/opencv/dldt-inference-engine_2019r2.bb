@@ -53,7 +53,6 @@ EXTRA_OECMAKE += " \
 
 DEPENDS += "libusb1 \
             ade \
-            mkl-dnn \
             opencv \
             pugixml \
             ngraph \
