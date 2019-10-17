@@ -5,8 +5,6 @@ deep learning models through a high-level C++ Inference Engine API \
 integrated with application logic."
 
 SRC_URI = "git://github.com/opencv/dldt.git;protocol=git;branch=2019 \
-           https://download.01.org/opencv/2019/openvinotoolkit/R2/inference_engine/firmware_ma2450_676.zip;name=ma2450 \
-           https://download.01.org/opencv/2019/openvinotoolkit/R2/inference_engine/firmware_ma2x8x_mdk_R8_9.zip;name=ma2x8x \
            file://0001-R2-Build-fixes.patch;patchdir=../ \
            file://0002-R2-Install-DLDT-headers-libs-sample-Apps.patch;patchdir=../ \
            file://0003-use-GNUInstallDirs-on-nix.patch;patchdir=../ \
@@ -19,12 +17,6 @@ SRC_URI = "git://github.com/opencv/dldt.git;protocol=git;branch=2019 \
            "
 SRCREV = "ba6e22b1b5ee4cbefcc30e8d9493cddb0bb3dfdf"
 
-SRC_URI[ma2450.md5sum] = "a241a063db7eaa3de70ebf89817960e0"
-SRC_URI[ma2450.sha256sum] = "7fb1aa10c0fde8315fe2af65356a00f09f030d811adddc98731ec28b35368786"
-
-SRC_URI[ma2x8x.md5sum] = "cebebec8d05c70c3d69ed5ceaa11a06b"
-SRC_URI[ma2x8x.sha256sum] = "93640eb13e235d3f71a83cd503c36ff8a63235349e1f528d9030eca417ba8c1e"
-
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://../LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
@@ -33,8 +25,7 @@ inherit cmake ptest python3native
 S = "${WORKDIR}/git/inference-engine"
 
 EXTRA_OECMAKE += " \
-                  -DVPU_FIRMWARE_MA2450_FILE=../mvnc/MvNCAPI-ma2450.mvcmd \
-                  -DVPU_FIRMWARE_MA2X8X_FILE=../mvnc/MvNCAPI-ma2x8x.mvcmd \
+                  -DENABLE_VPU=OFF \
                   -DENABLE_OPENCV=0 \
                   -DENABLE_SAMPLES_CORE=1 \
                   -DENABLE_PLUGIN_RPATH=0 \
