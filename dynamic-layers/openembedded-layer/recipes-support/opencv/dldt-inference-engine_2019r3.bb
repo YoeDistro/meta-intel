@@ -31,7 +31,6 @@ EXTRA_OECMAKE += " \
                   -DENABLE_GNA=0 \
                   -DPYTHON_EXECUTABLE=${PYTHON} \
                   -DTHREADING=TBB \
-                  -DCMAKE_INSTALL_LOCAL_ONLY=OFF \
                   -DCMAKE_BUILD_TYPE=DebugWithRelInfo \
                   -DNGRAPH_INCLUDES=${STAGING_INCDIR}/ngraph \
                   -DENABLE_TESTS="${@bb.utils.contains('PTEST_ENABLED', '1', '1', '0', d)}" \
@@ -54,7 +53,7 @@ COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST_libc-musl = "null"
 
 PACKAGECONFIG ?= ""
-PACKAGECONFIG[opencl] = "-DENABLE_CLDNN=1, -DENABLE_CLDNN=0, opencl-icd-loader, opencl-icd-loader intel-compute-runtime"
+PACKAGECONFIG[opencl] = "-DENABLE_CLDNN=1 -DCLDNN__IOCL_ICD_INCDIRS=${STAGING_INCDIR} -DCLDNN__IOCL_ICD_STLDIRS=${STAGING_LIBDIR} -DCLDNN__IOCL_ICD_SHLDIRS=${STAGING_LIBDIR}, -DENABLE_CLDNN=0, opencl-icd-loader, opencl-icd-loader intel-compute-runtime"
 PACKAGECONFIG[python3] = "-DENABLE_PYTHON=ON -DPYTHON_LIBRARY=${PYTHON_LIBRARY} -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR}, -DENABLE_PYTHON=OFF, python3-cython-native, python3"
 
 do_install_ptest_base_prepend() {
