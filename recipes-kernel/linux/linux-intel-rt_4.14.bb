@@ -5,7 +5,7 @@ require linux-intel.inc
 # to build multiple virtual/kernel providers, e.g. as dependency of
 # core-image-rt-sdk, core-image-rt.
 python () {
-    if d.getVar("PREFERRED_PROVIDER_virtual/kernel") != "linux-intel-rt":
+    if d.getVar("KERNEL_PACKAGE_NAME", True) == "kernel" and d.getVar("PREFERRED_PROVIDER_virtual/kernel") != "linux-intel-rt":
         raise bb.parse.SkipPackage("Set PREFERRED_PROVIDER_virtual/kernel to linux-intel-rt to enable it")
 }
 
