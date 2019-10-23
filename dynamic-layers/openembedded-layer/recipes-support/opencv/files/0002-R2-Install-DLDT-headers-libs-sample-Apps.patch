@@ -130,7 +130,7 @@ index 63fda2a..3a4bc48 100644
  file(GLOB_RECURSE EXTENSION_SOURCES extension/*.cpp extension/*.hpp extension/*.h)
  add_cpplint_target(ie_cpu_extension_cpplint FOR_SOURCES ${EXTENSION_SOURCES})
 +
-+install(DIRECTORY extension DESTINATION share/doc/inference_engine)
++install(DIRECTORY extension DESTINATION include/inference_engine)
 diff --git a/inference-engine/src/extension/CMakeLists.txt b/inference-engine/src/extension/CMakeLists.txt
 index 799a62d..fb14ebe 100644
 --- a/inference-engine/src/extension/CMakeLists.txt
