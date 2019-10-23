@@ -65,6 +65,10 @@ do_install_ptest_base_prepend() {
 	mv ${D}${libdir}/libmock_engine.so ${D}${PTEST_PATH}/
 }
 
+# Otherwise e.g. ros-openvino-toolkit-dynamic-vino-sample when using dldt-inference-engine uses dldt-inference-engine WORKDIR
+# instead of RSS
+SSTATE_SCAN_FILES_append = " *.cmake"
+
 FILES_${PN}-dev = "${includedir} \
                    ${libdir}/cmake \
                    ${libdir}/libinference_engine.so \
