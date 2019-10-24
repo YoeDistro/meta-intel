@@ -8,14 +8,14 @@ SRC_URI = "git://github.com/opencv/dldt.git;protocol=git;branch=2019 \
            https://download.01.org/opencv/2019/openvinotoolkit/R3/inference_engine/firmware_ma2450_759W.zip;name=ma2450 \
            https://download.01.org/opencv/2019/openvinotoolkit/R3/inference_engine/firmware_ma2x8x_mdk_R9.8.zip;name=ma2x8x \
            https://download.01.org/opencv/2019/openvinotoolkit/R3/inference_engine/firmware_mv0262_mdk_R9.8.zip;name=mv0262 \
-           file://0001-R2-Build-fixes.patch;patchdir=../ \
-           file://0002-R2-Install-DLDT-headers-libs-sample-Apps.patch;patchdir=../ \
-           file://0003-use-GNUInstallDirs-on-nix.patch;patchdir=../ \
-           file://0004-disable-werror.patch;patchdir=../ \
-           file://0005-point-to-correct-location-of-ngraph-headers.patch;patchdir=../ \
-           file://0006-Install-clDNN-plugin-to-CMAKE_INSTALL_LIBDIR.patch;patchdir=../ \
-           file://0007-Install-mock_engine-to-CMAKE_INSTALL_LIBDIR.patch;patchdir=../ \
-           file://0008-Simplify-searching-for-firmware-files.patch;patchdir=../ \
+           file://0001-R2-Build-fixes.patch;patchdir=.. \
+           file://0002-R2-Install-DLDT-headers-libs-sample-Apps.patch;patchdir=.. \
+           file://0003-use-GNUInstallDirs-on-nix.patch;patchdir=.. \
+           file://0004-disable-werror.patch;patchdir=.. \
+           file://0005-point-to-correct-location-of-ngraph-headers.patch;patchdir=.. \
+           file://0006-Install-clDNN-plugin-to-CMAKE_INSTALL_LIBDIR.patch;patchdir=.. \
+           file://0007-Install-mock_engine-to-CMAKE_INSTALL_LIBDIR.patch;patchdir=.. \
+           file://0008-Simplify-searching-for-firmware-files.patch;patchdir=.. \
            file://run-ptest \
            "
 SRCREV = "1c794d971cdd3c94de5ea4a6c9588eac63f4cc57"
