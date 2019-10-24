@@ -28,8 +28,11 @@ SRC_URI[ma2x8x.sha256sum] = "2993ecfb638b311dca0f208bec8bf66ba896274c513d949781b
 SRC_URI[mv0262.md5sum] = "026f30b5b60ccadf7aedc3ebe0fbf7f1"
 SRC_URI[mv0262.sha256sum] = "3f55645ac3a0d35467d0ebb8689852664d65b73735ad5d782d423468d6e12781"
 
-LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://../LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
+LICENSE = "Apache-2.0 & ISSL"
+LIC_FILES_CHKSUM = "file://../LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
+    file://../../ISSL.txt;md5=ab31aad35d740d800ae1e332d6290f50 \
+"
+LICENSE_${PN}-vpu-firmware = "ISSL"
 
 inherit cmake ptest python3native
 
