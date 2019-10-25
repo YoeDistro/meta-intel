@@ -67,16 +67,20 @@ DEPENDS += "libusb1 \
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST_libc-musl = "null"
 
-PACKAGECONFIG ?= ""
+PACKAGECONFIG ?= "vpu"
 PACKAGECONFIG[opencl] = "-DENABLE_CLDNN=1 -DCLDNN__IOCL_ICD_INCDIRS=${STAGING_INCDIR} -DCLDNN__IOCL_ICD_STLDIRS=${STAGING_LIBDIR} -DCLDNN__IOCL_ICD_SHLDIRS=${STAGING_LIBDIR}, -DENABLE_CLDNN=0, opencl-icd-loader, opencl-icd-loader intel-compute-runtime"
 PACKAGECONFIG[python3] = "-DENABLE_PYTHON=ON -DPYTHON_LIBRARY=${PYTHON_LIBRARY} -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR}, -DENABLE_PYTHON=OFF, python3-cython-native, python3"
 PACKAGECONFIG[vpu] = "-DENABLE_VPU=ON -DVPU_FIRMWARE_MA2450_FILE=../mvnc/MvNCAPI-ma2450.mvcmd -DVPU_FIRMWARE_MA2X8X_FILE=../mvnc/MvNCAPI-ma2x8x.mvcmd -DVPU_FIRMWARE_MV0262_FILE=../mvnc/MvNCAPI-mv0262.mvcmd,-DENABLE_VPU=OFF,,${PN}-vpu-firmware"
 PACKAGECONFIG[verbose] = "-DVERBOSE_BUILD=1,-DVERBOSE_BUILD=0"
 
 do_install_append() {
-    install -m0644 ${WORKDIR}/mvnc/MvNCAPI-ma2450.mvcmd ${D}${libdir}
-    install -m0644 ${WORKDIR}/mvnc/MvNCAPI-ma2x8x.mvcmd ${D}${libdir}
-    install -m0644 ${WORKDIR}/mvnc/MvNCAPI-mv0262.mvcmd ${D}${libdir}
+    if ${@bb.utils.contains('PACKAGECONFIG', 'vpu', 'true', 'false', d)}; then
+        install -m0644 ${WORKDIR}/mvnc/MvNCAPI-ma2450.mvcmd ${D}${libdir}
+        install -m0644 ${WORKDIR}/mvnc/MvNCAPI-ma2x8x.mvcmd ${D}${libdir}
+        install -m0644 ${WORKDIR}/mvnc/MvNCAPI-mv0262.mvcmd ${D}${libdir}
+
+        install -D -m0644 ${S}/thirdparty/movidius/mvnc/src/97-myriad-usbboot.rules ${D}${sysconfdir}/udev/rules.d/97-myriad-usbboot.rules
+    fi
 }
 
 do_install_ptest_base_prepend() {
