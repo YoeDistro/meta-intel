@@ -2,7 +2,6 @@
 
 RECIPE_MAINTAINER_pn-core-image-rt = "Anuj Mittal <anuj.mittal@intel.com>"
 RECIPE_MAINTAINER_pn-core-image-rt-sdk = "Anuj Mittal <anuj.mittal@intel.com>"
-RECIPE_MAINTAINER_pn-gma500-gfx-check = "Anuj Mittal <anuj.mittal@intel.com>"
 RECIPE_MAINTAINER_pn-gmmlib = "Anuj Mittal <anuj.mittal@intel.com>"
 RECIPE_MAINTAINER_pn-intel-gpu-tools = "Anuj Mittal <anuj.mittal@intel.com>"
 RECIPE_MAINTAINER_pn-intel-media-driver = "Anuj Mittal <anuj.mittal@intel.com>"
