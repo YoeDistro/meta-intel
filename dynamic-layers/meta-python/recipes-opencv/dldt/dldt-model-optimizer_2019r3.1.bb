@@ -7,7 +7,7 @@ HOMEPAGE = "https://01.org/openvinotoolkit"
 
 SRC_URI = "git://github.com/opencv/dldt.git;protocol=git;branch=2019 \
            "
-SRCREV = "1c794d971cdd3c94de5ea4a6c9588eac63f4cc57"
+SRCREV = "fe3f978b98c86eaeed3cbdc280e1ffd0bc50d278"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
