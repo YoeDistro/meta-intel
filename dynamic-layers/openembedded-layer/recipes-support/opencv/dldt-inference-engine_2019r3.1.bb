@@ -18,7 +18,7 @@ SRC_URI = "git://github.com/opencv/dldt.git;protocol=git;branch=2019 \
            file://0008-Simplify-searching-for-firmware-files.patch;patchdir=.. \
            file://run-ptest \
            "
-SRCREV = "1c794d971cdd3c94de5ea4a6c9588eac63f4cc57"
+SRCREV = "fe3f978b98c86eaeed3cbdc280e1ffd0bc50d278"
 
 SRC_URI[ma2450.md5sum] = "852f80c3248c451a6c8bfd96d871318f"
 SRC_URI[ma2450.sha256sum] = "ba1b23b45cd8e548ead77af49b0e378100cf4f8dcda41a491868d3d4e7bf8cba"
