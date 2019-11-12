@@ -8,6 +8,8 @@ BUGTRACKER = "https://github.com/Intel-Media-SDK/MediaSDK/issues"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3cb331af679cd8f968bf799a9c55b46e"
 
+CVE_DETAILS = "intel:media_sdk"
+
 # Only for 64 bit until media-driver issues aren't fixed
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST_x86-x32 = "null"
