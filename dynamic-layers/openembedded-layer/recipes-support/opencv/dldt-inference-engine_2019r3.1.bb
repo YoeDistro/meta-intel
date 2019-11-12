@@ -81,6 +81,10 @@ do_install_append() {
 
         install -D -m0644 ${S}/thirdparty/movidius/mvnc/src/97-myriad-usbboot.rules ${D}${sysconfdir}/udev/rules.d/97-myriad-usbboot.rules
     fi
+
+    if ${@bb.utils.contains('PACKAGECONFIG', 'opencl', 'true', 'false', d)}; then
+        cp -r ${S}/src/cldnn_engine/cldnn_global_custom_kernels ${D}${libdir}/
+    fi
 }
 
 do_install_ptest_base_prepend() {
@@ -103,6 +107,7 @@ FILES_${PN}-dev = "${includedir} \
 
 FILES_${PN} += "${libdir}/lib*${SOLIBSDEV} \
                 ${datadir}/openvino \
+                ${libdir}/cldnn_global_custom_kernels \
                 "
 
 # Move inference engine samples into a separate package
