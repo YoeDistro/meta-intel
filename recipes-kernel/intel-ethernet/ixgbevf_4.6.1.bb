@@ -20,6 +20,8 @@ SRC_URI[sha256sum] = "2ca0a0a836d006375fa28a999e0b139bda93110a22ee3742ae1c8d0ac9
 UPSTREAM_CHECK_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/"
 UPSTREAM_CHECK_REGEX = "ixgbevf%20stable/(?P<pver>\d+(\.\d+)+)/"
 
+CVE_PRODUCT = "linux:linux_kernel_ixgbe"
+
 S = "${WORKDIR}/${BP}/src"
 MODULES_INSTALL_TARGET = "install"
 
