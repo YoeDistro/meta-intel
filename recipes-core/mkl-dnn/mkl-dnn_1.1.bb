@@ -22,6 +22,8 @@ SRC_URI = "git://github.com/intel/mkl-dnn.git;branch=rls-v1.1 \
 
 UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>(\d+(\.\d+)+))$"
 
+CVE_PRODUCT = "intel:math_kernel_library"
+
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST_libc-musl = 'null'
 
