@@ -19,11 +19,8 @@ REQUIRED_DISTRO_FEATURES = "opengl"
 
 DEPENDS += "libva gmmlib"
 
-SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;branch=intel-media-19.2 \
-           file://0001-dont-mark-implicit-function-declaration-warnings-as-.patch \
-           "
-
-SRCREV = "9b648d81fb43f70c49304011371279713cb13ccc"
+SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;branch=intel-media-19.3"
+SRCREV = "811b651793b4893b1189c180c4f2bcc4a3e251b6"
 S = "${WORKDIR}/git"
 
 COMPATIBLE_HOST_x86-x32 = "null"
