@@ -15,7 +15,7 @@ SRC_URI_append_class-target = " \
       file://dont-use-ld-library-path.patch \
 "
 
-SRCREV = "cb4e5576cb5414ab3af54c49819a4ced305b965b"
+SRCREV = "74a5e50339cb58dd62b198763f65aa4987314a59"
 
 S = "${WORKDIR}/git"
 
