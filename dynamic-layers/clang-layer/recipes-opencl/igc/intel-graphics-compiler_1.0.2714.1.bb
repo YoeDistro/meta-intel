@@ -7,13 +7,12 @@ LICENSE = "MIT & BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc/LICENSE.TXT;md5=311cfc1a5b54bab8ed34a0b5fba4373e \
                     file://IGC/Compiler/LegalizationPass.cpp;beginline=1;endline=25;md5=4abf1738ff96b18e34186eb763e28eeb"
 
-SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https \
+SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;branch=releases/igc-1.0.2714 \
            file://0001-skip-execution-of-ElfPackager.patch \
            file://0002-comment-out-dump-functions.patch \
-           file://0003-Fix-for-buildbreak-when-using-clang-9-compiler.patch \
           "
 
-SRCREV = "5f96c6db35ffa238fd84314c99a53e6708322d65"
+SRCREV = "710e6273dd1698e8b11763e9ff74c0dd57dddb83"
 
 S = "${WORKDIR}/git"
 
