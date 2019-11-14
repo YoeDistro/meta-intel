@@ -9,7 +9,7 @@ SRC_URI = "git://github.com/intel/opencl-clang.git;branch=ocl-open-90;protocol=h
            file://point-to-correct-llvm-tblgen.patch \
            "
 
-SRCREV = "6f8c329bea44321aef1a1716dd206c1f7bed23cf"
+SRCREV = "e6049638474112ad26db13eb167a16b2d497b841"
 
 S = "${WORKDIR}/git"
 
