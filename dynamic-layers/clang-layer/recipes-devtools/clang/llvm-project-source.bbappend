@@ -8,4 +8,4 @@ SRC_URI_append_intel-x86-common = " \
                                     file://0001-skip-building-tests.patch;patchdir=llvm/projects/llvm-spirv \
                                     "
 
-SRCREV_spirv = "70420631144a6a25613ae37178f2cc1d3607b65b"
+SRCREV_spirv = "07f29780e5c4128924508d5d1c00bdf9ff7fd43d"
