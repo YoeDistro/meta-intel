@@ -19,6 +19,6 @@ PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "x11", "x11", "", d)}
 PACKAGECONFIG[x11] = "--enable-x11,--disable-x11,virtual/libx11 libxrandr libxrender"
 
 DEPENDS = "libva"
-inherit autotools pkgconfig distro_features_check
+inherit autotools pkgconfig features_check
 
 REQUIRED_DISTRO_FEATURES = "opengl"

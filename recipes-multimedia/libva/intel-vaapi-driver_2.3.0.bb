@@ -19,7 +19,7 @@ SRC_URI[sha256sum] = "5c2e5deab024a0a6ae81dfe77ef455542a88d824eda7bfd07684337407
 
 UPSTREAM_CHECK_URI = "https://github.com/intel/intel-vaapi-driver/releases"
 
-inherit autotools pkgconfig distro_features_check
+inherit autotools pkgconfig features_check
 
 REQUIRED_DISTRO_FEATURES = "opengl"
 

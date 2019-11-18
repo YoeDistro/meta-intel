@@ -14,7 +14,7 @@ CVE_DETAILS = "intel:media_sdk"
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST_x86-x32 = "null"
 
-inherit distro_features_check
+inherit features_check
 REQUIRED_DISTRO_FEATURES = "opengl"
 
 DEPENDS += "libdrm libva intel-media-driver"
