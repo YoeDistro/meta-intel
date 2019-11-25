@@ -13,7 +13,7 @@ DEPENDS_append_toolchain-clang = " openmp"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ea8831610e926e2e469075b52bf08848"
 
-SRC_URI = "git://github.com/intel/thermal_daemon/ \
+SRC_URI = "git://github.com/intel/thermal_daemon \
            file://0001-Use-correct-format-specifier-for-size_t.patch \
            "
 SRCREV = "7f573b681a25b5ffbe81103ba9fdcf7fec0f2884"
