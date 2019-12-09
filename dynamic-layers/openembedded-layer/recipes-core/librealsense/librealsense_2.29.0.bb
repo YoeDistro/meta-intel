@@ -13,6 +13,8 @@ S = "${WORKDIR}/git"
 SRC_URI = "git://github.com/IntelRealSense/librealsense.git"
 SRCREV = "5096aab40c71bfa2bebd17e4ace5f6678587b889"
 
+UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>(\d+(\.\d+)+))$"
+
 EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=Release"
 EXTRA_OECMAKE += "-DBUILD_EXAMPLES=true"
 EXTRA_OECMAKE += "-DBUILD_GRAPHICAL_EXAMPLES=${@bb.utils.contains('DISTRO_FEATURES', 'x11 opengl', 'true', 'false', d)}"
