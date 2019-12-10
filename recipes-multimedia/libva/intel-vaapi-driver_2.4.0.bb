@@ -14,19 +14,19 @@ COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 DEPENDS = "libva libdrm"
 
 SRC_URI = "https://github.com/intel/${BPN}/releases/download/${PV}/${BPN}-${PV}.tar.bz2"
-SRC_URI[md5sum] = "9d835d1a3f7a9ef394f0f4c348cd4b3e"
-SRC_URI[sha256sum] = "5c2e5deab024a0a6ae81dfe77ef455542a88d824eda7bfd07684337407ecdfe3"
+SRC_URI[md5sum] = "731dd9aaf9f5ef1b9c906ce82ef0220b"
+SRC_URI[sha256sum] = "71e2ddd985af6b221389db1018c4e8ca27a7f939fb51dcdf49d0efcb5ff3d089"
 
 UPSTREAM_CHECK_URI = "https://github.com/intel/intel-vaapi-driver/releases"
 
-inherit autotools pkgconfig features_check
+inherit meson pkgconfig features_check
 
 REQUIRED_DISTRO_FEATURES = "opengl"
 
 PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "x11", "x11", "", d)} \
                    ${@bb.utils.contains("DISTRO_FEATURES", "opengl wayland", "wayland", "", d)}"
-PACKAGECONFIG[x11] = "--enable-x11,--disable-x11"
-PACKAGECONFIG[wayland] = "--enable-wayland,--disable-wayland,wayland wayland-native virtual/egl"
+PACKAGECONFIG[x11] = "-Dwith_x11=yes, -Dwith_x11=false"
+PACKAGECONFIG[wayland] = "-Dwith_wayland=yes, -Dwith_wayland=false, wayland wayland-native virtual/egl"
 
 FILES_${PN} += "${libdir}/dri/*.so"
 FILES_${PN}-dev += "${libdir}/dri/*.la"
