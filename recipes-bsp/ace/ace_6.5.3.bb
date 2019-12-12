@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=407a202d1b887b998dc9480442840630"
 
 DEPENDS += "openssl gperf-native"
 
-SRC_URI = "ftp://download.dre.vanderbilt.edu/previous_versions/ACE-${PV}.tar.bz2 \
+SRC_URI = "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-6_5_3/ACE-${PV}.tar.bz2 \
            file://ace_config.patch \
            file://config_linux.patch \
           "
