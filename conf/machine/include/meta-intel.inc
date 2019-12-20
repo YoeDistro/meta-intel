@@ -12,10 +12,10 @@ PREFERRED_PROVIDER_zlib = "zlib-intel"
 PREFERRED_PROVIDER_zlib-native = "zlib-native"
 PREFERRED_PROVIDER_nativesdk-zlib = "nativesdk-zlib"
 
-PREFERRED_VERSION_linux-intel ?= "4.19%"
+PREFERRED_VERSION_linux-intel ?= "5.4%"
 PREFERRED_VERSION_linux-intel-rt ?= "4.19%"
-PREFERRED_VERSION_linux-intel_poky-altcfg ?= "4.14%"
-PREFERRED_VERSION_linux-intel-rt_poky-altcfg ?= "4.14%"
+PREFERRED_VERSION_linux-intel_poky-altcfg ?= "4.19%"
+PREFERRED_VERSION_linux-intel-rt_poky-altcfg ?= "4.19%"
 
 XSERVER_X86_ASPEED_AST = "xf86-video-ast \
            "
