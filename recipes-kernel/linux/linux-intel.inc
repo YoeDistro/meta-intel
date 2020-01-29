@@ -12,7 +12,7 @@ SRC_URI = " \
 
 SRC_URI_append_core2-32-intel-common = " file://disable_skylake_sound.cfg"
 
-LINUX_VERSION_EXTENSION ?= "-intel-pk-${LINUX_KERNEL_TYPE}"
+LINUX_VERSION_EXTENSION ??= "-intel-pk-${LINUX_KERNEL_TYPE}"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
