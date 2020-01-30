@@ -61,7 +61,7 @@ DEPENDS += "libusb1 \
             pugixml \
             ngraph \
             tbb \
-            ${@bb.utils.contains('PTEST_ENABLED', '1', 'gflags', '0', d)} \
+            ${@bb.utils.contains('PTEST_ENABLED', '1', 'gflags', '', d)} \
             "
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
