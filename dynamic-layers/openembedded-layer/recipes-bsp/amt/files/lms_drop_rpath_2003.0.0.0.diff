@@ -12,10 +12,10 @@ Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
  1 file changed, 3 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a303c4b..9bda082 100644
+index e22ff05..14d5dd1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -109,9 +109,6 @@ install (DIRECTORY Docs/Licenses
+@@ -112,9 +112,6 @@ install (DIRECTORY Docs/Licenses
    FILES_MATCHING PATTERN "LICENSE.*"
  )
  

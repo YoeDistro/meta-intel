@@ -25,7 +25,7 @@ S = "${WORKDIR}/git"
 SYSTEMD_SERVICE_${PN} = "lms.service"
 
 SRC_URI = "git://github.com/intel/lms.git"
-SRCREV = "f90fa51f07514b7644cc57846c90e46b146b23ae"
+SRCREV = "e425f34fadf9bb71228ffa23c6459331d86a0ab2"
 
 SRC_URI_append = " file://lms_drop_rpath_${PV}.diff"
 
