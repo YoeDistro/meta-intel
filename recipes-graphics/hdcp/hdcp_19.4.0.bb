@@ -12,7 +12,7 @@ inherit pkgconfig cmake useradd systemd features_check
 SRC_URI = "git://github.com/intel/hdcp.git \
         file://0001-main-fix-hdcpd-service-failure.patch \
 "
-SRCREV = "9ba9511d3a5bea41442ba8507f378b931caf8981"
+SRCREV = "d10f2ab3efea1a49c98f381ab2c0b1e84cec3c6f"
 S = "${WORKDIR}/git"
 
 REQUIRED_DISTRO_FEATURES = "systemd"
