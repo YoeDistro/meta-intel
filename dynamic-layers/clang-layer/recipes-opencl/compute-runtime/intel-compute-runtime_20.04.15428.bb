@@ -13,9 +13,10 @@ SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https \
 
 SRC_URI_append_class-target = " \
       file://dont-use-ld-library-path.patch \
+      file://fix-missing-header-path.patch \
 "
 
-SRCREV = "74a5e50339cb58dd62b198763f65aa4987314a59"
+SRCREV = "98006aa2bf282ebc5914359e0e4c5f1c539de56f"
 
 S = "${WORKDIR}/git"
 
