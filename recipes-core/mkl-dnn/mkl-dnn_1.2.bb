@@ -2,21 +2,19 @@ SUMMARY  = "Deep Neural Network Library"
 DESCRIPTION = "This software is a user mode library that accelerates\
 deep-learning applications and frameworks on Intel architecture."
 LICENSE  = "Apache-2.0 & BSD-3-Clause & BSL-1.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=477df9cc728dd9c63128c0f3525f4649 \
+LIC_FILES_CHKSUM = "file://LICENSE;md5=0c328b62744f16fbb96f4335c5b65325 \
                     file://tests/gtests/gtest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
                     file://src/cpu/xbyak/COPYRIGHT;md5=3b9bf048d063d54cdb28964db558bcc7 \
                     file://src/cpu/jit_utils/jitprofiling/LICENSE.BSD;md5=e671ff178b24a95a382ba670503c66fb \
-                    file://cmake/Copyright.txt;md5=622747147b46f22e1953876a7cba3323 \
                     file://doc/assets/mathjax/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57 \
-                    file://src/common/LICENSE_1_0;md5=e4224ccaecb14d942c71d31bef20d78c \
                     "
 SECTION = "lib"
 
 inherit pkgconfig cmake ptest
 
 S = "${WORKDIR}/git"
-SRCREV = "52c3052df8ec1d5b8b45cb6c350a952840eabd42"
-SRC_URI = "git://github.com/intel/mkl-dnn.git;branch=rls-v1.1 \
+SRCREV = "75d0b1a7f3586c212e37acebbb8acd221cee7216"
+SRC_URI = "git://github.com/intel/mkl-dnn.git;branch=rls-v1.2 \
            file://run-ptest \
            "
 
