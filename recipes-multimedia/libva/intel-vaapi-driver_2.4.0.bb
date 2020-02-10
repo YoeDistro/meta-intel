@@ -25,8 +25,8 @@ REQUIRED_DISTRO_FEATURES = "opengl"
 
 PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "x11", "x11", "", d)} \
                    ${@bb.utils.contains("DISTRO_FEATURES", "opengl wayland", "wayland", "", d)}"
-PACKAGECONFIG[x11] = "-Dwith_x11=yes, -Dwith_x11=false"
-PACKAGECONFIG[wayland] = "-Dwith_wayland=yes, -Dwith_wayland=false, wayland wayland-native virtual/egl"
+PACKAGECONFIG[x11] = "-Dwith_x11=yes, -Dwith_x11=no"
+PACKAGECONFIG[wayland] = "-Dwith_wayland=yes, -Dwith_wayland=no, wayland wayland-native virtual/egl"
 
 FILES_${PN} += "${libdir}/dri/*.so"
 FILES_${PN}-dev += "${libdir}/dri/*.la"
