@@ -5,4 +5,4 @@ part /boot --source bootimg-efi --sourceparams="loader=${EFI_PROVIDER},title=ins
 
 part / --source bootimg-partition --ondisk sda --fstype=ext4 --label image --use-uuid --align 1024
 
-bootloader --ptable gpt --timeout=5 --append="rootwait ${APPEND}"
+bootloader --ptable gpt --timeout=5 --append=" rootwait "
