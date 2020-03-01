@@ -43,3 +43,5 @@ do_install_append () {
 PACKAGES += "${PN}-script"
 
 FILES_${PN}-script += "${sysconfdir}/network/set_irq_affinity"
+
+EXCLUDE_FROM_WORLD = "1"
