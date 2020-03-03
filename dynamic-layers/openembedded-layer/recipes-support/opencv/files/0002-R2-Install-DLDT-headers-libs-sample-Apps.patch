@@ -1,14 +1,14 @@
-From d73cd3c504e1409861da0b6879ea0dbd4572e706 Mon Sep 17 00:00:00 2001
+From 518cd8afb38810924371209416fd5b5d2c23a92e Mon Sep 17 00:00:00 2001
 From: Erin Park <erin.park@intel.com>
 Date: Wed, 11 Sep 2019 10:33:58 -0700
-Subject: [PATCH 2/7] R2 Install DLDT headers, libs, sample Apps
+Subject: [PATCH] R2 Install DLDT headers, libs, sample Apps
 
 -Update to R3
 -Libraries to /usr/lib64
 -Headers to /usr/include
 -Sample Apps executable to /usr/bin
 -Sample Apps source code to /usr/share/doc/inference_engine
--Python library to /usr/lib/python3.7/site-packages
+-Python library to ${libdir}/python<version>/site-packages
 -plugins.xml to /usr/share/openvino/inference-engine
 -Create targets_cpu_extension.cmake
 
@@ -66,7 +66,7 @@ index bba853f..444cce9 100644
 -add_subdirectory (src/openvino/tools/statistics_collector)
 +#add_subdirectory (src/openvino/tools/statistics_collector)
 diff --git a/inference-engine/ie_bridges/python/src/openvino/inference_engine/CMakeLists.txt b/inference-engine/ie_bridges/python/src/openvino/inference_engine/CMakeLists.txt
-index 1f46013..d6cd112 100644
+index 1f46013..952c173 100644
 --- a/inference-engine/ie_bridges/python/src/openvino/inference_engine/CMakeLists.txt
 +++ b/inference-engine/ie_bridges/python/src/openvino/inference_engine/CMakeLists.txt
 @@ -29,4 +29,6 @@ ADD_CUSTOM_COMMAND (TARGET ${TARGET_NAME}
@@ -77,7 +77,7 @@ index 1f46013..d6cd112 100644
 \ No newline at end of file
 +)
 +
-+install(DIRECTORY ${PYTHON_BRIDGE_OUTPUT_DIRECTORY} DESTINATION lib/${PYTHON_VERSION}/site-packages/)
++install(DIRECTORY ${PYTHON_BRIDGE_OUTPUT_DIRECTORY} DESTINATION ${CMAKE_INSTALL_LIBDIR}/${PYTHON_VERSION}/site-packages/)
 diff --git a/inference-engine/samples/CMakeLists.txt b/inference-engine/samples/CMakeLists.txt
 index 884b0a6..25f9f23 100644
 --- a/inference-engine/samples/CMakeLists.txt
@@ -116,7 +116,7 @@ index a8c9caf..dffa8cb 100644
 +
 +install(TARGETS ${TARGET_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 diff --git a/inference-engine/src/CMakeLists.txt b/inference-engine/src/CMakeLists.txt
-index 63fda2a..3a4bc48 100644
+index 63fda2a..350e3f5 100644
 --- a/inference-engine/src/CMakeLists.txt
 +++ b/inference-engine/src/CMakeLists.txt
 @@ -37,8 +37,10 @@ set(InferenceEngine_SRC_DIRS ${CMAKE_SOURCE_DIR}/src)
