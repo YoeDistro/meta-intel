@@ -14,6 +14,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ea8831610e926e2e469075b52bf08848"
 
 SRC_URI = "git://github.com/intel/thermal_daemon/ \
+           file://0001-thd_trip_point-fix-32-bit-build-error-with-musl-v1.2.patch \
            "
 SRCREV = "7e23f7cc4611fd7289014c9805749ec75d59bae0"
 S = "${WORKDIR}/git"
