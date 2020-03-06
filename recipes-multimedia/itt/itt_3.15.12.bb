@@ -13,6 +13,8 @@ SRCREV = "8a3d4f4c4f8b66d1a242393efb82558dcfcd109b"
 S = "${WORKDIR}/git"
 PE = "1"
 
+UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>(\d+(\.\d+)+))$"
+
 inherit pkgconfig cmake
 
 EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=Release"
