@@ -13,9 +13,7 @@ SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https \
 
 SRC_URI_append_class-target = " \
       file://dont-use-ld-library-path.patch \
-      file://fix-missing-header-path.patch \
 "
-
 SRCREV = "98006aa2bf282ebc5914359e0e4c5f1c539de56f"
 
 S = "${WORKDIR}/git"
@@ -31,6 +29,7 @@ COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST_libc-musl = "null"
 
 EXTRA_OECMAKE = " \
+                 -DIGC_DIR=${STAGING_INCDIR}/igc \
                  -DBUILD_TYPE=Release \
                  -DSKIP_UNIT_TESTS=1 \
                  -DCCACHE_ALLOWED=FALSE \
