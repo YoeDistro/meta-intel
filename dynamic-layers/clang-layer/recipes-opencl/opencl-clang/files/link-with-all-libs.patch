@@ -1,0 +1,32 @@
+From cc0769fb72561f82976e40c5b7ea8bf07069c87a Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Thu, 19 Mar 2020 16:30:07 +0800
+Subject: [PATCH] link to all libs
+
+LINK_COMPONENTS=all isn't working for static libs for out of tree builds. Use
+LLVM_AVAILABLE_LIBS instead. Reported:
+
+https://github.com/intel/opencl-clang/issues/114
+
+Upstream-Status: Pending
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4590a11..2ff9901 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -261,6 +261,7 @@ add_llvm_library(${TARGET_NAME} SHARED
+     clangLex
+     clangBasic
+     ${ADDITIONAL_LIBS}
++    ${LLVM_AVAILABLE_LIBS}
+   )
+ 
+ # Configure resource file on Windows
+-- 
+2.25.1
+

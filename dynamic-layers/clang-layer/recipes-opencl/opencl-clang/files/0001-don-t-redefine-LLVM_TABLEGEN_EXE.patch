@@ -1,0 +1,32 @@
+From f3ef79a6301bab0b3a447f07ceb94c39a95009df Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Thu, 2 Apr 2020 08:59:20 +0800
+Subject: [PATCH] don't redefine LLVM_TABLEGEN_EXE
+
+Use the value that has been passed by the user.
+
+Upstream-Status: Submitted
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ CMakeLists.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6893e97..941b0ae 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -137,7 +137,10 @@ endif(NOT USE_PREBUILT_LLVM)
+ set (COMPILE_OPTIONS_TD  opencl_clang_options.td)
+ set (COMPILE_OPTIONS_INC opencl_clang_options.inc)
+ 
+-set(LLVM_TABLEGEN_EXE "llvm-tblgen")
++if(NOT DEFINED LLVM_TABLEGEN_EXE)
++  set(LLVM_TABLEGEN_EXE "llvm-tblgen")
++endif()
++
+ set(LLVM_TARGET_DEFINITIONS ${COMPILE_OPTIONS_TD})
+ if(USE_PREBUILT_LLVM)
+   set(TABLEGEN_ADDITIONAL -I ${LLVM_INCLUDE_DIRS})
+-- 
+2.25.1
+

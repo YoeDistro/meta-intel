@@ -5,17 +5,17 @@ DESCRIPTION = "Common clang has OpenCL-oriented API and is capable \
 LICENSE = "NCSA"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=e8a15bf1416762a09ece07e44c79118c"
 
-SRC_URI = "git://github.com/intel/opencl-clang.git;branch=ocl-open-90;protocol=https \
-           file://point-to-correct-llvm-tblgen.patch \
+SRC_URI = "git://github.com/intel/opencl-clang.git;branch=ocl-open-100;protocol=https \
+           file://0001-don-t-redefine-LLVM_TABLEGEN_EXE.patch \
+           file://link-with-all-libs.patch \
            "
 
-SRCREV = "e6049638474112ad26db13eb167a16b2d497b841"
+SRCREV = "0a5a9f67b56431ef7b9436d1af812df6dfb44975"
 
 S = "${WORKDIR}/git"
 
 inherit cmake
 DEPENDS += "clang"
-
 DEPENDS_append_class-target = " opencl-clang-native"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
