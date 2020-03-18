@@ -1,0 +1,44 @@
+From 6f6d64569d75f6fc352ce7ce3a65dd88f0f84b99 Mon Sep 17 00:00:00 2001
+From: Dongwon Kim <dongwon.kim@intel.com>
+Date: Wed, 25 Mar 2020 15:02:43 -0700
+Subject: [PATCH] Optionally enable external ocl offline compiler
+
+Expand commit af78548e80cb293ccc6b02b45ac03d249de03bc6 to
+scheduler's build configuration
+
+Change-Id: I04a5fc5f85d15bac040ad699df4c39cc2e0182aa
+Signed-off-by: Dongwon Kim <dongwon.kim@intel.com>
+
+Upstream-Status: Backport
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ opencl/source/scheduler/scheduler_binary.cmake | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/opencl/source/scheduler/scheduler_binary.cmake b/opencl/source/scheduler/scheduler_binary.cmake
+index 740ff7d63..c57e28f78 100644
+--- a/opencl/source/scheduler/scheduler_binary.cmake
++++ b/opencl/source/scheduler/scheduler_binary.cmake
+@@ -31,13 +31,16 @@ function(compile_kernel target gen_type platform_type kernel)
+   set(OUTPUTPATH "${OUTPUTDIR}/${BASENAME}_${family_name_with_type}.bin")
+ 
+   set(SCHEDULER_CPP "${OUTPUTDIR}/${BASENAME}_${family_name_with_type}.cpp")
+-  if(WIN32)
+-    set(cloc_cmd_prefix ocloc)
+-  else()
+-    if(DEFINED NEO__IGC_LIBRARY_PATH)
+-      set(cloc_cmd_prefix LD_LIBRARY_PATH=${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++
++  if(NOT DEFINED cloc_cmd_prefix)
++    if(WIN32)
++      set(cloc_cmd_prefix ocloc)
+     else()
+-      set(cloc_cmd_prefix LD_LIBRARY_PATH=$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++      if(DEFINED NEO__IGC_LIBRARY_PATH)
++        set(cloc_cmd_prefix LD_LIBRARY_PATH=${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++      else()
++        set(cloc_cmd_prefix LD_LIBRARY_PATH=$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++      endif()
+     endif()
+   endif()
+   list(APPEND __cloc__options__ "-cl-kernel-arg-info")

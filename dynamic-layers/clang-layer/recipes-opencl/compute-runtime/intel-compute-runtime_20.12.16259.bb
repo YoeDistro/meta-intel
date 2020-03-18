@@ -9,12 +9,10 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=ae27f47fd6755510247c19e547e4c804 \
                     file://third_party/opencl_headers/LICENSE;md5=dcefc90f4c3c689ec0c2489064e7273b"
 
 SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https \
+           file://enable-external-offline-compiler.patch \
            "
 
-SRC_URI_append_class-target = " \
-      file://dont-use-ld-library-path.patch \
-"
-SRCREV = "98006aa2bf282ebc5914359e0e4c5f1c539de56f"
+SRCREV = "43016c65591bd125a9590ea05ca83d094a628f79"
 
 S = "${WORKDIR}/git"
 
@@ -33,9 +31,13 @@ EXTRA_OECMAKE = " \
                  -DBUILD_TYPE=Release \
                  -DSKIP_UNIT_TESTS=1 \
                  -DCCACHE_ALLOWED=FALSE \
+                 -Dcloc_cmd_prefix=ocloc \
                  "
 
-FILES_${PN} += "${libdir}/intel-opencl/libigdrcl.so"
+FILES_${PN} += " \
+                 ${libdir}/intel-opencl/libigdrcl.so \
+                 ${libdir}/intel-opencl/libocloc.so \
+                 "
 
 BBCLASSEXTEND = "native nativesdk"
 
