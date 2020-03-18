@@ -11,7 +11,7 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https; \
            file://0001-skip-execution-of-ElfPackager.patch \
           "
 
-SRCREV = "ee341708a3d95738e942b6d3c5cd25b1f4b430f1"
+SRCREV = "3605a569ac938ef2cb50ac69e30f8619cd44ceb3"
 
 S = "${WORKDIR}/git"
 
@@ -25,7 +25,7 @@ DEPENDS_append_class-target = " clang-cross-x86_64"
 
 RDEPENDS_${PN} += "opencl-clang"
 
-EXTRA_OECMAKE = "-DIGC_PREFERRED_LLVM_VERSION=9.0.0 -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3"
+EXTRA_OECMAKE = "-DIGC_PREFERRED_LLVM_VERSION=10.0.0 -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3"
 
 BBCLASSEXTEND = "native nativesdk"
 
