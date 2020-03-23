@@ -1,10 +1,9 @@
 FILESEXTRAPATHS_prepend_intel-x86-common := "${THISDIR}/files:"
 
 SRC_URI_append_intel-x86-common = " \
-                                    file://BasicBlockUtils-Add-metadata-fixing-in-SplitBlockPre.patch;patchdir=llvm \
-                                    file://IndVarSimplify-Do-not-use-SCEV-expander-for-IVCount-.patch;patchdir=llvm \
-                                    git://github.com/KhronosGroup/SPIRV-LLVM-Translator.git;protocol=https;branch=llvm_release_90;destsuffix=git/llvm/projects/llvm-spirv;name=spirv \
+                                    git://github.com/KhronosGroup/SPIRV-LLVM-Translator.git;protocol=https;branch=llvm_release_100;destsuffix=git/llvm/projects/llvm-spirv;name=spirv \
                                     file://0001-skip-building-tests.patch;patchdir=llvm/projects/llvm-spirv \
+                                    file://fix-shared-libs.patch;patchdir=llvm/projects/llvm-spirv \
                                     "
 
-SRCREV_spirv = "07f29780e5c4128924508d5d1c00bdf9ff7fd43d"
+SRCREV_spirv = "7743482f2053582be990e93ca46d15239c509c9d"

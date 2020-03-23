@@ -1,0 +1,30 @@
+From a6d4ccf082858e63e139ca06c02a071c343d2657 Mon Sep 17 00:00:00 2001
+From: Andrea Bocci <andrea.bocci@cern.ch>
+Date: Sun, 15 Mar 2020 17:35:44 +0100
+Subject: [PATCH] Fix building in-tree with cmake -DLLVM_LINK_LLVM_DYLIB=ON
+
+Building in-tree with LLVM 11.0 master with the LLVM_LINK_LLVM_DYLIB
+cmake flag fails to link with the LLVMSPIRVLib library.
+
+Add an explicit dependency to force the correct build order and linking.
+
+Signed-off-by: Andrea Bocci <andrea.bocci@cern.ch>
+Upstream-Status: Backport
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ tools/llvm-spirv/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/llvm-spirv/CMakeLists.txt b/tools/llvm-spirv/CMakeLists.txt
+index 9aa96d9c..501c0daf 100644
+--- a/tools/llvm-spirv/CMakeLists.txt
++++ b/tools/llvm-spirv/CMakeLists.txt
+@@ -14,7 +14,7 @@ add_llvm_tool(llvm-spirv
+   NO_INSTALL_RPATH
+ )
+ 
+-if (LLVM_SPIRV_BUILD_EXTERNAL)
++if (LLVM_SPIRV_BUILD_EXTERNAL OR LLVM_LINK_LLVM_DYLIB)
+   target_link_libraries(llvm-spirv PRIVATE LLVMSPIRVLib)
+ endif()
+ 
