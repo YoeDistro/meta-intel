@@ -14,3 +14,19 @@ S = "${WORKDIR}/git"
 SRC_URI = "git://github.com/intel/libipt.git;protocol=https;branch=stable/v2.0"
 
 SRCREV = "916d777123bf60d323890557347570e5e19dfa12"
+
+EXTRA_OECMAKE += " \
+                  -DPTDUMP=ON  \
+                  -DPTTC=ON \
+                  "
+
+do_install_append() {
+    install -d ${D}${bindir}/libipt
+    install -d ${D}${bindir}/libipt/tests
+
+    cp -r ${B}/bin/* ${D}${bindir}/libipt/
+    cp -r ${WORKDIR}/git/test/src/* ${D}${bindir}/libipt/tests
+}
+
+FILES_${PN}-test = "${bindir}"
+PACKAGES =+ "${PN}-test"
