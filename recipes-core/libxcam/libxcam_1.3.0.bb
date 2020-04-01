@@ -27,4 +27,12 @@ PACKAGECONFIG[gles]   = "--enable-gles, --disable-gles, virtual/mesa"
 PACKAGECONFIG[vulkan] = "--enable-vulkan, --disable-vulkan, vulkan-loader virtual/mesa"
 PACKAGECONFIG[dnn]    = "--enable-dnn, --disable-dnn,"
 
+do_install_append () {
+    install -d ${D}${bindir}/libxcam
+    cp -r ${WORKDIR}/build/tests/.libs/* ${D}${bindir}/libxcam/
+}
+
 FILES_${PN} += "${libdir}/gstreamer-*/*.so"
+FILES_${PN}-test = "${bindir}/libxcam/*"
+PACKAGES =+ "${PN}-test"
+RDEPENDS_${PN}-test =+ "bash"
