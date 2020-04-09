@@ -16,9 +16,17 @@ class DldtInferenceEngineTest(object):
         self.target.run('mkdir -p %s' % self.work_dir)
         self.target.copy_to(os.path.join(files_path, 'dldt-inference-engine', self.ie_input_files['ie_python_sample']),
                             self.work_dir)
+        python_cmd = 'from openvino.inference_engine import IENetwork, IECore; ie = IECore(); print(ie.available_devices)'
+        __, output = self.target.run('python3 -c "%s"' % python_cmd)
+        self.available_devices = output
 
     def tear_down(self):
         self.target.run('rm -rf %s' % self.work_dir)
+
+    def test_check_if_openvino_device_available(self, device):
+        if device not in self.available_devices:
+            return False, self.available_devices
+        return True, self.available_devices
 
     def test_can_download_input_file(self, proxy_port):
         return self.target.run('cd %s; wget %s -e https_proxy=%s' %
