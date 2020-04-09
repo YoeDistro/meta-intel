@@ -67,7 +67,11 @@ class DldtInferenceEngine(OERuntimeTestCase):
     @OEHasPackage(['dldt-inference-engine-samples'])
     @OEHasPackage(['dldt-inference-engine-vpu-firmware'])
     def test_dldt_ie_classification_with_myriad(self):
-        (status, output) = self.dldt_ie.test_dldt_ie_classification_with_device('MYRIAD', self.ir_files_dir)
+        device = 'MYRIAD'
+        (status, output) = self.dldt_ie.test_check_if_openvino_device_available(device)
+        if not status:
+            self.skipTest('OpenVINO %s device not available on target machine(availalbe devices: %s)' % (device, output))
+        (status, output) = self.dldt_ie.test_dldt_ie_classification_with_device(device, self.ir_files_dir)
         self.assertEqual(status, 0, msg='status and output: %s and %s' % (status, output))
 
     @OETestDepends(['dldt_inference_engine.DldtInferenceEngine.test_dldt_ie_can_create_ir_and_download_input'])
@@ -97,5 +101,9 @@ class DldtInferenceEngine(OERuntimeTestCase):
     @OEHasPackage(['python3-opencv'])
     @OEHasPackage(['python3-numpy'])
     def test_dldt_ie_classification_python_api_with_myriad(self):
-        (status, output) = self.dldt_ie.test_dldt_ie_classification_python_api_with_device('MYRIAD', self.ir_files_dir)
+        device = 'MYRIAD'
+        (status, output) = self.dldt_ie.test_check_if_openvino_device_available(device)
+        if not status:
+            self.skipTest('OpenVINO %s device not available on target machine(availalbe devices: %s)' % (device, output))
+        (status, output) = self.dldt_ie.test_dldt_ie_classification_python_api_with_device(device, self.ir_files_dir)
         self.assertEqual(status, 0, msg='status and output: %s and %s' % (status, output))
