@@ -1,6 +1,6 @@
-From 295d119e12d22919fdc305470cd07973ba02f162 Mon Sep 17 00:00:00 2001
+From 1c78ff3ff1f77c78a618f7a780985cef1933bb2b Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
-Date: Fri, 10 Apr 2020 09:29:35 +0800
+Date: Mon, 13 Apr 2020 15:20:28 +0800
 Subject: [PATCH] Installation and build fixes
 
 - Install libs, samples and binaries at appropriate places.
@@ -13,28 +13,27 @@ Upstream-Status: Inappropriate [OS-specific]
 
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
- CMakeLists.txt                                |  2 --
- cmake/developer_package.cmake                 |  8 +++++---
- cmake/os_flags.cmake                          |  1 -
- inference-engine/CMakeLists.txt               | 20 +++++++++----------
- inference-engine/cmake/ie_parallel.cmake      | 10 ++--------
- .../ie_bridges/python/CMakeLists.txt          |  4 ++--
- .../openvino/inference_engine/CMakeLists.txt  | 18 +----------------
- .../include/gpu/gpu_ocl_wrapper.hpp           |  2 +-
- inference-engine/samples/CMakeLists.txt       |  6 +-----
- .../src/cldnn_engine/CMakeLists.txt           |  1 +
- .../src/inference_engine/CMakeLists.txt       | 17 +---------------
- .../src/vpu/myriad_plugin/CMakeLists.txt      |  2 +-
- .../tests/mock_engine/CMakeLists.txt          |  2 ++
- inference-engine/tests/unit/CMakeLists.txt    |  2 ++
- inference-engine/thirdparty/CMakeLists.txt    |  4 +---
- .../clDNN/CMakeCompilerLinkerOpts.txt         |  2 --
- .../thirdparty/clDNN/CMakeLists.txt           |  1 -
- .../common/khronos_ocl_clhpp/cl2_ext.hpp      |  2 +-
- .../tools/compile_tool/CMakeLists.txt         |  2 +-
- .../tools/vpu/vpu_compile/CMakeLists.txt      |  4 ++--
- .../tools/vpu/vpu_perfcheck/CMakeLists.txt    |  2 +-
- 21 files changed, 34 insertions(+), 78 deletions(-)
+ CMakeLists.txt                                  |  2 --
+ cmake/developer_package.cmake                   |  8 +++++---
+ cmake/os_flags.cmake                            |  1 -
+ inference-engine/CMakeLists.txt                 |  7 ++-----
+ inference-engine/cmake/ie_parallel.cmake        | 10 ++--------
+ .../include/gpu/gpu_ocl_wrapper.hpp             |  2 +-
+ inference-engine/samples/CMakeLists.txt         |  8 +++-----
+ .../samples/common/format_reader/CMakeLists.txt |  2 ++
+ .../src/cldnn_engine/CMakeLists.txt             |  1 +
+ .../src/inference_engine/CMakeLists.txt         | 17 +----------------
+ .../src/vpu/myriad_plugin/CMakeLists.txt        |  2 +-
+ .../tests/mock_engine/CMakeLists.txt            |  2 ++
+ inference-engine/tests/unit/CMakeLists.txt      |  2 ++
+ inference-engine/thirdparty/CMakeLists.txt      |  4 +---
+ .../clDNN/CMakeCompilerLinkerOpts.txt           |  2 --
+ .../thirdparty/clDNN/CMakeLists.txt             |  1 -
+ .../clDNN/common/khronos_ocl_clhpp/cl2_ext.hpp  |  2 +-
+ .../tools/compile_tool/CMakeLists.txt           |  2 +-
+ .../tools/vpu/vpu_compile/CMakeLists.txt        |  4 ++--
+ .../tools/vpu/vpu_perfcheck/CMakeLists.txt      |  2 +-
+ 20 files changed, 28 insertions(+), 53 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index e48cee57..e9598455 100644
@@ -95,49 +94,10 @@ index 6f70768f..40141aca 100644
      ie_add_compiler_flags(-fvisibility=hidden)
      ie_add_compiler_flags(-fdiagnostics-show-option)
 diff --git a/inference-engine/CMakeLists.txt b/inference-engine/CMakeLists.txt
-index d5feedb4..4cf5fb3d 100644
+index d5feedb4..1ee656a1 100644
 --- a/inference-engine/CMakeLists.txt
 +++ b/inference-engine/CMakeLists.txt
-@@ -86,13 +86,13 @@ ie_cpack_add_component(cpp_samples REQUIRED DEPENDS core)
- 
- if(UNIX)
-     install(DIRECTORY samples/
--            DESTINATION ${IE_CPACK_IE_DIR}/samples/cpp
-+            DESTINATION ${IE_CPACK_IE_DIR}/share/inference_engine/samples/
-             COMPONENT cpp_samples
-             USE_SOURCE_PERMISSIONS
-             PATTERN *.bat EXCLUDE)
- elseif(WIN32)
-     install(DIRECTORY samples
--            DESTINATION ${IE_CPACK_IE_DIR}/samples/cpp
-+            DESTINATION ${IE_CPACK_IE_DIR}/share/inference_engine/samples/
-             COMPONENT cpp_samples
-             USE_SOURCE_PERMISSIONS
-             PATTERN *.sh EXCLUDE)
-@@ -104,30 +104,32 @@ ie_cpack_add_component(c_samples REQUIRED DEPENDS core)
- 
- if(UNIX)
-     install(PROGRAMS samples/build_samples.sh
--            DESTINATION ${IE_CPACK_IE_DIR}/samples/c
-+            DESTINATION ${IE_CPACK_IE_DIR}/share/inference_engine/samples/c
-             COMPONENT c_samples)
- elseif(WIN32)
-     install(PROGRAMS samples/build_samples_msvc.bat
--            DESTINATION ${IE_CPACK_IE_DIR}/samples/c
-+            DESTINATION ${IE_CPACK_IE_DIR}/share/inference_engine/samples/c
-             COMPONENT c_samples)
- endif()
- 
- install(DIRECTORY ie_bridges/c/samples/
--        DESTINATION ${IE_CPACK_IE_DIR}/samples/c
-+        DESTINATION ${IE_CPACK_IE_DIR}/share/inference_engine/samples/c
-         COMPONENT c_samples
-         PATTERN ie_bridges/c/samples/CMakeLists.txt EXCLUDE)
- 
- install(FILES samples/CMakeLists.txt
--        DESTINATION ${IE_CPACK_IE_DIR}/samples/c
-+        DESTINATION ${IE_CPACK_IE_DIR}/share/inference_engine/samples/c
-         COMPONENT c_samples)
+@@ -123,12 +123,13 @@ install(FILES samples/CMakeLists.txt
  
  # install Python samples
  
@@ -145,14 +105,14 @@ index d5feedb4..4cf5fb3d 100644
  ie_cpack_add_component(python_samples REQUIRED DEPENDS core)
  
  install(DIRECTORY ${ie_python_api_SOURCE_DIR}/sample/
--        DESTINATION ${IE_CPACK_IE_DIR}/samples/python
-+        DESTINATION ${IE_CPACK_IE_DIR}/share/inference_engine/samples/python
+         DESTINATION ${IE_CPACK_IE_DIR}/samples/python
          COMPONENT python_samples)
+-
 +endif()
- 
  # Custom target to build only Inference Engine Developer Package targets
  
-@@ -136,10 +138,6 @@ add_custom_target(ie_dev_targets ALL DEPENDS inference_engine HeteroPlugin)
+ add_custom_target(ie_dev_targets ALL DEPENDS inference_engine HeteroPlugin)
+@@ -136,10 +137,6 @@ add_custom_target(ie_dev_targets ALL DEPENDS inference_engine HeteroPlugin)
  # Developer package
  ie_developer_export_targets(format_reader)
  
@@ -184,50 +144,6 @@ index 9ea885be..71733fd9 100644
      elseif (THREADING STREQUAL "OMP")
          if (WIN32)
              set(omp_lib_name libiomp5md)
-diff --git a/inference-engine/ie_bridges/python/CMakeLists.txt b/inference-engine/ie_bridges/python/CMakeLists.txt
-index b9492dfe..933b3c04 100644
---- a/inference-engine/ie_bridges/python/CMakeLists.txt
-+++ b/inference-engine/ie_bridges/python/CMakeLists.txt
-@@ -52,11 +52,11 @@ add_subdirectory (src/openvino/inference_engine)
- ie_cpack_add_component(${PYTHON_VERSION} REQUIRED)
- 
- install(FILES requirements.txt
--        DESTINATION python/${PYTHON_VERSION}
-+	DESTINATION ${CMAKE_INSTALL_LIBDIR}/${PYTHON_VERSION}/site-packages/openvino/
-         COMPONENT ${PYTHON_VERSION})
- 
- install(PROGRAMS src/openvino/__init__.py
--        DESTINATION python/${PYTHON_VERSION}/openvino
-+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/${PYTHON_VERSION}/site-packages/openvino/
-         COMPONENT ${PYTHON_VERSION})
- 
- ie_cpack(${PYTHON_VERSION})
-diff --git a/inference-engine/ie_bridges/python/src/openvino/inference_engine/CMakeLists.txt b/inference-engine/ie_bridges/python/src/openvino/inference_engine/CMakeLists.txt
-index 72175b33..0f2425dc 100644
---- a/inference-engine/ie_bridges/python/src/openvino/inference_engine/CMakeLists.txt
-+++ b/inference-engine/ie_bridges/python/src/openvino/inference_engine/CMakeLists.txt
-@@ -32,20 +32,4 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-     target_compile_options(${TARGET_NAME} PRIVATE "-Wno-error=register")
- endif()
- 
--# perform copy
--add_custom_command(TARGET ${TARGET_NAME}
--    POST_BUILD
--    COMMAND ${CMAKE_COMMAND} -E copy ${PYTHON_BRIDGE_SRC_ROOT}/src/openvino/inference_engine/__init__.py ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/__init__.py
--    COMMAND ${CMAKE_COMMAND} -E copy ${PYTHON_BRIDGE_SRC_ROOT}/requirements.txt ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/../../requirements.txt
--    COMMAND ${CMAKE_COMMAND} -E copy ${PYTHON_BRIDGE_SRC_ROOT}/src/openvino/__init__.py ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/../__init__.py
--)
--
--# install
--
--install(TARGETS ${TARGET_NAME}
--        DESTINATION python/${PYTHON_VERSION}/openvino/inference_engine
--        COMPONENT ${PYTHON_VERSION})
--
--install(PROGRAMS __init__.py
--        DESTINATION python/${PYTHON_VERSION}/openvino/inference_engine
--        COMPONENT ${PYTHON_VERSION})
-+install(DIRECTORY ${PYTHON_BRIDGE_OUTPUT_DIRECTORY} DESTINATION ${CMAKE_INSTALL_LIBDIR}/${PYTHON_VERSION}/site-packages/)
 diff --git a/inference-engine/include/gpu/gpu_ocl_wrapper.hpp b/inference-engine/include/gpu/gpu_ocl_wrapper.hpp
 index fce7d8f1..827e5764 100644
 --- a/inference-engine/include/gpu/gpu_ocl_wrapper.hpp
@@ -239,7 +155,7 @@ index fce7d8f1..827e5764 100644
 -#include <CL/cl2.hpp>
 +#include <cl2.hpp>
 diff --git a/inference-engine/samples/CMakeLists.txt b/inference-engine/samples/CMakeLists.txt
-index f355e7b9..351fb9cd 100644
+index f355e7b9..d24c7c78 100644
 --- a/inference-engine/samples/CMakeLists.txt
 +++ b/inference-engine/samples/CMakeLists.txt
 @@ -24,7 +24,7 @@ endif()
@@ -262,6 +178,25 @@ index f355e7b9..351fb9cd 100644
  if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
  endif()
+@@ -203,6 +199,8 @@ macro(ie_add_sample)
+     if(COMMAND add_cpplint_target AND NOT IE_SAMPLE_EXCLUDE_CPPLINT)
+         add_cpplint_target(${IE_SAMPLE_NAME}_cpplint FOR_TARGETS ${IE_SAMPLE_NAME})
+     endif()
++    
++    install(TARGETS ${IE_SAMPLE_NAME} DESTINATION bin)
+ endmacro()
+ 
+ # collect all samples subdirectories
+diff --git a/inference-engine/samples/common/format_reader/CMakeLists.txt b/inference-engine/samples/common/format_reader/CMakeLists.txt
+index 6d935135..fe12eeb7 100644
+--- a/inference-engine/samples/common/format_reader/CMakeLists.txt
++++ b/inference-engine/samples/common/format_reader/CMakeLists.txt
+@@ -40,3 +40,5 @@ target_include_directories(${TARGET_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}"
+                                                  "${CMAKE_CURRENT_SOURCE_DIR}/..")
+ 
+ set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_PDB_NAME ${TARGET_NAME})
++
++install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
 diff --git a/inference-engine/src/cldnn_engine/CMakeLists.txt b/inference-engine/src/cldnn_engine/CMakeLists.txt
 index 43344e7f..50beda23 100644
 --- a/inference-engine/src/cldnn_engine/CMakeLists.txt

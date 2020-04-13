@@ -43,7 +43,7 @@ EXTRA_OECMAKE += " \
                   -DBUILD_GTEST=0 \
                   -DINSTALL_GMOCK=0 \
                   -DINSTALL_GTEST=0 \
-                  -DENABLE_SAMPLES=0 \
+                  -DENABLE_SAMPLES=1 \
                   -DENABLE_NGRAPH=ON \
                   -DENABLE_MKL_DNN=ON \
                   -DIE_CPACK_IE_DIR=${prefix} \
@@ -77,6 +77,19 @@ do_install_append() {
     if ${@bb.utils.contains('PACKAGECONFIG', 'opencl', 'true', 'false', d)}; then
         cp -r ${S}/inference-engine/src/cldnn_engine/cldnn_global_custom_kernels ${D}${libdir}/
     fi
+
+    if ${@bb.utils.contains('PACKAGECONFIG', 'python3', 'true', 'false', d)}; then
+        install -d ${D}${datadir}/inference_engine
+        mv ${D}/usr/samples/python ${D}${datadir}/inference_engine/
+
+        install -d ${D}${PYTHON_SITEPACKAGES_DIR}
+        mv ${D}${prefix}/python/${PYTHON_DIR}/openvino ${D}${PYTHON_SITEPACKAGES_DIR}/
+
+        rm -rf ${D}${prefix}/python
+    fi
+
+    # Remove the samples source directory. We install the built samples.
+    rm -rf ${D}/usr/samples
 }
 
 do_install_ptest_base_prepend() {
@@ -107,7 +120,9 @@ FILES_${PN} += "${libdir}/lib*${SOLIBSDEV} \
 # Move inference engine samples into a separate package
 PACKAGES =+ "${PN}-samples ${PN}-vpu-firmware"
 
-FILES_${PN}-samples = "${datadir}/inference_engine"
+FILES_${PN}-samples = "${datadir}/inference_engine \
+                       ${bindir} \
+                       "
 FILES_${PN}-vpu-firmware += "${libdir}/*.mvcmd"
 
 # Package for inference engine python API
