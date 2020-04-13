@@ -9,10 +9,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=ae27f47fd6755510247c19e547e4c804 \
                     file://third_party/opencl_headers/LICENSE;md5=dcefc90f4c3c689ec0c2489064e7273b"
 
 SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https \
-           file://enable-external-offline-compiler.patch \
            "
 
-SRCREV = "43016c65591bd125a9590ea05ca83d094a628f79"
+SRCREV = "4786f1a6c2910207b9f544ef3a087c4cb04280dc"
 
 S = "${WORKDIR}/git"
 
