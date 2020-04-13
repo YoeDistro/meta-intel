@@ -25,8 +25,8 @@ PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "x11", "dri3", "", d)
 PACKAGECONFIG[dri3] 	= "-DENABLE_X11_DRI3=ON, -DENABLE_X11_DRI3=OFF"
 PACKAGECONFIG[wayland]	= "-DENABLE_WAYLAND=ON, -DENABLE_WAYLAND=OFF, wayland wayland-native"
 
-SRC_URI = "git://github.com/Intel-Media-SDK/MediaSDK.git;protocol=https;branch=${BPN}-19.4;lfs=0"
-SRCREV = "f8f6646afcaec410ca037f0176814dd9d7ca4900"
+SRC_URI = "git://github.com/Intel-Media-SDK/MediaSDK.git;protocol=https;branch=${BPN}-20.1;lfs=0"
+SRCREV = "3d6abcfb19ba2e31b6a8d32cddd1893c3e419ffc"
 S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^intel-mediasdk-(?P<pver>(\d+(\.\d+)+))$"
