@@ -11,7 +11,7 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https; \
            file://0001-skip-execution-of-ElfPackager.patch \
           "
 
-SRCREV = "3605a569ac938ef2cb50ac69e30f8619cd44ceb3"
+SRCREV = "f9706c22c9f697f5ac8bbb3bb675659f62f4ccc5"
 
 S = "${WORKDIR}/git"
 
