@@ -80,7 +80,7 @@ class DldtInferenceEngine(OERuntimeTestCase):
     @OEHasPackage(['python3-opencv'])
     @OEHasPackage(['python3-numpy'])
     def test_dldt_ie_classification_python_api_with_cpu(self):
-        (status, output) = self.dldt_ie.test_dldt_ie_classification_python_api_with_device('CPU', self.ir_files_dir, 'libcpu_extension.so')
+        (status, output) = self.dldt_ie.test_dldt_ie_classification_python_api_with_device('CPU', self.ir_files_dir)
         self.assertEqual(status, 0, msg='status and output: %s and %s' % (status, output))
 
     @OETestDepends(['dldt_inference_engine.DldtInferenceEngine.test_dldt_ie_can_create_ir_and_download_input'])
