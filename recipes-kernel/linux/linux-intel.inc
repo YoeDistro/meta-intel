@@ -8,7 +8,6 @@ KERNEL_CONFIG_URI ?= "git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;n
 SRC_URI = " \
            git://github.com/intel/linux-intel-lts.git;protocol=https;name=machine;branch=${KBRANCH}; \
            ${KERNEL_CONFIG_URI} \
-           file://perf-fix-build-with-binutils.patch \
 	  "
 
 SRC_URI_append_core2-32-intel-common = " file://disable_skylake_sound.cfg"

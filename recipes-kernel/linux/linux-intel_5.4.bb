@@ -9,8 +9,8 @@ SRC_URI_append = " file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurs
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "5.4.22"
-SRCREV_machine ?= "6938453b63e5b5ec190d2d1ba7c01654f5ca0323"
+LINUX_VERSION ?= "5.4.28"
+SRCREV_machine ?= "4726da64050d85576d3ea73ea9578865e3676f41"
 SRCREV_meta ?= "b8c82ba37370e4698ff0c42f3e54b8b4f2fb4ac0"
 
 # For Crystalforest and Romley

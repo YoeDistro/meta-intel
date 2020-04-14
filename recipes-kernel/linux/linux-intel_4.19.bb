@@ -5,6 +5,7 @@ KMETA_BRANCH = "yocto-4.19"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
 
+SRC_URI_append = " file://perf-fix-build-with-binutils.patch"
 SRC_URI_append = " file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
