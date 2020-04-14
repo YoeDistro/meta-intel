@@ -10,7 +10,6 @@ python () {
 }
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
-SRC_URI_append = " file://perf-fix-build-with-binutils.patch"
 SRC_URI_append = " file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch"
 
 KBRANCH = "5.4/preempt-rt"
@@ -18,8 +17,8 @@ KMETA_BRANCH = "yocto-5.4"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "5.4.22"
-SRCREV_machine ?= "375ba61f63b918a9e12ac53fa7d96bdab2a31d46"
+LINUX_VERSION ?= "5.4.26"
+SRCREV_machine ?= "d6f5dd6c6161d0ea5d8ca2aac030130ea5031b7b"
 SRCREV_meta ?= "b8c82ba37370e4698ff0c42f3e54b8b4f2fb4ac0"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
