@@ -10,7 +10,7 @@ QB_CPU_KVM_intel-corei7-64 = "-cpu kvm64"
 
 QB_SYSTEM_NAME_intel-skylake-64 = "qemu-system-x86_64"
 QB_CPU_intel-skylake-64 = "-cpu Skylake-Client"
-QB_CPU_KVM_intel-skylake-64 = "-cpu kvm64"
+QB_CPU_KVM_intel-skylake-64 = "-cpu Skylake-Client"
 
 QB_AUDIO_DRV = "alsa"
 QB_AUDIO_OPT = "-soundhw ac97,es1370"
