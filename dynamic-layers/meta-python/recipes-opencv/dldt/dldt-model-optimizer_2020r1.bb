@@ -5,9 +5,9 @@ environment, performs static model analysis, and adjusts deep \
 learning models for optimal execution on end-point target devices."
 HOMEPAGE = "https://01.org/openvinotoolkit"
 
-SRC_URI = "git://github.com/opencv/dldt.git;protocol=git;branch=2019 \
+SRC_URI = "git://github.com/opencv/dldt.git;protocol=git;branch=2020 \
            "
-SRCREV = "fe3f978b98c86eaeed3cbdc280e1ffd0bc50d278"
+SRCREV = "b2140c083a068a63591e8c2e9b5f6b240790519d"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
