@@ -22,8 +22,8 @@ PREFERRED_PROVIDER_nativesdk-libva-utils = "nativesdk-libva-utils-intel"
 
 PREFERRED_VERSION_linux-intel ?= "5.4%"
 PREFERRED_VERSION_linux-intel-rt ?= "5.4%"
-PREFERRED_VERSION_linux-intel_poky-altcfg ?= "4.19%"
-PREFERRED_VERSION_linux-intel-rt_poky-altcfg ?= "4.19%"
+PREFERRED_VERSION_linux-intel_poky-altcfg ?= "5.4%"
+PREFERRED_VERSION_linux-intel-rt_poky-altcfg ?= "5.4%"
 
 XSERVER_X86_ASPEED_AST = "xf86-video-ast \
            "
