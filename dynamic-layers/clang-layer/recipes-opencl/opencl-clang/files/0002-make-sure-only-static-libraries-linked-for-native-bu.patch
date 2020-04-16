@@ -1,0 +1,42 @@
+From b29e00e6fe428a031cf577dfb703cf13eff837f6 Mon Sep 17 00:00:00 2001
+From: Naveen Saini <naveen.kumar.saini@intel.com>
+Date: Wed, 15 Apr 2020 18:05:14 +0800
+Subject: [PATCH 2/2] make sure only static libraries linked for native build
+
+LINK_COMPONENTS=all isn't working for static libs for out of tree builds. Use
+LLVM_AVAILABLE_LIBS instead. Reported:
+
+https://github.com/intel/opencl-clang/issues/114
+
+Upstream-Status: Pending
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ CMakeLists.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8707487..ad2dbda 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -218,7 +218,7 @@ add_subdirectory(cl_headers)
+ 
+ set(LLVM_REQUIRES_EH ON)
+ 
+-if(USE_PREBUILT_LLVM OR CLANG_LINK_CLANG_DYLIB)
++if(false)
+   list(APPEND OPENCL_CLANG_LINK_LIBS clang-cpp)
+ else()
+   list(APPEND OPENCL_CLANG_LINK_LIBS
+@@ -266,6 +266,7 @@ add_llvm_library(${TARGET_NAME} SHARED
+     all
+   LINK_LIBS
+     ${OPENCL_CLANG_LINK_LIBS}
++    ${LLVM_AVAILABLE_LIBS}
+   )
+ 
+ # Configure resource file on Windows
+-- 
+2.17.1
+

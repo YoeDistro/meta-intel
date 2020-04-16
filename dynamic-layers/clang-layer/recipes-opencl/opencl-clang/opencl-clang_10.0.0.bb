@@ -7,10 +7,11 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=e8a15bf1416762a09ece07e44c79118c"
 
 SRC_URI = "git://github.com/intel/opencl-clang.git;branch=ocl-open-100;protocol=https \
            file://0001-don-t-redefine-LLVM_TABLEGEN_EXE.patch \
-           file://link-with-all-libs.patch \
+           file://0001-Building-in-tree-with-LLVM-10.0-with-the-LLVM_LINK_L.patch \
            "
+SRC_URI_append_class-native = " file://0002-make-sure-only-static-libraries-linked-for-native-bu.patch"
 
-SRCREV = "0a5a9f67b56431ef7b9436d1af812df6dfb44975"
+SRCREV = "9f0c2c0f5ddea1accc921aed4c94bc52c1b85637"
 
 S = "${WORKDIR}/git"
 
