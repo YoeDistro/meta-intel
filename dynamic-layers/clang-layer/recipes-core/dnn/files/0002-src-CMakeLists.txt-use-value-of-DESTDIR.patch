@@ -1,0 +1,33 @@
+From 3693305c9497f940b011e3e8b9d707d4f8075234 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Tue, 21 Apr 2020 09:19:38 +0800
+Subject: [PATCH 2/2] src/CMakeLists.txt: use value of DESTDIR
+
+Make sure that we're using the value of DESTDIR for the paths that are
+being created to look into paths of installed files. Ensure that
+cmake_install.cmake actually has $ENV{DESTDIR} which gets expanded if
+it's being passed to cmake.
+
+Upstream-Status: Submitted
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ src/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0c99fefae..2f1499d0d 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -137,7 +137,7 @@ install(EXPORT ${LIB_EXPORT_NAME}
+ 
+ # Intel MKL-DNN compat cmake files
+ install(CODE "execute_process(COMMAND ${CMAKE_COMMAND}
+-    -DDIR=${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/cmake
++    -DDIR=\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/cmake
+     -P ${PROJECT_SOURCE_DIR}/cmake/gen_mkldnn_compat_cmakes.cmake)")
+ 
+ # Intel MKL-DNN compat libraries
+-- 
+2.25.3
+
