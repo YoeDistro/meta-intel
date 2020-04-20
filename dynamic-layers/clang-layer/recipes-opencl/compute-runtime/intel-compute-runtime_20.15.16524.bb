@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=ae27f47fd6755510247c19e547e4c804 \
 SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https \
            "
 
-SRCREV = "4786f1a6c2910207b9f544ef3a087c4cb04280dc"
+SRCREV = "e0633548a9bd025c70bc7f3539eef094b1bc9ce1"
 
 S = "${WORKDIR}/git"
 
