@@ -1,0 +1,43 @@
+From 2ce2619b544678541e0cc56494e2927086718613 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Tue, 26 Mar 2019 14:11:29 +0800
+Subject: [PATCH] point to correct llvm-tblgen
+
+Let llvm-tblgen path be passed from recipe itself.
+
+Also since we're going to do the patching ourselves, no need to look for
+git through cmake.
+
+Upstream-Status: Inappropriate [OE specific]
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1371a67..f83ffcc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -53,7 +53,7 @@ endif(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+ include(AddLLVM)
+ include(TableGen)
+ 
+-find_package(Git REQUIRED)
++#find_package(Git REQUIRED)
+ 
+ if (NOT WIN32)
+     add_subdirectory( linux_linker )
+@@ -138,7 +138,7 @@ endif(NOT USE_PREBUILT_LLVM)
+ set (COMPILE_OPTIONS_TD  opencl_clang_options.td)
+ set (COMPILE_OPTIONS_INC opencl_clang_options.inc)
+ 
+-set(LLVM_TABLEGEN_EXE "llvm-tblgen")
++#set(LLVM_TABLEGEN_EXE "llvm-tblgen")
+ set(LLVM_TARGET_DEFINITIONS ${COMPILE_OPTIONS_TD})
+ if(USE_PREBUILT_LLVM)
+   set(TABLEGEN_ADDITIONAL -I ${LLVM_INCLUDE_DIRS})
+-- 
+2.17.1
+
