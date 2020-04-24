@@ -15,7 +15,7 @@ S = "${WORKDIR}/git"
 
 DEPENDS = "libva libyami"
 
-inherit autotools pkgconfig features_check
+inherit autotools pkgconfig ${COMPAT_DISTRO_FEATURE_CHECK}
 
 REQUIRED_DISTRO_FEATURES = "opengl"
 
