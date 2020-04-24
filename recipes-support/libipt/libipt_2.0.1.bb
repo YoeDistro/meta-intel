@@ -18,6 +18,7 @@ SRCREV = "916d777123bf60d323890557347570e5e19dfa12"
 EXTRA_OECMAKE += " \
                   -DPTDUMP=ON  \
                   -DPTTC=ON \
+                  -DCMAKE_SKIP_RPATH=ON \
                   "
 
 do_install_append() {
