@@ -25,6 +25,9 @@ PREFERRED_VERSION_linux-intel-rt ?= "5.4%"
 PREFERRED_VERSION_linux-intel_poky-altcfg ?= "4.19%"
 PREFERRED_VERSION_linux-intel-rt_poky-altcfg ?= "4.19%"
 
+PREFERRED_VERSION_opencl-clang ?= "${@bb.utils.contains('LLVMVERSION', '9.0.1', '9.0.0', '10.0.0', d)}"
+PREFERRED_VERSION_opencl-clang-native ?= "${@bb.utils.contains('LLVMVERSION', '9.0.1', '9.0.0', '10.0.0', d)}"
+
 XSERVER_X86_ASPEED_AST = "xf86-video-ast \
            "
 
