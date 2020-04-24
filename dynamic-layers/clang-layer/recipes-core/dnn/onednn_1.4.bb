@@ -35,6 +35,7 @@ EXTRA_OECMAKE += " \
                    -DDNNL_BUILD_TESTS=ON \
                    -DDNNL_CPU_RUNTIME=OMP \
                    -DDNNL_ARCH_OPT_FLAGS="" \
+                   -DCMAKE_SKIP_RPATH=ON \
                    "
 
 PACKAGECONFIG ??= ""
