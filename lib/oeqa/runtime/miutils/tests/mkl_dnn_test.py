@@ -9,7 +9,7 @@ class MkldnnTest(object):
         self.target.run('rm /tmp/%s' % self.mkldnn_target_test_filename)
         
     def test_mkldnn_can_compile_and_execute(self):
-        mkldnn_src_dir = '/usr/src/debug/mkl-dnn/'
+        mkldnn_src_dir = '/usr/src/debug/onednn/'
         mkldnn_src_test_filename = 'api.c'
         mkldnn_src_test_file = ''
         

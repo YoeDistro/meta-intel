@@ -14,9 +14,9 @@ class MklDnn(OERuntimeTestCase):
     def tearDownClass(cls):
         cls.mkldnntest.tear_down()
         
-    @OEHasPackage(['libdnnl', 'libdnnl1'])
-    @OEHasPackage(['libdnnl-src'])
-    @OEHasPackage(['libdnnl-dev'])
+    @OEHasPackage(['onednn', 'libdnnl1'])
+    @OEHasPackage(['onednn-src', 'libdnnl-src'])
+    @OEHasPackage(['onednn-dev', 'libdnnl-dev'])
     @OEHasPackage(['gcc'])
     @OEHasPackage(['gcc-symlinks'])
     @OEHasPackage(['libstdc++-dev'])
@@ -25,8 +25,8 @@ class MklDnn(OERuntimeTestCase):
         (status, output) = self.mkldnntest.test_mkldnn_can_compile_and_execute()
         self.assertEqual(status, 0, msg='status and output: %s and %s' % (status, output))
     
-    @OEHasPackage(['mkl-dnn', 'libdnnl1'])
-    @OEHasPackage(['mkl-dnn-test', 'libdnnl-test'])
+    @OEHasPackage(['onednn', 'libdnnl1'])
+    @OEHasPackage(['onednn-test', 'libdnnl-test'])
     def test_mkldnn_benchdnn_package_available(self):
         (status, output) = self.mkldnntest.test_mkldnn_benchdnn_package_available()
         self.assertEqual(status, 0, msg='status and output: %s and %s' % (status, output))
