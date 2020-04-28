@@ -13,9 +13,9 @@ class MkldnnTest(object):
         mkldnn_src_test_filename = 'api.c'
         mkldnn_src_test_file = ''
         
-        (status, output) = self.target.run('cd %s; find -name %s' % (mkldnn_src_dir, mkldnn_src_test_filename))
-        if status:
-            return status, output
+        (__, output) = self.target.run('cd %s; find -name %s' % (mkldnn_src_dir, mkldnn_src_test_filename))
+        if 'No such file or directory' in output:
+            return -1, output
 
         mkldnn_src_test_file = os.path.join(mkldnn_src_dir, output)
         (status, output) = self.target.run('gcc %s -o /tmp/%s -ldnnl' % (mkldnn_src_test_file, self.mkldnn_target_test_filename))
