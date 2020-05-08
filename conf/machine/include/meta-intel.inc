@@ -12,10 +12,6 @@ PREFERRED_PROVIDER_zlib = "zlib-intel"
 PREFERRED_PROVIDER_zlib-native = "zlib-native"
 PREFERRED_PROVIDER_nativesdk-zlib = "nativesdk-zlib"
 
-PREFERRED_PROVIDER_libva = "libva-intel"
-PREFERRED_PROVIDER_libva-native = "libva-intel-native"
-PREFERRED_PROVIDER_nativesdk-libva = "nativesdk-libva-intel"
-
 PREFERRED_PROVIDER_libva-utils = "libva-utils-intel"
 PREFERRED_PROVIDER_libva-native = "libva-utils-intel-native"
 PREFERRED_PROVIDER_nativesdk-libva-utils = "nativesdk-libva-utils-intel"
