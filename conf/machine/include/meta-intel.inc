@@ -12,10 +12,6 @@ PREFERRED_PROVIDER_zlib = "zlib-intel"
 PREFERRED_PROVIDER_zlib-native = "zlib-native"
 PREFERRED_PROVIDER_nativesdk-zlib = "nativesdk-zlib"
 
-PREFERRED_PROVIDER_libva-utils = "libva-utils-intel"
-PREFERRED_PROVIDER_libva-native = "libva-utils-intel-native"
-PREFERRED_PROVIDER_nativesdk-libva-utils = "nativesdk-libva-utils-intel"
-
 PREFERRED_VERSION_linux-intel ?= "5.4%"
 PREFERRED_VERSION_linux-intel-rt ?= "5.4%"
 PREFERRED_VERSION_linux-intel_poky-altcfg ?= "5.4%"
