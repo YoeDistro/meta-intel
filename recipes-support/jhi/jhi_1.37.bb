@@ -46,15 +46,15 @@ do_install_append () {
         cp -r ${S}/test/smoketest/applets/* ${D}${libdir}/dal/applets/
 }
 
-PACKAGES =+ "${PN}-test"
+PACKAGES += "${PN}-test"
 
 FILES_${PN}-dev = ""
 
 FILES_${PN} = "\
                 ${sbindir} \
                 ${sysconfdir} \
-                ${libdir} \
-                ${libdir}/dal/applets \
+                ${libdir}/lib*${SOLIBSDEV} \
+                ${libdir}/dal/applets/SpoolerApplet.dalp \
                 ${nonarch_libdir}/tmpfiles.d \
                 ${systemd_system_unitdir} \
                 ${localstatedir}/cache/dal/applet_repository \
