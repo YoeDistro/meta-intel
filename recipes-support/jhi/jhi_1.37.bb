@@ -21,9 +21,9 @@ USERADD_PARAM_${PN} = "--system --no-create-home --shell /bin/false -g mei jhi"
 
 GROUPADD_PARAM_${PN} = "-g 880 mei"
 
-SYSTEMD_PACKAGES = "${PN}"
-
 COMPATIBLE_HOST_libc-musl = 'null'
+
+SYSTEMD_SERVICE_${PN} = "jhi.service"
 
 # systemd is the default so they are installed when sysvinit is not selected as INIT_SYSTEM
 EXTRA_OECMAKE = "-DCMAKE_SKIP_RPATH=ON \
