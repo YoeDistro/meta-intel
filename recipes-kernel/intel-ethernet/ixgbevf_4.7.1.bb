@@ -11,11 +11,9 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/${BP}/COPYING;md5=a216b4192dc6b777b6f0db560e9a8417"
 
 SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/${PV}/${BP}.tar.gz \
-           file://0001-ixgbevf-skip-host-depmod.patch \
            "
 
-SRC_URI[md5sum] = "9258960e4d005c7da546cb8dca7bedc5"
-SRC_URI[sha256sum] = "740bb4822c54e5f9bc6a6e73ec562058cb9a27264d727453011c3725d3dd9ad2"
+SRC_URI[sha256sum] = "82d71eb04da5556171b4d776c5de61466801068738363847ef68d964c3d4735d"
 
 UPSTREAM_CHECK_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/"
 UPSTREAM_CHECK_REGEX = "ixgbevf%20stable/(?P<pver>\d+(\.\d+)+)/"
@@ -23,7 +21,6 @@ UPSTREAM_CHECK_REGEX = "ixgbevf%20stable/(?P<pver>\d+(\.\d+)+)/"
 CVE_PRODUCT = "linux:linux_kernel_ixgbe"
 
 S = "${WORKDIR}/${BP}/src"
-MODULES_INSTALL_TARGET = "install"
 
 EXTRA_OEMAKE='KSRC="${STAGING_KERNEL_BUILDDIR}" KVER="${KERNEL_VERSION}" INSTALL_MOD_PATH="${D}"'
 
@@ -43,5 +40,3 @@ do_install_append () {
 PACKAGES += "${PN}-script"
 
 FILES_${PN}-script += "${sysconfdir}/network/set_irq_affinity"
-
-EXCLUDE_FROM_WORLD = "1"
