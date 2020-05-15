@@ -8,11 +8,9 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/${BP}/COPYING;md5=a216b4192dc6b777b6f0db560e9a8417"
 
 SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbe%20stable/${PV}/${BP}.tar.gz \
-           file://0001-ixgbe-skip-host-depmod.patch \
            "
 
-SRC_URI[md5sum] = "172bc41f403b4a5904eb44d911af54d3"
-SRC_URI[sha256sum] = "08170d6719bb33fe8e08da2296729c77899e48c201115bdb81e4d492a1b21399"
+SRC_URI[sha256sum] = "2eb7d12e4b61412e217b9d78a196485a8ea02cb18368a55e59081b3d21e24215"
 
 UPSTREAM_CHECK_URI = "https://sourceforge.net/projects/e1000/files/ixgbe%20stable/"
 UPSTREAM_CHECK_REGEX = "ixgbe%20stable/(?P<pver>\d+(\.\d+)+)/"
@@ -20,7 +18,6 @@ UPSTREAM_CHECK_REGEX = "ixgbe%20stable/(?P<pver>\d+(\.\d+)+)/"
 CVE_PRODUCT = "linux:linux_kernel_ixgbe"
 
 S = "${WORKDIR}/${BP}/src"
-MODULES_INSTALL_TARGET = "install"
 
 EXTRA_OEMAKE='KSRC="${STAGING_KERNEL_BUILDDIR}" KVER="${KERNEL_VERSION}" INSTALL_MOD_PATH="${D}"'
 
