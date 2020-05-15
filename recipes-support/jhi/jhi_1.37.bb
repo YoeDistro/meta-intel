@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=833126f14614a3276708a4d7c9734645"
 
 SRC_URI = "git://github.com/intel/dynamic-application-loader-host-interface.git;protocol=https"
 
-inherit cmake useradd systemd pkgconfig
+inherit cmake useradd systemd pkgconfig update-rc.d
 
 SRCREV = "d1258013c8bc7d94cbc40de99e7ab2ed1327a086"
 
@@ -24,6 +24,10 @@ GROUPADD_PARAM_${PN} = "-g 880 mei"
 COMPATIBLE_HOST_libc-musl = 'null'
 
 SYSTEMD_SERVICE_${PN} = "jhi.service"
+
+INITSCRIPT_PACKAGES = "${PN}"
+INITSCRIPT_NAME_${PN} = "${PN}"
+INITSCRIPT_PARAMS_${PN} = "defaults"
 
 # systemd is the default so they are installed when sysvinit is not selected as INIT_SYSTEM
 EXTRA_OECMAKE = "-DCMAKE_SKIP_RPATH=ON \
