@@ -10,6 +10,7 @@ SRC_URI = " \
            ${KERNEL_CONFIG_URI} \
 	  "
 
+SRC_URI_append = " file://enable_lynxpoint_gpio.cfg"
 SRC_URI_append_core2-32-intel-common = " file://disable_skylake_sound.cfg"
 
 LINUX_VERSION_EXTENSION ??= "-intel-pk-${LINUX_KERNEL_TYPE}"
