@@ -11,12 +11,12 @@ DESCRIPTION = "The microcode data file contains the latest microcode\
  if the file is placed in the /etc/firmware directory of the Linux system."
 
 LICENSE = "Intel-Microcode-License"
-LIC_FILES_CHKSUM = "file://license;md5=99b296eb12723fd1eeb52e24971eed84"
+LIC_FILES_CHKSUM = "file://license;md5=6b58767419df274d2409b294ddae17e6"
 
 SRC_URI = "git://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files.git;protocol=https \
            "
 
-SRCREV = "33b7b2f3817e362111cd91910026ab8907f21710"
+SRCREV = "d6e1db6755da2d682f4558d1723f16f26575c4d1"
 
 DEPENDS = "iucode-tool-native"
 S = "${WORKDIR}/git"
