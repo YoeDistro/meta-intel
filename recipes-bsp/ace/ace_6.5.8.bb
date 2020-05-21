@@ -37,3 +37,4 @@ do_install() {
     rm -r ${D}/usr/share
 }
 
+UPSTREAM_CHECK_URI = "https://github.com/DOCGroup/ACE_TAO/releases"
