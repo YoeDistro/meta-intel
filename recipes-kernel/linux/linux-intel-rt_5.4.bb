@@ -22,3 +22,8 @@ SRCREV_machine ?= "ddb02394d5c1e41e8d0ef2b67f256e0fcf57c2eb"
 SRCREV_meta ?= "4ed477131e6e508d335d70c070eb84a5c3d673e5"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
+
+# Kernel config 'CONFIG_GPIO_LYNXPOINT' goes by a different name 'CONFIG_PINCTRL_LYNXPOINT' in
+# linux-intel 5.4 specifically. This cause annoying warning during kernel config audit. So suppress the
+# harmless warning for now.
+KCONF_BSP_AUDIT_LEVEL = "0"
