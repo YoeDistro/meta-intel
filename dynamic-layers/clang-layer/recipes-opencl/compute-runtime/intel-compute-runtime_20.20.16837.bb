@@ -10,8 +10,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=ae27f47fd6755510247c19e547e4c804 \
 
 SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https \
            "
+SRC_URI_append_class-target = " file://allow-to-find-cpp-generation-tool.patch"
 
-SRCREV = "e0633548a9bd025c70bc7f3539eef094b1bc9ce1"
+SRCREV = "b9b34659c8817393dd8ce35bf37c167c23cefcff"
 
 S = "${WORKDIR}/git"
 
@@ -30,12 +31,21 @@ EXTRA_OECMAKE = " \
                  -DBUILD_TYPE=Release \
                  -DSKIP_UNIT_TESTS=1 \
                  -DCCACHE_ALLOWED=FALSE \
-                 -Dcloc_cmd_prefix=ocloc \
                  "
+EXTRA_OECMAKE_append_class-target = " \
+                                     -Dcloc_cmd_prefix=ocloc \
+                                    "
+do_install_append_class-native() {
+    install -d ${D}${bindir}
+    install ${B}/bin/cpp_generate_tool ${D}${bindir}/
+}
+
+SOLIBS = ".so"
+FILES_SOLIBSDEV = ""
 
 FILES_${PN} += " \
                  ${libdir}/intel-opencl/libigdrcl.so \
-                 ${libdir}/intel-opencl/libocloc.so \
+                 ${libdir}/libocloc.so \
                  "
 
 BBCLASSEXTEND = "native nativesdk"
