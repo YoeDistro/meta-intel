@@ -3,7 +3,7 @@ FILESEXTRAPATHS_prepend_intel-x86-common := "${THISDIR}/files:"
 SPIRV_BRANCH = "${@bb.utils.contains('LLVMVERSION', '9.0.1', 'llvm_release_90', 'llvm_release_100', d)}"
 
 SPIRV9_SRCREV = "70420631144a6a25613ae37178f2cc1d3607b65b"
-SPIRV10_SRCREV = "7743482f2053582be990e93ca46d15239c509c9d"
+SPIRV10_SRCREV = "4d43f68a30a510b4e7607351caab3df8e7426a6b"
 SPIRV_SRCREV = "${@bb.utils.contains('LLVMVERSION', '9.0.1', '${SPIRV9_SRCREV}', '${SPIRV10_SRCREV}', d)}"
 
 LLVM9_PATCH_LIST = " file://0001-dont-export-targets-for-binaries.patch \
