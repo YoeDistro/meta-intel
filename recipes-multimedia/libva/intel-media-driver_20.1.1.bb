@@ -11,8 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=6aab5363823095ce682b155fef0231f0 \
                     file://media_driver/media_libvpx.LICENSE;md5=d5b04755015be901744a78cc30d390d4 \
                     "
 
-# Only for 64 bit until this is resolved: https://github.com/intel/media-driver/issues/356
-COMPATIBLE_HOST = '(x86_64).*-linux'
+COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
 inherit ${COMPAT_DISTRO_FEATURE_CHECK}
 REQUIRED_DISTRO_FEATURES = "opengl"
@@ -38,12 +37,12 @@ EXTRA_OECMAKE += " \
                    -DMEDIA_BUILD_FATAL_WARNINGS=OFF \
                    "
 
+CXXFLAGS_append_x86 = " -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
+
 do_configure_prepend_toolchain-clang() {
     sed -i -e '/-fno-tree-pre/d' ${S}/media_driver/cmake/linux/media_compile_flags_linux.cmake
 }
 
-# See: https://github.com/intel/media-driver/issues/358
 FILES_${PN} += " \
                  ${libdir}/dri/ \
-                 ${libdir}/igfxcmrt64.so \
                  "
