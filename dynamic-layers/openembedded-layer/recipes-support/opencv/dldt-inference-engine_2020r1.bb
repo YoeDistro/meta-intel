@@ -9,6 +9,7 @@ SRC_URI = "git://github.com/opencv/dldt.git;protocol=git;branch=2020 \
            https://download.01.org/opencv/2020/openvinotoolkit/2020.1/inference_engine/firmware_pcie-ma248x_942_R10.15.zip;name=ma248x \
            https://download.01.org/opencv/2020/openvinotoolkit/2020.1/inference_engine/firmware_usb-ma2x8x_942_R10.15.zip;name=ma2x8x \
            file://0001-Installation-and-build-fixes.patch \
+           file://0001-mkldnn_memory_solver.hpp-include-stdint.h-to-avoid-b.patch \
            file://run-ptest \
            "
 
