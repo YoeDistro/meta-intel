@@ -1,0 +1,115 @@
+From 6fef79d47c2b92b3e194c412849d44ef632f9905 Mon Sep 17 00:00:00 2001
+From: Liwei Song <liwei.song@windriver.com>
+Date: Fri, 22 May 2020 15:47:44 +0800
+Subject: [PATCH] use meta-oe gflags
+
+gflags is available in meta-oe, use this one instead of the thirdparty
+one in open-model-zoo
+
+Upstream-Status: Inappropriate [meta-intel specific]
+
+Signed-off-by: Liwei Song <liwei.song@windriver.com>
+---
+ CMakeLists.txt                                      | 8 ++++----
+ multi_channel/common/CMakeLists.txt                 | 2 +-
+ multi_channel/face_detection_demo/CMakeLists.txt    | 2 +-
+ human_pose_estimation_demo/CMakeLists.txt             | 2 +-
+ object_detection_demo_yolov3/CMakeLists.txt           | 2 +-
+ 5 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b22b2734656f..ed89411f1dfa 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -89,12 +89,10 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
+ endif()
+ ####################################
+ 
+-set (GFLAGS_IS_SUBPROJECT TRUE)
++set (GFLAGS_IS_SUBPROJECT FALSE)
+ set (HAVE_SYS_STAT_H 1)
+ set (HAVE_INTTYPES_H 1)
+ 
+-add_subdirectory(thirdparty/gflags)
+-
+ if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+ endif()
+@@ -185,7 +183,7 @@ macro(ie_add_sample)
+     endif()
+ 
+     target_link_libraries(${IE_SAMPLE_NAME} PRIVATE ${OpenCV_LIBRARIES} ${InferenceEngine_LIBRARIES}
+-                                                    ${IE_SAMPLE_DEPENDENCIES} gflags)
++                                                    ${IE_SAMPLE_DEPENDENCIES} ${GFLAGS_LIBRARIES})
+ 
+     if(UNIX)
+         target_link_libraries(${IE_SAMPLE_NAME} PRIVATE pthread)
+@@ -206,11 +204,13 @@ endmacro()
+ # use this flag if you need to throw custom message in case if the IE package is not found.
+ if (IE_NOT_FOUND_MESSAGE)
+     find_package(InferenceEngine 2.0 QUIET)
++    find_package(gflags 2.2 QUIET)
+     if (NOT(InferenceEngine_FOUND))
+         message(FATAL_ERROR ${IE_NOT_FOUND_MESSAGE})
+     endif()
+ else()
+     find_package(InferenceEngine 2.0 REQUIRED)
++    find_package(gflags 2.2 REQUIRED)
+ endif()
+ 
+ # collect all samples subdirectories
+diff --git a/multi_channel/common/CMakeLists.txt b/multi_channel/common/CMakeLists.txt
+index 740f3e1ec46e..573d12606d33 100644
+--- a/multi_channel/common/CMakeLists.txt
++++ b/multi_channel/common/CMakeLists.txt
+@@ -113,7 +113,7 @@ target_include_directories(${TARGET_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+ if(TARGET IE::ie_cpu_extension)
+     add_definitions(-DWITH_EXTENSIONS)
+ endif()
+-target_link_libraries(${TARGET_NAME} ${InferenceEngine_LIBRARIES} gflags ${OpenCV_LIBRARIES})
++target_link_libraries(${TARGET_NAME} ${InferenceEngine_LIBRARIES} ${GFLAGS_LIBRARIES} ${OpenCV_LIBRARIES})
+ if(TARGET IE::ie_cpu_extension)
+     target_link_libraries(${TARGET_NAME} IE::ie_cpu_extension)
+ endif()
+diff --git a/multi_channel/face_detection_demo/CMakeLists.txt b/multi_channel/face_detection_demo/CMakeLists.txt
+index 41730f1d73d4..3b2eb100ccf8 100644
+--- a/multi_channel/face_detection_demo/CMakeLists.txt
++++ b/multi_channel/face_detection_demo/CMakeLists.txt
+@@ -64,7 +64,7 @@ if(TARGET IE::ie_cpu_extension)
+     add_definitions(-DWITH_EXTENSIONS)
+ endif()
+ 
+-target_link_libraries(${TARGET_NAME} ${InferenceEngine_LIBRARIES} gflags ${OpenCV_LIBRARIES} common)
++target_link_libraries(${TARGET_NAME} ${InferenceEngine_LIBRARIES} ${GFLAGS_LIBRARIES} ${OpenCV_LIBRARIES} common)
+ 
+ if(TARGET IE::ie_cpu_extension)
+     target_link_libraries(${TARGET_NAME} IE::ie_cpu_extension)
+diff --git a/multi_channel/human_pose_estimation_demo/CMakeLists.txt b/multi_channel/human_pose_estimation_demo/CMakeLists.txt
+index f4c05cf5b0e8..2602f59c314f 100644
+--- a/multi_channel/human_pose_estimation_demo/CMakeLists.txt
++++ b/multi_channel/human_pose_estimation_demo/CMakeLists.txt
+@@ -63,7 +63,7 @@ endif()
+ if(TARGET IE::ie_cpu_extension)
+     add_definitions(-DWITH_EXTENSIONS)
+ endif()
+-target_link_libraries(${TARGET_NAME} ${InferenceEngine_LIBRARIES} gflags ${OpenCV_LIBRARIES} common)
++target_link_libraries(${TARGET_NAME} ${InferenceEngine_LIBRARIES} ${GFLAGS_LIBRARIES} ${OpenCV_LIBRARIES} common)
+ if(TARGET IE::ie_cpu_extension)
+     target_link_libraries(${TARGET_NAME} IE::ie_cpu_extension)
+ endif()
+diff --git a/multi_channel/object_detection_demo_yolov3/CMakeLists.txt b/multi_channel/object_detection_demo_yolov3/CMakeLists.txt
+index 2f2b3bc540f8..ac10776e2b4e 100644
+--- a/multi_channel/object_detection_demo_yolov3/CMakeLists.txt
++++ b/multi_channel/object_detection_demo_yolov3/CMakeLists.txt
+@@ -64,7 +64,7 @@ if(TARGET IE::ie_cpu_extension)
+     add_definitions(-DWITH_EXTENSIONS)
+ endif()
+ 
+-target_link_libraries(${TARGET_NAME} ${InferenceEngine_LIBRARIES} gflags ${OpenCV_LIBRARIES} common)
++target_link_libraries(${TARGET_NAME} ${InferenceEngine_LIBRARIES} ${GFLAGS_LIBRARIES} ${OpenCV_LIBRARIES} common)
+ 
+ if(TARGET IE::ie_cpu_extension)
+     target_link_libraries(${TARGET_NAME} IE::ie_cpu_extension)
+-- 
+2.17.1
+
