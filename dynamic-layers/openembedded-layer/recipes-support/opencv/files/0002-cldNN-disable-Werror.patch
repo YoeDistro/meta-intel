@@ -1,0 +1,30 @@
+From 65014a2703a6a3892fdebc86fe1c5a3a589dbf56 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Wed, 10 Jun 2020 09:45:48 +0800
+Subject: [PATCH 2/5] cldNN: disable Werror
+
+Don't treat warnings as errors. This just leads to failures every time
+we upgrade the compiler.
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ inference-engine/thirdparty/clDNN/CMakeLists.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/inference-engine/thirdparty/clDNN/CMakeLists.txt b/inference-engine/thirdparty/clDNN/CMakeLists.txt
+index 4b444eca..8610b9b8 100644
+--- a/inference-engine/thirdparty/clDNN/CMakeLists.txt
++++ b/inference-engine/thirdparty/clDNN/CMakeLists.txt
+@@ -770,7 +770,6 @@ foreach(__CLDNN_CompilerFlagName IN ITEMS "CMAKE_CXX_FLAGS" "CMAKE_C_FLAGS")
+         MultiProcessorCompilation
+         DeadCodeEliminate
+         ExtensionsEnabled
+-        TreatWarnAsErrorEnabled
+         WarnLevel4
+         NoFastMath
+         StackProtector
+-- 
+2.25.4
+

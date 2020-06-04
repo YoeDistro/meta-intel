@@ -1,0 +1,45 @@
+From 5d0f3782ba264880b3bb5b96b6d78e2581aa6efd Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Tue, 9 Jun 2020 11:35:59 +0800
+Subject: [PATCH] don't install licenses and version
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ CMakeLists.txt | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c347cb465d..d0ec643eb0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -641,7 +641,7 @@ if (NGRAPH_EXPORT_TARGETS_ENABLE)
+     install(EXPORT ngraphTargets
+         FILE ngraphTargets.cmake
+         NAMESPACE ngraph::
+-        DESTINATION ${NGRAPH_COMPONENT_PREFIX}cmake
++	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
+         COMPONENT ngraph)
+ 
+     configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/share/ngraphConfig.cmake.in
+@@ -654,15 +654,6 @@ if (NGRAPH_EXPORT_TARGETS_ENABLE)
+ 
+     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ngraphConfig.cmake
+         ${CMAKE_CURRENT_BINARY_DIR}/ngraphConfigVersion.cmake
+-        DESTINATION ${NGRAPH_COMPONENT_PREFIX}cmake
++	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
+         COMPONENT ngraph)
+ endif()
+-
+-install(DIRECTORY
+-    ${CMAKE_CURRENT_SOURCE_DIR}/licenses
+-    DESTINATION "${NGRAPH_COMPONENT_PREFIX}."
+-    COMPONENT ngraph
+-)
+-
+-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE DESTINATION "${NGRAPH_COMPONENT_PREFIX}." COMPONENT ngraph)
+-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/VERSION DESTINATION "${NGRAPH_COMPONENT_PREFIX}." COMPONENT ngraph)
+-- 
+2.25.4
+

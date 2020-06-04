@@ -1,13 +1,8 @@
 #!/bin/sh
 
-# InferenceEngineUnitTests requires libmock_engine.so, since they are
-# installed in the same directory we will need to set LD_LIBRARY_PATH
-# so that libmock_engine.so is picked up correctly. We also assume that
-# this script is only execute within the same directory where it is
-# installed.
-
-export LD_LIBRARY_PATH=.
-
-./InferenceEngineUnitTests |sed \
-  -e 's|\[.*OK.*\]\(.*\)|PASS:\1|' \
-  -e 's|\[.*FAILED.*\]\(.*\)|FAIL:\1|'
+for i in cpu ie vpu
+do
+	./$i"UnitTests" |sed \
+            -e 's|\[.*OK.*\]\(.*\)|PASS:\1|' \
+            -e 's|\[.*FAILED.*\]\(.*\)|FAIL:\1|'
+done

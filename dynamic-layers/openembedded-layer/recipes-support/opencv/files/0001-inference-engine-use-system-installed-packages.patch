@@ -1,0 +1,206 @@
+From e7730e68795c8ed0b9e1772ddc21ec931da462d0 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Wed, 10 Jun 2020 09:43:55 +0800
+Subject: [PATCH 1/5] inference-engine: use system installed packages
+
+Use installed versions of pugixml, ade, protobuf and tbb.
+
+Upstream-Status: Pending
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ cmake/dependencies.cmake                      | 17 --------------
+ inference-engine/cmake/ie_parallel.cmake      | 10 ++-------
+ .../src/inference_engine/CMakeLists.txt       | 22 +------------------
+ .../src/legacy_api/CMakeLists.txt             |  3 +--
+ .../src/vpu/graph_transformer/CMakeLists.txt  |  1 -
+ .../common_test_utils/CMakeLists.txt          |  3 +--
+ .../tests_deprecated/helpers/CMakeLists.txt   |  1 -
+ inference-engine/thirdparty/CMakeLists.txt    | 11 +---------
+ 8 files changed, 6 insertions(+), 62 deletions(-)
+
+diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
+index 2a5a74db..9cc9a6c9 100644
+--- a/cmake/dependencies.cmake
++++ b/cmake/dependencies.cmake
+@@ -13,25 +13,8 @@ if(CMAKE_CROSSCOMPILING)
+ 
+ 	set(protoc_version "3.7.1")
+ 	if(CMAKE_HOST_SYSTEM_NAME MATCHES Linux)
+-	    RESOLVE_DEPENDENCY(SYSTEM_PROTOC_ROOT
+-			               ARCHIVE_LIN "protoc-${protoc_version}-linux-x86_64.tar.gz"
+-			               TARGET_PATH "${TEMP}/protoc-${protoc_version}-linux-x86_64")
+-	    debug_message(STATUS "host protoc-${protoc_version} root path = " ${SYSTEM_PROTOC_ROOT})
+ 	else()
+ 		message(FATAL_ERROR "Unsupported host system (${CMAKE_HOST_SYSTEM_NAME}) and arch (${CMAKE_HOST_SYSTEM_PROCESSOR}) for cross-compilation")
+ 	endif()
+ 
+-    reset_deps_cache(SYSTEM_PROTOC)
+-
+-    message("${SYSTEM_PROTOC_ROOT}/bin")
+-    find_program(
+-        SYSTEM_PROTOC
+-        NAMES protoc
+-        PATHS "${SYSTEM_PROTOC_ROOT}/bin"
+-        NO_DEFAULT_PATH)
+-    if(NOT SYSTEM_PROTOC)
+-        message(FATAL_ERROR "[ONNX IMPORTER] Missing host protoc binary")
+-    endif()
+-
+-    update_deps_cache(SYSTEM_PROTOC "${SYSTEM_PROTOC}" "Path to host protoc for ONNX Importer")
+ endif()
+diff --git a/inference-engine/cmake/ie_parallel.cmake b/inference-engine/cmake/ie_parallel.cmake
+index 0f3c41e0..b3b2dfda 100644
+--- a/inference-engine/cmake/ie_parallel.cmake
++++ b/inference-engine/cmake/ie_parallel.cmake
+@@ -48,14 +48,8 @@ function(set_ie_threading_interface_for TARGET_NAME)
+     set(IE_THREAD_DEFINE "IE_THREAD_SEQ")
+ 
+     if (THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO")
+-        find_package(TBB COMPONENTS tbb tbbmalloc)
+-        if (TBB_FOUND)
+-            set(IE_THREAD_DEFINE "IE_THREAD_TBB")
+-            ie_target_link_libraries(${TARGET_NAME} ${LINK_TYPE} ${TBB_IMPORTED_TARGETS})
+-        else ()
+-            ext_message(WARNING "TBB was not found by the configured TBB_DIR path. \
+-                                 SEQ method will be used for ${TARGET_NAME}")
+-        endif ()
++        set(IE_THREAD_DEFINE "IE_THREAD_TBB")
++	target_link_libraries(${TARGET_NAME} INTERFACE tbb tbbmalloc)
+     elseif (THREADING STREQUAL "OMP")
+         if (WIN32)
+             set(omp_lib_name libiomp5md)
+diff --git a/inference-engine/src/inference_engine/CMakeLists.txt b/inference-engine/src/inference_engine/CMakeLists.txt
+index c8cd4b27..d98ba55d 100644
+--- a/inference-engine/src/inference_engine/CMakeLists.txt
++++ b/inference-engine/src/inference_engine/CMakeLists.txt
+@@ -117,8 +117,7 @@ add_library(${TARGET_NAME}_obj OBJECT
+ 
+ target_compile_definitions(${TARGET_NAME}_obj PRIVATE IMPLEMENT_INFERENCE_ENGINE_API)
+ 
+-target_include_directories(${TARGET_NAME}_obj SYSTEM PRIVATE $<TARGET_PROPERTY:ngraph::ngraph,INTERFACE_INCLUDE_DIRECTORIES>
+-                                                             $<TARGET_PROPERTY:pugixml,INTERFACE_INCLUDE_DIRECTORIES>)
++target_include_directories(${TARGET_NAME}_obj SYSTEM PRIVATE $<TARGET_PROPERTY:ngraph::ngraph,INTERFACE_INCLUDE_DIRECTORIES>)
+ 
+ target_include_directories(${TARGET_NAME}_obj PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}"
+                                                       $<TARGET_PROPERTY:${TARGET_NAME}_plugin_api,INTERFACE_INCLUDE_DIRECTORIES>)
+@@ -257,25 +256,6 @@ list(APPEND core_components ngraph)
+ if(THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO")
+     ie_cpack_add_component(tbb REQUIRED)
+     list(APPEND core_components tbb)
+-
+-    install(DIRECTORY "${TBB}/include"
+-            DESTINATION ${IE_CPACK_IE_DIR}/external/tbb
+-            COMPONENT tbb)
+-    install(DIRECTORY "${TBB}/lib"
+-            DESTINATION ${IE_CPACK_IE_DIR}/external/tbb
+-            COMPONENT tbb)
+-    if(EXISTS "${TBB}/bin")
+-      install(DIRECTORY "${TBB}/bin"
+-              DESTINATION ${IE_CPACK_IE_DIR}/external/tbb
+-              COMPONENT tbb)
+-    endif()
+-    install(FILES "${TBB}/LICENSE"
+-            DESTINATION ${IE_CPACK_IE_DIR}/external/tbb
+-            COMPONENT tbb)
+-    install(FILES "${TBB}/cmake/TBBConfig.cmake"
+-                  "${TBB}/cmake/TBBConfigVersion.cmake"
+-            DESTINATION ${IE_CPACK_IE_DIR}/external/tbb/cmake
+-            COMPONENT tbb)
+ endif()
+ 
+ ie_cpack_add_component(core REQUIRED DEPENDS ${core_components})
+diff --git a/inference-engine/src/legacy_api/CMakeLists.txt b/inference-engine/src/legacy_api/CMakeLists.txt
+index d54c5906..90920ab3 100644
+--- a/inference-engine/src/legacy_api/CMakeLists.txt
++++ b/inference-engine/src/legacy_api/CMakeLists.txt
+@@ -33,8 +33,7 @@ target_compile_definitions(${TARGET_NAME}_obj PRIVATE IMPLEMENT_INFERENCE_ENGINE
+ 
+ target_include_directories(${TARGET_NAME}_obj PRIVATE ${PUBLIC_HEADERS_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src
+     $<TARGET_PROPERTY:inference_engine_plugin_api,INTERFACE_INCLUDE_DIRECTORIES>
+-    $<TARGET_PROPERTY:ngraph::ngraph,INTERFACE_INCLUDE_DIRECTORIES>
+-    $<TARGET_PROPERTY:pugixml,INTERFACE_INCLUDE_DIRECTORIES>)
++    $<TARGET_PROPERTY:ngraph::ngraph,INTERFACE_INCLUDE_DIRECTORIES>)
+ 
+ function(nn_builder_disable_warnings)
+     disable_deprecated_warnings()
+diff --git a/inference-engine/src/vpu/graph_transformer/CMakeLists.txt b/inference-engine/src/vpu/graph_transformer/CMakeLists.txt
+index 982d3c7f..db881246 100644
+--- a/inference-engine/src/vpu/graph_transformer/CMakeLists.txt
++++ b/inference-engine/src/vpu/graph_transformer/CMakeLists.txt
+@@ -35,7 +35,6 @@ function(add_graph_transformer_target TARGET_NAME STATIC_IE)
+ 
+     target_include_directories(${TARGET_NAME}
+         SYSTEM PUBLIC
+-            $<TARGET_PROPERTY:pugixml,INTERFACE_INCLUDE_DIRECTORIES>
+             $<TARGET_PROPERTY:inference_engine_plugin_api,INTERFACE_INCLUDE_DIRECTORIES>
+             "${IE_MAIN_SOURCE_DIR}/thirdparty/movidius/mvnc/include")
+ 
+diff --git a/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt b/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt
+index 8a4ffd42..5bee450a 100644
+--- a/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt
++++ b/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt
+@@ -28,7 +28,6 @@ else ()
+ endif ()
+ 
+ list(APPEND EXPORT_DEPENDENCIES
+-        ${PUGI}
+         ${NGRAPH_LIBRARIES}
+         gtest
+         gtest_main
+@@ -70,7 +69,6 @@ function(add_common_utils ADD_TARGET_NAME)
+             PUBLIC
+             ${IE_TESTS_ROOT}/ie_test_utils
+             $<TARGET_PROPERTY:inference_engine,INTERFACE_INCLUDE_DIRECTORIES>
+-            $<TARGET_PROPERTY:pugixml,INTERFACE_INCLUDE_DIRECTORIES>
+             PRIVATE
+             $<TARGET_PROPERTY:inference_engine_plugin_api,INTERFACE_INCLUDE_DIRECTORIES>
+             )
+@@ -80,6 +78,7 @@ function(add_common_utils ADD_TARGET_NAME)
+     target_link_libraries(${ADD_TARGET_NAME}
+             PUBLIC
+             ${EXPORT_DEPENDENCIES}
++	    pugixml
+             )
+ endfunction()
+ 
+diff --git a/inference-engine/tests_deprecated/helpers/CMakeLists.txt b/inference-engine/tests_deprecated/helpers/CMakeLists.txt
+index 14265fa9..2482be78 100644
+--- a/inference-engine/tests_deprecated/helpers/CMakeLists.txt
++++ b/inference-engine/tests_deprecated/helpers/CMakeLists.txt
+@@ -23,7 +23,6 @@ function(add_helpers target_name)
+     target_include_directories(${target_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}"
+                                                      "${IE_MAIN_SOURCE_DIR}/src/inference_engine"
+                                                      $<TARGET_PROPERTY:inference_engine_lp_transformations,INTERFACE_INCLUDE_DIRECTORIES>
+-                                                     $<TARGET_PROPERTY:pugixml,INTERFACE_INCLUDE_DIRECTORIES>
+                                                      "${IE_MAIN_SOURCE_DIR}/src/vpu/"
+                                              PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
+ 
+diff --git a/inference-engine/thirdparty/CMakeLists.txt b/inference-engine/thirdparty/CMakeLists.txt
+index ebf32c71..56b6bcb0 100644
+--- a/inference-engine/thirdparty/CMakeLists.txt
++++ b/inference-engine/thirdparty/CMakeLists.txt
+@@ -35,19 +35,10 @@ function(build_with_lto)
+         add_subdirectory(clDNN)
+     endif()
+ 
+-    add_subdirectory(pugixml)
+     add_subdirectory(stb_lib)
+-    add_subdirectory(ade)
+     add_subdirectory(fluid/modules/gapi)
+ 
+-    # developer package
+-
+-    target_include_directories(pugixml INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pugixml/src>")
+-
+-    ie_developer_export_targets(ade fluid pugixml)
+-    if(TARGET pugixml_mt)
+-        ie_developer_export_targets(pugixml_mt)
+-    endif()
++    ie_developer_export_targets(fluid)
+ endfunction()
+ 
+ build_with_lto()
+-- 
+2.25.4
+
