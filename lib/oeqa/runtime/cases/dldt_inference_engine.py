@@ -57,7 +57,7 @@ class DldtInferenceEngine(OERuntimeTestCase):
     @OEHasPackage(['dldt-inference-engine'])
     @OEHasPackage(['dldt-inference-engine-samples'])
     @OEHasPackage(['intel-compute-runtime'])
-    @OEHasPackage(['opencl-icd-loader'])
+    @OEHasPackage(['ocl-icd'])
     def test_dldt_ie_classification_with_gpu(self):
         (status, output) = self.dldt_ie.test_dldt_ie_classification_with_device('GPU', self.ir_files_dir)
         self.assertEqual(status, 0, msg='status and output: %s and %s' % (status, output))
@@ -87,7 +87,7 @@ class DldtInferenceEngine(OERuntimeTestCase):
     @OEHasPackage(['dldt-inference-engine'])
     @OEHasPackage(['dldt-inference-engine-python3'])
     @OEHasPackage(['intel-compute-runtime'])
-    @OEHasPackage(['opencl-icd-loader'])
+    @OEHasPackage(['ocl-icd'])
     @OEHasPackage(['python3-opencv'])
     @OEHasPackage(['python3-numpy'])
     def test_dldt_ie_classification_python_api_with_gpu(self):
