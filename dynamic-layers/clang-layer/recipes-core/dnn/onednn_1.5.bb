@@ -5,20 +5,18 @@ deep-learning applications and frameworks on Intel architecture."
 LICENSE  = "Apache-2.0 & BSD-3-Clause & BSL-1.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3c6ff4426dbd618bcfd552ac4a7c1c56 \
                     file://tests/gtests/gtest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
-                    file://src/cpu/xbyak/COPYRIGHT;md5=3b9bf048d063d54cdb28964db558bcc7 \
-                    file://src/cpu/jit_utils/jitprofiling/LICENSE.BSD;md5=e671ff178b24a95a382ba670503c66fb \
+                    file://src/cpu/x64/xbyak/COPYRIGHT;md5=3b9bf048d063d54cdb28964db558bcc7 \
+                    file://src/cpu/x64/jit_utils/jitprofiling/LICENSE.BSD;md5=e671ff178b24a95a382ba670503c66fb \
                     file://doc/assets/mathjax/MathJax.js;endline=17;md5=25a014ad78c3d72a0e15d15f1d007c20 \
-                    file://src/common/primitive_hashing.hpp;beginline=52;endline=55;md5=f56de33cb6ec02de60006b10e027b300 \
+                    file://src/common/primitive_hashing.hpp;beginline=237;endline=240;md5=f56de33cb6ec02de60006b10e027b300 \
                     "
 SECTION = "lib"
 
 inherit pkgconfig cmake ptest
 
 S = "${WORKDIR}/git"
-SRCREV = "f7c41dc7b5471ad8bf7905e459bbed27f9094caa"
-SRC_URI = "git://github.com/oneapi-src/oneDNN.git;branch=rls-v1.4 \
-           file://0001-src-CMakeLists.txt-fix-FindOpenCL.cmake-source-path.patch \
-           file://0002-src-CMakeLists.txt-use-value-of-DESTDIR.patch \
+SRCREV = "e2ac1fac44c5078ca927cb9b90e1b3066a0b2ed0"
+SRC_URI = "git://github.com/oneapi-src/oneDNN.git;branch=rls-v1.5 \
            file://run-ptest \
            "
 
