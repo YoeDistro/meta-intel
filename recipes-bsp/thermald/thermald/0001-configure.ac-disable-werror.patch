@@ -1,0 +1,27 @@
+From b20692607ec8b0895c5ac0c23b0393ad3048640d Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Mon, 22 Jun 2020 09:34:51 +0800
+Subject: [PATCH] configure.ac: disable werror
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ configure.ac | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 7d6c13c..3e1a8bf 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -84,7 +84,6 @@ for flag in \
+     -Wall \
+     -Wclobbered \
+     -Wempty-body \
+-    -Werror \
+     -Wformat \
+     -Wignored-qualifiers \
+     -Wmissing-field-initializers \
+-- 
+2.25.4
+
