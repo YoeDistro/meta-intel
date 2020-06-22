@@ -14,12 +14,9 @@ COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 DEPENDS = "libva libdrm"
 
 SRC_URI = "https://github.com/intel/${BPN}/releases/download/${PV}/${BPN}-${PV}.tar.bz2 \
-           file://0001-Fix-HEVCe-kernel-compile-error-on-gcc10.patch \
-           file://0002-test-cast-VA_STATSUS_ERROR_UNKNOWN-to-VAStatus.patch \
            "
 
-SRC_URI[md5sum] = "731dd9aaf9f5ef1b9c906ce82ef0220b"
-SRC_URI[sha256sum] = "71e2ddd985af6b221389db1018c4e8ca27a7f939fb51dcdf49d0efcb5ff3d089"
+SRC_URI[sha256sum] = "0081fce08eb3a83f7d99c3b853c8fdfa0af437b8f5b0fb7c66faeb83bcbe0c19"
 
 UPSTREAM_CHECK_URI = "https://github.com/intel/intel-vaapi-driver/releases"
 
