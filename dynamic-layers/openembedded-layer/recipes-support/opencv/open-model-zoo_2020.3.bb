@@ -8,7 +8,7 @@ SRC_URI = "git://github.com/opencv/open_model_zoo.git;protocol=git;branch=master
            file://0001-use-oe-gflags.patch \
            "
 
-SRCREV = "efd238d02035f8a5417b7b1e25cd4c997d44351f"
+SRCREV = "912eeaddc034e31dedd34617d82bcc2ddf83e542"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://../LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
@@ -18,7 +18,7 @@ inherit cmake
 
 S = "${WORKDIR}/git/demos"
 
-DEPENDS += "dldt-inference-engine opencv gflags"
+DEPENDS += "openvino-inference-engine opencv gflags"
 
 RDEPENDS_${PN} += " \
                    python3-decorator \
@@ -38,6 +38,7 @@ EXTRA_OECMAKE += " \
                  -DIE_INCLUDE_DIR=${STAGING_EXECPREFIXDIR} \
                  -DIE_RELEASE_LIBRARY=${STAGING_LIBDIR}/libinference_engine.so \
                  -DIE_C_API_RELEASE_LIBRARY=${STAGING_LIBDIR}/libinference_engine_c_api.so \
+                 -DIE_LEGACY_RELEASE_LIBRARY=${STAGING_LIBDIR}/libinference_engine_legacy.so \
                  -DIE_NN_BUILDER_RELEASE_LIBRARY=${STAGING_LIBDIR}/libinference_engine_nn_builder.so \
                  -DIE_ROOT_DIR=${WORKDIR}/InferenceEngine \
 "
