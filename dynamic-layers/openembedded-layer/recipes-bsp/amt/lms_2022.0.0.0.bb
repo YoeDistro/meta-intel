@@ -10,7 +10,7 @@ COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
 COMPATIBLE_HOST_libc-musl = "null"
 
-inherit cmake systemd
+inherit cmake systemd features_check
 
 DEPENDS = "metee ace xerces-c libnl libxml2 glib-2.0 glib-2.0-native connman"
 
