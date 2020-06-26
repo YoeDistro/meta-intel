@@ -1,0 +1,37 @@
+From 8f8a1d131a05aa1494825f0fae32580cbed680e5 Mon Sep 17 00:00:00 2001
+From: Naveen Saini <naveen.kumar.saini@intel.com>
+Date: Thu, 25 Jun 2020 14:22:59 +0800
+Subject: [PATCH] test-soft-image.cpp: fix header path
+
+throw compilation error:
+ | ../../git/tests/test-soft-image.cpp:31:10: fatal error: xcore/fisheye_dewarp.h: No such file or directory
+|    31 | #include <xcore/fisheye_dewarp.h>
+|       |          ^~~~~~~~~~~~~~~~~~~~~~~~
+| compilation terminated.
+
+TEST_BASE_CXXFLAGS already includes -I$(top_srcdir)/xcore
+
+Ref: https://github.com/intel/libxcam/blob/1.4.0/tests/Makefile.am#L48
+
+Upstream-Status: Submitted [https://github.com/intel/libxcam/pull/734]
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ tests/test-soft-image.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/test-soft-image.cpp b/tests/test-soft-image.cpp
+index a9e02d8..1c687e5 100644
+--- a/tests/test-soft-image.cpp
++++ b/tests/test-soft-image.cpp
+@@ -28,7 +28,7 @@
+ #include <interface/blender.h>
+ #include <interface/geo_mapper.h>
+ #include <interface/stitcher.h>
+-#include <xcore/fisheye_dewarp.h>
++#include <fisheye_dewarp.h>
+ 
+ #define MAP_WIDTH 3
+ #define MAP_HEIGHT 4
+-- 
+2.17.1
+
