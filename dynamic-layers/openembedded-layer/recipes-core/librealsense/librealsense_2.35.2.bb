@@ -11,7 +11,7 @@ inherit pkgconfig cmake
 
 S = "${WORKDIR}/git"
 SRC_URI = "git://github.com/IntelRealSense/librealsense.git"
-SRCREV = "842ee1e1e5c4bb96d63582a7fde061dbc1bebf69"
+SRCREV = "8594d09f092347a8b3d832d14e4fb631140620c5"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>(\d+(\.\d+)+))$"
 
