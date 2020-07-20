@@ -12,7 +12,7 @@ SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https \
            "
 SRC_URI_append_class-target = " file://allow-to-find-cpp-generation-tool.patch"
 
-SRCREV = "22076663e44135e6b7a83ad3ccd76d8a100a78ed"
+SRCREV = "5eafc349c9c7566211bacd7d2de22ceed335c5c2"
 
 S = "${WORKDIR}/git"
 
