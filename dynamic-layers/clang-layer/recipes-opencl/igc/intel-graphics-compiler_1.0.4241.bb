@@ -6,14 +6,13 @@ hardware architecture."
 LICENSE = "MIT & BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc/LICENSE.TXT;md5=311cfc1a5b54bab8ed34a0b5fba4373e \
                     file://IGC/Compiler/LegalizationPass.cpp;beginline=1;endline=25;md5=4abf1738ff96b18e34186eb763e28eeb \
-                    file://NOTICES.txt;md5=a43460284ff9e81adceffa047c306eef"
+                    file://NOTICES.txt;md5=b12e73994de4fbe0f688cf0bc91512a0"
 
 SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https; \
            file://0001-skip-execution-of-ElfPackager.patch \
-           file://0001-add-workaround-for-gcc-10-error.patch \
           "
 
-SRCREV = "173eb2a0f5d0a16f4abc07bbd093056bf0c04ae5"
+SRCREV = "9a456d81355b266ac60b26c1865935b4a266d6e2"
 
 S = "${WORKDIR}/git"
 
