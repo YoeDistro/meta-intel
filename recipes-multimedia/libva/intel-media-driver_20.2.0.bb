@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=6aab5363823095ce682b155fef0231f0 \
 
 COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
-inherit ${COMPAT_DISTRO_FEATURE_CHECK}
+inherit features_check
 REQUIRED_DISTRO_FEATURES = "opengl"
 
 DEPENDS += "libva gmmlib"

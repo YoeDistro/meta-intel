@@ -20,7 +20,7 @@ SRC_URI[sha256sum] = "0081fce08eb3a83f7d99c3b853c8fdfa0af437b8f5b0fb7c66faeb83bc
 
 UPSTREAM_CHECK_URI = "https://github.com/intel/intel-vaapi-driver/releases"
 
-inherit meson pkgconfig ${COMPAT_DISTRO_FEATURE_CHECK}
+inherit meson pkgconfig features_check
 
 REQUIRED_DISTRO_FEATURES = "opengl"
 

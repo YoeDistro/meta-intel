@@ -7,7 +7,7 @@ LICENSE  = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=c50969be4feb8b99c6baa3795ede4dce"
 SECTION = "lib"
 
-inherit pkgconfig cmake useradd systemd ${COMPAT_DISTRO_FEATURE_CHECK}
+inherit pkgconfig cmake useradd systemd features_check
 
 SRC_URI = "git://github.com/intel/hdcp.git \
         file://0001-main-fix-hdcpd-service-failure.patch \
