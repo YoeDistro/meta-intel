@@ -26,9 +26,7 @@ DEPENDS_append_class-target = " clang-cross-x86_64"
 
 RDEPENDS_${PN} += "opencl-clang"
 
-LLVM_COMPAT_VER = "${@bb.utils.contains('LLVMVERSION', '9.0.1', '9.0.0', '10.0.0', d)}"
-
-EXTRA_OECMAKE = "-DIGC_PREFERRED_LLVM_VERSION=${LLVM_COMPAT_VER} -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3"
+EXTRA_OECMAKE = "-DIGC_PREFERRED_LLVM_VERSION=10.0.0 -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3"
 
 BBCLASSEXTEND = "native nativesdk"
 
