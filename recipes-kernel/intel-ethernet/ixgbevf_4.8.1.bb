@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/${BP}/COPYING;md5=a216b4192dc6b777b6f0db56
 SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/${PV}/${BP}.tar.gz \
            "
 
-SRC_URI[sha256sum] = "82d71eb04da5556171b4d776c5de61466801068738363847ef68d964c3d4735d"
+SRC_URI[sha256sum] = "b2b3020a9d15266a2f2bc248f9706c97c9ce9edd0603ab00edc5fc4dff51cfdd"
 
 UPSTREAM_CHECK_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/"
 UPSTREAM_CHECK_REGEX = "ixgbevf%20stable/(?P<pver>\d+(\.\d+)+)/"
