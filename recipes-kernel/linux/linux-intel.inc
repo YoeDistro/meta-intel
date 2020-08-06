@@ -8,6 +8,7 @@ KERNEL_CONFIG_URI ?= "git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;n
 SRC_URI = " \
            git://github.com/intel/linux-intel-lts.git;protocol=https;name=machine;branch=${KBRANCH}; \
            ${KERNEL_CONFIG_URI} \
+           file://libtraceevent-fix-build-with-binutils-25.patch \
 	  "
 
 SRC_URI_append = " file://enable_lynxpoint_gpio.cfg"
