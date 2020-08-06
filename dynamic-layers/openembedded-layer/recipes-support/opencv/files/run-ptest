@@ -1,8 +1,0 @@
-#!/bin/sh
-
-for i in cpu ie vpu
-do
-	./$i"UnitTests" |sed \
-            -e 's|\[.*OK.*\]\(.*\)|PASS:\1|' \
-            -e 's|\[.*FAILED.*\]\(.*\)|FAIL:\1|'
-done

@@ -1,7 +1,7 @@
-From e7730e68795c8ed0b9e1772ddc21ec931da462d0 Mon Sep 17 00:00:00 2001
+From cc44429f0e55efa0fa142cc043e83123e3b376e4 Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Wed, 10 Jun 2020 09:43:55 +0800
-Subject: [PATCH 1/5] inference-engine: use system installed packages
+Subject: [PATCH] inference-engine: use system installed packages
 
 Use installed versions of pugixml, ade, protobuf and tbb.
 
@@ -10,17 +10,19 @@ Upstream-Status: Pending
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
  cmake/dependencies.cmake                      | 17 --------------
+ inference-engine/CMakeLists.txt               |  2 +-
  inference-engine/cmake/ie_parallel.cmake      | 10 ++-------
  .../src/inference_engine/CMakeLists.txt       | 22 +------------------
  .../src/legacy_api/CMakeLists.txt             |  3 +--
  .../src/vpu/graph_transformer/CMakeLists.txt  |  1 -
- .../common_test_utils/CMakeLists.txt          |  3 +--
+ .../common_test_utils/CMakeLists.txt          |  7 ++----
+ .../unit_test_utils/CMakeLists.txt            |  3 +--
  .../tests_deprecated/helpers/CMakeLists.txt   |  1 -
- inference-engine/thirdparty/CMakeLists.txt    | 11 +---------
- 8 files changed, 6 insertions(+), 62 deletions(-)
+ inference-engine/thirdparty/CMakeLists.txt    | 14 +-----------
+ 10 files changed, 9 insertions(+), 71 deletions(-)
 
 diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
-index 2a5a74db..9cc9a6c9 100644
+index 2a5a74db6..9cc9a6c94 100644
 --- a/cmake/dependencies.cmake
 +++ b/cmake/dependencies.cmake
 @@ -13,25 +13,8 @@ if(CMAKE_CROSSCOMPILING)
@@ -49,8 +51,21 @@ index 2a5a74db..9cc9a6c9 100644
 -
 -    update_deps_cache(SYSTEM_PROTOC "${SYSTEM_PROTOC}" "Path to host protoc for ONNX Importer")
  endif()
+diff --git a/inference-engine/CMakeLists.txt b/inference-engine/CMakeLists.txt
+index 39ff413bc..ba8ed354c 100644
+--- a/inference-engine/CMakeLists.txt
++++ b/inference-engine/CMakeLists.txt
+@@ -54,7 +54,7 @@ function(ie_developer_export)
+             APPEND FILE "${CMAKE_BINARY_DIR}/targets_developer.cmake")
+ 
+     # Custom target to build only Inference Engine Developer Package targets
+-    add_custom_target(ie_dev_targets ALL DEPENDS ${IEDeveloperPackageTargets} gflags)
++    add_custom_target(ie_dev_targets ALL DEPENDS ${IEDeveloperPackageTargets})
+ endfunction()
+ 
+ add_subdirectory(thirdparty)
 diff --git a/inference-engine/cmake/ie_parallel.cmake b/inference-engine/cmake/ie_parallel.cmake
-index 0f3c41e0..b3b2dfda 100644
+index 0f3c41e0a..b3b2dfdab 100644
 --- a/inference-engine/cmake/ie_parallel.cmake
 +++ b/inference-engine/cmake/ie_parallel.cmake
 @@ -48,14 +48,8 @@ function(set_ie_threading_interface_for TARGET_NAME)
@@ -71,20 +86,20 @@ index 0f3c41e0..b3b2dfda 100644
          if (WIN32)
              set(omp_lib_name libiomp5md)
 diff --git a/inference-engine/src/inference_engine/CMakeLists.txt b/inference-engine/src/inference_engine/CMakeLists.txt
-index c8cd4b27..d98ba55d 100644
+index 4ae0d5607..4106cf8b4 100644
 --- a/inference-engine/src/inference_engine/CMakeLists.txt
 +++ b/inference-engine/src/inference_engine/CMakeLists.txt
-@@ -117,8 +117,7 @@ add_library(${TARGET_NAME}_obj OBJECT
- 
- target_compile_definitions(${TARGET_NAME}_obj PRIVATE IMPLEMENT_INFERENCE_ENGINE_API)
+@@ -124,8 +124,7 @@ if(NGRAPH_ONNX_IMPORT_ENABLE)
+     target_compile_definitions(${TARGET_NAME}_obj PRIVATE ONNX_IMPORT_ENABLE)
+ endif()
  
 -target_include_directories(${TARGET_NAME}_obj SYSTEM PRIVATE $<TARGET_PROPERTY:ngraph::ngraph,INTERFACE_INCLUDE_DIRECTORIES>
 -                                                             $<TARGET_PROPERTY:pugixml,INTERFACE_INCLUDE_DIRECTORIES>)
 +target_include_directories(${TARGET_NAME}_obj SYSTEM PRIVATE $<TARGET_PROPERTY:ngraph::ngraph,INTERFACE_INCLUDE_DIRECTORIES>)
  
  target_include_directories(${TARGET_NAME}_obj PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}"
-                                                       $<TARGET_PROPERTY:${TARGET_NAME}_plugin_api,INTERFACE_INCLUDE_DIRECTORIES>)
-@@ -257,25 +256,6 @@ list(APPEND core_components ngraph)
+                                                       $<TARGET_PROPERTY:${TARGET_NAME}_reader_api,INTERFACE_INCLUDE_DIRECTORIES>
+@@ -233,25 +232,6 @@ list(APPEND core_components ngraph)
  if(THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO")
      ie_cpack_add_component(tbb REQUIRED)
      list(APPEND core_components tbb)
@@ -111,21 +126,21 @@ index c8cd4b27..d98ba55d 100644
  
  ie_cpack_add_component(core REQUIRED DEPENDS ${core_components})
 diff --git a/inference-engine/src/legacy_api/CMakeLists.txt b/inference-engine/src/legacy_api/CMakeLists.txt
-index d54c5906..90920ab3 100644
+index 85524310b..dc25cae2f 100644
 --- a/inference-engine/src/legacy_api/CMakeLists.txt
 +++ b/inference-engine/src/legacy_api/CMakeLists.txt
-@@ -33,8 +33,7 @@ target_compile_definitions(${TARGET_NAME}_obj PRIVATE IMPLEMENT_INFERENCE_ENGINE
- 
- target_include_directories(${TARGET_NAME}_obj PRIVATE ${PUBLIC_HEADERS_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src
+@@ -33,8 +33,7 @@ target_include_directories(${TARGET_NAME}_obj PRIVATE ${PUBLIC_HEADERS_DIR} ${CM
+     ${IE_MAIN_SOURCE_DIR}/src/inference_engine                                          # For CNNNetworkNGraphImpl
+     $<TARGET_PROPERTY:inference_engine_transformations,INTERFACE_INCLUDE_DIRECTORIES>
      $<TARGET_PROPERTY:inference_engine_plugin_api,INTERFACE_INCLUDE_DIRECTORIES>
 -    $<TARGET_PROPERTY:ngraph::ngraph,INTERFACE_INCLUDE_DIRECTORIES>
 -    $<TARGET_PROPERTY:pugixml,INTERFACE_INCLUDE_DIRECTORIES>)
 +    $<TARGET_PROPERTY:ngraph::ngraph,INTERFACE_INCLUDE_DIRECTORIES>)
  
- function(nn_builder_disable_warnings)
-     disable_deprecated_warnings()
+ # Create shared library
+ 
 diff --git a/inference-engine/src/vpu/graph_transformer/CMakeLists.txt b/inference-engine/src/vpu/graph_transformer/CMakeLists.txt
-index 982d3c7f..db881246 100644
+index 982d3c7fa..db881246c 100644
 --- a/inference-engine/src/vpu/graph_transformer/CMakeLists.txt
 +++ b/inference-engine/src/vpu/graph_transformer/CMakeLists.txt
 @@ -35,7 +35,6 @@ function(add_graph_transformer_target TARGET_NAME STATIC_IE)
@@ -137,18 +152,30 @@ index 982d3c7f..db881246 100644
              "${IE_MAIN_SOURCE_DIR}/thirdparty/movidius/mvnc/include")
  
 diff --git a/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt b/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt
-index 8a4ffd42..5bee450a 100644
+index efead7271..732abee2d 100644
 --- a/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt
 +++ b/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt
-@@ -28,7 +28,6 @@ else ()
+@@ -23,7 +23,7 @@ function(add_gtest_libraries)
+                           PROPERTIES FOLDER thirdparty)
+ endfunction()
+ 
+-add_gtest_libraries()
++#add_gtest_libraries()
+ 
+ if (MSVC)
+     set(PUGI pugixml_mt)
+@@ -32,10 +32,7 @@ else ()
  endif ()
  
  list(APPEND EXPORT_DEPENDENCIES
 -        ${PUGI}
          ${NGRAPH_LIBRARIES}
-         gtest
-         gtest_main
-@@ -70,7 +69,6 @@ function(add_common_utils ADD_TARGET_NAME)
+-        gtest
+-        gtest_main
+         )
+ 
+ set(TARGET_NAME commonTestUtils)
+@@ -74,7 +71,6 @@ function(add_common_utils ADD_TARGET_NAME)
              PUBLIC
              ${IE_TESTS_ROOT}/ie_test_utils
              $<TARGET_PROPERTY:inference_engine,INTERFACE_INCLUDE_DIRECTORIES>
@@ -156,7 +183,7 @@ index 8a4ffd42..5bee450a 100644
              PRIVATE
              $<TARGET_PROPERTY:inference_engine_plugin_api,INTERFACE_INCLUDE_DIRECTORIES>
              )
-@@ -80,6 +78,7 @@ function(add_common_utils ADD_TARGET_NAME)
+@@ -84,6 +80,7 @@ function(add_common_utils ADD_TARGET_NAME)
      target_link_libraries(${ADD_TARGET_NAME}
              PUBLIC
              ${EXPORT_DEPENDENCIES}
@@ -164,43 +191,66 @@ index 8a4ffd42..5bee450a 100644
              )
  endfunction()
  
+diff --git a/inference-engine/tests/ie_test_utils/unit_test_utils/CMakeLists.txt b/inference-engine/tests/ie_test_utils/unit_test_utils/CMakeLists.txt
+index df611c700..06bd911ae 100644
+--- a/inference-engine/tests/ie_test_utils/unit_test_utils/CMakeLists.txt
++++ b/inference-engine/tests/ie_test_utils/unit_test_utils/CMakeLists.txt
+@@ -10,8 +10,7 @@ list(APPEND EXPORT_DEPENDENCIES
+         commonTestUtils_s
+         inference_engine_s
+         inference_engine_lp_transformations
+-        inference_engine_ir_reader
+-        gmock)
++        inference_engine_ir_reader)
+ 
+ addIeTarget(
+         NAME ${TARGET_NAME}
 diff --git a/inference-engine/tests_deprecated/helpers/CMakeLists.txt b/inference-engine/tests_deprecated/helpers/CMakeLists.txt
-index 14265fa9..2482be78 100644
+index bf915e52d..9e7173db6 100644
 --- a/inference-engine/tests_deprecated/helpers/CMakeLists.txt
 +++ b/inference-engine/tests_deprecated/helpers/CMakeLists.txt
 @@ -23,7 +23,6 @@ function(add_helpers target_name)
-     target_include_directories(${target_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}"
                                                       "${IE_MAIN_SOURCE_DIR}/src/inference_engine"
+                                                      $<TARGET_PROPERTY:inference_engine_ir_reader,INTERFACE_INCLUDE_DIRECTORIES>
                                                       $<TARGET_PROPERTY:inference_engine_lp_transformations,INTERFACE_INCLUDE_DIRECTORIES>
 -                                                     $<TARGET_PROPERTY:pugixml,INTERFACE_INCLUDE_DIRECTORIES>
                                                       "${IE_MAIN_SOURCE_DIR}/src/vpu/"
                                               PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
  
 diff --git a/inference-engine/thirdparty/CMakeLists.txt b/inference-engine/thirdparty/CMakeLists.txt
-index ebf32c71..56b6bcb0 100644
+index f94453e06..b3c25daf4 100644
 --- a/inference-engine/thirdparty/CMakeLists.txt
 +++ b/inference-engine/thirdparty/CMakeLists.txt
-@@ -35,19 +35,10 @@ function(build_with_lto)
-         add_subdirectory(clDNN)
-     endif()
+@@ -38,28 +38,16 @@ function(build_with_lto)
+     function(ie_build_pugixml)
+         set(BUILD_TESTS_current ${BUILD_TESTS})
+         set(BUILD_TESTS OFF CACHE BOOL "Build tests" FORCE)
+-        add_subdirectory(pugixml)
+         set(BUILD_TESTS ${BUILD_TESTS_current} CACHE BOOL "Build tests" FORCE)
+     endfunction()
  
--    add_subdirectory(pugixml)
+     ie_build_pugixml()
      add_subdirectory(stb_lib)
 -    add_subdirectory(ade)
      add_subdirectory(fluid/modules/gapi)
  
--    # developer package
--
 -    target_include_directories(pugixml INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pugixml/src>")
+-
+-    set_target_properties(pugixml ade fluid stb_image
++    set_target_properties(fluid stb_image
+                           PROPERTIES FOLDER thirdparty)
+ 
+-    # developer package
 -
 -    ie_developer_export_targets(ade fluid pugixml)
 -    if(TARGET pugixml_mt)
 -        ie_developer_export_targets(pugixml_mt)
+-        set_target_properties(pugixml_mt PROPERTIES FOLDER thirdparty)
 -    endif()
-+    ie_developer_export_targets(fluid)
- endfunction()
- 
- build_with_lto()
+-
+     if(ENABLE_MKL_DNN)
+         set(SDL_cmake_included ON)
+         include(mkldnn.cmake)
 -- 
-2.25.4
+2.26.2
 

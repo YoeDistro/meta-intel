@@ -1,7 +1,7 @@
-From 0d0810481186fc443fe65a6119ddcc71ba21e814 Mon Sep 17 00:00:00 2001
+From f201d67c965318ebe49f0d38ea36e530c35a4701 Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Wed, 10 Jun 2020 09:50:19 +0800
-Subject: [PATCH 5/5] cldnn: fix inclusion of headers
+Subject: [PATCH] cldnn: fix inclusion of headers
 
 Upstream-Status: Inappropriate
 
@@ -13,7 +13,7 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  3 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/inference-engine/include/gpu/gpu_ocl_wrapper.hpp b/inference-engine/include/gpu/gpu_ocl_wrapper.hpp
-index fce7d8f1..827e5764 100644
+index fce7d8f17..827e5764a 100644
 --- a/inference-engine/include/gpu/gpu_ocl_wrapper.hpp
 +++ b/inference-engine/include/gpu/gpu_ocl_wrapper.hpp
 @@ -21,4 +21,4 @@
@@ -23,19 +23,19 @@ index fce7d8f1..827e5764 100644
 -#include <CL/cl2.hpp>
 +#include <cl2.hpp>
 diff --git a/inference-engine/src/cldnn_engine/CMakeLists.txt b/inference-engine/src/cldnn_engine/CMakeLists.txt
-index de56ed8e..c81453ab 100644
+index eeb9b5c80..32a283ba4 100644
 --- a/inference-engine/src/cldnn_engine/CMakeLists.txt
 +++ b/inference-engine/src/cldnn_engine/CMakeLists.txt
-@@ -31,6 +31,7 @@ set (CLDNN_TOP_FOLDER ${IE_MAIN_SOURCE_DIR}/thirdparty/clDNN)
- target_include_directories(${TARGET_NAME} PRIVATE
+@@ -33,6 +33,7 @@ target_include_directories(${TARGET_NAME} PRIVATE
          ${CMAKE_CURRENT_SOURCE_DIR}
+         $<TARGET_PROPERTY:inference_engine_transformations,INTERFACE_INCLUDE_DIRECTORIES>
          ${CLDNN__IOCL_ICD_INCDIRS}
 +        ${CLDNN_TOP_FOLDER}/common/khronos_ocl_clhpp
          ${CLDNN_TOP_FOLDER})
  
- # copy default global xml file describing the custom kernels and the *.cl files
+ # install
 diff --git a/inference-engine/thirdparty/clDNN/common/khronos_ocl_clhpp/cl2_ext.hpp b/inference-engine/thirdparty/clDNN/common/khronos_ocl_clhpp/cl2_ext.hpp
-index 8f668b18..a1d24438 100644
+index c67c81726..5ca48c597 100644
 --- a/inference-engine/thirdparty/clDNN/common/khronos_ocl_clhpp/cl2_ext.hpp
 +++ b/inference-engine/thirdparty/clDNN/common/khronos_ocl_clhpp/cl2_ext.hpp
 @@ -29,7 +29,7 @@ typedef cl_d3d11_device_set_khr    cl_device_set_intel;

@@ -1,25 +1,16 @@
-From deec5feef34f86eb5616252e2e5b685b6555f561 Mon Sep 17 00:00:00 2001
-From: Anuj Mittal <anuj.mittal@intel.com>
-Date: Wed, 10 Jun 2020 09:49:03 +0800
-Subject: [PATCH 4/5] fix compilation errors
+From ed444bf9f4dda442bd2da51140f45631163e0e55 Mon Sep 17 00:00:00 2001
+From: Vladimir Zinoviev <vladimir.zinoviev@intel.com>
+Date: Sun, 14 Jun 2020 18:54:36 +0300
+Subject: [PATCH] [CLDNN] Fix std::runtime_error missing (#871)
 
-Fixes errors like:
-
-build/tmp/work/skylake-64-poky-linux/dldt-inference-engine/2020r1-r0/git/inference-engine/thirdparty/clDNN/kernel_selector/common/tensor_type.h:295:28:
-error: 'runtime_error' is not a member of 'std'
-  295 |                 throw std::runtime_error("Tensor pitches didn't
-set correctly");
-      |
-
-Upstream-Status: Pending
-
+Upstream-Status: Backport [https://github.com/openvinotoolkit/openvino/commit/ed444bf9f4dda442bd2da51140f45631163e0e55]
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
  .../thirdparty/clDNN/kernel_selector/common/tensor_type.h        | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/inference-engine/thirdparty/clDNN/kernel_selector/common/tensor_type.h b/inference-engine/thirdparty/clDNN/kernel_selector/common/tensor_type.h
-index 7f05b67f..641a4c9b 100644
+index 3dbdfd0b22..2226f1a874 100644
 --- a/inference-engine/thirdparty/clDNN/kernel_selector/common/tensor_type.h
 +++ b/inference-engine/thirdparty/clDNN/kernel_selector/common/tensor_type.h
 @@ -25,6 +25,7 @@
@@ -30,6 +21,3 @@ index 7f05b67f..641a4c9b 100644
  
  namespace kernel_selector {
  #define KERNEL_SELECTOR_TENSOR_DIM_MAX 9
--- 
-2.25.4
-
