@@ -5,9 +5,9 @@ environment, performs static model analysis, and adjusts deep \
 learning models for optimal execution on end-point target devices."
 HOMEPAGE = "https://01.org/openvinotoolkit"
 
-SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=releases/2020/3 \
+SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=releases/2020/4;lfs=0 \
            "
-SRCREV = "2fe9b1523058e282ad374db7dc1b3538c7d2dd27"
+SRCREV = "023e7c2c3f8a8ac83564db09799d2049115d9cf6"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
