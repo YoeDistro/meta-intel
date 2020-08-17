@@ -9,9 +9,9 @@ SRC_URI_append = " file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurs
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "4.19.120"
-SRCREV_machine ?= "a8127b82a48e200e2c83c9f633600e25e1691d9e"
-SRCREV_meta ?= "81f34c1df638655d5295801331e9b717562f9509"
+LINUX_VERSION ?= "4.19.135"
+SRCREV_machine ?= "b55ee8e7a36d3dd5ab0024766cabbc0a123ef672"
+SRCREV_meta ?= "8f22d2c0f776ef56845b1ed51e8a729de656e6bf"
 
 # For Crystalforest and Romley
 KERNEL_MODULE_AUTOLOAD_append_core2-32-intel-common = " uio"
