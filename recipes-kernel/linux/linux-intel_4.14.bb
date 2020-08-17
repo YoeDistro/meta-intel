@@ -11,9 +11,9 @@ SRC_URI_append = " file://0001-perf-x86-32-explicitly-include-errno.h.patch \
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "4.14.170"
-SRCREV_machine ?= "61037f1658f0f100a3ed1ed9954142525e107cd0"
-SRCREV_meta ?= "a889c43359ca8bee705601817c50edf3c209bc09"
+LINUX_VERSION ?= "4.14.188"
+SRCREV_machine ?= "6fda79a99bf63d5f59dee82da7269c2f67597b7b"
+SRCREV_meta ?= "d421224de85af341b8c67bffb29e234c44bfe1f2"
 
 # For Crystalforest and Romley
 KERNEL_MODULE_AUTOLOAD_append_core2-32-intel-common = " uio"
