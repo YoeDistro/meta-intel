@@ -13,7 +13,7 @@ S = "${WORKDIR}/git"
 
 SRC_URI = "git://github.com/intel/libipt.git;protocol=https;branch=stable/v2.0"
 
-SRCREV = "41445e40c8e9bc097c3609509cf142b6ad6dc160"
+SRCREV = "99a73227f15d49f83bd7c83dbcf0980ec3653e7a"
 
 EXTRA_OECMAKE += " \
                   -DPTDUMP=ON  \
