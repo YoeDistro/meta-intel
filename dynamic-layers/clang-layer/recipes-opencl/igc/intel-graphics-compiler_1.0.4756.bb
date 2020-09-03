@@ -10,9 +10,10 @@ LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc
 
 SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https; \
            file://0001-skip-execution-of-ElfPackager.patch \
+           file://link-to-LLVMGenXIntrinsics.patch \
           "
 
-SRCREV = "9a456d81355b266ac60b26c1865935b4a266d6e2"
+SRCREV = "3623209b10b357ddb3a3d6eac3551c53ebc897f7"
 
 S = "${WORKDIR}/git"
 
@@ -21,12 +22,12 @@ inherit cmake
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST_libc-musl = "null"
 
-DEPENDS += " flex-native bison-native clang opencl-clang"
+DEPENDS += " flex-native bison-native clang opencl-clang vc-intrinsics"
 DEPENDS_append_class-target = " clang-cross-x86_64"
 
 RDEPENDS_${PN} += "opencl-clang"
 
-EXTRA_OECMAKE = "-DIGC_PREFERRED_LLVM_VERSION=10.0.0 -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3"
+EXTRA_OECMAKE = "-DIGC_PREFERRED_LLVM_VERSION=10.0.0 -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 -DINSTALL_SPIRVDLL=0"
 
 BBCLASSEXTEND = "native nativesdk"
 
