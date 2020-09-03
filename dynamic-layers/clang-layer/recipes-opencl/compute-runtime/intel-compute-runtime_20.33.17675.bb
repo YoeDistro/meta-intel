@@ -35,6 +35,10 @@ EXTRA_OECMAKE = " \
 EXTRA_OECMAKE_append_class-target = " \
                                      -Dcloc_cmd_prefix=ocloc \
                                     "
+
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[levelzero] = "-DBUILD_WITH_L0=ON, -DBUILD_WITH_L0=OFF, level-zero"
+
 do_install_append_class-native() {
     install -d ${D}${bindir}
     install ${B}/bin/cpp_generate_tool ${D}${bindir}/
