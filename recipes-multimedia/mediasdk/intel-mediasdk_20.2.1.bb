@@ -20,9 +20,12 @@ REQUIRED_DISTRO_FEATURES = "opengl"
 DEPENDS += "libdrm libva intel-media-driver"
 
 PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "x11", "dri3", "", d)} \
-                   ${@bb.utils.contains("DISTRO_FEATURES", "wayland", "wayland", "", d)}"
+                   ${@bb.utils.contains("DISTRO_FEATURES", "wayland", "wayland", "", d)} \
+                   samples \
+                   "
 
 PACKAGECONFIG[dri3] 	= "-DENABLE_X11_DRI3=ON, -DENABLE_X11_DRI3=OFF"
+PACKAGECONFIG[samples]	= "-DBUILD_SAMPLES=ON, -DBUILD_SAMPLES=OFF"
 PACKAGECONFIG[wayland]	= "-DENABLE_WAYLAND=ON, -DENABLE_WAYLAND=OFF, wayland wayland-native"
 
 SRC_URI = "git://github.com/Intel-Media-SDK/MediaSDK.git;protocol=https;branch=${BPN}-20.2;lfs=0"
@@ -33,9 +36,19 @@ UPSTREAM_CHECK_GITTAGREGEX = "^intel-mediasdk-(?P<pver>(\d+(\.\d+)+))$"
 
 inherit cmake pkgconfig
 
-EXTRA_OECMAKE += "-DMFX_INCLUDE=${S}/api/include -DBUILD_SAMPLES=OFF"
+EXTRA_OECMAKE += "-DMFX_INCLUDE=${S}/api/include"
+
+do_install_append() {
+        mv ${D}${datadir}/mfx/samples ${D}${libdir}/mfx/samples
+}
+
+PACKAGE_BEFORE_PN = " ${PN}-samples"
 
 FILES_${PN} += " \
                  ${libdir}/mfx \
                  ${datadir}/mfx/plugins.cfg \
                  "
+
+FILES_${PN}-samples = "${libdir}/mfx/samples"
+
+INSANE_SKIP_${PN}-samples += "staticdev"
