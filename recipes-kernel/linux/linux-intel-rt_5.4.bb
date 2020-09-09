@@ -11,7 +11,6 @@ python () {
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
 SRC_URI_append = " file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch \
-                    file://libtraceevent-fix-build-with-binutils-25.patch \
 "
 
 KBRANCH = "5.4/preempt-rt"
@@ -19,9 +18,9 @@ KMETA_BRANCH = "yocto-5.4"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "5.4.52"
-SRCREV_machine ?= "67fed51a39242ade744c1c72aced7d395c57e8d9"
-SRCREV_meta ?= "4aeda12f7f7eb84613ae1fe6e22cd9cd9790c20b"
+LINUX_VERSION ?= "5.4.59"
+SRCREV_machine ?= "3747758c5c6c5b1b210e88c4bdb62e09c033c192"
+SRCREV_meta ?= "647f4fd91cc47567a7d88f21a6ad7d230d354469"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
 
