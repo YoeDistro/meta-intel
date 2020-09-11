@@ -44,13 +44,12 @@ do_install_append_class-native() {
     install ${B}/bin/cpp_generate_tool ${D}${bindir}/
 }
 
-SOLIBS = ".so"
-FILES_SOLIBSDEV = ""
-
 FILES_${PN} += " \
                  ${libdir}/intel-opencl/libigdrcl.so \
                  ${libdir}/libocloc.so \
                  "
+
+FILES_${PN}-dev = "${includedir}"
 
 BBCLASSEXTEND = "native nativesdk"
 
