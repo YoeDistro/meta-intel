@@ -11,9 +11,13 @@ LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc
 SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https; \
            file://0001-skip-execution-of-ElfPackager.patch \
            file://link-to-LLVMGenXIntrinsics.patch \
+           file://improve_src_package_reproducibility.patch \
           "
 
 SRCREV = "3623209b10b357ddb3a3d6eac3551c53ebc897f7"
+
+# Used to replace with relative path in reproducibility patch
+export B
 
 S = "${WORKDIR}/git"
 
