@@ -24,13 +24,13 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/jejb/sbsigntools.git;pr
            file://0001-configure-Fixup-build-dependencies-for-cross-compili.patch \
           "
 
-SRCREV_sbsigntools  ?= "fe88da5f66241d959b7aeca7502d401ad88df410"
+SRCREV_sbsigntools  ?= "f12484869c9590682ac3253d583bf59b890bb826"
 SRCREV_ccan         ?= "b1f28e17227f2320d07fe052a8a48942fe17caa5"
 SRCREV_FORMAT       =  "sbsigntools_ccan"
 
 DEPENDS = "binutils-native gnu-efi-native help2man-native openssl-native util-linux-native"
 
-PV = "0.9.3-git${SRCPV}"
+PV = "0.9.4-git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
