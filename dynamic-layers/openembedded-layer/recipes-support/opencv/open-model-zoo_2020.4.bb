@@ -52,10 +52,12 @@ do_install(){
 	install -d ${D}${libdir}
 	install -d ${D}${bindir}
 	install -d ${D}${datadir}/openvino/open-model-zoo/tools
+	install -d ${D}${datadir}/openvino/open-model-zoo/demos/python_demos
 	cp -rf ${WORKDIR}/build/intel64/Release/lib/*.a ${D}${libdir}
 	cp -rf ${WORKDIR}/build/intel64/Release/*_demo* ${D}${bindir}
 	cp -rf ${WORKDIR}/git/models ${D}${datadir}/openvino/open-model-zoo
 	cp -rf ${WORKDIR}/git/tools/downloader ${D}${datadir}/openvino/open-model-zoo/tools
+	cp -rf ${WORKDIR}/git/demos/python_demos ${D}${datadir}/openvino/open-model-zoo/demos
 }
 
 FILES_${PN} += "${datadir}/openvino"
