@@ -22,6 +22,10 @@ PREFERRED_PROVIDER_libva = "libva-intel"
 PREFERRED_PROVIDER_libva-native = "libva-intel-native"
 PREFERRED_PROVIDER_nativesdk-libva = "nativesdk-libva-intel"
 
+PREFERRED_PROVIDER_libva-utils = "libva-utils-intel"
+PREFERRED_PROVIDER_libva-native = "libva-utils-intel-native"
+PREFERRED_PROVIDER_nativesdk-libva-utils = "nativesdk-libva-utils-intel"
+
 XSERVER_X86_ASPEED_AST = "xf86-video-ast \
            "
 
