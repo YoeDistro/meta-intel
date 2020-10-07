@@ -30,7 +30,6 @@ RECIPE_MAINTAINER_pn-linux-intel-dev = "Naveen Saini <naveen.kumar.saini@intel.c
 RECIPE_MAINTAINER_pn-lms = "Anuj Mittal <anuj.mittal@intel.com>"
 RECIPE_MAINTAINER_pn-metee = "Naveen Saini <naveen.kumar.saini@intel.com>"
 RECIPE_MAINTAINER_pn-metrics-discovery = "Naveen Saini <naveen.kumar.saini@intel.com>"
-RECIPE_MAINTAINER_pn-ngraph = "Anuj Mittal <anuj.mittal@intel.com>"
 RECIPE_MAINTAINER_pn-onednn = "Naveen Saini <naveen.kumar.saini@intel.com>"
 RECIPE_MAINTAINER_pn-open-model-zoo = "Anuj Mittal <anuj.mittal@intel.com>"
 RECIPE_MAINTAINER_pn-opencl-clang = "Naveen Saini <naveen.kumar.saini@intel.com>"
