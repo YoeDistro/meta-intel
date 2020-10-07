@@ -25,12 +25,14 @@ PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "x11", "dri3", "", d)
                    "
 
 PACKAGECONFIG[dri3] 	= "-DENABLE_X11_DRI3=ON, -DENABLE_X11_DRI3=OFF"
+PACKAGECONFIG[itt] 	= "-DENABLE_ITT=ON, -DENABLE_ITT=OFF, itt"
 PACKAGECONFIG[opencl]	= "-DENABLE_OPENCL=ON, -DENABLE_OPENCL=OFF, ocl-icd opencl-clhpp opencl-headers"
 PACKAGECONFIG[samples]	= "-DBUILD_SAMPLES=ON, -DBUILD_SAMPLES=OFF"
 PACKAGECONFIG[wayland]	= "-DENABLE_WAYLAND=ON, -DENABLE_WAYLAND=OFF, wayland wayland-native"
 
 SRC_URI = "git://github.com/Intel-Media-SDK/MediaSDK.git;protocol=https;branch=${BPN}-20.2;lfs=0 \
            file://0001-FindOpenCL.cmake-don-t-look-for-driver-at-build-time.patch \
+           file://0001-FindITT.cmake-fix-detection-of-header-library.patch \
            "
 SRCREV = "f7ae8497b3e58a0ef8ad4ac94256f04928c20456"
 S = "${WORKDIR}/git"
