@@ -20,8 +20,6 @@ inherit pkgconfig cmake
 EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=Release"
 EXTRA_OECMAKE += "${@oe.utils.conditional('TARGET_ARCH','x86_64','','-DFORCE_32=ON',d)}"
 
-COMPATIBLE_HOST_libc-musl_class-target = "null"
-
 do_install() {
      install -d -m 755 ${D}${libdir} ${D}${includedir}/ittnotify
      install -m 644 ${B}/bin/*.a ${D}${libdir}
