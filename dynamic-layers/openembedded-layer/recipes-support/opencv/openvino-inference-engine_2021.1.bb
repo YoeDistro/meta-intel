@@ -4,25 +4,24 @@ DESCRIPTION = "This toolkit allows developers to deploy pre-trained \
 deep learning models through a high-level C++ Inference Engine API \
 integrated with application logic."
 
-SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=git;branch=releases/2020/4;lfs=0 \
-           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/usb-ma2450/firmware_usb-ma2450_1223.zip;name=ma2450 \
-           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/pcie-ma248x/firmware_pcie-ma248x_1223.zip;name=ma248x \
-           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/usb-ma2x8x/firmware_usb-ma2x8x_1223.zip;name=ma2x8x \
+SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=git;branch=releases/2021/1;lfs=0 \
+           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/usb-ma2450/firmware_usb-ma2450_1381.zip;name=ma2450 \
+           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/pcie-ma248x/firmware_pcie-ma248x_1381.zip;name=ma248x \
+           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/usb-ma2x8x/firmware_usb-ma2x8x_1381.zip;name=ma2x8x \
            git://github.com/openvinotoolkit/oneDNN.git;protocol=https;destsuffix=git/inference-engine/thirdparty/mkl-dnn;name=mkl;nobranch=1 \
            file://0001-inference-engine-use-system-installed-packages.patch \
            file://0002-cldNN-disable-Werror.patch \
            file://0003-inference-engine-installation-fixes.patch \
-           file://0004-fix-compilation-errors.patch \
            file://0005-cldnn-fix-inclusion-of-headers.patch \
-           file://0001-dont-install-licenses-and-version-file.patch;patchdir=ngraph \
+           file://0001-dont-install-licenses-and-version-file.patch \
            "
 
-SRCREV = "023e7c2c3f8a8ac83564db09799d2049115d9cf6"
-SRCREV_mkl = "2706f56ebab54415be48add2751072065f4b52ab"
+SRCREV = "f557dca475cb54dcfc9026fbaad0d93ddb85015c"
+SRCREV_mkl = "6547f0b6aac2725bd4e36197e19fb1a6f2ee2f51"
 
-SRC_URI[ma2450.sha256sum] = "4dc246bd12d7a21c1b10ac3e090b30043777c4ea862e1e4119536ba03c5878ef"
-SRC_URI[ma248x.sha256sum] = "64dd77ecd2f7172421414a388a87be4e6271894a982a58b3829f9de1a1869abd"
-SRC_URI[ma2x8x.sha256sum] = "d1d209221c1389a9a04e14ffeeaff1c3308f6ab105c7bd22f0e300df01cce4d8"
+SRC_URI[ma2450.sha256sum] = "d310d60c9ab5dd8979fa03151f54c889d2fc1e4f178636f83b6756c3fee72745"
+SRC_URI[ma248x.sha256sum] = "3c6c5f365bee1b114d08c0fc8ac1e655beee9dfe05fe1508cb8079eb12975204"
+SRC_URI[ma2x8x.sha256sum] = "35389d365287055beacb3dfbc041a3b71f9c09493a942ee5d6ad03a4a2c8127a"
 
 LICENSE = "Apache-2.0 & ISSL & MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
@@ -86,10 +85,12 @@ do_install_append() {
         install -d ${D}${PYTHON_SITEPACKAGES_DIR}
         mv ${D}${prefix}/python/${PYTHON_DIR}/openvino ${D}${PYTHON_SITEPACKAGES_DIR}/
         mv ${D}${prefix}/deployment_tools/tools/benchmark_tool ${D}${PYTHON_SITEPACKAGES_DIR}/openvino/
+        mv ${D}${prefix}/deployment_tools/tools/cross_check_tool ${D}${PYTHON_SITEPACKAGES_DIR}/openvino/
 
         rm -rf ${D}${prefix}/python
-        rm -rf ${D}${prefix}/deployment_tools
     fi
+
+    rm -rf ${D}${prefix}/deployment_tools
 
     # Remove the samples source directory. We install the built samples.
     rm -rf ${D}/usr/samples

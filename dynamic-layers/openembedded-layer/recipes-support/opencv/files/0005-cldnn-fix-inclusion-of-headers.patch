@@ -1,4 +1,4 @@
-From f201d67c965318ebe49f0d38ea36e530c35a4701 Mon Sep 17 00:00:00 2001
+From 74b6af221e7e2663687654e6eb2d68a5c7158af9 Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Wed, 10 Jun 2020 09:50:19 +0800
 Subject: [PATCH] cldnn: fix inclusion of headers
@@ -13,17 +13,20 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  3 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/inference-engine/include/gpu/gpu_ocl_wrapper.hpp b/inference-engine/include/gpu/gpu_ocl_wrapper.hpp
-index fce7d8f17..827e5764a 100644
+index 282dcd844..0d5d4084c 100644
 --- a/inference-engine/include/gpu/gpu_ocl_wrapper.hpp
 +++ b/inference-engine/include/gpu/gpu_ocl_wrapper.hpp
-@@ -21,4 +21,4 @@
+@@ -22,7 +22,7 @@
  # pragma GCC system_header
  #endif
  
 -#include <CL/cl2.hpp>
 +#include <cl2.hpp>
+ 
+ #if defined __GNUC__
+ # pragma GCC diagnostic pop
 diff --git a/inference-engine/src/cldnn_engine/CMakeLists.txt b/inference-engine/src/cldnn_engine/CMakeLists.txt
-index eeb9b5c80..32a283ba4 100644
+index cdc0de406..70883465b 100644
 --- a/inference-engine/src/cldnn_engine/CMakeLists.txt
 +++ b/inference-engine/src/cldnn_engine/CMakeLists.txt
 @@ -33,6 +33,7 @@ target_include_directories(${TARGET_NAME} PRIVATE
@@ -35,7 +38,7 @@ index eeb9b5c80..32a283ba4 100644
  
  # install
 diff --git a/inference-engine/thirdparty/clDNN/common/khronos_ocl_clhpp/cl2_ext.hpp b/inference-engine/thirdparty/clDNN/common/khronos_ocl_clhpp/cl2_ext.hpp
-index c67c81726..5ca48c597 100644
+index 97608c30a..3a04096c0 100644
 --- a/inference-engine/thirdparty/clDNN/common/khronos_ocl_clhpp/cl2_ext.hpp
 +++ b/inference-engine/thirdparty/clDNN/common/khronos_ocl_clhpp/cl2_ext.hpp
 @@ -29,7 +29,7 @@ typedef cl_d3d11_device_set_khr    cl_device_set_intel;
@@ -48,5 +51,5 @@ index c67c81726..5ca48c597 100644
  
  #include <memory>
 -- 
-2.25.4
+2.26.2
 
