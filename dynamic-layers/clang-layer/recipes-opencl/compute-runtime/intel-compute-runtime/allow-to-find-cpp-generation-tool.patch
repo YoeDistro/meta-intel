@@ -1,4 +1,4 @@
-From d6c5bf050f3d50ca02866ec90e474ef540df2ffa Mon Sep 17 00:00:00 2001
+From bde2a2b58d7f7b3063406db600e5b988fbcf01aa Mon Sep 17 00:00:00 2001
 From: Naveen Saini <naveen.kumar.saini@intel.com>
 Date: Wed, 27 May 2020 11:12:09 +0000
 Subject: [PATCH] intel-compute-runtime: allow to find cpp_generation_tool
@@ -8,25 +8,37 @@ Build not able to locate cpp_generation_tool.
 Upstream-Status: Inappropriate [oe specific]
 Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
 ---
- shared/source/built_ins/kernels/CMakeLists.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ shared/source/built_ins/kernels/CMakeLists.txt | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/shared/source/built_ins/kernels/CMakeLists.txt b/shared/source/built_ins/kernels/CMakeLists.txt
-index 308a6cb3b..9f34359c3 100644
+index 84935be2d..150c450d7 100644
 --- a/shared/source/built_ins/kernels/CMakeLists.txt
 +++ b/shared/source/built_ins/kernels/CMakeLists.txt
 @@ -84,9 +84,9 @@ function(compile_builtin gen_type platform_type builtin bits builtin_options)
    )
    add_custom_command(
-     OUTPUT ${OUTPUT_FILE_CPP}
--    COMMAND $<TARGET_FILE:cpp_generate_tool> --file ${OUTPUTPATH_BASE}.gen --output ${OUTPUT_FILE_CPP} --array ${BASENAME} --platform ${family_name_with_type}
-+    COMMAND cpp_generate_tool --file ${OUTPUTPATH_BASE}.gen --output ${OUTPUT_FILE_CPP} --array ${BASENAME} --platform ${family_name_with_type}
-     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
--    DEPENDS ${OUTPUTPATH_BASE}.gen $<TARGET_FILE:cpp_generate_tool>
-+    DEPENDS ${OUTPUTPATH_BASE}.gen cpp_generate_tool
+                      OUTPUT ${OUTPUT_FILE_CPP}
+-                     COMMAND $<TARGET_FILE:cpp_generate_tool> --file ${OUTPUTPATH_BASE}.gen --output ${OUTPUT_FILE_CPP} --array ${BASENAME} --platform ${family_name_with_type}
++                     COMMAND cpp_generate_tool --file ${OUTPUTPATH_BASE}.gen --output ${OUTPUT_FILE_CPP} --array ${BASENAME} --platform ${family_name_with_type}
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+-                     DEPENDS ${OUTPUTPATH_BASE}.gen $<TARGET_FILE:cpp_generate_tool>
++                     DEPENDS ${OUTPUTPATH_BASE}.gen cpp_generate_tool
+   )
+ endfunction()
+ 
+@@ -127,9 +127,9 @@ function(generate_cpp_spirv builtin)
+   )
+   add_custom_command(
+                      OUTPUT ${OUTPUT_FILE_CPP}
+-                     COMMAND $<TARGET_FILE:cpp_generate_tool> --file ${GENERATED_SPV_INPUT} --output ${OUTPUT_FILE_CPP} --array ${BASENAME}
++                     COMMAND cpp_generate_tool --file ${GENERATED_SPV_INPUT} --output ${OUTPUT_FILE_CPP} --array ${BASENAME}
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+-                     DEPENDS ${GENERATED_SPV_INPUT} $<TARGET_FILE:cpp_generate_tool>
++                     DEPENDS ${GENERATED_SPV_INPUT} cpp_generate_tool
    )
  endfunction()
  
 -- 
-2.24.1
+2.26.2
 
