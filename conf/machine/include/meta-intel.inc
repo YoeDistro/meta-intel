@@ -26,6 +26,9 @@ PREFERRED_PROVIDER_libva-utils = "libva-utils-intel"
 PREFERRED_PROVIDER_libva-native = "libva-utils-intel-native"
 PREFERRED_PROVIDER_nativesdk-libva-utils = "nativesdk-libva-utils-intel"
 
+PREFERRED_VERSION_opencl-clang ?= "${@bb.utils.contains('LLVMVERSION', '10.0.1', '10.0.0', '11.0.0', d)}"
+PREFERRED_VERSION_opencl-clang-native ?= "${@bb.utils.contains('LLVMVERSION', '10.0.1', '10.0.0', '11.0.0', d)}"
+
 XSERVER_X86_ASPEED_AST = "xf86-video-ast \
            "
 
