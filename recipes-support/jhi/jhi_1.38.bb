@@ -68,3 +68,5 @@ FILES_${PN}-test = "\
                      ${bindir} \
                      ${libdir}/dal/applets \
                      "
+
+UPSTREAM_CHECK_COMMITS = "1"
