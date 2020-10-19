@@ -1,27 +1,20 @@
-From d63d1a1291a2715b7d70ed88c4d764b22e6f2f4d Mon Sep 17 00:00:00 2001
-From: Liwei Song <liwei.song@windriver.com>
-Date: Fri, 22 May 2020 15:47:44 +0800
-Subject: [PATCH] use meta-oe gflags
+From 56078933a8397b7fae146156743408319eac1ae0 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Mon, 19 Oct 2020 23:29:23 +0800
+Subject: [PATCH] demos: use gflags from meta-oe
 
-gflags is available in meta-oe, use this one instead of the thirdparty
-one in open-model-zoo
+Upstream-Status: Inappropriate
 
-Upstream-Status: Inappropriate [meta-intel specific]
-
-Signed-off-by: Liwei Song <liwei.song@windriver.com>
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
- CMakeLists.txt                                            | 8 ++++----
- multi_channel/common/CMakeLists.txt                       | 2 +-
- multi_channel/face_detection_demo/CMakeLists.txt          | 2 +-
- multi_channel/human_pose_estimation_demo/CMakeLists.txt   | 2 +-
- multi_channel/object_detection_demo_yolov3/CMakeLists.txt | 2 +-
- 5 files changed, 8 insertions(+), 8 deletions(-)
+ demos/CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 40b549f..dfdbf93 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -89,12 +89,10 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
+diff --git a/demos/CMakeLists.txt b/demos/CMakeLists.txt
+index e5f17231..08d4e4e6 100644
+--- a/demos/CMakeLists.txt
++++ b/demos/CMakeLists.txt
+@@ -90,11 +90,11 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
  endif()
  ####################################
  
@@ -31,85 +24,10 @@ index 40b549f..dfdbf93 100644
  set (HAVE_INTTYPES_H 1)
  
 -add_subdirectory(thirdparty/gflags)
--
++#add_subdirectory(thirdparty/gflags)
+ 
  if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
- endif()
-@@ -177,7 +175,7 @@ macro(ie_add_sample)
-     target_include_directories(${IE_SAMPLE_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../common")
- 
-     target_link_libraries(${IE_SAMPLE_NAME} PRIVATE ${OpenCV_LIBRARIES} ${InferenceEngine_LIBRARIES}
--                                                    ${IE_SAMPLE_DEPENDENCIES} gflags)
-+                                                    ${IE_SAMPLE_DEPENDENCIES} ${GFLAGS_LIBRARIES})
- 
-     if(UNIX)
-         target_link_libraries(${IE_SAMPLE_NAME} PRIVATE pthread)
-@@ -198,11 +196,13 @@ endmacro()
- # use this flag if you need to throw custom message in case if the IE package is not found.
- if (IE_NOT_FOUND_MESSAGE)
-     find_package(InferenceEngine 2.0 QUIET)
-+    find_package(gflags 2.2 QUIET)
-     if (NOT(InferenceEngine_FOUND))
-         message(FATAL_ERROR ${IE_NOT_FOUND_MESSAGE})
-     endif()
- else()
-     find_package(InferenceEngine 2.0 REQUIRED)
-+    find_package(gflags 2.2 REQUIRED)
- endif()
- 
- find_package(ngraph REQUIRED)
-diff --git a/multi_channel/common/CMakeLists.txt b/multi_channel/common/CMakeLists.txt
-index d5e5d93..c33afbb 100644
---- a/multi_channel/common/CMakeLists.txt
-+++ b/multi_channel/common/CMakeLists.txt
-@@ -110,7 +110,7 @@ endif()
- 
- target_include_directories(${TARGET_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
- 
--target_link_libraries(${TARGET_NAME} ${InferenceEngine_LIBRARIES} gflags ${OpenCV_LIBRARIES})
-+target_link_libraries(${TARGET_NAME} ${InferenceEngine_LIBRARIES} ${GFLAGS_LIBRARIES} ${OpenCV_LIBRARIES})
- 
- if(UNIX)
-     target_link_libraries( ${TARGET_NAME} pthread)
-diff --git a/multi_channel/face_detection_demo/CMakeLists.txt b/multi_channel/face_detection_demo/CMakeLists.txt
-index 5b497fc..78c518e 100644
---- a/multi_channel/face_detection_demo/CMakeLists.txt
-+++ b/multi_channel/face_detection_demo/CMakeLists.txt
-@@ -60,7 +60,7 @@ if(MULTICHANNEL_DEMO_USE_TBB)
-     endif()
- endif()
- 
--target_link_libraries(${TARGET_NAME} ${InferenceEngine_LIBRARIES} gflags ${OpenCV_LIBRARIES} common)
-+target_link_libraries(${TARGET_NAME} ${InferenceEngine_LIBRARIES} ${GFLAGS_LIBRARIES} ${OpenCV_LIBRARIES} common)
- 
- if(UNIX)
-     target_link_libraries( ${TARGET_NAME} pthread)
-diff --git a/multi_channel/human_pose_estimation_demo/CMakeLists.txt b/multi_channel/human_pose_estimation_demo/CMakeLists.txt
-index 7fe4823..7e76796 100644
---- a/multi_channel/human_pose_estimation_demo/CMakeLists.txt
-+++ b/multi_channel/human_pose_estimation_demo/CMakeLists.txt
-@@ -60,7 +60,7 @@ if(MULTICHANNEL_DEMO_USE_TBB)
-     endif()
- endif()
- 
--target_link_libraries(${TARGET_NAME} ${InferenceEngine_LIBRARIES} gflags ${OpenCV_LIBRARIES} common)
-+target_link_libraries(${TARGET_NAME} ${InferenceEngine_LIBRARIES} ${GFLAGS_LIBRARIES} ${OpenCV_LIBRARIES} common)
- 
- if(UNIX)
-     target_link_libraries( ${TARGET_NAME} pthread)
-diff --git a/multi_channel/object_detection_demo_yolov3/CMakeLists.txt b/multi_channel/object_detection_demo_yolov3/CMakeLists.txt
-index e959349..cf1de4a 100644
---- a/multi_channel/object_detection_demo_yolov3/CMakeLists.txt
-+++ b/multi_channel/object_detection_demo_yolov3/CMakeLists.txt
-@@ -60,7 +60,7 @@ if(MULTICHANNEL_DEMO_USE_TBB)
-     endif()
- endif()
- 
--target_link_libraries(${TARGET_NAME} ${InferenceEngine_LIBRARIES} gflags ${OpenCV_LIBRARIES} ngraph::ngraph common)
-+target_link_libraries(${TARGET_NAME} ${InferenceEngine_LIBRARIES} ${GFLAGS_LIBRARIES} ${OpenCV_LIBRARIES} ngraph::ngraph common)
- 
- if(UNIX)
-     target_link_libraries( ${TARGET_NAME} pthread)
 -- 
-2.25.4
+2.26.2
 

@@ -5,10 +5,9 @@ models and a set of demos to expedite development of high-performance \
 deep learning inference applications."
 
 SRC_URI = "git://github.com/opencv/open_model_zoo.git;protocol=git;branch=master \
-           file://0001-use-oe-gflags.patch \
            "
 
-SRCREV = "366130da8fc27dd4d896639cb526a079acc07831"
+SRCREV = "75ec8ad4b6c4fd7fb161ae9d2c3056281b2443de"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://../LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
