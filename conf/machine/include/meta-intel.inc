@@ -22,9 +22,9 @@ PREFERRED_PROVIDER_libva = "libva-intel"
 PREFERRED_PROVIDER_libva-native = "libva-intel-native"
 PREFERRED_PROVIDER_nativesdk-libva = "nativesdk-libva-intel"
 
-PREFERRED_PROVIDER_libva-utils = "libva-utils-intel"
-PREFERRED_PROVIDER_libva-native = "libva-utils-intel-native"
-PREFERRED_PROVIDER_nativesdk-libva-utils = "nativesdk-libva-utils-intel"
+PREFERRED_PROVIDER_libva-utils = "libva-intel-utils"
+PREFERRED_PROVIDER_libva-utils-native = "libva-intel-utils-native"
+PREFERRED_PROVIDER_nativesdk-libva-utils = "nativesdk-libva-intel-utils"
 
 PREFERRED_VERSION_opencl-clang ?= "${@bb.utils.contains('LLVMVERSION', '10.0.1', '10.0.0', '11.0.0', d)}"
 PREFERRED_VERSION_opencl-clang-native ?= "${@bb.utils.contains('LLVMVERSION', '10.0.1', '10.0.0', '11.0.0', d)}"
