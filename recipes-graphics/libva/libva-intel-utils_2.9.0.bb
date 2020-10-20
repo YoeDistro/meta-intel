@@ -30,3 +30,6 @@ REQUIRED_DISTRO_FEATURES = "opengl"
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'wayland x11', d)}"
 PACKAGECONFIG[x11] = "-Dx11=true, -Dx11=false,virtual/libx11 libxext libxfixes"
 PACKAGECONFIG[wayland] = "-Dwayland=true, -Dwayland=false,wayland-native wayland"
+
+PROVIDES = "libva-utils"
+RPROVIDES_${PN} += "libva-utils"
