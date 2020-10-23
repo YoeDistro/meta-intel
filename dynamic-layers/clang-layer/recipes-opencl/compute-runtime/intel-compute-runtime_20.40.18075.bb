@@ -17,7 +17,7 @@ SRCREV = "7e31ec37d78693c08a1fcb2ec31801e64cb497d3"
 S = "${WORKDIR}/git"
 
 DEPENDS += " intel-graphics-compiler gmmlib clang"
-DEPENDS_append_class-target = " intel-compute-runtime-native"
+DEPENDS_append_class-target = " intel-compute-runtime-native libva"
 
 RDEPENDS_${PN} += " intel-graphics-compiler gmmlib"
 
