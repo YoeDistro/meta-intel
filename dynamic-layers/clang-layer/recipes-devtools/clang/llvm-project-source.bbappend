@@ -3,7 +3,7 @@ FILESEXTRAPATHS_prepend_intel-x86-common := "${THISDIR}/files:"
 SPIRV_BRANCH = "${@bb.utils.contains('LLVMVERSION', '10.0.1', 'llvm_release_100', 'llvm_release_110', d)}"
 
 SPIRV10_SRCREV = "4d43f68a30a510b4e7607351caab3df8e7426a6b"
-SPIRV11_SRCREV = "61a10b27604bc4a9f6840f8fad82b779e708a279"
+SPIRV11_SRCREV = "d6dc999eee381158a26f048a333467c9ce7e77f2"
 
 SPIRV_SRCREV = "${@bb.utils.contains('LLVMVERSION', '10.0.1', '${SPIRV10_SRCREV}', '${SPIRV11_SRCREV}', d)}"
 
