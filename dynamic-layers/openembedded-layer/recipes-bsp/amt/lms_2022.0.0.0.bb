@@ -12,9 +12,14 @@ COMPATIBLE_HOST_libc-musl = "null"
 
 inherit cmake systemd features_check
 
-DEPENDS = "metee ace xerces-c libnl libxml2 glib-2.0 glib-2.0-native connman"
+DEPENDS = "metee ace xerces-c libnl libxml2 glib-2.0 glib-2.0-native"
 
 EXTRA_OECMAKE += "-DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3"
+
+# Enable either connman or networkmanager or none but not both.
+PACKAGECONFIG ??= "connman"
+PACKAGECONFIG[connman]        = "-DNETWORK_CN=ON, -DNETWORK_CN=OFF, connman"
+PACKAGECONFIG[networkmanager] = "-DNETWORK_NM=ON, -DNETWORK_NM=OFF, networkmanager"
 
 REQUIRED_DISTRO_FEATURES= "systemd"
 
