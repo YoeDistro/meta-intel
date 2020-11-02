@@ -5,6 +5,7 @@ models and a set of demos to expedite development of high-performance \
 deep learning inference applications."
 
 SRC_URI = "git://github.com/opencv/open_model_zoo.git;protocol=git;branch=master \
+           file://0001-switch-to-python3.patch \
            "
 
 SRCREV = "75ec8ad4b6c4fd7fb161ae9d2c3056281b2443de"
