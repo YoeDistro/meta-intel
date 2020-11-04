@@ -9,7 +9,9 @@ inherit autotools pkgconfig
 S = "${WORKDIR}/git"
 SRCREV = "e0d740f0706f7902d4f262b649d42b1b48c5e4e3"
 SRC_URI = "git://github.com/intel/libxcam.git;branch=1.4.0; \
-            file://0001-test-soft-image.cpp-fix-header-path.patch"
+            file://0001-test-soft-image.cpp-fix-header-path.patch \
+            file://0002-fix-build-with-vulkan-1.2.140.patch \
+"
 
 COMPATIBLE_HOST_libc-musl = "null"
 
