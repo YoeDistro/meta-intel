@@ -32,7 +32,7 @@ DEPENDS_append_class-target = " clang-cross-x86_64"
 RDEPENDS_${PN} += "opencl-clang"
 
 LLVM_COMPAT_VERSION = "${@bb.utils.contains('LLVMVERSION', '10.0.1', '10.0.0', '11.0.0', d)}"
-EXTRA_OECMAKE = "-DIGC_PREFERRED_LLVM_VERSION=${LLVM_COMPAT_VERSION} -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 -DINSTALL_SPIRVDLL=0"
+EXTRA_OECMAKE = "-DIGC_PREFERRED_LLVM_VERSION=${LLVM_COMPAT_VERSION} -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 -DINSTALL_SPIRVDLL=0 -DIGC_BUILD__VC_ENABLED=OFF"
 
 # VectorCompiler doesn't build with LLVM11 as of this release.
 # Re-enable after those issues have been fixed.
