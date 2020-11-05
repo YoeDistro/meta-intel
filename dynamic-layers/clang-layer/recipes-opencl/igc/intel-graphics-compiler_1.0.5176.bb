@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc
                     file://IGC/Compiler/LegalizationPass.cpp;beginline=1;endline=25;md5=4abf1738ff96b18e34186eb763e28eeb \
                     file://NOTICES.txt;md5=b12e73994de4fbe0f688cf0bc91512a0"
 
-SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https; \
+SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;nobranch=1 \
            file://0001-skip-execution-of-ElfPackager.patch \
            file://link-to-LLVMGenXIntrinsics.patch \
            file://improve_src_package_reproducibility.patch \
