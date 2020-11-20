@@ -14,7 +14,7 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https; \
            file://improve_src_package_reproducibility.patch \
           "
 
-SRCREV = "3e7c8e95b48a4eb6637077c52ff253a37b5ea085"
+SRCREV = "93f02a7dfa37d879abc2ff5d62fd1e527fa4b03a"
 
 # Used to replace with relative path in reproducibility patch
 export B
