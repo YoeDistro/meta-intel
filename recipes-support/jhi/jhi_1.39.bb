@@ -8,7 +8,7 @@ SRC_URI = "git://github.com/intel/dynamic-application-loader-host-interface.git;
 
 inherit cmake useradd systemd pkgconfig update-rc.d
 
-SRCREV = "6c3bc6f14fa4775758a7c8111b2783edc5207c9d"
+SRCREV = "cbf9e015dd9de03eb5df1124d568de50ec7784d5"
 
 S = "${WORKDIR}/git"
 
