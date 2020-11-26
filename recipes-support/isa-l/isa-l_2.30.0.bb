@@ -8,7 +8,7 @@ SECTION = "lib"
 inherit autotools pkgconfig
 
 S = "${WORKDIR}/git"
-SRCREV = "806b55ee578efd8158962b90121a4568eb1ecb66"
+SRCREV = "2df39cf5f1b9ccaa2973f6ef273857e4dc46f0cf"
 SRC_URI = "git://github.com/intel/isa-l.git"
 
 DEPENDS = "nasm-native"
