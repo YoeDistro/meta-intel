@@ -30,11 +30,8 @@ S = "${WORKDIR}/git"
 SYSTEMD_SERVICE_${PN} = "lms.service"
 
 SRC_URI = "git://github.com/intel/lms.git \
-           file://0001-CIM_Framework-CMakeLists.txt-turn-OFF-BUILD_LIBCIM.patch \
            "
-SRCREV = "597783800b000091e05855f1e7431555216e77da"
-
-SRC_URI_append = " file://lms_drop_rpath_${PV}.diff"
+SRCREV = "11e6713f794b560328746ac39653d595f01361dc"
 
 do_install_append() {
     install -d ${D}${systemd_system_unitdir}
