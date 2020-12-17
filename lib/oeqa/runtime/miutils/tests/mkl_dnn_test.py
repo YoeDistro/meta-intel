@@ -49,9 +49,7 @@ class MkldnnTest(object):
         return self._run_mkldnn_benchdnn_test('./benchdnn --reorder --batch=inputs/reorder/test_reorder_bfloat16')
         
     def test_mkldnn_rnn_api(self):
-        # test_rnn_inference was not yet ready and was expected to fail
-        # while waiting it to be ready, use test_rnn_small for now
-        return self._run_mkldnn_benchdnn_test('./benchdnn --rnn --batch=inputs/rnn/test_rnn_small')
+        return self._run_mkldnn_benchdnn_test('./benchdnn --rnn --batch=inputs/rnn/test_rnn_all')
         
     def test_mkldnn_shuffle_api(self):
         return self._run_mkldnn_benchdnn_test('./benchdnn --shuffle --batch=inputs/shuffle/test_shuffle_bfloat16')
