@@ -19,6 +19,7 @@ REQUIRED_DISTRO_FEATURES = "opengl"
 DEPENDS += "libva gmmlib"
 
 SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;branch=intel-media-20.3 \
+           file://0001-Encode-Fixed-VP9-444-frame-header.patch \
           "
 
 SRCREV = "86ec0b6f61862806d8aed1803537728d1dfadf84"
