@@ -4,10 +4,9 @@ DESCRIPTION = "This toolkit allows developers to deploy pre-trained \
 deep learning models through a high-level C++ Inference Engine API \
 integrated with application logic."
 
-SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=git;branch=releases/2021/1;lfs=0 \
-           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/usb-ma2450/firmware_usb-ma2450_1381.zip;name=ma2450 \
-           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/pcie-ma248x/firmware_pcie-ma248x_1381.zip;name=ma248x \
-           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/usb-ma2x8x/firmware_usb-ma2x8x_1381.zip;name=ma2x8x \
+SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=git;branch=releases/2021/2;lfs=0 \
+           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/usb-ma2x8x/firmware_usb-ma2x8x_1522.zip;name=usb_ma2x8x \
+           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/pcie-ma2x8x/firmware_pcie-ma2x8x_1522.zip;name=pcie_ma2x8x \
            git://github.com/openvinotoolkit/oneDNN.git;protocol=https;destsuffix=git/inference-engine/thirdparty/mkl-dnn;name=mkl;nobranch=1 \
            file://0001-inference-engine-use-system-installed-packages.patch \
            file://0002-cldNN-disable-Werror.patch \
@@ -16,12 +15,11 @@ SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=git;branch=rel
            file://0001-dont-install-licenses-and-version-file.patch \
            "
 
-SRCREV = "f557dca475cb54dcfc9026fbaad0d93ddb85015c"
-SRCREV_mkl = "6547f0b6aac2725bd4e36197e19fb1a6f2ee2f51"
+SRCREV = "4795391b73381660b69b4cd3986c7a0bf902e868"
+SRCREV_mkl = "5ef085d5af65e8966e03cdfcbaa65761d61a5c9a"
 
-SRC_URI[ma2450.sha256sum] = "d310d60c9ab5dd8979fa03151f54c889d2fc1e4f178636f83b6756c3fee72745"
-SRC_URI[ma248x.sha256sum] = "3c6c5f365bee1b114d08c0fc8ac1e655beee9dfe05fe1508cb8079eb12975204"
-SRC_URI[ma2x8x.sha256sum] = "35389d365287055beacb3dfbc041a3b71f9c09493a942ee5d6ad03a4a2c8127a"
+SRC_URI[usb_ma2x8x.sha256sum] = "95a93144f0bbfe6e35d3830e93e6b63e1e109f849a6a7c307cae9030e3a662aa"
+SRC_URI[pcie_ma2x8x.sha256sum] = "6d061d21d90f1919ef375138066ba7a20ceb663901d2729d9cb1b639169df5da"
 
 LICENSE = "Apache-2.0 & ISSL & MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
@@ -51,6 +49,7 @@ EXTRA_OECMAKE += " \
                   -DTREAT_WARNING_AS_ERROR=FALSE \
                   -DENABLE_SPEECH_DEMO=FALSE \
                   -DENABLE_DATA=FALSE \
+                  -DUSE_SYSTEM_PUGIXML=TRUE \
                   "
 
 DEPENDS += "libusb1 \
@@ -68,14 +67,13 @@ COMPATIBLE_HOST_libc-musl = "null"
 PACKAGECONFIG ?= "vpu"
 PACKAGECONFIG[opencl] = "-DENABLE_CLDNN=1 -DCLDNN__IOCL_ICD_INCDIRS=${STAGING_INCDIR} -DCLDNN__IOCL_ICD_STLDIRS=${STAGING_LIBDIR} -DCLDNN__IOCL_ICD_SHLDIRS=${STAGING_LIBDIR}, -DENABLE_CLDNN=0, ocl-icd opencl-headers libva, intel-compute-runtime"
 PACKAGECONFIG[python3] = "-DENABLE_PYTHON=ON -DPYTHON_LIBRARY=${PYTHON_LIBRARY} -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR}, -DENABLE_PYTHON=OFF, python3-cython-native, python3 python3-numpy python3-opencv python3-progress python3-cython"
-PACKAGECONFIG[vpu] = "-DENABLE_VPU=ON -DVPU_FIRMWARE_USB-MA2450_FILE=../mvnc/usb-ma2450.mvcmd -DVPU_FIRMWARE_USB-MA2X8X_FILE=../mvnc/usb-ma2x8x.mvcmd -DVPU_FIRMWARE_PCIE-MA248X_FILE=../mvnc/pcie-ma248x.mvcmd,-DENABLE_VPU=OFF,,${PN}-vpu-firmware"
+PACKAGECONFIG[vpu] = "-DENABLE_VPU=ON -DVPU_FIRMWARE_USB-MA2X8X_FILE=../mvnc/usb-ma2x8x.mvcmd -DVPU_FIRMWARE_PCIE-MA2X8X_FILE=../mvnc/pcie-ma2x8x.mvcmd,-DENABLE_VPU=OFF,,${PN}-vpu-firmware"
 PACKAGECONFIG[verbose] = "-DVERBOSE_BUILD=1,-DVERBOSE_BUILD=0"
 
 do_install_append() {
     if ${@bb.utils.contains('PACKAGECONFIG', 'vpu', 'true', 'false', d)}; then
-        install -m0644 ${WORKDIR}/mvnc/usb-ma2450.mvcmd ${D}${libdir}/
         install -m0644 ${WORKDIR}/mvnc/usb-ma2x8x.mvcmd ${D}${libdir}/
-        install -m0644 ${WORKDIR}/mvnc/pcie-ma248x.mvcmd ${D}${libdir}/
+        install -m0644 ${WORKDIR}/mvnc/pcie-ma2x8x.mvcmd ${D}${libdir}/
     fi
 
     if ${@bb.utils.contains('PACKAGECONFIG', 'python3', 'true', 'false', d)}; then
