@@ -31,12 +31,11 @@ PACKAGECONFIG[opencl]	= "-DENABLE_OPENCL=ON, -DENABLE_OPENCL=OFF, ocl-icd opencl
 PACKAGECONFIG[samples]	= "-DBUILD_SAMPLES=ON, -DBUILD_SAMPLES=OFF"
 PACKAGECONFIG[wayland]	= "-DENABLE_WAYLAND=ON, -DENABLE_WAYLAND=OFF, wayland wayland-native"
 
-SRC_URI = "git://github.com/Intel-Media-SDK/MediaSDK.git;protocol=https;branch=${BPN}-20.3;lfs=0 \
+SRC_URI = "git://github.com/Intel-Media-SDK/MediaSDK.git;protocol=https;branch=${BPN}-20.5;lfs=0 \
            file://0001-FindOpenCL.cmake-don-t-look-for-driver-at-build-time.patch \
            file://0001-FindITT.cmake-fix-detection-of-header-library.patch \
-           file://0001-Fix-video-stuttering-during-wayland-rendering.patch \
            "
-SRCREV = "34c7cbbb3775bd547a16ea37576297b290b603a4"
+SRCREV = "95665e9eacfeeca7827b1e3eace990e1a7ae32d5"
 S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^intel-mediasdk-(?P<pver>(\d+(\.\d+)+))$"
