@@ -35,7 +35,7 @@ SRC_URI = "git://github.com/Intel-Media-SDK/MediaSDK.git;protocol=https;branch=$
            file://0001-FindOpenCL.cmake-don-t-look-for-driver-at-build-time.patch \
            file://0001-FindITT.cmake-fix-detection-of-header-library.patch \
            "
-SRCREV = "95665e9eacfeeca7827b1e3eace990e1a7ae32d5"
+SRCREV = "98c0c3639f74bc0d030642dd29592054aecffa64"
 S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^intel-mediasdk-(?P<pver>(\d+(\.\d+)+))$"
