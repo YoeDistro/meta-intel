@@ -20,6 +20,6 @@ DEPENDS += "elfutils-native openssl-native util-linux-native"
 
 LINUX_VERSION ?= "5.10.1"
 SRCREV_machine ?= "7cc9ab35ca5c12de2484deeb2ffe0ebc063e409a"
-SRCREV_meta ?= "30c21625f9989859ade341ebe738664f3efbf122"
+SRCREV_meta ?= "47c7a3148a4d7653cec536ba202b25148d1952ad"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
