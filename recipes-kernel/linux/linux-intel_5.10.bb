@@ -11,7 +11,7 @@ DEPENDS += "elfutils-native openssl-native util-linux-native"
 
 LINUX_VERSION ?= "5.10.1"
 SRCREV_machine ?= "b8dd2066fae53c1bba0c7a6c73a08e137d5fca29"
-SRCREV_meta ?= "30c21625f9989859ade341ebe738664f3efbf122"
+SRCREV_meta ?= "47c7a3148a4d7653cec536ba202b25148d1952ad"
 
 # For Crystalforest and Romley
 KERNEL_MODULE_AUTOLOAD_append_core2-32-intel-common = " uio"
