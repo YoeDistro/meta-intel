@@ -34,7 +34,8 @@ PV = "0.9.4-git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-inherit native autotools pkgconfig
+inherit autotools pkgconfig
+inherit native
 
 do_configure_prepend() {
 	cd ${S}
