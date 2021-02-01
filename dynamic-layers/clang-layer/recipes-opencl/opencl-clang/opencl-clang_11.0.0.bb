@@ -24,6 +24,7 @@ COMPATIBLE_HOST_libc-musl = "null"
 EXTRA_OECMAKE += "\
                   -DLLVM_TABLEGEN_EXE=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
                   -DCMAKE_SKIP_RPATH=TRUE \
+                  -DPREFERRED_LLVM_VERSION="11.1.0" \
                   "
 
 do_install_append_class-native() {
