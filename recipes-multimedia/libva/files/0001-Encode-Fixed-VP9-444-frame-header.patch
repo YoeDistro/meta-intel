@@ -1,0 +1,43 @@
+From 24da63ad1e0215b103c29b1bce29e126ca94ba00 Mon Sep 17 00:00:00 2001
+From: Lim Siew Hoon <siew.hoon.lim@intel.com>
+Date: Thu, 17 Dec 2020 14:33:21 +0800
+Subject: [PATCH] [Encode] Fixed VP9 444 frame header
+
+According VP9 spec section 7.2.2 color config semantics,
+both subsampling_x and subsampling_y should be 0 for YUV444.
+Only YUV440 subsampling_x=0 and subsampling_y=1.
+
+fixes #1074
+
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
+
+The patch was imported from the iHD media-driver git server
+(https://github.com/intel/media-driver.git) as of commit id
+a33eaaec2f71f04c8850db9287ee4012e143e283.
+
+Upstream-Status: Backport
+
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
+---
+ media_driver/linux/common/codec/ddi/media_libvpx_vp9.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/media_driver/linux/common/codec/ddi/media_libvpx_vp9.cpp b/media_driver/linux/common/codec/ddi/media_libvpx_vp9.cpp
+index df89f4fe..41357b0e 100644
+--- a/media_driver/linux/common/codec/ddi/media_libvpx_vp9.cpp
++++ b/media_driver/linux/common/codec/ddi/media_libvpx_vp9.cpp
+@@ -97,9 +97,9 @@ void write_bitdepth_colorspace_sampling(uint32_t codecProfile,
+         (codecProfile == VP9_PROFILE_3))
+     {
+         /* sub_sampling_x/y */
+-        /* Currently the sub_sampling_x = 0, sub_sampling_y = 1 */
++        /* Currently the sub_sampling_x = 0, sub_sampling_y = 0 */
++        vp9_wb_write_bit(wb, 0);
+         vp9_wb_write_bit(wb, 0);
+-        vp9_wb_write_bit(wb, 1);
+         vp9_wb_write_bit(wb, 0); // unused
+     }
+ }
+-- 
+2.17.1
+
