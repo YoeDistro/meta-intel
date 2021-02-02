@@ -10,7 +10,7 @@ SRC_URI = "git://github.com/intel/opencl-clang.git;branch=ocl-open-110;protocol=
            "
 SRC_URI_append_class-native = " file://0002-make-sure-only-static-libraries-linked-for-native-bu.patch"
 
-SRCREV = "7a88e28f00b1479fa5809ce4cf8388938c0d7495"
+SRCREV = "c67648d41df00ea8ee9d701d17299b86f86f0321"
 
 S = "${WORKDIR}/git"
 
