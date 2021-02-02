@@ -1,6 +1,6 @@
-From 483154871f72590b81c036b000be09627376b5a9 Mon Sep 17 00:00:00 2001
+From 11b923c99cbe3580885ce40c322277fc823107a0 Mon Sep 17 00:00:00 2001
 From: Naveen Saini <naveen.kumar.saini@intel.com>
-Date: Thu, 27 Aug 2020 12:17:12 +0800
+Date: Tue, 2 Feb 2021 13:39:53 +0800
 Subject: [PATCH] IGC/VectorCompiler/CMakeLists.txt: link to external
  LLVMGenXIntrinsics
 
@@ -13,14 +13,14 @@ Upstream-Status: Inappropriate [configuration specific]
 
 Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
 ---
- IGC/VectorCompiler/CMakeLists.txt | 23 ++---------------------
- 1 file changed, 2 insertions(+), 21 deletions(-)
+ IGC/VectorCompiler/CMakeLists.txt | 32 ++-----------------------------
+ 1 file changed, 2 insertions(+), 30 deletions(-)
 
 diff --git a/IGC/VectorCompiler/CMakeLists.txt b/IGC/VectorCompiler/CMakeLists.txt
-index 3592e0b4..ae754b8b 100644
+index 86f343ee..b4268160 100644
 --- a/IGC/VectorCompiler/CMakeLists.txt
 +++ b/IGC/VectorCompiler/CMakeLists.txt
-@@ -50,10 +50,7 @@ if(IGC_BUILD__USING_SYSTEM_LLVM OR (WIN32 AND LLVM_USE_PREBUILT))
+@@ -53,10 +53,7 @@ if(IGC_BUILD__USING_SYSTEM_LLVM OR (WIN32 AND LLVM_USE_PREBUILT))
    message(STATUS "[VC] Using system llvm")
  
    # Need to search for llvm-tblgen
@@ -32,8 +32,8 @@ index 3592e0b4..ae754b8b 100644
    if(LLVM_TABLEGEN_EXE-NOTFOUND)
      message(FATAL_ERROR "[VC] llvm-tblgen is not found")
    endif()
-@@ -131,23 +128,7 @@ if(LLVM_ON_WIN32)
-   add_compile_options(/wd4624)
+@@ -140,32 +137,7 @@ if(LLVM_ON_WIN32)
+   add_compile_options(/wd4141)
  endif()
  
 -if(DEFINED VC_INTRINSICS_SRC)
@@ -48,15 +48,24 @@ index 3592e0b4..ae754b8b 100644
 -
 -# We are using prebuilt SPIRV and building intrinsics.
 -set(INTRBUILD "${CMAKE_CURRENT_BINARY_DIR}/intrbuild")
--
--
--# Do not copy anything from prebuilts. libSPIRVDLL.so will be dynamically loaded at runtime.
 -add_subdirectory(${INTRSRC} ${INTRBUILD})
--include_directories(${INTRSRC}/include ${INTRBUILD}/include)
+-# Make separate target for intrinstics headers.
+-# Ideally, this should be inside intrinsics, but
+-# this breaks in-tree build of intrinsics with LLVM.
+-add_library(VCIntrinsicsHeaders INTERFACE)
+-target_include_directories(VCIntrinsicsHeaders
+-  INTERFACE
+-  ${INTRSRC}/include
+-  ${INTRBUILD}/include
+-  )
+-add_dependencies(VCIntrinsicsHeaders
+-  GenXIntrinsics
+-  )
+-
 +find_package(LLVMGenXIntrinsics REQUIRED)
- 
  include(cmake/spirv.cmake)
  include(${IGC_SOURCE_DIR}/cmake/utils.cmake)
+ 
 -- 
 2.17.1
 

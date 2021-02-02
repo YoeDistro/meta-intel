@@ -14,7 +14,7 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https; \
            file://improve_src_package_reproducibility.patch \
           "
 
-SRCREV = "93f02a7dfa37d879abc2ff5d62fd1e527fa4b03a"
+SRCREV = "f6ec355e7e275f87e0756576cd7a390d2365ed48"
 
 # Used to replace with relative path in reproducibility patch
 export B
@@ -33,10 +33,6 @@ RDEPENDS_${PN} += "opencl-clang"
 
 LLVM_COMPAT_VERSION = "${@bb.utils.contains('LLVMVERSION', '10.0.1', '10.0.0', '11.1.0', d)}"
 EXTRA_OECMAKE = "-DIGC_PREFERRED_LLVM_VERSION=${LLVM_COMPAT_VERSION} -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 -DINSTALL_SPIRVDLL=0 -DIGC_BUILD__VC_ENABLED=OFF"
-
-# VectorCompiler doesn't build with LLVM11 as of this release.
-# Re-enable after those issues have been fixed.
-EXTRA_OECMAKE_append = " ${@bb.utils.contains('LLVMVERSION', '11.0.0', "-DIGC_BUILD__VC_ENABLED=OFF", "", d)}"
 
 BBCLASSEXTEND = "native nativesdk"
 
