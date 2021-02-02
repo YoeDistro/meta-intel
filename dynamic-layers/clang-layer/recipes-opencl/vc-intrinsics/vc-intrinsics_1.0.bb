@@ -7,10 +7,8 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://License.md;md5=c18ea6bb4786a26bf4eee88a7424a408"
 
 SRC_URI = "git://github.com/intel/vc-intrinsics.git;protocol=https; \
-            file://0001-Use-standard-installation-directory-variables.patch \
           "
-
-SRCREV = "c8c52b5fb14b33e32de9df573b7de186a0c97c94"
+SRCREV = "77974f5a32e19475125531483bede9ee23935257"
 
 S = "${WORKDIR}/git"
 
