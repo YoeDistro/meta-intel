@@ -11,7 +11,9 @@ python () {
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 SRC_URI_append = " file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch \
-"
+                   file://objtool-fix-segfault-with-clang.patch \
+                   file://x86-entry-Emit-a-symbol-for-register-restoring-thunk.patch \
+                   "
 
 KBRANCH = "5.10/preempt-rt"
 KMETA_BRANCH = "yocto-5.10"
