@@ -19,7 +19,7 @@ class ThermaldTest(OERuntimeTestCase):
     def run_thermald_emulation_to_exceed_setpoint_then_end_thermald_process(self, run_args):
         time.sleep(2)
         self.target.run('echo 106000 > /sys/class/thermal/thermal_zone%s/emul_temp' % run_args)
-        time.sleep(2)
+        time.sleep(5)
         __, output = self.target.run('pidof thermald')
         self.target.run('kill -9 %s' % output)
 
@@ -27,7 +27,8 @@ class ThermaldTest(OERuntimeTestCase):
         # Thermald test depend on thermal emulation, where CONFIG_THERMAL_EMULATION=y was required
         # To enable thermal emulation, refer to https://github.com/intel/thermal_daemon/blob/master/test/readme_test.txt
         (status, output) = self.target.run('gzip -dc /proc/config.gz | grep CONFIG_THERMAL_EMULATION=y')
-        self.assertEqual(status, 0, msg='status and output: %s and %s' % (status, output))
+        if status:
+            self.skipTest("CONFIG_THERMAL_EMULATION is not set")
 
     @OEHasPackage(['thermald'])
     @OETestDepends(['thermald.ThermaldTest.test_thermald_emulation_mode'])
@@ -38,7 +39,8 @@ class ThermaldTest(OERuntimeTestCase):
         td_thread = threading.Thread(target=self.run_thermald_emulation_to_exceed_setpoint_then_end_thermald_process,
                                      args=(x86_thermal_zone_index,))
         td_thread.start()
-        status, output = self.target.run('thermald --no-daemon --loglevel=info')
+        td_thread.join()
+        status, output = self.target.run('timeout 3s thermald --no-daemon --loglevel=info')
         regex_search = ".*thd_cdev_set_state.*106000"
         regex_comp = re.compile(regex_search)
         m = regex_comp.search(output)
