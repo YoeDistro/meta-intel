@@ -31,7 +31,7 @@ SYSTEMD_SERVICE_${PN} = "lms.service"
 
 SRC_URI = "git://github.com/intel/lms.git \
            "
-SRCREV = "13c0a4ca14778d030d99d96e3efb65cc51ffa91b"
+SRCREV = "bc85572713f04dc78fe2c58834a65197de8825e9"
 
 do_install_append() {
     install -d ${D}${systemd_system_unitdir}
