@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSES/BSD-3-Clause.txt;md5=c551872bcf41ce707df54c7
                     "
 
 SRC_URI = "git://github.com/intel/ittapi.git;protocol=https"
-SRCREV = "8a3d4f4c4f8b66d1a242393efb82558dcfcd109b"
+SRCREV = "66ebaee7a44fcdfb6ae052beb9507318781f3cd0"
 S = "${WORKDIR}/git"
 PE = "1"
 
@@ -25,6 +25,13 @@ do_install() {
      install -m 644 ${B}/bin/*.a ${D}${libdir}
      cp -r ${S}/include/* ${D}${includedir}/ittnotify
      cp -r ${S}/src/ittnotify/*.h ${D}${includedir}/ittnotify
+     rm -r ${D}${includedir}/ittnotify/fortran/win32
+     if [ "${TARGET_ARCH}" = "x86_64" ]; then
+        rm -r ${D}${includedir}/ittnotify/fortran/posix/x86
+     else
+        rm -r ${D}${includedir}/ittnotify/fortran/posix/x86_64
+     fi
+
 }
 
 RDEPENDS_${PN}-dev_remove = "${PN} (= ${EXTENDPKGV})"
