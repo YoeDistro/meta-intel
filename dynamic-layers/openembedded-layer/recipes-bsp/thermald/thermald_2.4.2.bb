@@ -6,17 +6,23 @@ compensation using available cooling methods."
 
 HOMEPAGE = "https://github.com/01org/thermal_daemon"
 
-DEPENDS = "dbus dbus-glib dbus-glib-native libxml2 glib-2.0 glib-2.0-native"
+DEPENDS = "dbus dbus-glib dbus-glib-native libxml2 glib-2.0 glib-2.0-native upower libevdev"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ea8831610e926e2e469075b52bf08848"
 
 SRC_URI = "git://github.com/intel/thermal_daemon/ \
-           file://0001-configure.ac-disable-werror.patch \
            "
-SRCREV = "4f0e68974c26749191ac945586b8cc97800d5d02"
+
+SRCREV = "86d6634b7e648ad5a3304e8dcf4eee613fa07fac"
 S = "${WORKDIR}/git"
 
-inherit pkgconfig autotools systemd
+inherit pkgconfig autotools systemd gtk-doc
+
+# gtkdocsize runs before autotools do_configure and it copies gtk-doc.m4 and fails
+# to copy becuase there is no m4 dir yet.
+do_configure_prepend () {
+	mkdir -p ${S}/m4
+}
 
 EXTRA_OECONF = " \
                  --with-systemdsystemunitdir=${systemd_system_unitdir} \
