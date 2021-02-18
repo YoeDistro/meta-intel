@@ -11,7 +11,7 @@ DESCRIPTION = "The microcode data file contains the latest microcode\
  if the file is placed in the /etc/firmware directory of the Linux system."
 
 LICENSE = "Intel-Microcode-License"
-LIC_FILES_CHKSUM = "file://license;md5=6b58767419df274d2409b294ddae17e6"
+LIC_FILES_CHKSUM = "file://license;md5=d8405101ec6e90c1d84b082b0c40c721"
 
 SRC_URI = "git://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files.git;protocol=https;branch=main \
            "
