@@ -19,9 +19,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "5.8.0"
-SRCREV_machine ?= "bcf876870b95592b52519ed4aafcf9d95999bc9c"
-SRCREV_meta ?= "2bcb4b9e8a85412849095463d4b891d9bbfbd1ad"
+LINUX_VERSION ?= "5.11-rc6"
+SRCREV_machine ?= "1048ba83fb1c00cd24172e23e8263972f6b5d9ac"
+SRCREV_meta ?= "3356fb62fb5eadec1f5c3c4248f1f8dbab968aa1"
 
 LINUX_VERSION_EXTENSION ?= "-mainline-tracking-${LINUX_KERNEL_TYPE}"
 PV = "${LINUX_VERSION}+git${SRCPV}"
