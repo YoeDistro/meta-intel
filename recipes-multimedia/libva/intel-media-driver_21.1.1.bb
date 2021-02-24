@@ -18,12 +18,10 @@ REQUIRED_DISTRO_FEATURES = "opengl"
 
 DEPENDS += "libva gmmlib"
 
-SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;branch=intel-media-20.4 \
-           file://0001-media-libva-Add-export-AYUV-color-in-vaExportSurface.patch \
-           file://0001-Encode-Fixed-VP9-444-frame-header.patch \
+SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;nobranch=1 \
           "
 
-SRCREV = "74e2f11131def34314ce52940e8d0028a4aba01c"
+SRCREV = "2c80a6973166f9f2ca6a21d37679409cfce0e8f6"
 S = "${WORKDIR}/git"
 
 COMPATIBLE_HOST_x86-x32 = "null"
