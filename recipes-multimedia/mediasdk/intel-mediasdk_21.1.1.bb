@@ -31,11 +31,11 @@ PACKAGECONFIG[opencl]	= "-DENABLE_OPENCL=ON, -DENABLE_OPENCL=OFF, ocl-icd opencl
 PACKAGECONFIG[samples]	= "-DBUILD_SAMPLES=ON, -DBUILD_SAMPLES=OFF"
 PACKAGECONFIG[wayland]	= "-DENABLE_WAYLAND=ON, -DENABLE_WAYLAND=OFF, wayland wayland-native"
 
-SRC_URI = "git://github.com/Intel-Media-SDK/MediaSDK.git;protocol=https;branch=${BPN}-20.5;lfs=0 \
-           file://0001-FindOpenCL.cmake-don-t-look-for-driver-at-build-time.patch \
+SRC_URI = "git://github.com/Intel-Media-SDK/MediaSDK.git;protocol=https;nobranch=1;lfs=0 \
            file://0001-FindITT.cmake-fix-detection-of-header-library.patch \
            "
-SRCREV = "98c0c3639f74bc0d030642dd29592054aecffa64"
+
+SRCREV = "c982e8cccc98c2ad0b3c6043cdbd6aaf7447cf54"
 S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^intel-mediasdk-(?P<pver>(\d+(\.\d+)+))$"
