@@ -1,0 +1,27 @@
+From d1938a90c7e09f6c901b7ef556bd3e8c33a257aa Mon Sep 17 00:00:00 2001
+From: "Ung, Teng En" <teng.en.ung@intel.com>
+Date: Tue, 19 Jan 2021 15:31:24 +0800
+Subject: [PATCH 2/2] [hevcd] Use reinterpret_cast for style alignment.
+
+Upstream-Status: Accepted [https://github.com/Intel-Media-SDK/MediaSDK/pull/2383]
+Signed-off-by: Ung, Teng En <teng.en.ung@intel.com>
+---
+ _studio/mfx_lib/decode/h265/src/mfx_h265_dec_decode.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/_studio/mfx_lib/decode/h265/src/mfx_h265_dec_decode.cpp b/_studio/mfx_lib/decode/h265/src/mfx_h265_dec_decode.cpp
+index f346e8c..3069f04 100644
+--- a/_studio/mfx_lib/decode/h265/src/mfx_h265_dec_decode.cpp
++++ b/_studio/mfx_lib/decode/h265/src/mfx_h265_dec_decode.cpp
+@@ -1110,7 +1110,7 @@ mfxStatus VideoDECODEH265::DecodeFrameCheck(mfxBitstream *bs, mfxFrameSurface1 *
+ 
+         if (extbuf)
+         {
+-            ((mfxExtDecodeErrorReport *)extbuf)->ErrorTypes = 0;
++            reinterpret_cast<mfxExtDecodeErrorReport *>(extbuf)->ErrorTypes = 0;
+             src.SetExtBuffer(extbuf);
+         }
+ #endif
+-- 
+2.7.4
+
