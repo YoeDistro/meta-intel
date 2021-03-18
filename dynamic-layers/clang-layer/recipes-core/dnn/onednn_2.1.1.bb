@@ -3,20 +3,19 @@ SUMMARY  = "Deep Neural Network Library"
 DESCRIPTION = "This software is a user mode library that accelerates\
 deep-learning applications and frameworks on Intel architecture."
 LICENSE  = "Apache-2.0 & BSD-3-Clause & BSL-1.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=c441291ac5f15bdc6b09b4cc02ece35b \
+LIC_FILES_CHKSUM = "file://LICENSE;md5=8e17c0f9656ebaf0c380d9b22707c846 \
                     file://tests/gtests/gtest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
                     file://src/cpu/x64/xbyak/COPYRIGHT;md5=3b9bf048d063d54cdb28964db558bcc7 \
                     file://src/cpu/x64/jit_utils/jitprofiling/LICENSE.BSD;md5=e671ff178b24a95a382ba670503c66fb \
                     file://doc/assets/mathjax/MathJax.js;endline=17;md5=25a014ad78c3d72a0e15d15f1d007c20 \
-                    file://src/common/primitive_hashing.hpp;beginline=223;endline=226;md5=f56de33cb6ec02de60006b10e027b300 \
                     "
 SECTION = "lib"
 
 inherit pkgconfig cmake ptest
 
 S = "${WORKDIR}/git"
-SRCREV = "83ebc40d86bc54f0f23e947235e53570eeacf254"
-SRC_URI = "git://github.com/oneapi-src/oneDNN.git;branch=rls-v2.0-beta10 \
+SRCREV = "53f53c2bb859d386a40e03f7623a4f9af758c1b3"
+SRC_URI = "git://github.com/oneapi-src/oneDNN.git;branch=rls-v2.1 \
            file://run-ptest \
            "
 
