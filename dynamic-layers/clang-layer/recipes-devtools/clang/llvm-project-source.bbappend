@@ -18,10 +18,10 @@ SRC_URI_LLVM11 = " \
                    file://llvm11-skip-building-tests.patch;patchdir=llvm/projects/llvm-spirv \
                    "
 
-SRC_URI_append_intel-x86-common = " \
-                                    git://github.com/KhronosGroup/SPIRV-LLVM-Translator.git;protocol=https;branch=${SPIRV_BRANCH};destsuffix=git/llvm/projects/llvm-spirv;name=spirv \
-                                    "
+SPIRV_LLVM_SRC_URI = "git://github.com/KhronosGroup/SPIRV-LLVM-Translator.git;protocol=https;branch=${SPIRV_BRANCH};destsuffix=git/llvm/projects/llvm-spirv;name=spirv"
 
-SRC_URI_append_intel-x86-common = "${@bb.utils.contains('LLVMVERSION', '10.0.1', '${SRC_URI_LLVM10}', '${SRC_URI_LLVM11}', d)}"
+SPIRV_LLVM_PATCHES = "${@bb.utils.contains('LLVMVERSION', '10.0.1', '${SRC_URI_LLVM10}', '${SRC_URI_LLVM11}', d)}"
 
-SRCREV_spirv = "${SPIRV_SRCREV}"
+
+SRC_URI_append_intel-x86-common = "${@bb.utils.contains('LLVMVERSION', '12.0.0', '', ' ${SPIRV_LLVM_SRC_URI} ${SPIRV_LLVM_PATCHES} ', d)}"
+SRCREV_spirv = "${@bb.utils.contains('LLVMVERSION', '12.0.0', '', '${SPIRV_SRCREV}', d)}"
