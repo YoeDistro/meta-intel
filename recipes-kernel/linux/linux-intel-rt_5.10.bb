@@ -11,8 +11,6 @@ python () {
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 SRC_URI_append = " file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch \
-                   file://objtool-fix-segfault-with-clang.patch \
-                   file://x86-entry-Emit-a-symbol-for-register-restoring-thunk.patch \
                    "
 
 KBRANCH = "5.10/preempt-rt"
@@ -20,8 +18,8 @@ KMETA_BRANCH = "yocto-5.10"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "5.10.12"
-SRCREV_machine ?= "67938f51cc0319dd29e5be856ace30fd0bfed1e6"
-SRCREV_meta ?= "513e9332a0092795b3b29eec0030b462ae4c8b6e"
+LINUX_VERSION ?= "5.10.21"
+SRCREV_machine ?= "774cd893ee3f4044305e0a7bf5090e32b72578b3"
+SRCREV_meta ?= "eb09284047fec2f09d62068c338ae320c6681bd1"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
