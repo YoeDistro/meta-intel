@@ -4,28 +4,29 @@ DESCRIPTION = "This toolkit allows developers to deploy pre-trained \
 deep learning models through a high-level C++ Inference Engine API \
 integrated with application logic."
 
-SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=git;branch=releases/2021/2;lfs=0 \
-           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/usb-ma2x8x/firmware_usb-ma2x8x_1522.zip;name=usb_ma2x8x \
-           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/pcie-ma2x8x/firmware_pcie-ma2x8x_1522.zip;name=pcie_ma2x8x \
+SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=git;branch=releases/2021/3;lfs=0 \
+           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/usb-ma2x8x/firmware_usb-ma2x8x_1642.zip;name=usb_ma2x8x \
+           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/pcie-ma2x8x/firmware_pcie-ma2x8x_1642.zip;name=pcie_ma2x8x \
            git://github.com/openvinotoolkit/oneDNN.git;protocol=https;destsuffix=git/inference-engine/thirdparty/mkl-dnn;name=mkl;nobranch=1 \
+           git://github.com/herumi/xbyak.git;protocol=https;destsuffix=git/thirdparty/xbyak;name=xbyak \
            file://0001-inference-engine-use-system-installed-packages.patch \
            file://0002-cldNN-disable-Werror.patch \
            file://0003-inference-engine-installation-fixes.patch \
-           file://0005-cldnn-fix-inclusion-of-headers.patch \
            file://0001-dont-install-licenses-and-version-file.patch \
            "
 
-SRCREV = "4795391b73381660b69b4cd3986c7a0bf902e868"
-SRCREV_mkl = "5ef085d5af65e8966e03cdfcbaa65761d61a5c9a"
+SRCREV = "18e83a217702c650280c6abfc43f3285a3aadb61"
+SRCREV_mkl = "d35c3c11f9ff0f5090f9afe16af122cda501134c"
+SRCREV_xbyak = "8d1e41b650890080fb77548372b6236bbd4079f9"
 
-SRC_URI[usb_ma2x8x.sha256sum] = "95a93144f0bbfe6e35d3830e93e6b63e1e109f849a6a7c307cae9030e3a662aa"
-SRC_URI[pcie_ma2x8x.sha256sum] = "6d061d21d90f1919ef375138066ba7a20ceb663901d2729d9cb1b639169df5da"
+SRC_URI[usb_ma2x8x.sha256sum] = "d0f6aaaf71a595963e6013ef59045e20b07324f1a47deaa3f906419d39b2bd5a"
+SRC_URI[pcie_ma2x8x.sha256sum] = "18d3cd10cf6cc36ff58001812d3d215c0bbb2de09a8832128592401c8f959358"
 
 LICENSE = "Apache-2.0 & ISSL & MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
-                    file://inference-engine/thirdparty/mkl-dnn/LICENSE;md5=afa44a3d001cc203032135324f9636b7 \
-                    file://inference-engine/thirdparty/mkl-dnn/src/cpu/xbyak/COPYRIGHT;md5=03532861dad9003cc2c17f14fc7a4efa \
-                    file://inference-engine/thirdparty/clDNN/common/khronos_ocl_clhpp/LICENSE.txt;md5=88b295a48d2b3244ba65d3c055472c8a \
+                    file://inference-engine/thirdparty/mkl-dnn/LICENSE;md5=c441291ac5f15bdc6b09b4cc02ece35b \
+                    file://thirdparty/xbyak/COPYRIGHT;md5=03532861dad9003cc2c17f14fc7a4efa \
+                    file://inference-engine/thirdparty/clDNN/common/include/OpenCL_CLHPP_License.txt;md5=3b83ef96387f14655fc854ddc3c6bd57 \
 "
 LICENSE_${PN}-vpu-firmware = "ISSL"
 
@@ -39,7 +40,7 @@ EXTRA_OECMAKE += " \
                   -DENABLE_GNA=0 \
                   -DPYTHON_EXECUTABLE=${PYTHON} \
                   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-                  -DTHREADING=TBB -DTBB_DIR=${STAGING_LIBDIR} \
+                  -DTHREADING=TBB -DTBB_DIR=${STAGING_LIBDIR}/cmake/TBB \
                   -DENABLE_SAMPLES=1 \
                   -DIE_CPACK_IE_DIR=${prefix} \
                   -DNGRAPH_UNIT_TEST_ENABLE=FALSE \
@@ -58,7 +59,6 @@ DEPENDS += "libusb1 \
             pugixml \
             protobuf-native \
             tbb \
-            onednn \
             "
 
 COMPATIBLE_HOST = '(x86_64).*-linux'

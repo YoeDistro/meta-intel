@@ -1,6 +1,6 @@
-From a8b6a2e251c42a393218174c6737208760d2e1c1 Mon Sep 17 00:00:00 2001
+From ca4a2b824de61c182b46e28fce875370ce46d4e1 Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
-Date: Wed, 10 Jun 2020 09:43:55 +0800
+Date: Thu, 8 Apr 2021 14:19:51 +0800
 Subject: [PATCH] inference-engine: use system installed packages
 
 Use installed versions of ade, protobuf and tbb.
@@ -9,34 +9,33 @@ Upstream-Status: Pending
 
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
- cmake/dependencies.cmake                      | 18 ------------------
+ cmake/dependencies.cmake                      | 19 -----------
  inference-engine/CMakeLists.txt               |  2 +-
- inference-engine/cmake/ie_parallel.cmake      |  7 +------
- .../src/inference_engine/CMakeLists.txt       | 19 -------------------
- .../common_test_utils/CMakeLists.txt          |  4 +---
- .../unit_test_utils/CMakeLists.txt            |  3 +--
- inference-engine/thirdparty/CMakeLists.txt    |  5 ++---
- 7 files changed, 6 insertions(+), 52 deletions(-)
+ inference-engine/cmake/dependencies.cmake     | 34 -------------------
+ inference-engine/cmake/ie_parallel.cmake      |  2 +-
+ inference-engine/samples/CMakeLists.txt       |  2 +-
+ .../common_test_utils/CMakeLists.txt          |  4 +--
+ .../unit_test_utils/CMakeLists.txt            |  3 +-
+ inference-engine/thirdparty/CMakeLists.txt    |  5 ++-
+ 8 files changed, 7 insertions(+), 64 deletions(-)
 
 diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
-index 6a44c8769e..a128eb63a1 100644
+index aed7614734..f5baa6f86b 100644
 --- a/cmake/dependencies.cmake
 +++ b/cmake/dependencies.cmake
-@@ -13,25 +13,7 @@ if(CMAKE_CROSSCOMPILING AND NGRAPH_ONNX_IMPORT_ENABLE)
- 
+@@ -7,23 +7,4 @@ set_temp_directory(TEMP "${IE_MAIN_SOURCE_DIR}")
+ if(CMAKE_CROSSCOMPILING AND CMAKE_HOST_SYSTEM_NAME MATCHES Linux AND CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "amd64.*|x86_64.*|AMD64.*")
      set(protoc_version "3.7.1")
-     if(CMAKE_HOST_SYSTEM_NAME MATCHES Linux)
--        RESOLVE_DEPENDENCY(SYSTEM_PROTOC_ROOT
--                           ARCHIVE_LIN "protoc-${protoc_version}-linux-x86_64.tar.gz"
--                           TARGET_PATH "${TEMP}/protoc-${protoc_version}-linux-x86_64")
--        debug_message(STATUS "host protoc-${protoc_version} root path = " ${SYSTEM_PROTOC_ROOT})
-     else()
-         message(FATAL_ERROR "Unsupported host system (${CMAKE_HOST_SYSTEM_NAME}) and arch (${CMAKE_HOST_SYSTEM_PROCESSOR}) for cross-compilation")
-     endif()
+ 
+-    RESOLVE_DEPENDENCY(SYSTEM_PROTOC_ROOT
+-        ARCHIVE_LIN "protoc-${protoc_version}-linux-x86_64.tar.gz"
+-        TARGET_PATH "${TEMP}/protoc-${protoc_version}-linux-x86_64"
+-        SHA256 "a1bedd5c05ca51e49f8f254faa3d7331e05b3a806c151fb111d582f154d0fee8"
+-    )
+-    debug_message(STATUS "host protoc-${protoc_version} root path = " ${SYSTEM_PROTOC_ROOT})
 -
 -    reset_deps_cache(SYSTEM_PROTOC)
 -
--    message("${SYSTEM_PROTOC_ROOT}/bin")
 -    find_program(
 -        SYSTEM_PROTOC
 -        NAMES protoc
@@ -49,72 +48,94 @@ index 6a44c8769e..a128eb63a1 100644
 -    update_deps_cache(SYSTEM_PROTOC "${SYSTEM_PROTOC}" "Path to host protoc for ONNX Importer")
  endif()
 diff --git a/inference-engine/CMakeLists.txt b/inference-engine/CMakeLists.txt
-index a3e4f74c40..76b09683dd 100644
+index 95c657222e..20cbd5000b 100644
 --- a/inference-engine/CMakeLists.txt
 +++ b/inference-engine/CMakeLists.txt
-@@ -56,7 +56,7 @@ function(ie_developer_export)
-         APPEND FILE "${CMAKE_BINARY_DIR}/targets_developer.cmake")
- 
-     # Custom target to build only Inference Engine Developer Package targets
--    add_custom_target(ie_dev_targets ALL DEPENDS ${OpenVINODeveloperPackageTargets} ${IEDeveloperPackageTargets} gflags
-+    add_custom_target(ie_dev_targets ALL DEPENDS ${OpenVINODeveloperPackageTargets} ${IEDeveloperPackageTargets}
-                       inference_engine_ir_reader inference_engine_ir_v7_reader)
+@@ -20,7 +20,7 @@ function(ie_developer_export_targets)
  endfunction()
  
+ function(ie_developer_export)
+-    set(all_dev_targets gflags ie_libraries)
++    set(all_dev_targets ie_libraries)
+     foreach(component IN LISTS openvino_export_components)
+         export(TARGETS ${${component}} NAMESPACE IE::
+             APPEND FILE "${CMAKE_BINARY_DIR}/${component}_dev_targets.cmake")
+diff --git a/inference-engine/cmake/dependencies.cmake b/inference-engine/cmake/dependencies.cmake
+index 6fdfc6f3cd..c07bf0f3c8 100644
+--- a/inference-engine/cmake/dependencies.cmake
++++ b/inference-engine/cmake/dependencies.cmake
+@@ -138,40 +138,6 @@ endif ()
+ if (THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO")
+     reset_deps_cache(TBBROOT TBB_DIR)
+ 
+-    if (WIN32 AND X86_64)
+-        #TODO: add target_path to be platform specific as well, to avoid following if
+-        RESOLVE_DEPENDENCY(TBB
+-                ARCHIVE_WIN "tbb2020_20200415_win.zip"
+-                TARGET_PATH "${TEMP}/tbb"
+-                ENVIRONMENT "TBBROOT"
+-                SHA256 "f1c9b9e2861efdaa01552bd25312ccbc5feeb45551e5f91ae61e29221c5c1479")
+-    elseif(ANDROID)  # Should be before LINUX due LINUX is detected as well
+-        RESOLVE_DEPENDENCY(TBB
+-                ARCHIVE_ANDROID "tbb2020_20200404_android.tgz"
+-                TARGET_PATH "${TEMP}/tbb"
+-                ENVIRONMENT "TBBROOT"
+-                SHA256 "f42d084224cc2d643314bd483ad180b081774608844000f132859fca3e9bf0ce")
+-    elseif(LINUX AND X86_64)
+-        RESOLVE_DEPENDENCY(TBB
+-                ARCHIVE_LIN "tbb2020_20200415_lin_strip.tgz"
+-                TARGET_PATH "${TEMP}/tbb"
+-                SHA256 "95b2f3b0b70c7376a0c7de351a355c2c514b42c4966e77e3e34271a599501008")
+-    elseif(LINUX AND AARCH64)
+-        RESOLVE_DEPENDENCY(TBB
+-                ARCHIVE_LIN "keembay/tbb2020_38404_kmb_lic.tgz"
+-                TARGET_PATH "${TEMP}/tbb_yocto"
+-                ENVIRONMENT "TBBROOT"
+-                SHA256 "321261ff2eda6d4568a473cb883262bce77a93dac599f7bd65d2918bdee4d75b")
+-    elseif(APPLE AND X86_64)
+-        RESOLVE_DEPENDENCY(TBB
+-                ARCHIVE_MAC "tbb2020_20200404_mac.tgz"
+-                TARGET_PATH "${TEMP}/tbb"
+-                ENVIRONMENT "TBBROOT"
+-                SHA256 "ad9cf52e657660058aa6c6844914bc0fc66241fec89a392d8b79a7ff69c3c7f6")
+-    else()
+-        message(FATAL_ERROR "TBB is not available on current platform")
+-    endif()
+-
+     update_deps_cache(TBBROOT "${TBB}" "Path to TBB root folder")
+     update_deps_cache(TBB_DIR "${TBB}/cmake" "Path to TBB cmake folder")
+ 
 diff --git a/inference-engine/cmake/ie_parallel.cmake b/inference-engine/cmake/ie_parallel.cmake
-index f8988aa105..28e79417f4 100644
+index f8988aa105..42fedd10c5 100644
 --- a/inference-engine/cmake/ie_parallel.cmake
 +++ b/inference-engine/cmake/ie_parallel.cmake
-@@ -67,13 +67,8 @@ function(set_ie_threading_interface_for TARGET_NAME)
-     set(IE_THREAD_DEFINE "IE_THREAD_SEQ")
- 
-     if (THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO")
--        if (TBB_FOUND)
-             set(IE_THREAD_DEFINE "IE_THREAD_TBB")
--            ie_target_link_libraries(${TARGET_NAME} ${LINK_TYPE} ${TBB_IMPORTED_TARGETS})
--        else ()
--            ext_message(WARNING "TBB was not found by the configured TBB_DIR path.\
--                                 SEQ method will be used for ${TARGET_NAME}")
--        endif ()
-+            target_link_libraries(${TARGET_NAME} INTERFACE tbb tbbmalloc)
-     elseif (THREADING STREQUAL "OMP")
-         if (WIN32)
-             set(omp_lib_name libiomp5md)
-diff --git a/inference-engine/src/inference_engine/CMakeLists.txt b/inference-engine/src/inference_engine/CMakeLists.txt
-index f012a038a2..3bba22215e 100644
---- a/inference-engine/src/inference_engine/CMakeLists.txt
-+++ b/inference-engine/src/inference_engine/CMakeLists.txt
-@@ -216,25 +216,6 @@ list(APPEND core_components ngraph)
- if((THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO") AND TBBROOT MATCHES ${TEMP})
-     ie_cpack_add_component(tbb REQUIRED)
-     list(APPEND core_components tbb)
--
--    install(DIRECTORY "${TBB}/include"
--            DESTINATION ${IE_CPACK_IE_DIR}/external/tbb
--            COMPONENT tbb)
--    install(DIRECTORY "${TBB}/lib"
--            DESTINATION ${IE_CPACK_IE_DIR}/external/tbb
--            COMPONENT tbb)
--    if(EXISTS "${TBB}/bin")
--      install(DIRECTORY "${TBB}/bin"
--              DESTINATION ${IE_CPACK_IE_DIR}/external/tbb
--              COMPONENT tbb)
--    endif()
--    install(FILES "${TBB}/LICENSE"
--            DESTINATION ${IE_CPACK_IE_DIR}/external/tbb
--            COMPONENT tbb)
--    install(FILES "${TBB}/cmake/TBBConfig.cmake"
--                  "${TBB}/cmake/TBBConfigVersion.cmake"
--            DESTINATION ${IE_CPACK_IE_DIR}/external/tbb/cmake
--            COMPONENT tbb)
+@@ -6,7 +6,7 @@ function(set_ie_threading_interface_for TARGET_NAME)
+     if (THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO" AND NOT TBB_FOUND)
+         find_package(TBB COMPONENTS tbb tbbmalloc)
+         set("TBB_FOUND" ${TBB_FOUND} PARENT_SCOPE)
+-        set("TBB_IMPORTED_TARGETS" ${TBB_IMPORTED_TARGETS} PARENT_SCOPE)
++        set("TBB_IMPORTED_TARGETS" "tbb;tbbmalloc" PARENT_SCOPE)
+         set("TBB_VERSION" ${TBB_VERSION} PARENT_SCOPE)
+         if (TBB_FOUND)
+             if (TBB_VERSION VERSION_LESS 2020)
+diff --git a/inference-engine/samples/CMakeLists.txt b/inference-engine/samples/CMakeLists.txt
+index dfe9f2303d..6bc44019fe 100644
+--- a/inference-engine/samples/CMakeLists.txt
++++ b/inference-engine/samples/CMakeLists.txt
+@@ -126,7 +126,7 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/gflags")
+         add_subdirectory(thirdparty/gflags EXCLUDE_FROM_ALL)
+         set_target_properties(gflags_nothreads_static PROPERTIES FOLDER thirdparty)
+     endfunction()
+-    add_gflags()
++    #add_gflags()
  endif()
  
- ie_cpack_add_component(core REQUIRED DEPENDS ${core_components})
+ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 diff --git a/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt b/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt
-index ca58264bd5..11df150845 100644
+index 6e09201f1e..2d2e3524a5 100644
 --- a/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt
 +++ b/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt
-@@ -26,7 +26,7 @@ function(add_gtest_libraries)
+@@ -43,7 +43,7 @@ function(add_gtest_libraries)
                            PROPERTIES FOLDER thirdparty)
  endfunction()
  
@@ -123,17 +144,17 @@ index ca58264bd5..11df150845 100644
  
  if (MSVC)
      set(PUGI pugixml_mt)
-@@ -37,8 +37,6 @@ endif ()
+@@ -52,8 +52,6 @@ else ()
+ endif ()
+ 
  list(APPEND EXPORT_DEPENDENCIES
-         ${PUGI}
-         ${NGRAPH_LIBRARIES}
 -        gtest
 -        gtest_main
          )
  
  set(TARGET_NAME commonTestUtils)
 diff --git a/inference-engine/tests/ie_test_utils/unit_test_utils/CMakeLists.txt b/inference-engine/tests/ie_test_utils/unit_test_utils/CMakeLists.txt
-index 5413d13895..3f2803750f 100644
+index ab956218aa..233eb5ea46 100644
 --- a/inference-engine/tests/ie_test_utils/unit_test_utils/CMakeLists.txt
 +++ b/inference-engine/tests/ie_test_utils/unit_test_utils/CMakeLists.txt
 @@ -8,8 +8,7 @@ add_subdirectory(mocks/mock_engine)
@@ -147,26 +168,26 @@ index 5413d13895..3f2803750f 100644
  addIeTarget(
          NAME ${TARGET_NAME}
 diff --git a/inference-engine/thirdparty/CMakeLists.txt b/inference-engine/thirdparty/CMakeLists.txt
-index fa2a4d02d8..67d3b7ad05 100644
+index 9a6a9209f1..eda6a64161 100644
 --- a/inference-engine/thirdparty/CMakeLists.txt
 +++ b/inference-engine/thirdparty/CMakeLists.txt
 @@ -62,14 +62,13 @@ else()
+     target_include_directories(pugixml INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pugixml/src>")
  endif()
  
- add_subdirectory(stb_lib)
--add_subdirectory(ade)
+-add_subdirectory(ade EXCLUDE_FROM_ALL)
  add_subdirectory(fluid/modules/gapi)
  
--set_target_properties(ade fluid stb_image PROPERTIES FOLDER thirdparty)
-+set_target_properties(fluid stb_image PROPERTIES FOLDER thirdparty)
+-set_target_properties(ade fluid PROPERTIES FOLDER thirdparty)
++set_target_properties(fluid PROPERTIES FOLDER thirdparty)
  
  # developer package
  
--ie_developer_export_targets(ade fluid)
-+ie_developer_export_targets(fluid)
+-openvino_developer_export_targets(COMPONENT openvino_common TARGETS ade fluid)
++openvino_developer_export_targets(COMPONENT openvino_common TARGETS fluid)
  
  if (NOT USE_SYSTEM_PUGIXML)
      set_target_properties(pugixml PROPERTIES FOLDER thirdparty)
 -- 
-2.29.2
+2.29.0
 
