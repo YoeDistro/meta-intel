@@ -33,11 +33,9 @@ PACKAGECONFIG[wayland]	= "-DENABLE_WAYLAND=ON, -DENABLE_WAYLAND=OFF, wayland way
 
 SRC_URI = "git://github.com/Intel-Media-SDK/MediaSDK.git;protocol=https;nobranch=1;lfs=0 \
            file://0001-FindITT.cmake-fix-detection-of-header-library.patch \
-           file://0001-hevcd-Enable-the-SPS-PPS-error-reporting.patch \
-           file://0002-hevcd-Use-reinterpret_cast-for-style-alignment.patch \
            "
 
-SRCREV = "c982e8cccc98c2ad0b3c6043cdbd6aaf7447cf54"
+SRCREV = "03164a0b491651c210abd4549ca5275ac974d105"
 S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^intel-mediasdk-(?P<pver>(\d+(\.\d+)+))$"
