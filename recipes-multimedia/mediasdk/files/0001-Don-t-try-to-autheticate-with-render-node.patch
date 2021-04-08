@@ -1,0 +1,44 @@
+From 6945cd0ad84855ab4a2dc40016879fb5fc7f2b6a Mon Sep 17 00:00:00 2001
+From: Vincent Cheah Beng Keat <vincent.beng.keat.cheah@intel.com>
+Date: Wed, 7 Apr 2021 05:30:15 +0000
+Subject: [PATCH] Don't try to autheticate with render node
+
+Replicate similar libVA wayland change.
+https://github.com/intel/libva/commit/283f776a9649dcef58b47958c1269499adfa1cd4
+
+Platform: ADL-S, EHL, TGL
+OS: Yocto native wayland weston
+Tested:
+    ./sample_decode h265 -i Puppies_3840x2160.265 -rwld -rgb4
+
+Issue: #2592
+
+Upstream-Status: Backport [https://github.com/Intel-Media-SDK/MediaSDK/commit/6945cd0ad84855ab4a2dc40016879fb5fc7f2b6a]
+
+Signed-off-by: Cheah, Vincent Beng Keat <vincent.beng.keat.cheah@intel.com>
+---
+ samples/sample_misc/wayland/src/class_wayland.cpp | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/samples/sample_misc/wayland/src/class_wayland.cpp b/samples/sample_misc/wayland/src/class_wayland.cpp
+index 62f326e3..4a0beed3 100644
+--- a/samples/sample_misc/wayland/src/class_wayland.cpp
++++ b/samples/sample_misc/wayland/src/class_wayland.cpp
+@@ -433,8 +433,12 @@ void Wayland::DrmHandleDevice(const char *name)
+             m_device_name << "\n";
+         return;
+     }
+-    drmGetMagic(m_fd, &magic);
+-    wl_drm_authenticate(m_drm, magic);
++
++    int type = drmGetNodeTypeFromFd(m_fd);
++    if (type != DRM_NODE_RENDER) {
++        drmGetMagic(m_fd, &magic);
++        wl_drm_authenticate(m_drm, magic);
++    }
+ }
+ 
+ void Wayland::DrmHandleAuthenticated()
+-- 
+2.24.3
+
