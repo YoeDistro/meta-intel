@@ -2,8 +2,8 @@ FILESEXTRAPATHS_prepend_intel-x86-common := "${THISDIR}/files:"
 
 SPIRV_BRANCH = "${@bb.utils.contains('LLVMVERSION', '10.0.1', 'llvm_release_100', 'llvm_release_110', d)}"
 
-SPIRV10_SRCREV = "4d43f68a30a510b4e7607351caab3df8e7426a6b"
-SPIRV11_SRCREV = "93032d36d2fe17befb7994714c07c67ea68efbea"
+SPIRV10_SRCREV = "576abae62cecd171992017a4a786e3831221ab8d"
+SPIRV11_SRCREV = "2a8c1e6c9778deaa720a23e08c293006dc5d56fd"
 
 SPIRV_SRCREV = "${@bb.utils.contains('LLVMVERSION', '10.0.1', '${SPIRV10_SRCREV}', '${SPIRV11_SRCREV}', d)}"
 
@@ -12,10 +12,18 @@ SRC_URI_LLVM10 = " \
                    file://fix-shared-libs.patch;patchdir=llvm/projects/llvm-spirv \
                    file://BasicBlockUtils-Add-metadata-fixing-in-SplitBlockPre.patch;patchdir=llvm \
                    file://IndVarSimplify-Do-not-use-SCEV-expander-for-IVCount-.patch;patchdir=llvm \
+                   file://llvm10-OpenCL-3.0-support.patch \
+                   file://0002-Add-cl_khr_extended_subgroup-extensions.patch \
+                   file://0001-Memory-leak-fix-for-Managed-Static-Mutex.patch \
+                   file://llvm10-Remove-repo-name-in-LLVM-IR.patch \
+                   file://0001-Fix-debug-info-of-work-item-builtin-translation-745.patch;patchdir=llvm/projects/llvm-spirv \
                    "
 
 SRC_URI_LLVM11 = " \
                    file://llvm11-skip-building-tests.patch;patchdir=llvm/projects/llvm-spirv \
+                   file://llvm11-OpenCL-3.0-support.patch \
+                   file://0001-Memory-leak-fix-for-Managed-Static-Mutex.patch \
+                   file://llvm11-Remove-repo-name-in-LLVM-IR.patch \
                    "
 
 SPIRV_LLVM_SRC_URI = "git://github.com/KhronosGroup/SPIRV-LLVM-Translator.git;protocol=https;branch=${SPIRV_BRANCH};destsuffix=git/llvm/projects/llvm-spirv;name=spirv"
