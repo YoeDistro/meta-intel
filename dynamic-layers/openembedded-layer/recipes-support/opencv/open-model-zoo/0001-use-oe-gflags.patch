@@ -1,4 +1,4 @@
-From 56078933a8397b7fae146156743408319eac1ae0 Mon Sep 17 00:00:00 2001
+From 6a0046c523a67b4d21d856ea73861c00b5a9c9fd Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Mon, 19 Oct 2020 23:29:23 +0800
 Subject: [PATCH] demos: use gflags from meta-oe
@@ -11,23 +11,23 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/demos/CMakeLists.txt b/demos/CMakeLists.txt
-index e5f17231..08d4e4e6 100644
+index c5e3b1ec3..4e78c72a6 100644
 --- a/demos/CMakeLists.txt
 +++ b/demos/CMakeLists.txt
-@@ -90,11 +90,11 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
- endif()
+@@ -62,11 +62,11 @@ set(CMAKE_CXX_STANDARD 11)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
  ####################################
  
--set (GFLAGS_IS_SUBPROJECT TRUE)
-+set (GFLAGS_IS_SUBPROJECT FALSE)
- set (HAVE_SYS_STAT_H 1)
- set (HAVE_INTTYPES_H 1)
+-set(GFLAGS_IS_SUBPROJECT TRUE)
++set(GFLAGS_IS_SUBPROJECT FALSE)
+ set(HAVE_SYS_STAT_H 1)
+ set(HAVE_INTTYPES_H 1)
  
 -add_subdirectory(thirdparty/gflags)
 +#add_subdirectory(thirdparty/gflags)
  
- if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
-     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+ if(CMAKE_CXX_COMPILER_ID MATCHES "^GNU|(Apple)?Clang$")
+     set(COMPILER_IS_GCC_LIKE TRUE)
 -- 
-2.26.2
+2.29.0
 

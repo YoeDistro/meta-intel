@@ -5,18 +5,19 @@ models and a set of demos to expedite development of high-performance \
 deep learning inference applications."
 
 SRC_URI = "git://github.com/opencv/open_model_zoo.git;protocol=git;branch=master \
-           file://0001-use-oe-gflags.patch;striplevel=2 \
+           file://0001-use-oe-gflags.patch \
            "
 
-SRCREV = "338630987b403a6981d03ab6d04c2d5ad367793a"
+SRCREV = "9ca5dbeff80464bf5728e8be25daedfe9a9208d7"
 
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://../LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
+LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
 "
 
 inherit cmake
 
-S = "${WORKDIR}/git/demos"
+S = "${WORKDIR}/git"
+OECMAKE_SOURCEPATH = "${S}/demos"
 
 DEPENDS += "openvino-inference-engine opencv gflags"
 
@@ -28,6 +29,8 @@ RDEPENDS_${PN} += " \
                    python3-test-generator \
                    python3-requests \
                    python3-pyyaml \
+                   python3-numpy \
+                   bash \
 "
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
@@ -52,12 +55,12 @@ do_install(){
 	install -d ${D}${libdir}
 	install -d ${D}${bindir}
 	install -d ${D}${datadir}/openvino/open-model-zoo/tools
-	install -d ${D}${datadir}/openvino/open-model-zoo/demos/python_demos
+	install -d ${D}${datadir}/openvino/open-model-zoo/demos
 	cp -rf ${WORKDIR}/build/intel64/Release/lib/*.a ${D}${libdir}
 	cp -rf ${WORKDIR}/build/intel64/Release/*_demo* ${D}${bindir}
 	cp -rf ${WORKDIR}/git/models ${D}${datadir}/openvino/open-model-zoo
+	cp -rf ${WORKDIR}/git/demos ${D}${datadir}/openvino/open-model-zoo
 	cp -rf ${WORKDIR}/git/tools/downloader ${D}${datadir}/openvino/open-model-zoo/tools
-	cp -rf ${WORKDIR}/git/demos/python_demos ${D}${datadir}/openvino/open-model-zoo/demos
 }
 
 FILES_${PN} += "${datadir}/openvino"
