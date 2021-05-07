@@ -13,6 +13,7 @@ SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=git;branch=rel
            file://0002-cldNN-disable-Werror.patch \
            file://0003-inference-engine-installation-fixes.patch \
            file://0001-dont-install-licenses-and-version-file.patch \
+           file://0001-plugin_api-fix-build-with-gcc-11.patch \
            "
 
 SRCREV = "18e83a217702c650280c6abfc43f3285a3aadb61"
