@@ -40,3 +40,6 @@ do_install_append () {
 PACKAGES += "${PN}-script"
 
 FILES_${PN}-script += "${sysconfdir}/network/set_irq_affinity"
+
+# This was fixed in kernel v4.4
+CVE_CHECK_WHITELIST += "CVE-2015-1142857"
