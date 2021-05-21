@@ -20,7 +20,7 @@ SRC_URI = "git://github.com/intel/ipmctl.git;protocol=https;branch=development;n
         file://0001-Ignore-STATIC_ASSERT-and-NULL-definition-so-we-can-c.patch;patchdir=edk2 \
 "
 
-SRCREV_ipmctl = "4579c7ec127d6c678ce25136f928b66c7ba51097"
+SRCREV_ipmctl = "c8134c253a577a89f651d82c3f3ecd19a015c057"
 #tag: edk2-stable202102
 SRCREV_edk2 = "ef91b07388e1c0a50c604e5350eeda98428ccea6"
 
