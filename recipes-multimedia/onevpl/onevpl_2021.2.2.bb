@@ -11,6 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c18ea6bb4786a26bf4eee88a7424a408 \
 SRC_URI = "git://github.com/oneapi-src/oneVPL.git;protocol=https \
             file://0001-cmake-Allow-build-env-to-set-variables.patch \
             file://0001-Add-X11-support-to-legacy-tools.patch \
+            file://0001-Adding-Wayland-support-to-legacy-tools.patch \
             "
 SRCREV = "17968d8d2299352f5a9e09388d24e81064c81c87"
 S = "${WORKDIR}/git"
