@@ -14,7 +14,7 @@ SECTION = "lib"
 inherit pkgconfig cmake ptest
 
 S = "${WORKDIR}/git"
-SRCREV = "518b5e03690e142eb07934d8ddb9c3571fe4f206"
+SRCREV = "7336ca9f055cf1bfa13efb658fe15dc9b41f0740"
 SRC_URI = "git://github.com/oneapi-src/oneDNN.git;branch=rls-v2.2 \
            file://fix-gcc-11-failures.patch \
            file://run-ptest \
