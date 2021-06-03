@@ -15,7 +15,7 @@ SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=git;branch=rel
            file://0001-dont-install-licenses-and-version-file.patch \
            "
 
-SRCREV = "18e83a217702c650280c6abfc43f3285a3aadb61"
+SRCREV = "c5f7ad383e654dfb4a5ac0805323cf8d43426b3f"
 SRCREV_mkl = "d35c3c11f9ff0f5090f9afe16af122cda501134c"
 SRCREV_xbyak = "8d1e41b650890080fb77548372b6236bbd4079f9"
 
