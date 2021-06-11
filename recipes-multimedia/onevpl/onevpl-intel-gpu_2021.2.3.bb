@@ -15,7 +15,8 @@ COMPATIBLE_HOST_x86-x32 = "null"
 DEPENDS += "libdrm libva intel-media-driver onevpl"
 
 SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;branch=main;lfs=0 \
-          "
+            file://0001-ADLP-add-new-device-id-list.patch \
+            "
 
 SRCREV = "d6b0df4f058166cff31a360b77774f7410667be5"
 S = "${WORKDIR}/git"
