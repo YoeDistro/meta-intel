@@ -1,0 +1,96 @@
+From 1b754c4bf20c33ae0e9a82197be58975da828516 Mon Sep 17 00:00:00 2001
+From: Seunghyuk Park <seunghyuk.h.park@intel.com>
+Date: Tue, 25 May 2021 13:46:00 -0700
+Subject: [PATCH] Fix sample_vpp, sample_encode alignment issue
+
+Upstream-Status: Backport
+inner-source #1b754c4b
+
+Signed-off-by: Yew, Chang Ching <chang.ching.yew@intel.com>
+---
+ .../sample_encode/src/pipeline_encode.cpp     | 21 +++++++++++++++++++
+ .../sample_vpp/src/sample_vpp_utils.cpp       |  9 ++++++++
+ 2 files changed, 30 insertions(+)
+
+diff --git a/tools/legacy/sample_encode/src/pipeline_encode.cpp b/tools/legacy/sample_encode/src/pipeline_encode.cpp
+index 6e5c6fc..f68ed02 100644
+--- a/tools/legacy/sample_encode/src/pipeline_encode.cpp
++++ b/tools/legacy/sample_encode/src/pipeline_encode.cpp
+@@ -594,6 +594,13 @@ mfxStatus CEncodingPipeline::InitMfxEncParams(sInputParams *pInParams) {
+             ? MSDK_ALIGN16(pInParams->nDstHeight)
+             : MSDK_ALIGN32(pInParams->nDstHeight);
+
++#if (MFX_VERSION >= 2000)
++    if (!pInParams->bUseHWLib) {
++        m_mfxEncParams.mfx.FrameInfo.Width  = pInParams->nDstWidth;
++        m_mfxEncParams.mfx.FrameInfo.Height = pInParams->nDstHeight;
++    }
++#endif
++
+     m_mfxEncParams.mfx.FrameInfo.CropX = 0;
+     m_mfxEncParams.mfx.FrameInfo.CropY = 0;
+     m_mfxEncParams.mfx.FrameInfo.CropW = pInParams->nDstWidth;
+@@ -855,6 +862,13 @@ mfxStatus CEncodingPipeline::InitMfxVppParams(sInputParams *pInParams) {
+                                        ? MSDK_ALIGN16(pInParams->nHeight)
+                                        : MSDK_ALIGN32(pInParams->nHeight);
+
++#if (MFX_VERSION >= 2000)
++    if (!pInParams->bUseHWLib) {
++        m_mfxVppParams.vpp.In.Width  = pInParams->nWidth;
++        m_mfxVppParams.vpp.In.Height = pInParams->nHeight;
++    }
++#endif
++
+     // set crops in input mfxFrameInfo for correct work of file reader
+     // VPP itself ignores crops at initialization
+     m_mfxVppParams.vpp.In.CropW = pInParams->nWidth;
+@@ -893,6 +907,13 @@ mfxStatus CEncodingPipeline::InitMfxVppParams(sInputParams *pInParams) {
+                                         ? MSDK_ALIGN16(pInParams->nDstHeight)
+                                         : MSDK_ALIGN32(pInParams->nDstHeight);
+
++#if (MFX_VERSION >= 2000)
++    if (!pInParams->bUseHWLib) {
++        m_mfxVppParams.vpp.Out.Width  = pInParams->nDstWidth;
++        m_mfxVppParams.vpp.Out.Height = pInParams->nDstHeight;
++    }
++#endif
++
+     // configure and attach external parameters
+     InitVppFilters();
+
+diff --git a/tools/legacy/sample_vpp/src/sample_vpp_utils.cpp b/tools/legacy/sample_vpp/src/sample_vpp_utils.cpp
+index 60b7720..ccb6cff 100644
+--- a/tools/legacy/sample_vpp/src/sample_vpp_utils.cpp
++++ b/tools/legacy/sample_vpp/src/sample_vpp_utils.cpp
+@@ -385,12 +385,20 @@ mfxStatus InitParamsVPP(MfxVideoParamsWrapper* pParams, sInputParams* pInParams,
+     pParams->vpp.In.CropY = pInParams->frameInfoIn[paramID].CropY;
+     pParams->vpp.In.CropW = pInParams->frameInfoIn[paramID].CropW;
+     pParams->vpp.In.CropH = pInParams->frameInfoIn[paramID].CropH;
++
+     pParams->vpp.In.Width = MSDK_ALIGN16(pInParams->frameInfoIn[paramID].nWidth);
+     pParams->vpp.In.Height =
+         (MFX_PICSTRUCT_PROGRESSIVE == pInParams->frameInfoIn[paramID].PicStruct)
+             ? MSDK_ALIGN16(pInParams->frameInfoIn[paramID].nHeight)
+             : MSDK_ALIGN32(pInParams->frameInfoIn[paramID].nHeight);
+
++#if (MFX_VERSION >= 2000)
++    if (MFX_IMPL_SOFTWARE == pInParams->ImpLib) {
++        pParams->vpp.In.Width  = pInParams->frameInfoIn[paramID].nWidth;
++        pParams->vpp.In.Height = pInParams->frameInfoIn[paramID].nHeight;
++    }
++#endif
++
+     // width must be a multiple of 16
+     // height must be a multiple of 16 in case of frame picture and
+     // a multiple of 32 in case of field picture
+@@ -441,6 +449,7 @@ mfxStatus InitParamsVPP(MfxVideoParamsWrapper* pParams, sInputParams* pInParams,
+         (MFX_PICSTRUCT_PROGRESSIVE == pInParams->frameInfoOut[paramID].PicStruct)
+             ? MSDK_ALIGN16(pInParams->frameInfoOut[paramID].nHeight)
+             : MSDK_ALIGN32(pInParams->frameInfoOut[paramID].nHeight);
++
+ #if (MFX_VERSION >= 2000)
+     if (MFX_IMPL_SOFTWARE == pInParams->ImpLib) {
+         pParams->vpp.Out.Width  = pInParams->frameInfoOut[paramID].nWidth;
+--
+2.32.0
+

@@ -15,6 +15,9 @@ SRC_URI = "git://github.com/oneapi-src/oneVPL.git;protocol=https \
             file://0001-Update-headers-to-oneAPI-spec-v2.3-e170992.patch \
             file://0001-Remove-duplicate-MFXVideoDECODE_VPP-from-samples.patch \
             file://0001-Add-SMT-and-media_sdk_compatibility_headers.patch \
+            file://0001-Fix-NV12-input-format-in-legacy-samples.patch \
+            file://0001-Fix-sample_vpp-sample_encode-alignment-issue.patch \
+            file://0001-Fix-sample_encode-i010-input.patch \
             "
 SRCREV = "17968d8d2299352f5a9e09388d24e81064c81c87"
 S = "${WORKDIR}/git"
