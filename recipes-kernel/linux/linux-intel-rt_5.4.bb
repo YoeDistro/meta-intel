@@ -18,9 +18,9 @@ KMETA_BRANCH = "yocto-5.4"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "5.4.115"
-SRCREV_machine ?= "00c7e2e1841e0ed3c1249c0e4bcacbd70435d62e"
-SRCREV_meta ?= "9e2546ab8d63f70ba458eb159d29ce6736ffd3e4"
+LINUX_VERSION ?= "5.4.123"
+SRCREV_machine ?= "a6261c6ffb8eb5c0700ff0842565b4b38523dac4"
+SRCREV_meta ?= "656383210d369bbd49a7a278c6c7c7313f0df825"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
 
