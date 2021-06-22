@@ -18,6 +18,7 @@ SRC_URI = "git://github.com/oneapi-src/oneVPL.git;protocol=https \
             file://0001-Fix-NV12-input-format-in-legacy-samples.patch \
             file://0001-Fix-sample_vpp-sample_encode-alignment-issue.patch \
             file://0001-Fix-sample_encode-i010-input.patch \
+            file://0001-Corrected-the-install-path.patch \
             "
 SRCREV = "17968d8d2299352f5a9e09388d24e81064c81c87"
 S = "${WORKDIR}/git"
@@ -41,9 +42,14 @@ do_install_append () {
         find "${D}${datadir}/vpl/examples/" -type d \! -name 'examples' \! -name 'content' -exec rm -rf {} +
 }
 
-
 FILES_${PN}-examples = "${bindir}/dpcpp-blur \
                         ${bindir}/hello-* \
                         ${datadir}/vpl/examples \
                         "
-FILES_${PN} += "${datadir}"
+
+FILES_SOLIBSDEV = ""
+FILES_${PN}-dev += "${libdir}/libvpl.so"
+
+FILES_${PN} += "${datadir} \
+                ${libdir}/libvpl_wayland.so \
+                "
