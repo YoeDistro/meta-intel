@@ -4,11 +4,11 @@ top of core LLVM IR instructions that represent SIMD semantics of a program \
 targeting GPU"
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://License.md;md5=c18ea6bb4786a26bf4eee88a7424a408"
+LIC_FILES_CHKSUM = "file://Readme.md;beginline=1;endline=25;md5=607994952928db68a8a86574f661b914"
 
 SRC_URI = "git://github.com/intel/vc-intrinsics.git;protocol=https; \
           "
-SRCREV = "77974f5a32e19475125531483bede9ee23935257"
+SRCREV = "efec192d98e6d8ad611025d2cefd7a31cbc1d44b"
 
 S = "${WORKDIR}/git"
 
