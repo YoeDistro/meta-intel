@@ -4,13 +4,13 @@ device specific and buffer management for the Intel(R) Graphics \
 Compute Runtime for OpenCL(TM) and the Intel(R) Media Driver for VAAPI."
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE.md;md5=d9a6e772cd4c362ee4c8ef87c5aad843"
+LIC_FILES_CHKSUM = "file://LICENSE.md;md5=465fe90caea3edd6a2cecb3f0c28a654"
 
 SRC_URI = " \
             git://github.com/intel/gmmlib.git;protocol=https \
             "
 
-SRCREV = "60a77187c43ff23a0888b2f297ae5c93cc50a666"
+SRCREV = "9253eb8b949515d2a5030f99163a35567fe81838"
 
 S = "${WORKDIR}/git"
 
