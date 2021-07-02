@@ -1,0 +1,28 @@
+From b9bc0df996d1e65fd70d5eb2d40866693f23bb67 Mon Sep 17 00:00:00 2001
+From: Naveen Saini <naveen.kumar.saini@intel.com>
+Date: Thu, 24 Jun 2021 17:53:27 +0800
+Subject: [PATCH] CMakeLists.txt: link with libclang-cpp library instead
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ef88317e..7507d6a5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -281,7 +281,7 @@ if (WASM_ENABLED)
+     list(APPEND ISPC_TARGETS wasm-i32x4)
+ endif()
+ 
+-set(CLANG_LIBRARY_LIST clangFrontend clangDriver clangSerialization clangParse clangSema clangAnalysis clangAST clangBasic clangEdit clangLex)
++set(CLANG_LIBRARY_LIST clang-cpp)
+ set(LLVM_COMPONENTS engine ipo bitreader bitwriter instrumentation linker option frontendopenmp)
+ 
+ if (X86_ENABLED)
+-- 
+2.17.1
+

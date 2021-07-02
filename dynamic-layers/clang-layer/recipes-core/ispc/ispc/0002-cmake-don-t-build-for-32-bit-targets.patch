@@ -1,0 +1,64 @@
+From 3f3f81bde7d9d80921515ed0bf7fe36e69319bc4 Mon Sep 17 00:00:00 2001
+From: Naveen Saini <naveen.kumar.saini@intel.com>
+Date: Wed, 30 Jun 2021 13:47:41 +0800
+Subject: [PATCH] cmake: don't build for 32-bit targets
+
+Error log:
+| tmp/work/corei7-64-poky-linux/ispc/1.16.0-r0/recipe-sysroot/usr/include/bits/long-double.h:23:10: fatal error: 'bits/long-double-32.h' file not found
+| #include <bits/long-double-32.h>
+|          ^~~~~~~~~~~~~~~~~~~~~~~
+| 1 error generated.
+
+Remove SYSTEM include search path and set -isysroot dir path
+for root dir for cross compilation.
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ cmake/GenerateBuiltins.cmake | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/cmake/GenerateBuiltins.cmake b/cmake/GenerateBuiltins.cmake
+index 15a74788..db30f809 100644
+--- a/cmake/GenerateBuiltins.cmake
++++ b/cmake/GenerateBuiltins.cmake
+@@ -249,7 +249,7 @@ function(builtin_to_cpp bit os_name arch supported_archs supported_oses resultFi
+             #   In this case headers will be installed in /usr/arm-linux-gnueabihf/include and will not be picked up
+             #   by clang by default. So the following line adds such path explicitly. If this path doesn't exist and
+             #   the headers can be found in other locations, this should not be a problem.
+-            set(includePath -isystem/usr/${debian_triple}/include)
++            set(includePath -isysroot${SYSROOT_DIR})
+         endif()
+     endif()
+ 
+@@ -331,7 +331,7 @@ function (generate_target_builtins resultList)
+     set(regular_targets ${ARGN})
+     list(FILTER regular_targets EXCLUDE REGEX wasm)
+     foreach (ispc_target ${regular_targets})
+-        foreach (bit 32 64)
++        foreach (bit 64)
+             foreach (os_name ${TARGET_OS_LIST_FOR_LL})
+                 target_ll_to_cpp(target-${ispc_target} ${bit} ${os_name} output${os_name}${bit})
+                 list(APPEND tmpList ${output${os_name}${bit}})
+@@ -392,7 +392,7 @@ function (generate_common_builtins resultList)
+     endif()
+ 
+     message (STATUS "ISPC will be built with support of ${supported_oses} for ${supported_archs}")
+-    foreach (bit 32 64)
++    foreach (bit 64)
+         foreach (os_name "windows" "linux" "freebsd" "macos" "android" "ios" "ps4" "web")
+             foreach (arch "x86" "arm" "wasm32")
+                 builtin_to_cpp(${bit} ${os_name} ${arch} "${supported_archs}" "${supported_oses}" res${bit}${os_name}${arch})
+@@ -405,7 +405,7 @@ function (generate_common_builtins resultList)
+         endforeach()
+     endforeach()
+     if (GENX_ENABLED)
+-        foreach (bit 32 64)
++        foreach (bit 64)
+             builtin_genx_to_cpp(${bit} res_genx_${bit})
+             list(APPEND tmpList ${res_genx_${bit}} )
+             if(MSVC)
+-- 
+2.17.1
+
