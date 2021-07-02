@@ -1,24 +1,27 @@
-From 64250fb3e73c1977067381c70aeffbaa980f4136 Mon Sep 17 00:00:00 2001
-From: jinchung <jin.chung.teng@intel.com>
-Date: Fri, 28 May 2021 11:34:01 +0800
+From 2d72bd9c295ac84654e0f24b64675d3c95a15c2e Mon Sep 17 00:00:00 2001
+From: "Yew, Chang Ching" <chang.ching.yew@intel.com>
+Date: Tue, 29 Jun 2021 15:51:41 +0800
 Subject: [PATCH] Adding Wayland support to legacy tools
 
 Upstream-Status: Submitted
 https://github.com/oneapi-src/oneVPL/pull/6
 
 Signed-off-by: jinchung <jin.chung.teng@intel.com>
+Signed-off-by: Yew, Chang Ching <chang.ching.yew@intel.com>
 ---
- tools/legacy/CMakeLists.txt                        |   1 +
- tools/legacy/sample_common/CMakeLists.txt          |   8 +
- tools/legacy/sample_common/src/vaapi_device.cpp    |   2 +-
- tools/legacy/sample_misc/wayland/CMakeLists.txt    |  29 ++
- .../sample_misc/wayland/include/class_wayland.h    | 160 +++++++
- .../sample_misc/wayland/include/listener_wayland.h |  66 +++
- .../wayland/include/wayland-drm-client-protocol.h  | 235 ++++++++++
- .../sample_misc/wayland/src/class_wayland.cpp      | 500 +++++++++++++++++++++
- .../sample_misc/wayland/src/listener_wayland.cpp   | 105 +++++
- .../sample_misc/wayland/src/wayland-drm-protocol.c |  84 ++++
- 10 files changed, 1189 insertions(+), 1 deletion(-)
+ tools/legacy/CMakeLists.txt                   |   1 +
+ tools/legacy/sample_common/CMakeLists.txt     |   8 +
+ .../legacy/sample_common/CMakeLists.txt.orig  | 105 ++++
+ .../legacy/sample_common/src/vaapi_device.cpp |   2 +-
+ .../legacy/sample_misc/wayland/CMakeLists.txt |  29 +
+ .../wayland/include/class_wayland.h           | 160 ++++++
+ .../wayland/include/listener_wayland.h        |  66 +++
+ .../include/wayland-drm-client-protocol.h     | 235 ++++++++
+ .../sample_misc/wayland/src/class_wayland.cpp | 500 ++++++++++++++++++
+ .../wayland/src/listener_wayland.cpp          | 105 ++++
+ .../wayland/src/wayland-drm-protocol.c        |  84 +++
+ 11 files changed, 1294 insertions(+), 1 deletion(-)
+ create mode 100644 tools/legacy/sample_common/CMakeLists.txt.orig
  create mode 100644 tools/legacy/sample_misc/wayland/CMakeLists.txt
  create mode 100644 tools/legacy/sample_misc/wayland/include/class_wayland.h
  create mode 100644 tools/legacy/sample_misc/wayland/include/listener_wayland.h
@@ -28,27 +31,28 @@ Signed-off-by: jinchung <jin.chung.teng@intel.com>
  create mode 100644 tools/legacy/sample_misc/wayland/src/wayland-drm-protocol.c
 
 diff --git a/tools/legacy/CMakeLists.txt b/tools/legacy/CMakeLists.txt
-index 165a5b2..1d4af73 100644
+index 59e1ad2..de7c452 100644
 --- a/tools/legacy/CMakeLists.txt
 +++ b/tools/legacy/CMakeLists.txt
-@@ -11,3 +11,4 @@ add_subdirectory(sample_common)
+@@ -11,4 +11,5 @@ add_subdirectory(sample_common)
  add_subdirectory(sample_decode)
  add_subdirectory(sample_vpp)
  add_subdirectory(sample_encode)
 +add_subdirectory(sample_misc/wayland)
+ add_subdirectory(sample_multi_transcode)
 diff --git a/tools/legacy/sample_common/CMakeLists.txt b/tools/legacy/sample_common/CMakeLists.txt
-index db4de3d..4f04226 100644
+index 32b7944..b4710f6 100644
 --- a/tools/legacy/sample_common/CMakeLists.txt
 +++ b/tools/legacy/sample_common/CMakeLists.txt
-@@ -70,6 +70,7 @@ if(UNIX)
+@@ -73,6 +73,7 @@ if(UNIX)
    pkg_check_modules(PKG_LIBDRM libdrm)
    pkg_check_modules(PKG_X11 x11)
    pkg_check_modules(PKG_LIBVA_X11 libva-x11>=1.10.0)
 +  pkg_check_modules(PKG_WAYLAND_CLIENT wayland-client)
    if(PKG_LIBVA_FOUND)
      target_compile_definitions(${TARGET} PUBLIC -DLIBVA_SUPPORT)
-     target_include_directories(${TARGET} PUBLIC ${PKG_LIBVA_INCLUDE_DIRS})
-@@ -88,6 +89,13 @@ if(UNIX)
+     target_compile_definitions(${TARGET} PUBLIC -DLIBVA_DRM_SUPPORT)
+@@ -91,6 +92,13 @@ if(UNIX)
    else()
      message(WARNING "x11 modules not found: building without libVA X11 support")
    endif()
@@ -62,6 +66,117 @@ index db4de3d..4f04226 100644
  
    target_link_libraries(${TARGET} ${CMAKE_DL_LIBS})
  
+diff --git a/tools/legacy/sample_common/CMakeLists.txt.orig b/tools/legacy/sample_common/CMakeLists.txt.orig
+new file mode 100644
+index 0000000..32b7944
+--- /dev/null
++++ b/tools/legacy/sample_common/CMakeLists.txt.orig
+@@ -0,0 +1,105 @@
++# ##############################################################################
++# Copyright (C) Intel Corporation
++#
++# SPDX-License-Identifier: MIT
++# ##############################################################################
++cmake_minimum_required(VERSION 3.10.2)
++
++set(TARGET sample_common)
++
++set(sources "")
++list(
++  APPEND
++  sources
++  src/base_allocator.cpp
++  src/decode_render.cpp
++  src/mfx_buffering.cpp
++  src/sysmem_allocator.cpp
++  src/general_allocator.cpp
++  src/sample_utils.cpp
++  src/plugin_utils.cpp
++  src/preset_manager.cpp
++  src/parameters_dumper.cpp
++  src/vpl_implementation_loader.cpp
++  src/vm/atomic.cpp
++  src/vm/time.cpp)
++
++if(UNIX)
++  list(
++    APPEND
++    sources
++    src/vaapi_utils.cpp
++    src/vaapi_device.cpp
++    src/vaapi_allocator.cpp
++    src/vm/time_linux.cpp
++    src/vm/atomic_linux.cpp
++    src/vm/thread_linux.cpp
++    src/vaapi_utils_x11.cpp
++    src/vaapi_utils_drm.cpp)
++else()
++  list(
++    APPEND
++    sources
++    src/d3d11_allocator.cpp
++    src/d3d11_device.cpp
++    src/d3d_allocator.cpp
++    src/vm/thread_windows.cpp
++    src/d3d_device.cpp)
++endif()
++
++set(CMAKE_POSITION_INDEPENDENT_CODE true)
++add_library(${TARGET} STATIC ${sources})
++target_include_directories(
++  ${TARGET} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
++
++if(MSVC)
++  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
++endif()
++
++add_definitions(-DMFX_DEPRECATED_OFF)
++
++if(POLICY CMP0074)
++  # ignore warning of VPL_ROOT in find_package search path
++  cmake_policy(SET CMP0074 OLD)
++endif()
++
++find_package(VPL REQUIRED)
++target_link_libraries(${TARGET} VPL::dispatcher media_sdk_compatibility_headers)
++
++if(UNIX)
++  find_package(PkgConfig REQUIRED)
++  # note: pkg-config version for libva is *API* version
++  pkg_check_modules(PKG_LIBVA libva>=1.2 libva-drm>=1.2)
++  pkg_check_modules(PKG_LIBDRM libdrm)
++  pkg_check_modules(PKG_X11 x11)
++  pkg_check_modules(PKG_LIBVA_X11 libva-x11>=1.10.0)
++  if(PKG_LIBVA_FOUND)
++    target_compile_definitions(${TARGET} PUBLIC -DLIBVA_SUPPORT)
++    target_compile_definitions(${TARGET} PUBLIC -DLIBVA_DRM_SUPPORT)
++    target_include_directories(${TARGET} PUBLIC ${PKG_LIBVA_INCLUDE_DIRS})
++  else()
++    message(WARNING "libva not found: building without libVA support")
++  endif()
++  if(PKG_LIBDRM_FOUND)
++    target_include_directories(${TARGET} PUBLIC ${PKG_LIBDRM_INCLUDE_DIRS})
++  else()
++    message(WARNING "libva-drm not found: building without libVA DRM support")
++  endif()
++  if(PKG_X11_FOUND)
++    target_compile_definitions(${TARGET} PUBLIC -DLIBVA_X11_SUPPORT)
++    target_include_directories(${TARGET} PUBLIC ${PKG_X11_LIBRARY_DIRS})
++  else()
++    message(WARNING "x11 modules not found: building without libVA X11 support")
++  endif()
++
++  target_link_libraries(${TARGET} ${CMAKE_DL_LIBS})
++
++  set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
++  set(THREADS_PREFER_PTHREAD_FLAG TRUE)
++  find_package(Threads REQUIRED)
++  target_link_libraries(${TARGET} Threads::Threads)
++
++else()
++  target_compile_definitions(${TARGET} PUBLIC -DMFX_D3D11_SUPPORT)
++  target_link_libraries(${TARGET} DXGI D3D11 D3D9 DXVA2)
++endif()
 diff --git a/tools/legacy/sample_common/src/vaapi_device.cpp b/tools/legacy/sample_common/src/vaapi_device.cpp
 index 3f6d3ba..b034376 100644
 --- a/tools/legacy/sample_common/src/vaapi_device.cpp
@@ -350,7 +465,7 @@ index 0000000..1bbaa91
 +#endif /* LISTENER_WAYLAND_H */
 diff --git a/tools/legacy/sample_misc/wayland/include/wayland-drm-client-protocol.h b/tools/legacy/sample_misc/wayland/include/wayland-drm-client-protocol.h
 new file mode 100644
-index 0000000..e11b35d
+index 0000000..e8f33c0
 --- /dev/null
 +++ b/tools/legacy/sample_misc/wayland/include/wayland-drm-client-protocol.h
 @@ -0,0 +1,235 @@
@@ -1208,7 +1323,7 @@ index 0000000..90f582a
 +}
 diff --git a/tools/legacy/sample_misc/wayland/src/wayland-drm-protocol.c b/tools/legacy/sample_misc/wayland/src/wayland-drm-protocol.c
 new file mode 100644
-index 0000000..8e1fd50
+index 0000000..7640883
 --- /dev/null
 +++ b/tools/legacy/sample_misc/wayland/src/wayland-drm-protocol.c
 @@ -0,0 +1,84 @@
@@ -1297,5 +1412,5 @@ index 0000000..8e1fd50
 +};
 +
 -- 
-2.7.4
+2.32.0
 
