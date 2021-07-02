@@ -11,6 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c18ea6bb4786a26bf4eee88a7424a408 \
 SRC_URI = "git://github.com/oneapi-src/oneVPL.git;protocol=https \
             file://0001-Adding-Wayland-support-to-legacy-tools.patch \
             file://0001-Corrected-the-install-path.patch \
+            file://0001-Adding-X11-DRI3-support.patch \
             "
 SRCREV = "d5c072584ee6f81305ed85de8759658ab7854606"
 S = "${WORKDIR}/git"

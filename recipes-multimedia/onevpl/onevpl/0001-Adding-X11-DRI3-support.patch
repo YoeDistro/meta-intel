@@ -1,0 +1,39 @@
+From 5943f3dcca3ce715e7f721535a031d137255fb70 Mon Sep 17 00:00:00 2001
+From: "Yew, Chang Ching" <chang.ching.yew@intel.com>
+Date: Thu, 1 Jul 2021 11:16:33 +0800
+Subject: [PATCH] Adding X11 DRI3 support
+
+Upstream-Status: Backport
+inner-source #e8e7b97
+
+Signed-off-by: Teng, Jin Chung <jin.chung.teng@intel.com>
+Signed-off-by: Yew, Chang Ching <chang.ching.yew@intel.com>
+---
+ tools/legacy/sample_common/CMakeLists.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/tools/legacy/sample_common/CMakeLists.txt b/tools/legacy/sample_common/CMakeLists.txt
+index b4710f6..5fd97da 100644
+--- a/tools/legacy/sample_common/CMakeLists.txt
++++ b/tools/legacy/sample_common/CMakeLists.txt
+@@ -73,6 +73,7 @@ if(UNIX)
+   pkg_check_modules(PKG_LIBDRM libdrm)
+   pkg_check_modules(PKG_X11 x11)
+   pkg_check_modules(PKG_LIBVA_X11 libva-x11>=1.10.0)
++  pkg_check_modules(PKG_XCB xcb xcb-dri3 x11-xcb xcb-present)
+   pkg_check_modules(PKG_WAYLAND_CLIENT wayland-client)
+   if(PKG_LIBVA_FOUND)
+     target_compile_definitions(${TARGET} PUBLIC -DLIBVA_SUPPORT)
+@@ -89,6 +90,9 @@ if(UNIX)
+   if(PKG_X11_FOUND)
+     target_compile_definitions(${TARGET} PUBLIC -DLIBVA_X11_SUPPORT)
+     target_include_directories(${TARGET} PUBLIC ${PKG_X11_LIBRARY_DIRS})
++    if(PKG_XCB_FOUND)
++      target_compile_definitions(${TARGET} PUBLIC -DX11_DRI3_SUPPORT)
++    endif()
+   else()
+     message(WARNING "x11 modules not found: building without libVA X11 support")
+   endif()
+-- 
+2.32.0
+
