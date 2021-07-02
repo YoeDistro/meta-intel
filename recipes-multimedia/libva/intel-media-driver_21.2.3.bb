@@ -19,10 +19,9 @@ REQUIRED_DISTRO_FEATURES = "opengl"
 DEPENDS += "libva gmmlib"
 
 SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;nobranch=1 \
-           file://0001-changed-VPHAL_MAX_SOURCES-set-to-65.patch \
           "
 
-SRCREV = "bec8e1382637589bc3f302edf6c866bec3d754dd"
+SRCREV = "008fb3b400dd906276f999eeaef3f49d52fd3d05"
 S = "${WORKDIR}/git"
 
 COMPATIBLE_HOST_x86-x32 = "null"
