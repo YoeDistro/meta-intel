@@ -19,7 +19,7 @@ SRCREV = "7c53133eb21424f7f0ae1e25bf357e358feaf6ab"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
-DEPENDS = "tbb jpeg libpng glfw"
+DEPENDS = "tbb jpeg libpng glfw ispc-native"
 
 EMBREE-MAX-ISA = "SSE4.2"
 EMBREE-MAX-ISA_intel-corei7-64 = "SSE4.2"
@@ -30,4 +30,5 @@ EXTRA_OECMAKE += " \
                   -DEMBREE_IGNORE_CMAKE_CXX_FLAGS=OFF  \
                   -DEMBREE_MAX_ISA=${EMBREE-MAX-ISA}  \
                   -DEMBREE_TUTORIALS=OFF  \
+                  -DEMBREE_ISPC_SUPPORT=ON  \
                   "
