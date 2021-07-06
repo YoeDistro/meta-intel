@@ -36,6 +36,8 @@ SRCREV = "e0ebda9d1e7884b51293b71c1bcda511a7942e1a"
 do_install_append() {
     install -d ${D}${systemd_system_unitdir}
     install -m 0644 ${B}/UNS/lms.service ${D}${systemd_system_unitdir}
+    install -d ${D}${sysconfdir}/udev/rules.d
+    install -m 0644 ${S}/UNS/linux_scripts/70-mei-wdt.rules ${D}${sysconfdir}/udev/rules.d/70-mei-wdt.rules
 }
 
 RDEPENDS_${PN} += "ace"
