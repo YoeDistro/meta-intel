@@ -21,14 +21,10 @@ COMPATIBLE_HOST = '(x86_64).*-linux'
 
 DEPENDS = "tbb jpeg libpng glfw ispc-native"
 
-EMBREE-MAX-ISA = "SSE4.2"
-EMBREE-MAX-ISA_intel-corei7-64 = "SSE4.2"
-EMBREE-MAX-ISA_intel-skylake-64 = "AVX2"
-
 EXTRA_OECMAKE += " \
                   -DEMBREE_ISPC_SUPPORT=OFF  \
                   -DEMBREE_IGNORE_CMAKE_CXX_FLAGS=OFF  \
-                  -DEMBREE_MAX_ISA=${EMBREE-MAX-ISA}  \
+                  -DEMBREE_MAX_ISA=DEFAULT  \
                   -DEMBREE_TUTORIALS=OFF  \
                   -DEMBREE_ISPC_SUPPORT=ON  \
                   "
