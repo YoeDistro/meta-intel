@@ -1,0 +1,28 @@
+From 09e6b6615d9a16e9555eff9d569356e32bd26aa4 Mon Sep 17 00:00:00 2001
+From: benradel <86351445+benradel@users.noreply.github.com>
+Date: Wed, 23 Jun 2021 11:56:03 +0200
+Subject: [PATCH] Fix GCC11 Compile Error in benchmark_register.h
+
+Fix GCC11 compilation error due to missing header "limits" in benchmark_register.h
+
+Upstream-Status: Submitted [https://github.com/ospray/ospray/pull/484/files]
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ apps/common/external/benchmark/src/benchmark_register.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/apps/common/external/benchmark/src/benchmark_register.h b/apps/common/external/benchmark/src/benchmark_register.h
+index 61377d742..8f1bb7795 100644
+--- a/apps/common/external/benchmark/src/benchmark_register.h
++++ b/apps/common/external/benchmark/src/benchmark_register.h
+@@ -2,6 +2,7 @@
+ #define BENCHMARK_REGISTER_H
+ 
+ #include <vector>
++#include <limits>
+ 
+ #include "check.h"
+ 
+-- 
+2.32.0
+
