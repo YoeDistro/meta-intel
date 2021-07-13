@@ -1,0 +1,50 @@
+From 13a9e6fbe3e62720d088e750de73483f2b74a855 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Wed, 14 Jul 2021 00:55:31 +0800
+Subject: [PATCH] InferenceEngineConfig.cmake: set the right paths
+
+Make sure that the projects using cmake to locate the libraries
+are able to do so.
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ .../cmake/templates/InferenceEngineConfig.cmake.in        | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/inference-engine/cmake/templates/InferenceEngineConfig.cmake.in b/inference-engine/cmake/templates/InferenceEngineConfig.cmake.in
+index 5ede817bbf..83d258834b 100644
+--- a/inference-engine/cmake/templates/InferenceEngineConfig.cmake.in
++++ b/inference-engine/cmake/templates/InferenceEngineConfig.cmake.in
+@@ -74,7 +74,7 @@ else()
+         ext_message(FATAL_ERROR "inference_engine root directory is not found")
+     endif()
+ 
+-    find_path(IE_INCLUDE_DIR inference_engine.hpp "${IE_ROOT_DIR}/include" NO_DEFAULT_PATH)
++    find_path(IE_INCLUDE_DIR inference_engine.hpp "${IE_ROOT_DIR}/include")
+ 
+     set(IE_LIB_DIR "${IE_ROOT_DIR}/lib/${_ARCH}")
+     set(IE_LIB_REL_DIR "${IE_LIB_DIR}/Release")
+@@ -89,8 +89,8 @@ else()
+         find_library(IE_RELEASE_LIBRARY inference_engine@IE_RELEASE_POSTFIX_MAC@ "${IE_LIB_DIR}" NO_DEFAULT_PATH)
+         find_library(IE_C_API_RELEASE_LIBRARY inference_engine_c_api@IE_RELEASE_POSTFIX_MAC@ "${IE_LIB_DIR}" NO_DEFAULT_PATH)
+     else()
+-        find_library(IE_RELEASE_LIBRARY inference_engine@IE_RELEASE_POSTFIX_LIN@ "${IE_LIB_DIR}" NO_DEFAULT_PATH)
+-        find_library(IE_C_API_RELEASE_LIBRARY inference_engine_c_api@IE_RELEASE_POSTFIX_LIN@ "${IE_LIB_DIR}" NO_DEFAULT_PATH)
++        find_library(IE_RELEASE_LIBRARY inference_engine@IE_RELEASE_POSTFIX_LIN@ "${IE_LIB_DIR}")
++        find_library(IE_C_API_RELEASE_LIBRARY inference_engine_c_api@IE_RELEASE_POSTFIX_LIN@ "${IE_LIB_DIR}")
+     endif()
+ 
+     find_package_handle_standard_args(  InferenceEngine
+@@ -163,6 +163,6 @@ else()
+                                       IE::inference_engine_c_api)
+ 
+         set(IE_EXTERNAL_DIR "${IE_ROOT_DIR}/external")
+-        include("${IE_ROOT_DIR}/share/ie_parallel.cmake")
++        include("$ENV{PKG_CONFIG_SYSROOT_DIR}@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_LIBDIR@/cmake/InferenceEngine/ie_parallel.cmake")
+     endif()
+ endif()
+-- 
+2.32.0
+
