@@ -20,6 +20,7 @@ DEPENDS += "libva gmmlib"
 
 SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;nobranch=1 \
            file://0001-VP-Fix-2pass-CSC-PROCAMP-not-work-issue.patch \
+           file://0001-Expose-the-reg-to-disable-scalability.patch \
           "
 
 SRCREV = "008fb3b400dd906276f999eeaef3f49d52fd3d05"
