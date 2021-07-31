@@ -64,7 +64,7 @@ without having to use hardware. The virtio drivers are added via
 KERNEL_FEATURES_INTEL_COMMON. This prevents them from being added to
 custom kernels by default. They can be removed by adding the
 following to a conf or kernel bbappend file:
-  KERNEL_FEATURES_INTEL_COMMON_remove = “cfg/virtio.scc”
+  KERNEL_FEATURES_INTEL_COMMON:remove = “cfg/virtio.scc”
 OVMF firmware is also built and can be used in order to emulate a UEFI
 environment. A full runqemu command line for intel-corei7-64 could look
 like this:
@@ -84,4 +84,4 @@ setting, it will not work in as the primary MACHINE tune as the bootloader needs
 to be built as a 64bit binary. The setup for this would be as follows:
   require conf/multilib.conf
   MULTILIBS = "multilib:libx32
-  DEFAULTTUNE_virtclass-multilib-libx32 = "corei7-64-x32"
+  DEFAULTTUNE:virtclass-multilib-libx32 = "corei7-64-x32"

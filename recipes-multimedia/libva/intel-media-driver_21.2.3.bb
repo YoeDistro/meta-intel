@@ -26,14 +26,14 @@ SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;nobranch=1 \
 SRCREV = "008fb3b400dd906276f999eeaef3f49d52fd3d05"
 S = "${WORKDIR}/git"
 
-COMPATIBLE_HOST_x86-x32 = "null"
+COMPATIBLE_HOST:x86-x32 = "null"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^intel-media-(?P<pver>(?!600\..*)\d+(\.\d+)+)$"
 
 inherit cmake pkgconfig
 
-MEDIA_DRIVER_ARCH_x86    = "32"
-MEDIA_DRIVER_ARCH_x86-64 = "64"
+MEDIA_DRIVER_ARCH:x86    = "32"
+MEDIA_DRIVER_ARCH:x86-64 = "64"
 
 EXTRA_OECMAKE += " \
                    -DMEDIA_RUN_TEST_SUITE=OFF \
@@ -41,12 +41,12 @@ EXTRA_OECMAKE += " \
                    -DMEDIA_BUILD_FATAL_WARNINGS=OFF \
 		  "
 
-CXXFLAGS_append_x86 = " -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
+CXXFLAGS:append:x86 = " -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
 
-do_configure_prepend_toolchain-clang() {
+do_configure:prepend:toolchain-clang() {
     sed -i -e '/-fno-tree-pre/d' ${S}/media_driver/cmake/linux/media_compile_flags_linux.cmake
 }
 
-FILES_${PN} += " \
+FILES:${PN} += " \
                  ${libdir}/dri/ \
                  "

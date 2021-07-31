@@ -13,17 +13,17 @@ S = "${WORKDIR}/git"
 
 inherit cmake
 DEPENDS += " clang spirv-llvm-translator"
-DEPENDS_append_class-target = " opencl-clang-native"
+DEPENDS:append:class-target = " opencl-clang-native"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
-COMPATIBLE_HOST_libc-musl = "null"
+COMPATIBLE_HOST:libc-musl = "null"
 
 EXTRA_OECMAKE += "\
                   -DCMAKE_SKIP_RPATH=TRUE \
                   -DPREFERRED_LLVM_VERSION=${LLVMVERSION} \
                   "
 
-do_install_append_class-native() {
+do_install:append:class-native() {
         install -d ${D}${bindir}
         install -m 0755 ${B}/linux_linker/linux_resource_linker ${D}${bindir}/
 }

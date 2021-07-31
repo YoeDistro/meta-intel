@@ -25,6 +25,6 @@ EXTRA_OECMAKE += " \
                   -DISPC_EXECUTABLE=${STAGING_BINDIR_NATIVE}/ispc  \
                   "
 PACKAGES =+ "${PN}-apps"
-FILES_${PN}-apps = "\
+FILES:${PN}-apps = "\
                      ${bindir} \
                      "

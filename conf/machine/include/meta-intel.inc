@@ -14,8 +14,8 @@ PREFERRED_PROVIDER_nativesdk-zlib = "nativesdk-zlib"
 
 PREFERRED_VERSION_linux-intel ?= "5.10%"
 PREFERRED_VERSION_linux-intel-rt ?= "5.10%"
-PREFERRED_VERSION_linux-intel_poky-altcfg ?= "5.4%"
-PREFERRED_VERSION_linux-intel-rt_poky-altcfg ?= "5.4%"
+PREFERRED_VERSION_linux-intel:poky-altcfg ?= "5.4%"
+PREFERRED_VERSION_linux-intel-rt:poky-altcfg ?= "5.4%"
 
 # Need to point to latest version of libva needed for media components
 PREFERRED_PROVIDER_libva = "libva-intel"
@@ -35,20 +35,20 @@ XSERVER_X86_ASPEED_AST = "xf86-video-ast \
            "
 
 # include the user space intel microcode loading support in the generated images.
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS_append = "${@bb.utils.contains('MACHINE_FEATURES', 'intel-ucode', ' intel-microcode', '', d)}"
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'intel-ucode', ' intel-microcode', '', d)}"
 
 # recommended extra packages common to all intel machines
-MACHINE_EXTRA_RRECOMMENDS_append = " kernel-modules linux-firmware"
-MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS_append = " kernel-module-i915 linux-firmware-i915"
+MACHINE_EXTRA_RRECOMMENDS:append = " kernel-modules linux-firmware"
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS:append = " kernel-module-i915 linux-firmware-i915"
 
 # for the early boot time kernel microcode loading support,
 # merge the microcode data in the final initrd image.
-INITRD_LIVE_prepend = "${@bb.utils.contains('MACHINE_FEATURES', 'intel-ucode', '${DEPLOY_DIR_IMAGE}/microcode.cpio ', '', d)}"
+INITRD_LIVE:prepend = "${@bb.utils.contains('MACHINE_FEATURES', 'intel-ucode', '${DEPLOY_DIR_IMAGE}/microcode.cpio ', '', d)}"
 
 DISK_SIGNATURE_UUID ??= "deadbeef-dead-beef-dead-beefdeadbeef"
 
 EFI_PROVIDER ?= "systemd-boot"
-EFI_PROVIDER_x86-x32 = "grub-efi"
+EFI_PROVIDER:x86-x32 = "grub-efi"
 
 # Add general MACHINEOVERRIDE for meta-intel
 MACHINEOVERRIDES =. "intel-x86-common:"

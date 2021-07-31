@@ -206,12 +206,12 @@ based installer image instead of default wic image. To build it, you need to
 add below configuration to local.conf :
 
   WKS_FILE = "image-installer.wks.in"
-  IMAGE_FSTYPES_append = " ext4"
+  IMAGE_FSTYPES:append = " ext4"
   IMAGE_TYPEDEP_wic = "ext4"
   INITRD_IMAGE_LIVE="core-image-minimal-initramfs"
   do_image_wic[depends] += "${INITRD_IMAGE_LIVE}:do_image_complete"
   do_rootfs[depends] += "virtual/kernel:do_deploy"
-  IMAGE_BOOT_FILES_append = "\
+  IMAGE_BOOT_FILES:append = "\
       ${KERNEL_IMAGETYPE} \
       microcode.cpio \
       ${IMGDEPLOYDIR}/${IMAGE_BASENAME}-${MACHINE}.ext4;rootfs.img \

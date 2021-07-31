@@ -4,8 +4,8 @@
 # it with the efi stub obtained from systemd-boot.
 
 # Don't add syslinux or build an ISO
-PCBIOS_forcevariable = "0"
-NOISO_forcevariable  = "1"
+PCBIOS:forcevariable = "0"
+NOISO:forcevariable  = "1"
 
 # image-live.bbclass will default INITRD_LIVE to the image INITRD_IMAGE creates.
 # We want behavior to be consistent whether or not "live" is in IMAGE_FSTYPES, so
@@ -138,7 +138,7 @@ build_efi_cfg() {
     :
 }
 
-populate_kernel_append() {
+populate_kernel:append() {
     # The kernel and initrd are built into the app, so we don't need these
     if [ -f $dest/initrd ]; then
         rm $dest/initrd

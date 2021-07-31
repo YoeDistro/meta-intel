@@ -32,7 +32,7 @@ DEPENDS = "ndctl"
 
 EXTRA_OECMAKE = "-DRELEASE=ON"
 
-do_configure_prepend() {
+do_configure:prepend() {
     for dir in BaseTools MdeModulePkg MdePkg ShellPkg ; do
         ln -sf edk2/${dir} ${S}
     done

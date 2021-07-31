@@ -31,6 +31,6 @@ EXTRA_OECMAKE += " \
                   -DISPC_EXECUTABLE=${STAGING_BINDIR_NATIVE}/ispc  \
                   "
 PACKAGES =+ "${PN}-examples"
-FILES_${PN}-examples = "\
+FILES:${PN}-examples = "\
                      ${bindir} \
                      "

@@ -21,7 +21,7 @@ do_install() {
         cp -r model-optimizer ${D}${datadir}/openvino/
 }
 
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
                     python3-numpy \
                     python3-protobuf \
                     python3-defusedxml \
@@ -30,4 +30,4 @@ RDEPENDS_${PN} += " \
                     bash \
                     "
 
-FILES_${PN} += "${datadir}/openvino"
+FILES:${PN} += "${datadir}/openvino"

@@ -9,7 +9,7 @@ SRC_URI = "git://github.com/intel/opencl-clang.git;branch=ocl-open-100;protocol=
            file://0001-don-t-redefine-LLVM_TABLEGEN_EXE.patch \
            file://0001-Building-in-tree-with-LLVM-10.0-with-the-LLVM_LINK_L.patch \
            "
-SRC_URI_append_class-native = " file://0002-make-sure-only-static-libraries-linked-for-native-bu.patch"
+SRC_URI:append:class-native = " file://0002-make-sure-only-static-libraries-linked-for-native-bu.patch"
 
 SRCREV = "c8cd72e32b6abc18ce6da71c357ea45ba78b52f0"
 
@@ -17,17 +17,17 @@ S = "${WORKDIR}/git"
 
 inherit cmake
 DEPENDS += "clang"
-DEPENDS_append_class-target = " opencl-clang-native"
+DEPENDS:append:class-target = " opencl-clang-native"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
-COMPATIBLE_HOST_libc-musl = "null"
+COMPATIBLE_HOST:libc-musl = "null"
 
 EXTRA_OECMAKE += "\
                   -DLLVM_TABLEGEN_EXE=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
                   -DCMAKE_SKIP_RPATH=TRUE \
                   "
 
-do_install_append_class-native() {
+do_install:append:class-native() {
         install -d ${D}${bindir}
         install -m 0755 ${B}/linux_linker/linux_resource_linker ${D}${bindir}/
 }

@@ -21,7 +21,7 @@ SRCREV = "bdd411085d3e398cf7927cb3b94b00af676737ba"
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
 DEPENDS += " clang-native bison-native "
-RDEPENDS_${PN} += " clang-libllvm clang"
+RDEPENDS:${PN} += " clang-libllvm clang"
 
 EXTRA_OECMAKE += " \
                   -DISPC_INCLUDE_TESTS=OFF  \

@@ -12,7 +12,7 @@ PE = "1"
 
 # Only for 64 bit
 COMPATIBLE_HOST = '(x86_64).*-linux'
-COMPATIBLE_HOST_x86-x32 = "null"
+COMPATIBLE_HOST:x86-x32 = "null"
 
 DEPENDS += "libdrm libva intel-media-driver onevpl"
 

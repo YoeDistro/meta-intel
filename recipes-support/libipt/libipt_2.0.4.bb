@@ -21,7 +21,7 @@ EXTRA_OECMAKE += " \
                   -DCMAKE_SKIP_RPATH=ON \
                   "
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${bindir}/libipt
     install -d ${D}${bindir}/libipt/tests
 
@@ -29,5 +29,5 @@ do_install_append() {
     cp -r ${WORKDIR}/git/test/src/* ${D}${bindir}/libipt/tests
 }
 
-FILES_${PN}-test = "${bindir}"
+FILES:${PN}-test = "${bindir}"
 PACKAGES =+ "${PN}-test"

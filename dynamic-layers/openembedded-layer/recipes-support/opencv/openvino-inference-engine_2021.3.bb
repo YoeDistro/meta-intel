@@ -30,7 +30,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
                     file://thirdparty/xbyak/COPYRIGHT;md5=03532861dad9003cc2c17f14fc7a4efa \
                     file://inference-engine/thirdparty/clDNN/common/include/OpenCL_CLHPP_License.txt;md5=3b83ef96387f14655fc854ddc3c6bd57 \
 "
-LICENSE_${PN}-vpu-firmware = "ISSL"
+LICENSE:${PN}-vpu-firmware = "ISSL"
 
 inherit cmake python3native
 
@@ -64,7 +64,7 @@ DEPENDS += "libusb1 \
             "
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
-COMPATIBLE_HOST_libc-musl = "null"
+COMPATIBLE_HOST:libc-musl = "null"
 
 #Disable opencl temporarily. intel-compute-runtime depends on
 #intel-graphics-compiler and vc-intrinsics and these two recipes fail to
@@ -76,7 +76,7 @@ PACKAGECONFIG[python3] = "-DENABLE_PYTHON=ON -DPYTHON_LIBRARY=${PYTHON_LIBRARY} 
 PACKAGECONFIG[vpu] = "-DENABLE_VPU=ON -DVPU_FIRMWARE_USB-MA2X8X_FILE=../mvnc/usb-ma2x8x.mvcmd -DVPU_FIRMWARE_PCIE-MA2X8X_FILE=../mvnc/pcie-ma2x8x.mvcmd,-DENABLE_VPU=OFF,,${PN}-vpu-firmware"
 PACKAGECONFIG[verbose] = "-DVERBOSE_BUILD=1,-DVERBOSE_BUILD=0"
 
-do_install_append() {
+do_install:append() {
     if ${@bb.utils.contains('PACKAGECONFIG', 'vpu', 'true', 'false', d)}; then
         install -m0644 ${WORKDIR}/mvnc/usb-ma2x8x.mvcmd ${D}${libdir}/
         install -m0644 ${WORKDIR}/mvnc/pcie-ma2x8x.mvcmd ${D}${libdir}/
@@ -102,13 +102,13 @@ do_install_append() {
 
 # Otherwise e.g. ros-openvino-toolkit-dynamic-vino-sample when using dldt-inference-engine uses dldt-inference-engine WORKDIR
 # instead of RSS
-SSTATE_SCAN_FILES_append = " *.cmake"
+SSTATE_SCAN_FILES:append = " *.cmake"
 
-FILES_${PN}-dev = "${includedir} \
+FILES:${PN}-dev = "${includedir} \
                    ${libdir}/cmake \
                    "
 
-FILES_${PN} += "${libdir}/lib*${SOLIBSDEV} \
+FILES:${PN} += "${libdir}/lib*${SOLIBSDEV} \
                 ${datadir}/openvino \
                 ${libdir}/custom_kernels \
                 ${libdir}/plugins.xml \
@@ -118,12 +118,12 @@ FILES_${PN} += "${libdir}/lib*${SOLIBSDEV} \
 # Move inference engine samples into a separate package
 PACKAGES =+ "${PN}-samples ${PN}-vpu-firmware"
 
-FILES_${PN}-samples = "${datadir}/inference_engine \
+FILES:${PN}-samples = "${datadir}/inference_engine \
                        ${bindir} \
                        "
-FILES_${PN}-vpu-firmware += "${libdir}/*.mvcmd"
+FILES:${PN}-vpu-firmware += "${libdir}/*.mvcmd"
 
 # Package for inference engine python API
 PACKAGES =+ "${PN}-${PYTHON_PN}"
 
-FILES_${PN}-${PYTHON_PN} = "${PYTHON_SITEPACKAGES_DIR}/openvino"
+FILES:${PN}-${PYTHON_PN} = "${PYTHON_SITEPACKAGES_DIR}/openvino"

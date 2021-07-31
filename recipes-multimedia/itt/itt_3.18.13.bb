@@ -34,4 +34,4 @@ do_install() {
 
 }
 
-RDEPENDS_${PN}-dev_remove = "${PN} (= ${EXTENDPKGV})"
+RDEPENDS:${PN}-dev:remove = "${PN} (= ${EXTENDPKGV})"

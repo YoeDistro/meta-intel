@@ -13,7 +13,7 @@ SRC_URI = "git://github.com/intel/libyami.git;branch=apache \
 SRCREV = "08606d0a43e0ef15e5b61cc13563169370ce8715"
 S = "${WORKDIR}/git"
 
-CXXFLAGS_append = " -Wno-error"
+CXXFLAGS:append = " -Wno-error"
 
 PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "x11", "x11", "", d)}"
 PACKAGECONFIG[x11] = "--enable-x11,--disable-x11,virtual/libx11 libxrandr libxrender"

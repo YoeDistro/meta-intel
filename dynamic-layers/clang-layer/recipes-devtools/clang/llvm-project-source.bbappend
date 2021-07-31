@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_prepend_intel-x86-common := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend:intel-x86-common := "${THISDIR}/files:"
 
 SPIRV10_SRCREV = "576abae62cecd171992017a4a786e3831221ab8d"
 SPIRV11_SRCREV = "2a8c1e6c9778deaa720a23e08c293006dc5d56fd"
@@ -34,8 +34,8 @@ SPIRV_LLVM11_SRC_URI = "git://github.com/KhronosGroup/SPIRV-LLVM-Translator.git;
 
 
 
-SRC_URI_append_intel-x86-common = "${@bb.utils.contains('LLVMVERSION', '10.0.1', ' ${SPIRV_LLVM10_SRC_URI} ${SRC_URI_LLVM10_PATCHES} ', '', d)}"
-SRC_URI_append_intel-x86-common = "${@bb.utils.contains('LLVMVERSION', '11.1.0', ' ${SPIRV_LLVM11_SRC_URI} ${SRC_URI_LLVM11_PATCHES} ', '', d)}"
-SRC_URI_append_intel-x86-common = "${@bb.utils.contains('LLVMVERSION', '12.0.0', ' ${SRC_URI_LLVM12_PATCHES} ', '', d)}"
+SRC_URI:append:intel-x86-common = "${@bb.utils.contains('LLVMVERSION', '10.0.1', ' ${SPIRV_LLVM10_SRC_URI} ${SRC_URI_LLVM10_PATCHES} ', '', d)}"
+SRC_URI:append:intel-x86-common = "${@bb.utils.contains('LLVMVERSION', '11.1.0', ' ${SPIRV_LLVM11_SRC_URI} ${SRC_URI_LLVM11_PATCHES} ', '', d)}"
+SRC_URI:append:intel-x86-common = "${@bb.utils.contains('LLVMVERSION', '12.0.0', ' ${SRC_URI_LLVM12_PATCHES} ', '', d)}"
 
 SRCREV_spirv = "${@bb.utils.contains_any('LLVMVERSION', [ '13.0.0', '12.0.0' ], '', '${SPIRV_SRCREV}', d)}"

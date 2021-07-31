@@ -12,7 +12,7 @@ CVE_DETAILS = "intel:media_sdk"
 
 # Only for 64 bit until media-driver issues aren't fixed
 COMPATIBLE_HOST = '(x86_64).*-linux'
-COMPATIBLE_HOST_x86-x32 = "null"
+COMPATIBLE_HOST:x86-x32 = "null"
 
 inherit features_check
 REQUIRED_DISTRO_FEATURES = "opengl"
@@ -44,17 +44,17 @@ inherit cmake pkgconfig
 
 EXTRA_OECMAKE += "-DMFX_INCLUDE=${S}/api/include"
 
-do_install_append() {
+do_install:append() {
         mv ${D}${datadir}/mfx/samples ${D}${libdir}/mfx/samples
 }
 
 PACKAGE_BEFORE_PN = " ${PN}-samples"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
                  ${libdir}/mfx \
                  ${datadir}/mfx/plugins.cfg \
                  "
 
-FILES_${PN}-samples = "${libdir}/mfx/samples"
+FILES:${PN}-samples = "${libdir}/mfx/samples"
 
-INSANE_SKIP_${PN}-samples += "staticdev"
+INSANE_SKIP:${PN}-samples += "staticdev"

@@ -24,12 +24,12 @@ COMPATIBLE_HOST = '(x86_64).*-linux'
 
 PACKAGES =+ "${PN}-examples"
 
-FILES_${PN}-examples = "${datadir}/oneVPL/examples \
+FILES:${PN}-examples = "${datadir}/oneVPL/examples \
                        "
 
 FILES_SOLIBSDEV = ""
-FILES_${PN}-dev += "${libdir}/libvpl.so"
+FILES:${PN}-dev += "${libdir}/libvpl.so"
 
-FILES_${PN} += "${datadir} \
+FILES:${PN} += "${datadir} \
                 ${libdir}/libvpl_wayland.so \
                 "

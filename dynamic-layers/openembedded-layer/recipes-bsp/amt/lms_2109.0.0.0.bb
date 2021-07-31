@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=2ee41112a44fe7014dce33e26468ba93"
 
 COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
-COMPATIBLE_HOST_libc-musl = "null"
+COMPATIBLE_HOST:libc-musl = "null"
 
 inherit cmake systemd features_check
 
@@ -23,24 +23,24 @@ PACKAGECONFIG[networkmanager] = "-DNETWORK_NM=ON, -DNETWORK_NM=OFF, networkmanag
 
 REQUIRED_DISTRO_FEATURES= "systemd"
 
-FILES_${PN} += "${datadir}/dbus-1/system-services/*.service"
+FILES:${PN} += "${datadir}/dbus-1/system-services/*.service"
 
 S = "${WORKDIR}/git"
 
-SYSTEMD_SERVICE_${PN} = "lms.service"
+SYSTEMD_SERVICE:${PN} = "lms.service"
 
 SRC_URI = "git://github.com/intel/lms.git \
            "
 SRCREV = "e0ebda9d1e7884b51293b71c1bcda511a7942e1a"
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${systemd_system_unitdir}
     install -m 0644 ${B}/UNS/lms.service ${D}${systemd_system_unitdir}
     install -d ${D}${sysconfdir}/udev/rules.d
     install -m 0644 ${S}/UNS/linux_scripts/70-mei-wdt.rules ${D}${sysconfdir}/udev/rules.d/70-mei-wdt.rules
 }
 
-RDEPENDS_${PN} += "ace"
+RDEPENDS:${PN} += "ace"
 
 # This CVE is for Lan Management System software and not this lms.
 CVE_CHECK_WHITELIST += "CVE-2018-1000535"

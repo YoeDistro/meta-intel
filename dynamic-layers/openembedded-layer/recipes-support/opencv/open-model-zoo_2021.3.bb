@@ -21,7 +21,7 @@ OECMAKE_SOURCEPATH = "${S}/demos"
 
 DEPENDS += "openvino-inference-engine opencv gflags"
 
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
                    python3-decorator \
                    python3-defusedxml \
                    python3-networkx \
@@ -46,7 +46,7 @@ EXTRA_OECMAKE += " \
                  -DIE_ROOT_DIR=${WORKDIR}/InferenceEngine \
 "
 
-do_configure_prepend(){
+do_configure:prepend(){
 	mkdir -p ${WORKDIR}/InferenceEngine/share
 	cp ${STAGING_LIBDIR}/cmake/InferenceEngine/* ${WORKDIR}/InferenceEngine/share/
 }
@@ -63,4 +63,4 @@ do_install(){
 	cp -rf ${WORKDIR}/git/tools/downloader ${D}${datadir}/openvino/open-model-zoo/tools
 }
 
-FILES_${PN} += "${datadir}/openvino"
+FILES:${PN} += "${datadir}/openvino"

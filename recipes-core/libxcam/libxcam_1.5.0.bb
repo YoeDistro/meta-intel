@@ -11,7 +11,7 @@ SRCREV = "231a1d5243cd45c7a6b511b667f1ec52178fdda8"
 SRC_URI = "git://github.com/intel/libxcam.git;branch=1.5.0; \
 "
 
-COMPATIBLE_HOST_libc-musl = "null"
+COMPATIBLE_HOST:libc-musl = "null"
 
 PACKAGECONFIG ??= " gst \
                     ${@bb.utils.contains("DISTRO_FEATURES", "opengl", "gles", "", d)} \
@@ -27,12 +27,12 @@ PACKAGECONFIG[gles]   = "--enable-gles, --disable-gles, virtual/mesa"
 PACKAGECONFIG[vulkan] = "--enable-vulkan, --disable-vulkan, vulkan-loader virtual/mesa"
 PACKAGECONFIG[dnn]    = "--enable-dnn, --disable-dnn,"
 
-do_install_append () {
+do_install:append () {
     install -d ${D}${bindir}/libxcam
     cp -r ${WORKDIR}/build/tests/.libs/* ${D}${bindir}/libxcam/
 }
 
-FILES_${PN} += "${libdir}/gstreamer-*/*.so"
-FILES_${PN}-test = "${bindir}/libxcam/*"
+FILES:${PN} += "${libdir}/gstreamer-*/*.so"
+FILES:${PN}-test = "${bindir}/libxcam/*"
 PACKAGES =+ "${PN}-test"
-RDEPENDS_${PN}-test =+ "bash"
+RDEPENDS:${PN}-test =+ "bash"

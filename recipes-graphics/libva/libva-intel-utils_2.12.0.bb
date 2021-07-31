@@ -32,4 +32,4 @@ PACKAGECONFIG[x11] = "-Dx11=true, -Dx11=false,virtual/libx11 libxext libxfixes"
 PACKAGECONFIG[wayland] = "-Dwayland=true, -Dwayland=false,wayland-native wayland"
 
 PROVIDES = "libva-utils"
-RPROVIDES_${PN} += "libva-utils"
+RPROVIDES:${PN} += "libva-utils"

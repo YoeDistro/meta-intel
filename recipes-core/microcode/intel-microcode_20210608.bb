@@ -63,6 +63,6 @@ addtask deploy before do_build after do_compile
 
 PACKAGES = "${PN}"
 
-FILES_${PN} = "${nonarch_base_libdir}"
+FILES:${PN} = "${nonarch_base_libdir}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^microcode-(?P<pver>(\d+)[a-z]*)$"

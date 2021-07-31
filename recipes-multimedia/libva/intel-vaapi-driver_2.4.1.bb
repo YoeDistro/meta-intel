@@ -29,6 +29,6 @@ PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "x11", "x11", "", d)}
 PACKAGECONFIG[x11] = "-Dwith_x11=yes, -Dwith_x11=no"
 PACKAGECONFIG[wayland] = "-Dwith_wayland=yes, -Dwith_wayland=no, wayland wayland-native virtual/egl"
 
-FILES_${PN} += "${libdir}/dri/*.so"
-FILES_${PN}-dev += "${libdir}/dri/*.la"
-FILES_${PN}-dbg += "${libdir}/dri/.debug"
+FILES:${PN} += "${libdir}/dri/*.so"
+FILES:${PN}-dev += "${libdir}/dri/*.la"
+FILES:${PN}-dbg += "${libdir}/dri/.debug"

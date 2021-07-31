@@ -24,12 +24,12 @@ S = "${WORKDIR}/${BP}/src"
 
 EXTRA_OEMAKE='KSRC="${STAGING_KERNEL_BUILDDIR}" KVER="${KERNEL_VERSION}" INSTALL_MOD_PATH="${D}"'
 
-KERNEL_MODULE_AUTOLOAD_append_intel-core2-32 = " ixgbevf"
-KERNEL_MODULE_AUTOLOAD_append_intel-corei7-64 = " ixgbevf"
+KERNEL_MODULE_AUTOLOAD:append:intel-core2-32 = " ixgbevf"
+KERNEL_MODULE_AUTOLOAD:append:intel-corei7-64 = " ixgbevf"
 
 inherit module
 
-do_install_append () {
+do_install:append () {
         # Install scripts/set_irq_affinity
         install -d      ${D}${sysconfdir}/network
         install -m 0755 ${S}/../scripts/set_irq_affinity  ${D}${sysconfdir}/network
@@ -39,7 +39,7 @@ do_install_append () {
 
 PACKAGES += "${PN}-script"
 
-FILES_${PN}-script += "${sysconfdir}/network/set_irq_affinity"
+FILES:${PN}-script += "${sysconfdir}/network/set_irq_affinity"
 
 # This was fixed in kernel v4.4
 CVE_CHECK_WHITELIST += "CVE-2015-1142857"

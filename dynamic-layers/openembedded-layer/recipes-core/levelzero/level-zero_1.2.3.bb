@@ -14,7 +14,7 @@ UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>(\d+(\.\d+)+))$"
 
 PACKAGES =+ "${PN}-headers ${PN}-samples ${PN}-loader"
 
-do_install_append () {
+do_install:append () {
         install -d ${D}${bindir} ${D}${libdir}
         install -m 755 ${B}/bin/zello* ${D}${bindir}
 
@@ -22,10 +22,10 @@ do_install_append () {
 }
 
 
-FILES_${PN}-headers = "${includedir}"
-FILES_${PN}-samples = "${bindir} ${libdir}/libze_null* ${libdir}/libze_validation*"
-FILES_${PN}-loader = "${libdir}"
+FILES:${PN}-headers = "${includedir}"
+FILES:${PN}-samples = "${bindir} ${libdir}/libze_null* ${libdir}/libze_validation*"
+FILES:${PN}-loader = "${libdir}"
 
 # PN-loader (non -dev/-dbg/nativesdk- package) contains symlink .so
-INSANE_SKIP_${PN}-loader = "dev-so"
-INSANE_SKIP_${PN}-samples = "dev-so"
+INSANE_SKIP:${PN}-loader = "dev-so"
+INSANE_SKIP:${PN}-samples = "dev-so"

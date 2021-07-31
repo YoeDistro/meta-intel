@@ -25,7 +25,7 @@ UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>(\d+(\.\d+)+))$"
 CVE_PRODUCT = "intel:math_kernel_library"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
-COMPATIBLE_HOST_libc-musl = 'null'
+COMPATIBLE_HOST:libc-musl = 'null'
 
 EXTRA_OECMAKE += " \
                    -DDNNL_LIBRARY_TYPE=SHARED \
@@ -39,7 +39,7 @@ EXTRA_OECMAKE += " \
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[gpu] = "-DDNNL_GPU_RUNTIME=OCL, , opencl-headers ocl-icd, intel-compute-runtime"
 
-do_install_append () {
+do_install:append () {
     install -d ${D}${bindir}/mkl-dnn/tests/benchdnn/inputs
     install -m 0755 ${B}/tests/benchdnn/benchdnn ${D}${bindir}/mkl-dnn/tests/benchdnn
     cp -r ${B}/tests/benchdnn/inputs/* ${D}${bindir}/mkl-dnn/tests/benchdnn/inputs
@@ -53,4 +53,4 @@ do_install_ptest () {
 
 PACKAGES =+ "${PN}-test"
 
-FILES_${PN}-test = "${bindir}/mkl-dnn/*"
+FILES:${PN}-test = "${bindir}/mkl-dnn/*"

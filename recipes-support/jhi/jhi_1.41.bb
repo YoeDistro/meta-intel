@@ -14,20 +14,20 @@ S = "${WORKDIR}/git"
 
 DEPENDS += "util-linux libxml2"
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
-RDEPENDS_${PN} += "bash"
+RDEPENDS:${PN} += "bash"
 
 USERADD_PACKAGES = "${PN}"
-USERADD_PARAM_${PN} = "--system --no-create-home --shell /bin/false -g mei jhi"
+USERADD_PARAM:${PN} = "--system --no-create-home --shell /bin/false -g mei jhi"
 
-GROUPADD_PARAM_${PN} = "-g 880 mei"
+GROUPADD_PARAM:${PN} = "-g 880 mei"
 
-COMPATIBLE_HOST_libc-musl = 'null'
+COMPATIBLE_HOST:libc-musl = 'null'
 
-SYSTEMD_SERVICE_${PN} = "jhi.service"
+SYSTEMD_SERVICE:${PN} = "jhi.service"
 
 INITSCRIPT_PACKAGES = "${PN}"
-INITSCRIPT_NAME_${PN} = "${PN}"
-INITSCRIPT_PARAMS_${PN} = "defaults"
+INITSCRIPT_NAME:${PN} = "${PN}"
+INITSCRIPT_PARAMS:${PN} = "defaults"
 
 # systemd is the default so they are installed when sysvinit is not selected as INIT_SYSTEM
 EXTRA_OECMAKE = "-DCMAKE_SKIP_RPATH=ON \
@@ -36,7 +36,7 @@ EXTRA_OECMAKE = "-DCMAKE_SKIP_RPATH=ON \
                  -DAPP_REPO_DIR=${localstatedir}/cache/dal/applet_repository \
                  "
 
-do_install_append () {
+do_install:append () {
         install -d ${D}${localstatedir}/cache/dal/applet_repository
 
         chown -R jhi ${D}${localstatedir}/cache/dal/applet_repository
@@ -52,9 +52,9 @@ do_install_append () {
 
 PACKAGES += "${PN}-test"
 
-FILES_${PN}-dev = ""
+FILES:${PN}-dev = ""
 
-FILES_${PN} = "\
+FILES:${PN} = "\
                 ${sbindir} \
                 ${sysconfdir} \
                 ${libdir}/lib*${SOLIBSDEV} \
@@ -64,7 +64,7 @@ FILES_${PN} = "\
                 ${localstatedir}/cache/dal/applet_repository \
                 "
 
-FILES_${PN}-test = "\
+FILES:${PN}-test = "\
                      ${bindir} \
                      ${libdir}/dal/applets \
                      "

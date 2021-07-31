@@ -20,7 +20,7 @@ REQUIRED_DISTRO_FEATURES = "systemd"
 DEPENDS = "libdrm virtual/mesa systemd"
 
 USERADD_PACKAGES = "${PN}"
-USERADD_PARAM_${PN} = "--system --no-create-home --shell /bin/false --gid nogroup media"
+USERADD_PARAM:${PN} = "--system --no-create-home --shell /bin/false --gid nogroup media"
 
-SYSTEMD_SERVICE_${PN} = "hdcpd.service"
+SYSTEMD_SERVICE:${PN} = "hdcpd.service"
 SYSTEMD_AUTO_ENABLE = "disable"

@@ -27,12 +27,12 @@ S = "${WORKDIR}/git"
 inherit cmake
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
-COMPATIBLE_HOST_libc-musl = "null"
+COMPATIBLE_HOST:libc-musl = "null"
 
 DEPENDS += " flex-native bison-native clang opencl-clang vc-intrinsics"
-DEPENDS_append_class-target = " clang-cross-x86_64"
+DEPENDS:append:class-target = " clang-cross-x86_64"
 
-RDEPENDS_${PN} += "opencl-clang"
+RDEPENDS:${PN} += "opencl-clang"
 
 EXTRA_OECMAKE = "-DIGC_OPTION__LLVM_PREFERRED_VERSION=${LLVMVERSION} -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 -DIGC_BUILD__VC_ENABLED=OFF -DIGC_BUILD__USE_KHRONOS_SPIRV_TRANSLATOR=ON"
 
@@ -40,6 +40,6 @@ BBCLASSEXTEND = "native nativesdk"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^igc-(?P<pver>(?!19\..*)\d+(\.\d+)+)$"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
                  ${libdir}/igc/NOTICES.txt \
                  "

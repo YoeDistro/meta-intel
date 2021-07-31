@@ -20,7 +20,7 @@ inherit pkgconfig autotools systemd gtk-doc
 
 # gtkdocsize runs before autotools do_configure and it copies gtk-doc.m4 and fails
 # to copy becuase there is no m4 dir yet.
-do_configure_prepend () {
+do_configure:prepend () {
 	mkdir -p ${S}/m4
 }
 
@@ -28,13 +28,13 @@ EXTRA_OECONF = " \
                  --with-systemdsystemunitdir=${systemd_system_unitdir} \
                  "
 
-FILES_${PN} += "${datadir}/dbus-1/system-services/*.service"
+FILES:${PN} += "${datadir}/dbus-1/system-services/*.service"
 
-SYSTEMD_SERVICE_${PN} = "thermald.service"
+SYSTEMD_SERVICE:${PN} = "thermald.service"
 
 COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
-CONFFILES_${PN} = " \
+CONFFILES:${PN} = " \
                    ${sysconfdir}/thermald/thermal-conf.xml \
                    ${sysconfdir}/thermald/thermal-cpu-cdev-order.xml \
                   "

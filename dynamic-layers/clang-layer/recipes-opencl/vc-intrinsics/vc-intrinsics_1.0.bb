@@ -15,7 +15,7 @@ S = "${WORKDIR}/git"
 inherit cmake
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
-COMPATIBLE_HOST_libc-musl = "null"
+COMPATIBLE_HOST:libc-musl = "null"
 
 DEPENDS += "  clang"
 
