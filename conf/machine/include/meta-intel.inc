@@ -5,7 +5,7 @@
 #
 
 PREFERRED_PROVIDER_virtual/kernel ?= "linux-intel"
-PREFERRED_PROVIDER_virtual/kernel_poky-tiny ?= "linux-intel"
+PREFERRED_PROVIDER_virtual/kernel:poky-tiny ?= "linux-intel"
 
 # Only use the Intel-tuned zlib for target builds to improve reuse
 PREFERRED_PROVIDER_zlib = "zlib-intel"

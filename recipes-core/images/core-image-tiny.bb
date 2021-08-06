@@ -32,5 +32,5 @@ python() {
         d.appendVarFlag('do_image', 'depends', ' %s:do_image_complete' % initrd_i)
 }
 
-WKS_FILE_intel-corei7-64 = "core-image-tiny.wks.in"
-WKS_FILE_intel-core2-32 = "core-image-tiny.wks.in"
+WKS_FILE:intel-corei7-64 = "core-image-tiny.wks.in"
+WKS_FILE:intel-core2-32 = "core-image-tiny.wks.in"
