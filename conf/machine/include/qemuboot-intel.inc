@@ -1,6 +1,6 @@
 # For runqemu
 IMAGE_CLASSES += "qemuboot"
-QB_SYSTEM_NAME_intel-core2-32 = "qemu-system-i386"
+QB_SYSTEM_NAME:intel-core2-32 = "qemu-system-i386"
 QB_CPU:intel-core2-32 = "-cpu coreduo"
 QB_CPU_KVM:intel-core2-32 = "-cpu kvm32"
 
