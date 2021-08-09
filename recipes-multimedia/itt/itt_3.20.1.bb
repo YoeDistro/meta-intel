@@ -15,6 +15,8 @@ PE = "1"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>(\d+(\.\d+)+))$"
 
+COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
+
 inherit pkgconfig cmake
 
 EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=Release"
