@@ -18,6 +18,11 @@ S = "${WORKDIR}/git"
 inherit cmake
 DEPENDS += "libva"
 
+do_install:append() {
+        mkdir -p ${D}${datadir}/oneVPL/samples
+        mv ${D}${bindir}/sample_* ${D}${datadir}/oneVPL/samples
+}
+
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
 PACKAGES += "${PN}-examples"
