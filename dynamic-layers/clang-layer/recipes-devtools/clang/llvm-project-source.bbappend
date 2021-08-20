@@ -1,7 +1,7 @@
 FILESEXTRAPATHS:prepend:intel-x86-common := "${THISDIR}/files:"
 
 SPIRV10_SRCREV = "fe4d6b767363a1995ccbfca27f79efb10dcfe110"
-SPIRV11_SRCREV = "2a8c1e6c9778deaa720a23e08c293006dc5d56fd"
+SPIRV11_SRCREV = "ca3a50e6e3193e399d26446d4f74a90e2a531f3a"
 
 SPIRV_SRCREV = "${@bb.utils.contains('LLVMVERSION', '10.0.1', '${SPIRV10_SRCREV}', '${SPIRV11_SRCREV}', d)}"
 
@@ -21,10 +21,14 @@ SRC_URI_LLVM10_PATCHES = " \
                    "
 
 SRC_URI_LLVM11_PATCHES = " \
-                   file://llvm11-skip-building-tests.patch;patchdir=llvm/projects/llvm-spirv \
-                   file://llvm11-OpenCL-3.0-support.patch \
-                   file://0001-Memory-leak-fix-for-Managed-Static-Mutex.patch \
-                   file://llvm11-Remove-repo-name-in-LLVM-IR.patch \
+                   file://llvm11-0001-llvm-spirv-skip-building-tests.patch;patchdir=llvm/projects/llvm-spirv \
+                   file://llvm11-0002-Add-support-for-cl_ext_float_atomics-in-SPIRVWriter.patch;patchdir=llvm/projects/llvm-spirv \
+                   file://llvm11-0001-OpenCL-3.0-support.patch \
+                   file://llvm11-0002-Memory-leak-fix-for-Managed-Static-Mutex.patch \
+                   file://llvm11-0003-Remove-repo-name-in-LLVM-IR.patch \
+                   file://llvm11-0004-Remove-__IMAGE_SUPPORT__-macro-for-SPIR-since-SPIR-d.patch \
+                   file://llvm11-0005-Avoid-calling-ParseCommandLineOptions-in-BackendUtil.patch \
+                   file://llvm11-0006-OpenCL-support-cl_ext_float_atomics.patch \
                    "
 SRC_URI_LLVM12_PATCHES = " \
                    file://0001-Remove-__IMAGE_SUPPORT__-macro-for-SPIR.patch \

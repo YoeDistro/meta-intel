@@ -1,13 +1,11 @@
-From d767afa79d1c8153081eac1ef33e348cadbea5bb Mon Sep 17 00:00:00 2001
+From 36d87f69fee9c3d3f399f8e4027ab707ad050e80 Mon Sep 17 00:00:00 2001
 From: Anton Zabaznov <anton.zabaznov@intel.com>
 Date: Tue, 22 Sep 2020 19:03:50 +0300
-Subject: [PATCH] OpenCL 3.0 support
+Subject: [PATCH 1/6] OpenCL 3.0 support
 
 Upstream-Status: Backport [Taken from opencl-clang patches, https://github.com/intel/opencl-clang/blob/ocl-open-110/patches/clang/0001-OpenCL-3.0-support.patch]
 Signed-off-by: Anton Zabaznov <anton.zabaznov@intel.com>
 Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
-
-
 ---
  clang/include/clang/Basic/Builtins.def        |   65 +-
  clang/include/clang/Basic/Builtins.h          |   13 +-

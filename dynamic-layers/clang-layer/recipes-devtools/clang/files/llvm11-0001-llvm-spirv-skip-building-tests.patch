@@ -1,7 +1,7 @@
-From d362652617c5e840089273df0c6623a9745c92a2 Mon Sep 17 00:00:00 2001
+From 6690d77f9007ce82984dc1b6ae12585cb3e04785 Mon Sep 17 00:00:00 2001
 From: Naveen Saini <naveen.kumar.saini@intel.com>
 Date: Wed, 21 Aug 2019 14:35:31 +0800
-Subject: [PATCH] llvm-spirv: skip building tests
+Subject: [PATCH 1/2] llvm-spirv: skip building tests
 
 Some of these need clang to be built and since we're building this in-tree,
 that leads to problems when compiling libcxx, compiler-rt which aren't built
@@ -19,10 +19,10 @@ Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
  1 file changed, 10 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ecebb4cb..578ca602 100644
+index ec61fb95..d723c0a5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -25,13 +25,6 @@ if(LLVM_SPIRV_BUILD_EXTERNAL)
+@@ -26,13 +26,6 @@ if(LLVM_SPIRV_BUILD_EXTERNAL)
    set(CMAKE_CXX_STANDARD 14)
    set(CMAKE_CXX_STANDARD_REQUIRED ON)
  
@@ -36,7 +36,7 @@ index ecebb4cb..578ca602 100644
    find_package(LLVM ${BASE_LLVM_VERSION} REQUIRED
      COMPONENTS
        Analysis
-@@ -62,9 +55,6 @@ set(LLVM_SPIRV_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
+@@ -65,9 +58,6 @@ set(LLVM_SPIRV_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
  
  add_subdirectory(lib/SPIRV)
  add_subdirectory(tools/llvm-spirv)
@@ -47,5 +47,5 @@ index ecebb4cb..578ca602 100644
  install(
    FILES
 -- 
-2.26.2
+2.17.1
 
