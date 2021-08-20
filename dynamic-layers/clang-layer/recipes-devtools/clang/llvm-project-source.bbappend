@@ -1,20 +1,23 @@
 FILESEXTRAPATHS:prepend:intel-x86-common := "${THISDIR}/files:"
 
-SPIRV10_SRCREV = "576abae62cecd171992017a4a786e3831221ab8d"
+SPIRV10_SRCREV = "fe4d6b767363a1995ccbfca27f79efb10dcfe110"
 SPIRV11_SRCREV = "2a8c1e6c9778deaa720a23e08c293006dc5d56fd"
 
 SPIRV_SRCREV = "${@bb.utils.contains('LLVMVERSION', '10.0.1', '${SPIRV10_SRCREV}', '${SPIRV11_SRCREV}', d)}"
 
 SRC_URI_LLVM10_PATCHES = " \
-                   file://llvm10-skip-building-tests.patch;patchdir=llvm/projects/llvm-spirv \
-                   file://fix-shared-libs.patch;patchdir=llvm/projects/llvm-spirv \
+                   file://llvm10-0001-llvm-spirv-skip-building-tests.patch;patchdir=llvm/projects/llvm-spirv \
+                   file://llvm10-0002-Fix-building-in-tree-with-cmake-DLLVM_LINK_LLVM_DYLI.patch;patchdir=llvm/projects/llvm-spirv \
+                   file://llvm10-0003-Add-support-for-cl_ext_float_atomics-in-SPIRVWriter.patch;patchdir=llvm/projects/llvm-spirv \
                    file://BasicBlockUtils-Add-metadata-fixing-in-SplitBlockPre.patch;patchdir=llvm \
                    file://IndVarSimplify-Do-not-use-SCEV-expander-for-IVCount-.patch;patchdir=llvm \
-                   file://llvm10-OpenCL-3.0-support.patch \
-                   file://0002-Add-cl_khr_extended_subgroup-extensions.patch \
-                   file://0001-Memory-leak-fix-for-Managed-Static-Mutex.patch \
-                   file://llvm10-Remove-repo-name-in-LLVM-IR.patch \
-                   file://0001-Fix-debug-info-of-work-item-builtin-translation-745.patch;patchdir=llvm/projects/llvm-spirv \
+                   file://llvm10-0001-OpenCL-3.0-support.patch \
+                   file://llvm10-0002-Add-cl_khr_extended_subgroup-extensions.patch \
+                   file://llvm10-0003-Memory-leak-fix-for-Managed-Static-Mutex.patch \
+                   file://llvm10-0004-Remove-repo-name-in-LLVM-IR.patch \
+                   file://llvm10-0005-Remove-__IMAGE_SUPPORT__-macro-for-SPIR-since-SPIR-d.patch \
+                   file://llvm10-0006-Avoid-calling-ParseCommandLineOptions-in-BackendUtil.patch \
+                   file://llvm10-0007-support-cl_ext_float_atomics.patch \
                    "
 
 SRC_URI_LLVM11_PATCHES = " \

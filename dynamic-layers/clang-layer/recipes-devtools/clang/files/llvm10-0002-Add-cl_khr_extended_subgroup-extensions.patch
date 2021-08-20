@@ -1,7 +1,7 @@
-From 27d47f1a17c8921b07acc8cdc26e38cc609de4a9 Mon Sep 17 00:00:00 2001
+From 3f544cfe44ee5f113a3fb554aca2cf5d64996062 Mon Sep 17 00:00:00 2001
 From: Naveen Saini <naveen.kumar.saini@intel.com>
 Date: Wed, 7 Apr 2021 16:38:38 +0800
-Subject: [PATCH 2/2] Add cl_khr_extended_subgroup extensions.
+Subject: [PATCH 2/7] Add cl_khr_extended_subgroup extensions.
 
 Added extensions and their function declarations into
 the standard header.

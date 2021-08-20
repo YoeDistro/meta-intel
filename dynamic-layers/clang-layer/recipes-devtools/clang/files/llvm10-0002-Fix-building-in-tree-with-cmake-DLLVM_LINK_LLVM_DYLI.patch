@@ -1,7 +1,7 @@
-From a6d4ccf082858e63e139ca06c02a071c343d2657 Mon Sep 17 00:00:00 2001
+From 331e323ae2633a8999a660314022491d670c442c Mon Sep 17 00:00:00 2001
 From: Andrea Bocci <andrea.bocci@cern.ch>
 Date: Sun, 15 Mar 2020 17:35:44 +0100
-Subject: [PATCH] Fix building in-tree with cmake -DLLVM_LINK_LLVM_DYLIB=ON
+Subject: [PATCH 2/3] Fix building in-tree with cmake -DLLVM_LINK_LLVM_DYLIB=ON
 
 Building in-tree with LLVM 11.0 master with the LLVM_LINK_LLVM_DYLIB
 cmake flag fails to link with the LLVMSPIRVLib library.
@@ -28,3 +28,6 @@ index 9aa96d9c..501c0daf 100644
    target_link_libraries(llvm-spirv PRIVATE LLVMSPIRVLib)
  endif()
  
+-- 
+2.17.1
+
