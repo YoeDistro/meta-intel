@@ -31,7 +31,9 @@ SRC_URI_LLVM11_PATCHES = " \
                    file://llvm11-0006-OpenCL-support-cl_ext_float_atomics.patch \
                    "
 SRC_URI_LLVM12_PATCHES = " \
-                   file://0001-Remove-__IMAGE_SUPPORT__-macro-for-SPIR.patch \
+                   file://llvm12-0001-Remove-__IMAGE_SUPPORT__-macro-for-SPIR-since-SPIR-d.patch \
+                   file://llvm12-0002-Avoid-calling-ParseCommandLineOptions-in-BackendUtil.patch \
+                   file://llvm12-0003-Support-cl_ext_float_atomics.patch \
                    "
 
 
