@@ -3,5 +3,5 @@
 #
 
 DEFAULTTUNE ?= "core2-32"
-require conf/machine/include/tune-core2.inc
-require conf/machine/include/x86-base.inc
+require conf/machine/${X86_TUNE_DIR}/tune-core2.inc
+require conf/machine/${X86_TUNE_DIR}/x86-base.inc
