@@ -1,33 +1,33 @@
-From 32851d269ac0c027730168c04d9ce32d0eb50905 Mon Sep 17 00:00:00 2001
-From: Naveen Saini <naveen.kumar.saini@intel.com>
-Date: Wed, 27 May 2020 11:12:09 +0000
-Subject: [PATCH] intel-compute-runtime: allow to find cpp_generation_tool
-
-Build not able to locate cpp_generation_tool.
+From b5d0b22011dd0360ad92dcd34f69a2b6a9e0772f Mon Sep 17 00:00:00 2001
+From: Dongwon Kim <dongwon.kim@intel.com>
+Date: Sat, 21 Aug 2021 16:09:39 -0700
+Subject: [PATCH] Build not able to locate cpp_generation_tool.
 
 Upstream-Status: Inappropriate [oe specific]
+
 Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+Signed-off-by: Dongwon Kim <dongwon.kim@intel.com>
 ---
  shared/source/built_ins/kernels/CMakeLists.txt | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/shared/source/built_ins/kernels/CMakeLists.txt b/shared/source/built_ins/kernels/CMakeLists.txt
-index 1b1225077..2e8148c25 100644
+index 12dc4aa7a..9e42d7a34 100644
 --- a/shared/source/built_ins/kernels/CMakeLists.txt
 +++ b/shared/source/built_ins/kernels/CMakeLists.txt
-@@ -93,9 +93,9 @@ function(compile_builtin gen_type platform_type builtin bits builtin_options mod
-   )
-   add_custom_command(
-                      OUTPUT ${OUTPUT_FILE_CPP}
--                     COMMAND $<TARGET_FILE:cpp_generate_tool> --file ${OUTPUTPATH_BASE}.gen --output ${OUTPUT_FILE_CPP} --array ${mode}_${BASENAME} --platform ${family_name_with_type}
-+                     COMMAND cpp_generate_tool --file ${OUTPUTPATH_BASE}.gen --output ${OUTPUT_FILE_CPP} --array ${mode}_${BASENAME} --platform ${family_name_with_type}
-                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
--                     DEPENDS ${OUTPUTPATH_BASE}.gen $<TARGET_FILE:cpp_generate_tool>
-+                     DEPENDS ${OUTPUTPATH_BASE}.gen cpp_generate_tool
-   )
- endfunction()
- 
-@@ -136,9 +136,9 @@ function(generate_cpp_spirv builtin)
+@@ -91,9 +91,9 @@ function(compile_builtin gen_type platform_type builtin bits builtin_options mod
+     list(APPEND BUILTINS_COMMANDS "${OUTPUT_FILE_CPP}")
+     add_custom_command(
+                        OUTPUT ${OUTPUT_FILE_CPP}
+-                       COMMAND $<TARGET_FILE:cpp_generate_tool> --file ${OUTPUTPATH_BASE}.gen --output ${OUTPUT_FILE_CPP} --array ${mode}_${BASENAME} --platform ${family_name_with_type} --revision_id ${REVISION_ID}
++                       COMMAND cpp_generate_tool --file ${OUTPUTPATH_BASE}.gen --output ${OUTPUT_FILE_CPP} --array ${mode}_${BASENAME} --platform ${family_name_with_type} --revision_id ${REVISION_ID}
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+-                       DEPENDS ${OUTPUTPATH_BASE}.gen $<TARGET_FILE:cpp_generate_tool>
++                       DEPENDS ${OUTPUTPATH_BASE}.gen cpp_generate_tool
+     )
+   endforeach()
+   set(BUILTINS_COMMANDS ${BUILTINS_COMMANDS} PARENT_SCOPE)
+@@ -135,9 +135,9 @@ function(generate_cpp_spirv builtin)
    )
    add_custom_command(
                       OUTPUT ${OUTPUT_FILE_CPP}
@@ -40,5 +40,5 @@ index 1b1225077..2e8148c25 100644
  endfunction()
  
 -- 
-2.28.0
+2.20.1
 

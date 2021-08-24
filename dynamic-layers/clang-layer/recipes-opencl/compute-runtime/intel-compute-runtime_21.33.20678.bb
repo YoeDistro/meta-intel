@@ -5,14 +5,16 @@ on OpenCL(TM) compute stacks supporting the GEN graphics hardware \
 architecture."
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=ae27f47fd6755510247c19e547e4c804 \
+LIC_FILES_CHKSUM = "file://LICENSE.md;md5=983b0c493ea3dc3c21a90ff743bf90e4 \
                     file://third_party/opencl_headers/LICENSE;md5=dcefc90f4c3c689ec0c2489064e7273b"
 
 SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https \
-           "
-SRC_URI:append:class-target = " file://allow-to-find-cpp-generation-tool.patch"
+           file://0001-Revert-Change-builtin-kernels-compilation-process.patch \
+          "
 
-SRCREV = "5a05d7643c4d8cc14e281b686c78101a7a01e8e1"
+SRC_URI:append:class-target = "file://allow-to-find-cpp-generation-tool.patch"
+
+SRCREV = "0a106c150e3cde872b4728d766134d99c02e8b1c"
 
 S = "${WORKDIR}/git"
 
