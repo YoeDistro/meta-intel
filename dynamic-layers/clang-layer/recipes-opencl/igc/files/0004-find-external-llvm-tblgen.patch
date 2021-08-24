@@ -1,0 +1,30 @@
+From c9fe51ec555fadd098cfc98804ce91b1cf3029d4 Mon Sep 17 00:00:00 2001
+From: Dongwon Kim <dongwon.kim@intel.com>
+Date: Thu, 19 Aug 2021 08:28:03 -0700
+Subject: [PATCH 4/5] find external llvm-tblgen
+
+Upstream-Status: Pending
+Signed-off-by: Dongwon Kim <dongwon.kim@intel.com>
+---
+ IGC/cmake/igc_llvm.cmake | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/IGC/cmake/igc_llvm.cmake b/IGC/cmake/igc_llvm.cmake
+index 541793f21..bc82922b1 100644
+--- a/IGC/cmake/igc_llvm.cmake
++++ b/IGC/cmake/igc_llvm.cmake
+@@ -24,7 +24,10 @@ set(CMAKE_MODULE_PATH
+   ${CMAKE_MODULE_PATH}
+   )
+ 
+-set(LLVM_TABLEGEN_EXE "llvm-tblgen")
++find_program(LLVM_TABLEGEN_EXE "llvm-tblgen")
++if(LLVM_TABLEGEN_EXE-NOTFOUND)
++  message(FATAL_ERROR "[VC] llvm-tblgen is not found")
++endif()
+ 
+ include(AddLLVM)
+ include(TableGen)
+-- 
+2.20.1
+

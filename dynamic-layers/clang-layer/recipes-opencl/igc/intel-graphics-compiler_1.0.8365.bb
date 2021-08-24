@@ -5,19 +5,18 @@ hardware architecture."
 
 LICENSE = "MIT & BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc/LICENSE.TXT;md5=311cfc1a5b54bab8ed34a0b5fba4373e \
-                    file://IGC/Compiler/LegalizationPass.cpp;beginline=1;endline=23;md5=8b19c5999abc484f18232b0905367f9f \
-                    file://NOTICES.txt;md5=b12e73994de4fbe0f688cf0bc91512a0"
+                    file://IGC/Compiler/LegalizationPass.cpp;beginline=1;endline=23;md5=4a985f2545dd5a846e205b1e60a51cd9 \
+                    file://NOTICES.txt;md5=db621145dfb627436bc90ad600386801"
 
 SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https; \
            file://0001-skip-execution-of-ElfPackager.patch \
-           file://link-to-LLVMGenXIntrinsics.patch \
-           file://improve_src_package_reproducibility.patch \
-           file://0001-Fix-build-with-LLVM-12.patch \
-           file://0002-Review-fixes-for-LLVM-12-phase-1.patch \
-           file://0003-Review-fixes-for-LLVM-12-phase-2.patch \
+           file://0002-IGC-VectorCompiler-CMakeLists.txt-link-to-external-L.patch \
+           file://0003-Improve-Reproducibility-for-src-package.patch \
+           file://0004-find-external-llvm-tblgen.patch \
+           file://0005-Temporary-LLVM-12-compatiblity-fix.patch \
           "
 
-SRCREV = "535aaaef03ce338e05e6162118082e6e007e8c10"
+SRCREV = "5d5672d6cc0c415dae76648390026f777004bd99"
 
 # Used to replace with relative path in reproducibility patch
 export B

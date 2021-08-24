@@ -1,7 +1,7 @@
-From 2fa3f2da1179bd5b2eeac82839d386f0111e611c Mon Sep 17 00:00:00 2001
+From c2b7f30dd56568482b1b7c2f22bafdf68736fc88 Mon Sep 17 00:00:00 2001
 From: Lee Chee Yang <chee.yang.lee@intel.com>
 Date: Wed, 2 Sep 2020 08:28:35 +0800
-Subject: [PATCH] Improve Reproducibility for src package
+Subject: [PATCH 3/5] Improve Reproducibility for src package
 
 Improve reproducibility for intel-graphics-compiler-src package.
 needs to pass build path as environment variable to the build.
@@ -14,10 +14,10 @@ Signed-off-by: Lee Chee Yang <chee.yang.lee@intel.com>
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/visa/CMakeLists.txt b/visa/CMakeLists.txt
-index 981c35d2..d5944370 100644
+index 65dbb4934..8cd607a69 100644
 --- a/visa/CMakeLists.txt
 +++ b/visa/CMakeLists.txt
-@@ -109,8 +109,11 @@ endif()
+@@ -123,8 +123,11 @@ endif()
  set(bison_output_file ${CMAKE_CURRENT_BINARY_DIR}/CISA.tab.cpp)
  set(flex_output_file ${CMAKE_CURRENT_BINARY_DIR}/lex.CISA.cpp)
  
@@ -32,5 +32,5 @@ index 981c35d2..d5944370 100644
  set(CISAScanner_dependencies)
  
 -- 
-2.28.0
+2.20.1
 
