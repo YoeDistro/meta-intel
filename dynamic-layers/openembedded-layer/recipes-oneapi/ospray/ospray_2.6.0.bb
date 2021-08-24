@@ -28,3 +28,5 @@ PACKAGES =+ "${PN}-apps"
 FILES:${PN}-apps = "\
                      ${bindir} \
                      "
+
+UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>(\d+(\.\d+)+))$"
