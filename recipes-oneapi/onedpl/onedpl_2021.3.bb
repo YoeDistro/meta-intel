@@ -22,3 +22,5 @@ do_install() {
      install -d -m 755 ${D}${includedir}/onedpl
      cp -r ${S}/include/* ${D}${includedir}/onedpl
 }
+
+UPSTREAM_CHECK_GITTAGREGEX = "^oneDPL-(?P<pver>(\d+(\.\d+)+))-release$"
