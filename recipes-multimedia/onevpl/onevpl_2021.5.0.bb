@@ -11,6 +11,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c18ea6bb4786a26bf4eee88a7424a408 \
 SRC_URI = "git://github.com/oneapi-src/oneVPL.git;protocol=https \
             file://0001-Fix-the-rendering-to-X11-failures.patch \
             file://0001-Fix-compile-issue-with-CMAKE_CXX_FLAGS-setting.patch \
+            file://0001-samples-Add-support-of-DRM_FORMAT_NV12-for-console-m.patch \
+            file://0001-samples-Fixed-tile-modifier-issue-for-NV12-format.patch \
             "
 SRCREV = "dde640ef0872b645d6e0275a6aaec26c01a9c0b9"
 S = "${WORKDIR}/git"
