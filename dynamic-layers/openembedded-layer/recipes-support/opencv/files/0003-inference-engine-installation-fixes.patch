@@ -1,4 +1,4 @@
-From 21453439cd6d89058710e868f05727502e556f99 Mon Sep 17 00:00:00 2001
+From 626184cf0e8c97b23cf0e7be4fb3e73f7e6748ee Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Thu, 11 Jun 2020 14:24:04 +0800
 Subject: [PATCH] cmake installation fixes
@@ -7,41 +7,34 @@ Make sure that libraries/samples/binaries are installed correctly.
 
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
- CMakeLists.txt                                    | 15 ---------------
- cmake/developer_package/IEDevScriptsConfig.cmake  |  2 +-
- cmake/developer_package/packaging.cmake           |  8 +++++---
- cmake/developer_package/plugins/plugins.cmake     |  2 +-
- .../samples/common/opencv_c_wraper/CMakeLists.txt |  2 ++
- inference-engine/samples/CMakeLists.txt           |  4 +++-
- .../samples/common/format_reader/CMakeLists.txt   |  2 ++
- .../src/inference_engine/CMakeLists.txt           |  4 ++--
- inference-engine/src/preprocessing/CMakeLists.txt |  2 +-
- .../src/readers/ir_reader/CMakeLists.txt          |  2 +-
- .../src/vpu/myriad_plugin/CMakeLists.txt          |  2 +-
- inference-engine/tests/unit/cpu/CMakeLists.txt    |  2 ++
- .../tests/unit/inference_engine/CMakeLists.txt    |  2 ++
- inference-engine/tests/unit/vpu/CMakeLists.txt    |  2 ++
- .../tools/compile_tool/CMakeLists.txt             |  2 +-
- 15 files changed, 26 insertions(+), 27 deletions(-)
+ CMakeLists.txt                                | 15 --------
+ .../IEDevScriptsConfig.cmake                  |  2 +-
+ cmake/developer_package/packaging.cmake       |  8 +++--
+ cmake/developer_package/plugins/plugins.cmake |  2 +-
+ .../common/opencv_c_wrapper/CMakeLists.txt    |  2 ++
+ inference-engine/samples/CMakeLists.txt       |  4 ++-
+ .../common/format_reader/CMakeLists.txt       |  4 ++-
+ .../src/inference_engine/CMakeLists.txt       | 35 ++-----------------
+ .../src/preprocessing/CMakeLists.txt          |  2 +-
+ .../src/readers/ir_reader/CMakeLists.txt      |  2 +-
+ .../src/vpu/myriad_plugin/CMakeLists.txt      |  2 +-
+ .../tests/unit/cpu/CMakeLists.txt             |  2 ++
+ .../unit/inference_engine/CMakeLists.txt      |  2 ++
+ .../tests/unit/vpu/CMakeLists.txt             |  2 ++
+ .../tools/compile_tool/CMakeLists.txt         |  2 +-
+ ngraph/CMakeLists.txt                         |  8 ++---
+ 16 files changed, 32 insertions(+), 62 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e72f2b61f1..2c22827e2d 100644
+index e0706a72e8..7920de9a42 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -105,7 +105,6 @@ function(build_ngraph)
-     ie_cpack_add_component(ngraph)
- 
-     set(SDL_cmake_included ON)
--    set(NGRAPH_COMPONENT_PREFIX "deployment_tools/ngraph/")
-     add_subdirectory(ngraph)
-     set(NGRAPH_LIBRARIES ngraph PARENT_SCOPE)
-     set(NGRAPH_REF_LIBRARIES ngraph_reference PARENT_SCOPE)
-@@ -174,12 +173,8 @@ ie_shellcheck_process(DIRECTORY "${OpenVINO_MAIN_SOURCE_DIR}"
+@@ -180,12 +180,7 @@ ie_shellcheck_process(DIRECTORY "${OpenVINO_MAIN_SOURCE_DIR}"
  
  # install setupvars
  
 -ie_cpack_add_component(setupvars REQUIRED)
- 
+-
  if(UNIX)
 -    install(PROGRAMS scripts/setupvars/setupvars.sh
 -            DESTINATION bin
@@ -49,7 +42,7 @@ index e72f2b61f1..2c22827e2d 100644
  elseif(WIN32)
      install(PROGRAMS scripts/setupvars/setupvars.bat
              DESTINATION bin
-@@ -189,22 +184,12 @@ endif()
+@@ -195,22 +190,12 @@ endif()
  # install install_dependencies
  
  if(UNIX)
@@ -61,7 +54,7 @@ index e72f2b61f1..2c22827e2d 100644
  
  # install files for demo
  
--ie_cpack_add_component(demo_scripts REQUIRED DEPENDS core)
+-ie_cpack_add_component(demo_scripts DEPENDS core)
  
  if(UNIX)
 -    install(DIRECTORY scripts/demo/
@@ -73,10 +66,10 @@ index e72f2b61f1..2c22827e2d 100644
      install(DIRECTORY scripts/demo/
              DESTINATION deployment_tools/demo
 diff --git a/cmake/developer_package/IEDevScriptsConfig.cmake b/cmake/developer_package/IEDevScriptsConfig.cmake
-index ed6971fd37..10817d3a75 100644
+index 0e1fe76db2..97867a24f8 100644
 --- a/cmake/developer_package/IEDevScriptsConfig.cmake
 +++ b/cmake/developer_package/IEDevScriptsConfig.cmake
-@@ -121,7 +121,7 @@ if(NOT DEFINED OUTPUT_ROOT)
+@@ -124,7 +124,7 @@ if(NOT DEFINED OUTPUT_ROOT)
      if(NOT DEFINED OpenVINO_MAIN_SOURCE_DIR)
          message(FATAL_ERROR "OpenVINO_MAIN_SOURCE_DIR is not defined")
      endif()
@@ -86,10 +79,10 @@ index ed6971fd37..10817d3a75 100644
  
  # Enable postfixes for Debug/Release builds
 diff --git a/cmake/developer_package/packaging.cmake b/cmake/developer_package/packaging.cmake
-index b846bf732d..7a0022968c 100644
+index 2b5e945b17..adc4bef0bc 100644
 --- a/cmake/developer_package/packaging.cmake
 +++ b/cmake/developer_package/packaging.cmake
-@@ -4,7 +4,9 @@
+@@ -5,7 +5,9 @@
  include(CPackComponent)
  unset(IE_CPACK_COMPONENTS_ALL CACHE)
  
@@ -100,7 +93,7 @@ index b846bf732d..7a0022968c 100644
  
  #
  # ie_cpack_set_library_dir()
-@@ -17,8 +19,8 @@ function(ie_cpack_set_library_dir)
+@@ -18,8 +20,8 @@ function(ie_cpack_set_library_dir)
          set(IE_CPACK_RUNTIME_PATH ${IE_CPACK_IE_DIR}/bin/${ARCH_FOLDER}/${CMAKE_BUILD_TYPE} PARENT_SCOPE)
          set(IE_CPACK_ARCHIVE_PATH ${IE_CPACK_IE_DIR}/lib/${ARCH_FOLDER}/${CMAKE_BUILD_TYPE} PARENT_SCOPE)
      else()
@@ -112,10 +105,10 @@ index b846bf732d..7a0022968c 100644
      endif()
  endfunction()
 diff --git a/cmake/developer_package/plugins/plugins.cmake b/cmake/developer_package/plugins/plugins.cmake
-index a66d2568d9..c3aad14bab 100644
+index aae1dbb7fb..e6dac2a478 100644
 --- a/cmake/developer_package/plugins/plugins.cmake
 +++ b/cmake/developer_package/plugins/plugins.cmake
-@@ -106,7 +106,7 @@ function(ie_add_plugin)
+@@ -124,7 +124,7 @@ function(ie_add_plugin)
  
          install(TARGETS ${IE_PLUGIN_NAME}
              RUNTIME DESTINATION ${IE_CPACK_RUNTIME_PATH} COMPONENT ${install_component}
@@ -124,18 +117,18 @@ index a66d2568d9..c3aad14bab 100644
      endif()
  endfunction()
  
-diff --git a/inference-engine/ie_bridges/c/samples/common/opencv_c_wraper/CMakeLists.txt b/inference-engine/ie_bridges/c/samples/common/opencv_c_wraper/CMakeLists.txt
-index aff7229c9f..f45a215f68 100644
---- a/inference-engine/ie_bridges/c/samples/common/opencv_c_wraper/CMakeLists.txt
-+++ b/inference-engine/ie_bridges/c/samples/common/opencv_c_wraper/CMakeLists.txt
+diff --git a/inference-engine/ie_bridges/c/samples/common/opencv_c_wrapper/CMakeLists.txt b/inference-engine/ie_bridges/c/samples/common/opencv_c_wrapper/CMakeLists.txt
+index 45b2b3e9ed..55f7dfd214 100644
+--- a/inference-engine/ie_bridges/c/samples/common/opencv_c_wrapper/CMakeLists.txt
++++ b/inference-engine/ie_bridges/c/samples/common/opencv_c_wrapper/CMakeLists.txt
 @@ -28,3 +28,5 @@ set_target_properties(${TARGET_NAME} PROPERTIES FOLDER c_samples)
- if(COMMAND add_cpplint_target)
- 	add_cpplint_target(${TARGET_NAME}_cpplint FOR_TARGETS ${TARGET_NAME})
+ if(COMMAND add_clang_format_target AND NOT IE_SAMPLE_EXCLUDE_CLANG_FORMAT)
+     add_clang_format_target(${TARGET_NAME}_clang FOR_TARGETS ${TARGET_NAME})
  endif()
 +
 +install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
 diff --git a/inference-engine/samples/CMakeLists.txt b/inference-engine/samples/CMakeLists.txt
-index 6bc44019fe..ca5ab34704 100644
+index ae93857944..fba24c6fed 100644
 --- a/inference-engine/samples/CMakeLists.txt
 +++ b/inference-engine/samples/CMakeLists.txt
 @@ -33,7 +33,7 @@ endif()
@@ -147,9 +140,9 @@ index 6bc44019fe..ca5ab34704 100644
      # hint for find_package(InferenceEngine in the samples folder)
      set(InferenceEngine_DIR "${CMAKE_BINARY_DIR}")
      # hint for find_package(ngraph in the samples folder)
-@@ -251,6 +251,8 @@ macro(ie_add_sample)
-         add_cpplint_target(${IE_SAMPLE_NAME}_cpplint FOR_TARGETS ${IE_SAMPLE_NAME}
-                            CUSTOM_FILTERS ${custom_filters})
+@@ -256,6 +256,8 @@ macro(ie_add_sample)
+     if(COMMAND add_clang_format_target AND NOT IE_SAMPLE_EXCLUDE_CLANG_FORMAT)
+         add_clang_format_target(${IE_SAMPLE_NAME}_clang FOR_SOURCES ${IE_SAMPLE_SOURCES} ${IE_SAMPLE_HEADERS})
      endif()
 +    
 +    install(TARGETS ${IE_SAMPLE_NAME} DESTINATION bin)
@@ -157,52 +150,105 @@ index 6bc44019fe..ca5ab34704 100644
  
  # collect all samples subdirectories
 diff --git a/inference-engine/samples/common/format_reader/CMakeLists.txt b/inference-engine/samples/common/format_reader/CMakeLists.txt
-index c5c5449677..06ecab13b5 100644
+index d75061e56c..a2f8bd6397 100644
 --- a/inference-engine/samples/common/format_reader/CMakeLists.txt
 +++ b/inference-engine/samples/common/format_reader/CMakeLists.txt
-@@ -41,3 +41,5 @@ target_include_directories(${TARGET_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}"
+@@ -44,4 +44,6 @@ set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_PDB_NAME ${TARGET_NAME}
  
- set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_PDB_NAME ${TARGET_NAME}
-                                                 FOLDER cpp_samples)
+ if(COMMAND add_clang_format_target)
+     add_clang_format_target(${TARGET_NAME}_clang FOR_TARGETS ${TARGET_NAME})
+-endif()
+\ No newline at end of file
++endif()
 +
 +install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
 diff --git a/inference-engine/src/inference_engine/CMakeLists.txt b/inference-engine/src/inference_engine/CMakeLists.txt
-index 1ea3227631..aa64718940 100644
+index 5d044e097c..103c187913 100644
 --- a/inference-engine/src/inference_engine/CMakeLists.txt
 +++ b/inference-engine/src/inference_engine/CMakeLists.txt
-@@ -254,8 +254,8 @@ install(TARGETS ${TARGET_NAME}
- install(FILES "${OpenVINO_BINARY_DIR}/share/ie_parallel.cmake"
-               "${OpenVINO_BINARY_DIR}/share/InferenceEngineConfig.cmake"
-               "${OpenVINO_BINARY_DIR}/share/InferenceEngineConfig-version.cmake"
--        DESTINATION ${IE_CPACK_IE_DIR}/share
-+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/InferenceEngine
-         COMPONENT core)
+@@ -227,35 +227,6 @@ list(APPEND core_components ngraph)
+ list(APPEND PATH_VARS "IE_INCLUDE_DIR" "IE_NGRAPH_DIR"
+                       "IE_PARALLEL_CMAKE")
+ 
+-if((THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO") AND TBBROOT MATCHES ${TEMP})
+-    ie_cpack_add_component(tbb REQUIRED)
+-    list(APPEND core_components tbb)
+-
+-    install(DIRECTORY "${TBB}/include"
+-            DESTINATION ${IE_CPACK_IE_DIR}/external/tbb
+-            COMPONENT tbb)
+-    install(DIRECTORY "${TBB}/lib"
+-            DESTINATION ${IE_CPACK_IE_DIR}/external/tbb
+-            COMPONENT tbb)
+-    if(EXISTS "${TBB}/bin")
+-        install(DIRECTORY "${TBB}/bin"
+-                DESTINATION ${IE_CPACK_IE_DIR}/external/tbb
+-                COMPONENT tbb)
+-    endif()
+-    install(FILES "${TBB}/LICENSE"
+-            DESTINATION ${IE_CPACK_IE_DIR}/external/tbb
+-            COMPONENT tbb)
+-
+-    set(IE_TBB_DIR_INSTALL "external/tbb/cmake")
+-    set(IE_TBB_DIR "${TBB_DIR}")
+-    list(APPEND PATH_VARS "IE_TBB_DIR")
+-
+-    install(FILES "${TBB}/cmake/TBBConfig.cmake"
+-                  "${TBB}/cmake/TBBConfigVersion.cmake"
+-            DESTINATION ${IE_CPACK_IE_DIR}/${IE_TBB_DIR_INSTALL}
+-            COMPONENT tbb)
+-endif()
+-
+ # Install Inference Engine
+ 
+ ie_cpack_add_component(core REQUIRED DEPENDS ${core_components})
+@@ -270,7 +241,7 @@ install(TARGETS ${TARGET_NAME} EXPORT InferenceEngineTargets
+         LIBRARY DESTINATION ${IE_CPACK_LIBRARY_PATH} COMPONENT core)
+ 
  install(FILES $<TARGET_FILE_DIR:${TARGET_NAME}>/plugins.xml
 -        DESTINATION ${IE_CPACK_RUNTIME_PATH}
-+	DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}
          COMPONENT core)
+ 
+ # Install cmake scripts
+@@ -278,7 +249,7 @@ install(FILES $<TARGET_FILE_DIR:${TARGET_NAME}>/plugins.xml
+ install(EXPORT InferenceEngineTargets
+         FILE InferenceEngineTargets.cmake
+         NAMESPACE IE::
+-        DESTINATION ${IE_CPACK_IE_DIR}/share
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/InferenceEngine
+         COMPONENT core_dev)
+ 
+ set(IE_NGRAPH_DIR "${CMAKE_BINARY_DIR}/ngraph")
+@@ -307,5 +278,5 @@ configure_file("${IE_MAIN_SOURCE_DIR}/cmake/templates/InferenceEngineConfig-vers
+ install(FILES "${CMAKE_BINARY_DIR}/share/InferenceEngineConfig.cmake"
+               "${CMAKE_BINARY_DIR}/InferenceEngineConfig-version.cmake"
+               "${InferenceEngine_SOURCE_DIR}/cmake/ie_parallel.cmake"
+-        DESTINATION ${IE_CPACK_IE_DIR}/share
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/InferenceEngine
+         COMPONENT core_dev)
 diff --git a/inference-engine/src/preprocessing/CMakeLists.txt b/inference-engine/src/preprocessing/CMakeLists.txt
-index 973fafcbf5..81aea3471a 100644
+index f9548339d1..2670a04b60 100644
 --- a/inference-engine/src/preprocessing/CMakeLists.txt
 +++ b/inference-engine/src/preprocessing/CMakeLists.txt
-@@ -185,4 +185,4 @@ ie_developer_export_targets(${TARGET_NAME})
+@@ -184,4 +184,4 @@ ie_developer_export_targets(${TARGET_NAME})
+ 
  install(TARGETS ${TARGET_NAME}
          RUNTIME DESTINATION ${IE_CPACK_RUNTIME_PATH} COMPONENT core
-         ARCHIVE DESTINATION ${IE_CPACK_ARCHIVE_PATH} COMPONENT core
 -        LIBRARY DESTINATION ${IE_CPACK_RUNTIME_PATH} COMPONENT core)
 +        LIBRARY DESTINATION ${IE_CPACK_LIBRARY_PATH} COMPONENT core)
 diff --git a/inference-engine/src/readers/ir_reader/CMakeLists.txt b/inference-engine/src/readers/ir_reader/CMakeLists.txt
-index 7721b7df6d..bf6543efa8 100644
+index 6d2bd39f3c..0722702055 100644
 --- a/inference-engine/src/readers/ir_reader/CMakeLists.txt
 +++ b/inference-engine/src/readers/ir_reader/CMakeLists.txt
 @@ -49,4 +49,4 @@ add_cpplint_target(${TARGET_NAME}_cpplint FOR_TARGETS ${TARGET_NAME})
+ 
  install(TARGETS ${TARGET_NAME}
          RUNTIME DESTINATION ${IE_CPACK_RUNTIME_PATH} COMPONENT core
-         ARCHIVE DESTINATION ${IE_CPACK_ARCHIVE_PATH} COMPONENT core
 -        LIBRARY DESTINATION ${IE_CPACK_RUNTIME_PATH} COMPONENT core)
 +        LIBRARY DESTINATION ${IE_CPACK_LIBRARY_PATH} COMPONENT core)
 diff --git a/inference-engine/src/vpu/myriad_plugin/CMakeLists.txt b/inference-engine/src/vpu/myriad_plugin/CMakeLists.txt
-index d8a5f2ec1d..2db7ddea6f 100644
+index a3e0182ed9..1b0e241485 100644
 --- a/inference-engine/src/vpu/myriad_plugin/CMakeLists.txt
 +++ b/inference-engine/src/vpu/myriad_plugin/CMakeLists.txt
 @@ -55,6 +55,6 @@ set_target_properties(${TARGET_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION_REL
@@ -214,7 +260,7 @@ index d8a5f2ec1d..2db7ddea6f 100644
          COMPONENT myriad)
  endif()
 diff --git a/inference-engine/tests/unit/cpu/CMakeLists.txt b/inference-engine/tests/unit/cpu/CMakeLists.txt
-index c9a92b4857..2b4fcc4d01 100644
+index dfa8ce9d3f..88e7fbf67f 100644
 --- a/inference-engine/tests/unit/cpu/CMakeLists.txt
 +++ b/inference-engine/tests/unit/cpu/CMakeLists.txt
 @@ -25,3 +25,5 @@ addIeTargetTest(
@@ -224,7 +270,7 @@ index c9a92b4857..2b4fcc4d01 100644
 +
 +install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
 diff --git a/inference-engine/tests/unit/inference_engine/CMakeLists.txt b/inference-engine/tests/unit/inference_engine/CMakeLists.txt
-index 1d9515f540..c81cb2ed79 100644
+index 5c38c77b9b..927f93484f 100644
 --- a/inference-engine/tests/unit/inference_engine/CMakeLists.txt
 +++ b/inference-engine/tests/unit/inference_engine/CMakeLists.txt
 @@ -26,3 +26,5 @@ addIeTargetTest(
@@ -234,28 +280,47 @@ index 1d9515f540..c81cb2ed79 100644
 +
 +install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
 diff --git a/inference-engine/tests/unit/vpu/CMakeLists.txt b/inference-engine/tests/unit/vpu/CMakeLists.txt
-index 5be30a3092..6a01e280ae 100644
+index fcb9f567bb..d4ac1952b8 100644
 --- a/inference-engine/tests/unit/vpu/CMakeLists.txt
 +++ b/inference-engine/tests/unit/vpu/CMakeLists.txt
-@@ -35,3 +35,5 @@ addIeTargetTest(
+@@ -33,3 +33,5 @@ addIeTargetTest(
              VPU
              MYRIAD
  )
 +
 +install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
 diff --git a/inference-engine/tools/compile_tool/CMakeLists.txt b/inference-engine/tools/compile_tool/CMakeLists.txt
-index 58614d3ced..9dfa068e4d 100644
+index 6e6f384289..a76ba55e64 100644
 --- a/inference-engine/tools/compile_tool/CMakeLists.txt
 +++ b/inference-engine/tools/compile_tool/CMakeLists.txt
-@@ -49,7 +49,7 @@ add_cpplint_target(${TARGET_NAME}_cpplint FOR_TARGETS ${TARGET_NAME})
- # install
+@@ -41,7 +41,7 @@ add_cpplint_target(${TARGET_NAME}_cpplint FOR_TARGETS ${TARGET_NAME})
+ ie_cpack_add_component(core_tools DEPENDS core)
  
  install(TARGETS compile_tool
 -        RUNTIME DESTINATION deployment_tools/tools/compile_tool
 +        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-         COMPONENT core)
+         COMPONENT core_tools)
  
  install(FILES README.md
+diff --git a/ngraph/CMakeLists.txt b/ngraph/CMakeLists.txt
+index 830fb3eb36..3093596e4a 100644
+--- a/ngraph/CMakeLists.txt
++++ b/ngraph/CMakeLists.txt
+@@ -183,10 +183,10 @@ endif()
+ message(STATUS "Installation directory: ${CMAKE_INSTALL_PREFIX}")
+ 
+ # Destinations
+-set(NGRAPH_INSTALL_LIB "deployment_tools/ngraph/${CMAKE_INSTALL_LIBDIR}")
+-set(NGRAPH_INSTALL_INCLUDE "deployment_tools/ngraph/${CMAKE_INSTALL_INCLUDEDIR}")
+-set(NGRAPH_INSTALL_DOC "deployment_tools/ngraph/${CMAKE_INSTALL_DOCDIR}")
+-set(NGRAPH_INSTALL_BIN "deployment_tools/ngraph/${CMAKE_INSTALL_BINDIR}")
++set(NGRAPH_INSTALL_LIB "${CMAKE_INSTALL_LIBDIR}")
++set(NGRAPH_INSTALL_INCLUDE "${CMAKE_INSTALL_INCLUDEDIR}")
++set(NGRAPH_INSTALL_DOC "${CMAKE_INSTALL_DOCDIR}")
++set(NGRAPH_INSTALL_BIN "${CMAKE_INSTALL_BINDIR}")
+ 
+ #-----------------------------------------------------------------------------------------------
+ # Compile Flags for nGraph...
 -- 
-2.29.0
+2.32.0
 

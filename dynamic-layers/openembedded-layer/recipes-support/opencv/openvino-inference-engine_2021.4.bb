@@ -4,25 +4,25 @@ DESCRIPTION = "This toolkit allows developers to deploy pre-trained \
 deep learning models through a high-level C++ Inference Engine API \
 integrated with application logic."
 
-SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=git;branch=releases/2021/3;lfs=0 \
-           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/usb-ma2x8x/firmware_usb-ma2x8x_1642.zip;name=usb_ma2x8x \
-           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/pcie-ma2x8x/firmware_pcie-ma2x8x_1642.zip;name=pcie_ma2x8x \
+SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=git;branch=releases/2021/4;lfs=0 \
+           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/usb-ma2x8x/firmware_usb-ma2x8x_1736.zip;name=usb_ma2x8x \
+           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/pcie-ma2x8x/firmware_pcie-ma2x8x_1736.zip;name=pcie_ma2x8x \
            git://github.com/openvinotoolkit/oneDNN.git;protocol=https;destsuffix=git/inference-engine/thirdparty/mkl-dnn;name=mkl;nobranch=1 \
            git://github.com/herumi/xbyak.git;protocol=https;destsuffix=git/thirdparty/xbyak;name=xbyak \
+           git://github.com/pybind/pybind11.git;protocol=https;destsuffix=git/ngraph/python/pybind11;name=pybind11 \
            file://0001-inference-engine-use-system-installed-packages.patch \
-           file://0002-cldNN-disable-Werror.patch \
+           file://0002-Disable-Werror.patch \
            file://0003-inference-engine-installation-fixes.patch \
            file://0001-dont-install-licenses-and-version-file.patch \
-           file://0001-plugin_api-fix-build-with-gcc-11.patch \
-           file://0001-InferenceEngineConfig.cmake-set-the-right-paths.patch \
            "
 
-SRCREV = "c5f7ad383e654dfb4a5ac0805323cf8d43426b3f"
-SRCREV_mkl = "d35c3c11f9ff0f5090f9afe16af122cda501134c"
+SRCREV = "5cee8bbf29797f4544b343e803de957e9f041f92"
+SRCREV_mkl = "e0381c369fc3bed487b0dcfef7e9fcb2e0aea575"
 SRCREV_xbyak = "8d1e41b650890080fb77548372b6236bbd4079f9"
+SRCREV_pybind11 = "3b1dbebabc801c9cf6f0953a4c20b904d444f879"
 
-SRC_URI[usb_ma2x8x.sha256sum] = "d0f6aaaf71a595963e6013ef59045e20b07324f1a47deaa3f906419d39b2bd5a"
-SRC_URI[pcie_ma2x8x.sha256sum] = "18d3cd10cf6cc36ff58001812d3d215c0bbb2de09a8832128592401c8f959358"
+SRC_URI[usb_ma2x8x.sha256sum] = "28ed086ac52b964d9a1f5a54c017237d2d03ea39013e7910df678b176b9ce0c3"
+SRC_URI[pcie_ma2x8x.sha256sum] = "c2268e700eb597329376cbe830eeb6504203d765a1bde4da917242ca535a7ab3"
 
 LICENSE = "Apache-2.0 & ISSL & MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
@@ -61,6 +61,7 @@ DEPENDS += "libusb1 \
             pugixml \
             protobuf-native \
             tbb \
+            zlib \
             "
 
 COMPATIBLE_HOST = '(x86_64).*-linux'

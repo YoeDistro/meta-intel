@@ -1,26 +1,35 @@
-From ca4a2b824de61c182b46e28fce875370ce46d4e1 Mon Sep 17 00:00:00 2001
+From 47ff7f056d219a8a9f02a8b533e1d32972b84589 Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Thu, 8 Apr 2021 14:19:51 +0800
 Subject: [PATCH] inference-engine: use system installed packages
 
-Use installed versions of ade, protobuf and tbb.
+Use installed versions of ade, protobuf, zlib and tbb.
 
-Upstream-Status: Pending
+Don't fetch pybind11 at runtime and use the one that we have fetched while
+running do_fetch.
+
+Upstream-Status: Inappropriate
 
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
- cmake/dependencies.cmake                      | 19 -----------
- inference-engine/CMakeLists.txt               |  2 +-
- inference-engine/cmake/dependencies.cmake     | 34 -------------------
+ cmake/dependencies.cmake                      | 19 --------
+ inference-engine/CMakeLists.txt               |  6 +--
+ inference-engine/cmake/dependencies.cmake     | 45 -------------------
  inference-engine/cmake/ie_parallel.cmake      |  2 +-
- inference-engine/samples/CMakeLists.txt       |  2 +-
- .../common_test_utils/CMakeLists.txt          |  4 +--
+ .../templates/InferenceEngineConfig.cmake.in  | 10 -----
+ inference-engine/samples/CMakeLists.txt       |  3 +-
+ .../src/inference_engine/CMakeLists.txt       |  4 +-
+ .../common_test_utils/CMakeLists.txt          |  4 +-
  .../unit_test_utils/CMakeLists.txt            |  3 +-
- inference-engine/thirdparty/CMakeLists.txt    |  5 ++-
- 8 files changed, 7 insertions(+), 64 deletions(-)
+ inference-engine/thirdparty/CMakeLists.txt    |  5 +--
+ ngraph/python/CMakeLists.txt                  | 12 +----
+ tests/fuzz/src/CMakeLists.txt                 |  1 -
+ thirdparty/CMakeLists.txt                     |  1 -
+ thirdparty/cnpy/CMakeLists.txt                |  4 +-
+ 14 files changed, 14 insertions(+), 105 deletions(-)
 
 diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
-index aed7614734..f5baa6f86b 100644
+index 6cb15a077e..74d4ac4124 100644
 --- a/cmake/dependencies.cmake
 +++ b/cmake/dependencies.cmake
 @@ -7,23 +7,4 @@ set_temp_directory(TEMP "${IE_MAIN_SOURCE_DIR}")
@@ -48,10 +57,10 @@ index aed7614734..f5baa6f86b 100644
 -    update_deps_cache(SYSTEM_PROTOC "${SYSTEM_PROTOC}" "Path to host protoc for ONNX Importer")
  endif()
 diff --git a/inference-engine/CMakeLists.txt b/inference-engine/CMakeLists.txt
-index 95c657222e..20cbd5000b 100644
+index 1ac7fd8bf6..0615873110 100644
 --- a/inference-engine/CMakeLists.txt
 +++ b/inference-engine/CMakeLists.txt
-@@ -20,7 +20,7 @@ function(ie_developer_export_targets)
+@@ -18,7 +18,7 @@ function(ie_developer_export_targets)
  endfunction()
  
  function(ie_developer_export)
@@ -59,12 +68,30 @@ index 95c657222e..20cbd5000b 100644
 +    set(all_dev_targets ie_libraries)
      foreach(component IN LISTS openvino_export_components)
          export(TARGETS ${${component}} NAMESPACE IE::
-             APPEND FILE "${CMAKE_BINARY_DIR}/${component}_dev_targets.cmake")
+                APPEND FILE "${CMAKE_BINARY_DIR}/${component}_dev_targets.cmake")
+@@ -142,7 +142,7 @@ endif()
+ # Developer package
+ #
+ 
+-openvino_developer_export_targets(COMPONENT openvino_common TARGETS format_reader gflags ie_samples_utils)
++openvino_developer_export_targets(COMPONENT openvino_common TARGETS format_reader ie_samples_utils)
+ 
+ # for Template plugin
+ if(NGRAPH_INTERPRETER_ENABLE)
+@@ -158,7 +158,7 @@ function(ie_generate_dev_package_config)
+     configure_package_config_file("${InferenceEngine_SOURCE_DIR}/cmake/templates/InferenceEngineDeveloperPackageConfig.cmake.in"
+                                 "${CMAKE_BINARY_DIR}/InferenceEngineDeveloperPackageConfig.cmake"
+                                 INSTALL_DESTINATION share # not used
+-                                PATH_VARS "OpenVINO_MAIN_SOURCE_DIR;IE_MAIN_SOURCE_DIR;gflags_BINARY_DIR"
++                                PATH_VARS "OpenVINO_MAIN_SOURCE_DIR;IE_MAIN_SOURCE_DIR"
+                                 NO_CHECK_REQUIRED_COMPONENTS_MACRO)
+ 
+     configure_file("${IE_MAIN_SOURCE_DIR}/cmake/templates/InferenceEngineConfig-version.cmake.in"
 diff --git a/inference-engine/cmake/dependencies.cmake b/inference-engine/cmake/dependencies.cmake
-index 6fdfc6f3cd..c07bf0f3c8 100644
+index b270c46f2d..5f85197a85 100644
 --- a/inference-engine/cmake/dependencies.cmake
 +++ b/inference-engine/cmake/dependencies.cmake
-@@ -138,40 +138,6 @@ endif ()
+@@ -81,51 +81,6 @@ endif ()
  if (THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO")
      reset_deps_cache(TBBROOT TBB_DIR)
  
@@ -75,6 +102,11 @@ index 6fdfc6f3cd..c07bf0f3c8 100644
 -                TARGET_PATH "${TEMP}/tbb"
 -                ENVIRONMENT "TBBROOT"
 -                SHA256 "f1c9b9e2861efdaa01552bd25312ccbc5feeb45551e5f91ae61e29221c5c1479")
+-        RESOLVE_DEPENDENCY(TBBBIND_2_4
+-                ARCHIVE_WIN "tbbbind_2_4_static_win_v2.zip"
+-                TARGET_PATH "${TEMP}/tbbbind_2_4"
+-                ENVIRONMENT "TBBBIND_2_4_ROOT"
+-                SHA256 "90dc165652f6ac2ed3014c71e57f797fcc4b11e1498a468e3d2c85deb2a4186a")
 -    elseif(ANDROID)  # Should be before LINUX due LINUX is detected as well
 -        RESOLVE_DEPENDENCY(TBB
 -                ARCHIVE_ANDROID "tbb2020_20200404_android.tgz"
@@ -85,7 +117,13 @@ index 6fdfc6f3cd..c07bf0f3c8 100644
 -        RESOLVE_DEPENDENCY(TBB
 -                ARCHIVE_LIN "tbb2020_20200415_lin_strip.tgz"
 -                TARGET_PATH "${TEMP}/tbb"
+-                ENVIRONMENT "TBBROOT"
 -                SHA256 "95b2f3b0b70c7376a0c7de351a355c2c514b42c4966e77e3e34271a599501008")
+-        RESOLVE_DEPENDENCY(TBBBIND_2_4
+-                ARCHIVE_LIN "tbbbind_2_4_static_lin_v2.tgz"
+-                TARGET_PATH "${TEMP}/tbbbind_2_4"
+-                ENVIRONMENT "TBBBIND_2_4_ROOT"
+-                SHA256 "6dc926258c6cd3cba0f5c2cc672fd2ad599a1650fe95ab11122e8f361a726cb6")
 -    elseif(LINUX AND AARCH64)
 -        RESOLVE_DEPENDENCY(TBB
 -                ARCHIVE_LIN "keembay/tbb2020_38404_kmb_lic.tgz"
@@ -106,23 +144,44 @@ index 6fdfc6f3cd..c07bf0f3c8 100644
      update_deps_cache(TBB_DIR "${TBB}/cmake" "Path to TBB cmake folder")
  
 diff --git a/inference-engine/cmake/ie_parallel.cmake b/inference-engine/cmake/ie_parallel.cmake
-index f8988aa105..42fedd10c5 100644
+index edf3d2f2b2..6579d0f7ea 100644
 --- a/inference-engine/cmake/ie_parallel.cmake
 +++ b/inference-engine/cmake/ie_parallel.cmake
-@@ -6,7 +6,7 @@ function(set_ie_threading_interface_for TARGET_NAME)
-     if (THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO" AND NOT TBB_FOUND)
-         find_package(TBB COMPONENTS tbb tbbmalloc)
-         set("TBB_FOUND" ${TBB_FOUND} PARENT_SCOPE)
--        set("TBB_IMPORTED_TARGETS" ${TBB_IMPORTED_TARGETS} PARENT_SCOPE)
-+        set("TBB_IMPORTED_TARGETS" "tbb;tbbmalloc" PARENT_SCOPE)
-         set("TBB_VERSION" ${TBB_VERSION} PARENT_SCOPE)
-         if (TBB_FOUND)
-             if (TBB_VERSION VERSION_LESS 2020)
+@@ -26,7 +26,7 @@ function(set_ie_threading_interface_for TARGET_NAME)
+             find_dependency(TBB COMPONENTS tbb tbbmalloc)
+         endif()
+         set(TBB_FOUND ${TBB_FOUND} PARENT_SCOPE)
+-        set(TBB_IMPORTED_TARGETS ${TBB_IMPORTED_TARGETS} PARENT_SCOPE)
++        set(TBB_IMPORTED_TARGETS "tbb;tbbmalloc" PARENT_SCOPE)
+         set(TBB_VERSION ${TBB_VERSION} PARENT_SCOPE)
+         if (NOT TBB_FOUND)
+             ext_message(WARNING "TBB was not found by the configured TBB_DIR/TBBROOT path.\
+diff --git a/inference-engine/cmake/templates/InferenceEngineConfig.cmake.in b/inference-engine/cmake/templates/InferenceEngineConfig.cmake.in
+index 261edbf3d7..bf217a789a 100644
+--- a/inference-engine/cmake/templates/InferenceEngineConfig.cmake.in
++++ b/inference-engine/cmake/templates/InferenceEngineConfig.cmake.in
+@@ -86,16 +86,6 @@ endfunction()
+ set(IE_PACKAGE_PREFIX_DIR "${PACKAGE_PREFIX_DIR}")
+ 
+ set(THREADING "@THREADING@")
+-if(THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO" AND NOT TBB_FOUND)
+-    set_and_check(_tbb_dir "@PACKAGE_IE_TBB_DIR@")
+-    _ie_find_dependency(TBB
+-                        COMPONENTS tbb tbbmalloc
+-                        CONFIG
+-                        PATHS ${TBBROOT}/cmake
+-                              ${_tbb_dir}
+-                        NO_CMAKE_FIND_ROOT_PATH
+-                        NO_DEFAULT_PATH)
+-endif()
+ 
+ set_and_check(_ngraph_dir "@PACKAGE_IE_NGRAPH_DIR@")
+ _ie_find_dependency(ngraph
 diff --git a/inference-engine/samples/CMakeLists.txt b/inference-engine/samples/CMakeLists.txt
-index dfe9f2303d..6bc44019fe 100644
+index 7924c56779..ae93857944 100644
 --- a/inference-engine/samples/CMakeLists.txt
 +++ b/inference-engine/samples/CMakeLists.txt
-@@ -126,7 +126,7 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/gflags")
+@@ -126,11 +126,10 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/gflags")
          add_subdirectory(thirdparty/gflags EXCLUDE_FROM_ALL)
          set_target_properties(gflags_nothreads_static PROPERTIES FOLDER thirdparty)
      endfunction()
@@ -130,9 +189,28 @@ index dfe9f2303d..6bc44019fe 100644
 +    #add_gflags()
  endif()
  
- if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/zlib")
+-    add_subdirectory(thirdparty/zlib EXCLUDE_FROM_ALL)
+ endif()
+ 
+ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/cnpy")
+diff --git a/inference-engine/src/inference_engine/CMakeLists.txt b/inference-engine/src/inference_engine/CMakeLists.txt
+index e8ed1a5c4c..2fcb0bed4a 100644
+--- a/inference-engine/src/inference_engine/CMakeLists.txt
++++ b/inference-engine/src/inference_engine/CMakeLists.txt
+@@ -290,8 +290,8 @@ configure_package_config_file("${InferenceEngine_SOURCE_DIR}/cmake/templates/Inf
+                                INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}"
+                                PATH_VARS ${PATH_VARS})
+ 
+-set(IE_INCLUDE_DIR "include")
+-set(IE_NGRAPH_DIR "../ngraph/cmake")
++set(IE_INCLUDE_DIR "../../include")
++set(IE_NGRAPH_DIR "ngraph")
+ set(IE_TBB_DIR "${IE_TBB_DIR_INSTALL}")
+ set(IE_PARALLEL_CMAKE "share/ie_parallel.cmake")
+ 
 diff --git a/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt b/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt
-index 6e09201f1e..2d2e3524a5 100644
+index 5e8643dc5d..031557efc3 100644
 --- a/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt
 +++ b/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt
 @@ -43,7 +43,7 @@ function(add_gtest_libraries)
@@ -154,7 +232,7 @@ index 6e09201f1e..2d2e3524a5 100644
  
  set(TARGET_NAME commonTestUtils)
 diff --git a/inference-engine/tests/ie_test_utils/unit_test_utils/CMakeLists.txt b/inference-engine/tests/ie_test_utils/unit_test_utils/CMakeLists.txt
-index ab956218aa..233eb5ea46 100644
+index 7c1d89eabf..2fbd8fc324 100644
 --- a/inference-engine/tests/ie_test_utils/unit_test_utils/CMakeLists.txt
 +++ b/inference-engine/tests/ie_test_utils/unit_test_utils/CMakeLists.txt
 @@ -8,8 +8,7 @@ add_subdirectory(mocks/mock_engine)
@@ -168,7 +246,7 @@ index ab956218aa..233eb5ea46 100644
  addIeTarget(
          NAME ${TARGET_NAME}
 diff --git a/inference-engine/thirdparty/CMakeLists.txt b/inference-engine/thirdparty/CMakeLists.txt
-index 9a6a9209f1..eda6a64161 100644
+index f028ebdd8a..9c5bd53466 100644
 --- a/inference-engine/thirdparty/CMakeLists.txt
 +++ b/inference-engine/thirdparty/CMakeLists.txt
 @@ -62,14 +62,13 @@ else()
@@ -188,6 +266,68 @@ index 9a6a9209f1..eda6a64161 100644
  
  if (NOT USE_SYSTEM_PUGIXML)
      set_target_properties(pugixml PROPERTIES FOLDER thirdparty)
+diff --git a/ngraph/python/CMakeLists.txt b/ngraph/python/CMakeLists.txt
+index 501bfffb4b..b45612c19c 100644
+--- a/ngraph/python/CMakeLists.txt
++++ b/ngraph/python/CMakeLists.txt
+@@ -17,17 +17,7 @@ endif()
+ 
+ include(FetchContent)
+ 
+-FetchContent_Declare(
+-    pybind11
+-    GIT_REPOSITORY "https://github.com/pybind/pybind11.git"
+-    GIT_TAG        "v2.5.0"
+-)
+-
+-FetchContent_GetProperties(pybind11)
+-if(NOT pybind11_POPULATED)
+-    FetchContent_Populate(pybind11)
+-    add_subdirectory(${pybind11_SOURCE_DIR} ${pybind11_BINARY_DIR})
+-endif()
++add_subdirectory(pybind11)
+ 
+ # PYTHON_VERSION_MAJOR and PYTHON_VERSION_MINOR are defined inside pybind11
+ set(PYTHON_VERSION python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR})
+diff --git a/tests/fuzz/src/CMakeLists.txt b/tests/fuzz/src/CMakeLists.txt
+index b9400d9e7e..669938526c 100644
+--- a/tests/fuzz/src/CMakeLists.txt
++++ b/tests/fuzz/src/CMakeLists.txt
+@@ -10,7 +10,6 @@ add_custom_target(fuzz)
+ FILE(GLOB tests "*-fuzzer.cc")
+ 
+ add_subdirectory(../../../thirdparty/cnpy ${CMAKE_CURRENT_BINARY_DIR}/cnpy)
+-add_subdirectory(../../../thirdparty/zlib ${CMAKE_CURRENT_BINARY_DIR}/zlib)
+ 
+ foreach(test_source ${tests})
+     get_filename_component(test_name ${test_source} NAME_WE)
+diff --git a/thirdparty/CMakeLists.txt b/thirdparty/CMakeLists.txt
+index 2c6b656408..4e86bd21ef 100644
+--- a/thirdparty/CMakeLists.txt
++++ b/thirdparty/CMakeLists.txt
+@@ -5,6 +5,5 @@
+ add_subdirectory(ittapi)
+ add_subdirectory(itt_collector)
+ add_subdirectory(xbyak EXCLUDE_FROM_ALL)
+-add_subdirectory(zlib EXCLUDE_FROM_ALL)
+ add_subdirectory(cnpy EXCLUDE_FROM_ALL)
+ openvino_developer_export_targets(COMPONENT openvino_common TARGETS xbyak)
+diff --git a/thirdparty/cnpy/CMakeLists.txt b/thirdparty/cnpy/CMakeLists.txt
+index 5571cd5f78..e30604927a 100644
+--- a/thirdparty/cnpy/CMakeLists.txt
++++ b/thirdparty/cnpy/CMakeLists.txt
+@@ -14,8 +14,8 @@ if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+     target_compile_options(${TARGET_NAME} PUBLIC -Wno-unused-variable)
+ endif()
+ 
+-target_link_libraries(${TARGET_NAME} PUBLIC zlib)
++target_link_libraries(${TARGET_NAME} PUBLIC z)
+ target_include_directories(${TARGET_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}"
+                                                  "${CMAKE_CURRENT_SOURCE_DIR}/..")
+ 
+-set_target_properties(cnpy PROPERTIES FOLDER thirdparty)
+\ No newline at end of file
++set_target_properties(cnpy PROPERTIES FOLDER thirdparty)
 -- 
-2.29.0
+2.32.0
 

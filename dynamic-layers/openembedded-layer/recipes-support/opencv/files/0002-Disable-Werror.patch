@@ -1,7 +1,7 @@
-From 65014a2703a6a3892fdebc86fe1c5a3a589dbf56 Mon Sep 17 00:00:00 2001
+From 1a3f315323a0b1d1affed01e85cbbf0a677718e8 Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Wed, 10 Jun 2020 09:45:48 +0800
-Subject: [PATCH 2/5] cldNN: disable Werror
+Subject: [PATCH] Disable Werror
 
 Don't treat warnings as errors. This just leads to failures every time
 we upgrade the compiler.
@@ -11,13 +11,14 @@ Upstream-Status: Inappropriate
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
  inference-engine/thirdparty/clDNN/CMakeLists.txt | 1 -
- 1 file changed, 1 deletion(-)
+ ngraph/CMakeLists.txt                            | 1 -
+ 2 files changed, 2 deletions(-)
 
 diff --git a/inference-engine/thirdparty/clDNN/CMakeLists.txt b/inference-engine/thirdparty/clDNN/CMakeLists.txt
-index 4b444eca..8610b9b8 100644
+index d14da47860..08ed695c0d 100644
 --- a/inference-engine/thirdparty/clDNN/CMakeLists.txt
 +++ b/inference-engine/thirdparty/clDNN/CMakeLists.txt
-@@ -770,7 +770,6 @@ foreach(__CLDNN_CompilerFlagName IN ITEMS "CMAKE_CXX_FLAGS" "CMAKE_C_FLAGS")
+@@ -518,7 +518,6 @@ foreach(__CLDNN_CompilerFlagName IN ITEMS "CMAKE_CXX_FLAGS" "CMAKE_C_FLAGS")
          MultiProcessorCompilation
          DeadCodeEliminate
          ExtensionsEnabled
@@ -25,6 +26,18 @@ index 4b444eca..8610b9b8 100644
          WarnLevel4
          NoFastMath
          StackProtector
+diff --git a/ngraph/CMakeLists.txt b/ngraph/CMakeLists.txt
+index a05ca3b15c..ae888c4cb2 100644
+--- a/ngraph/CMakeLists.txt
++++ b/ngraph/CMakeLists.txt
+@@ -197,7 +197,6 @@ if (WIN32)
+ endif()
+ 
+ if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
+ endif()
+ 
+ if(WIN32)
 -- 
-2.25.4
+2.32.0
 

@@ -1,4 +1,4 @@
-From c6fa6f32077ab554839d6e1e5b46d0778c17b8b1 Mon Sep 17 00:00:00 2001
+From 419070322898381885b0ffa286905a3b08a23aa6 Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Tue, 9 Jun 2020 11:35:59 +0800
 Subject: [PATCH] don't install licenses and version
@@ -7,48 +7,50 @@ Upstream-Status: Inappropriate
 
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
- ngraph/CMakeLists.txt              | 6 ++----
+ ngraph/CMakeLists.txt              | 8 ++------
  ngraph/test/runtime/CMakeLists.txt | 2 ++
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
 diff --git a/ngraph/CMakeLists.txt b/ngraph/CMakeLists.txt
-index 6163c01e4a..74c479c071 100644
+index a05ca3b15c..9bc507b4c7 100644
 --- a/ngraph/CMakeLists.txt
 +++ b/ngraph/CMakeLists.txt
-@@ -353,7 +353,7 @@ if (NGRAPH_EXPORT_TARGETS_ENABLE)
+@@ -272,7 +272,7 @@ if (NGRAPH_EXPORT_TARGETS_ENABLE)
          install(EXPORT ngraphTargets
              FILE ngraphTargets.cmake
              NAMESPACE ngraph::
--            DESTINATION ${NGRAPH_COMPONENT_PREFIX}cmake
+-            DESTINATION "deployment_tools/ngraph/cmake"
 +            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ngraph
-             COMPONENT ngraph)
+             COMPONENT ngraph_dev)
      endif()
  
-@@ -367,7 +367,7 @@ if (NGRAPH_EXPORT_TARGETS_ENABLE)
+@@ -286,7 +286,7 @@ if (NGRAPH_EXPORT_TARGETS_ENABLE)
  
      install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ngraphConfig.cmake
          ${CMAKE_CURRENT_BINARY_DIR}/ngraphConfigVersion.cmake
--        DESTINATION ${NGRAPH_COMPONENT_PREFIX}cmake
+-        DESTINATION "deployment_tools/ngraph/cmake"
 +        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ngraph
-         COMPONENT ngraph)
+         COMPONENT ngraph_dev)
  endif()
  
-@@ -386,5 +386,3 @@ add_subdirectory(test)
+@@ -337,7 +337,3 @@ add_subdirectory(test)
  if (NGRAPH_PYTHON_BUILD_ENABLE)
      add_subdirectory(python)
  endif()
 -
--install(FILES ${CMAKE_CURRENT_BINARY_DIR}/VERSION DESTINATION "${NGRAPH_COMPONENT_PREFIX}." COMPONENT ngraph)
+-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/VERSION
+-    DESTINATION "deployment_tools/ngraph"
+-    COMPONENT ngraph)
 diff --git a/ngraph/test/runtime/CMakeLists.txt b/ngraph/test/runtime/CMakeLists.txt
-index 2943722acc..a2ccdd11de 100644
+index be84499ee0..f65357b751 100644
 --- a/ngraph/test/runtime/CMakeLists.txt
 +++ b/ngraph/test/runtime/CMakeLists.txt
-@@ -79,3 +79,5 @@ target_include_directories(ngraph_backend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -66,3 +66,5 @@ target_include_directories(ngraph_backend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
  
  add_subdirectory(interpreter)
  add_subdirectory(ie)
 +
 +install(TARGETS ngraph_backend DESTINATION ${NGRAPH_INSTALL_LIB})
 -- 
-2.30.2
+2.32.0
 
