@@ -5,9 +5,9 @@ environment, performs static model analysis, and adjusts deep \
 learning models for optimal execution on end-point target devices."
 HOMEPAGE = "https://01.org/openvinotoolkit"
 
-SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=releases/2021/3;lfs=0 \
+SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=releases/2021/4;lfs=0 \
            "
-SRCREV = "c5f7ad383e654dfb4a5ac0805323cf8d43426b3f"
+SRCREV = "5cee8bbf29797f4544b343e803de957e9f041f92"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
@@ -27,6 +27,8 @@ RDEPENDS:${PN} += " \
                     python3-defusedxml \
                     python3-networkx \
                     python3-test-generator \
+                    python3-requests \
+                    python3-urllib3 \
                     bash \
                     "
 
