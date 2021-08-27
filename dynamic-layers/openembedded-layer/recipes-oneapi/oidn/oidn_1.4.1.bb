@@ -18,3 +18,5 @@ SRC_URI[sha256sum] = "9088966685a78adf24b8de075d66e4c0019bd7b2b9d29c6e45aaf35d29
 inherit cmake
 
 DEPENDS += "tbb ispc-native"
+
+UPSTREAM_CHECK_URI = "https://github.com/OpenImageDenoise/oidn/releases"
