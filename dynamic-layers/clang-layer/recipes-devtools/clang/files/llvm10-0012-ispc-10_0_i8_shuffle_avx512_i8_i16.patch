@@ -1,0 +1,40 @@
+From cc4301f82ca1bde1d438c3708de285b0ab8c72d3 Mon Sep 17 00:00:00 2001
+From: Naveen Saini <naveen.kumar.saini@intel.com>
+Date: Fri, 27 Aug 2021 12:07:25 +0800
+Subject: [PATCH 1/2] [X86] createVariablePermute - handle case where recursive
+ createVariablePermute call fails
+
+Account for the case where a recursive createVariablePermute call with a wider vector type fails.
+
+Original test case from @craig.topper (Craig Topper)
+
+Upstream-Status: Backport [https://github.com/llvm/llvm-project/commit/6bdd63dc28208a597542b0c6bc41093f32417804]
+
+Signed-off-by: Simon Pilgrim <llvm-dev@redking.me.uk>
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ llvm/lib/Target/X86/X86ISelLowering.cpp | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/llvm/lib/Target/X86/X86ISelLowering.cpp b/llvm/lib/Target/X86/X86ISelLowering.cpp
+index c8720d9ae3a6..63eb050e9b3a 100644
+--- a/llvm/lib/Target/X86/X86ISelLowering.cpp
++++ b/llvm/lib/Target/X86/X86ISelLowering.cpp
+@@ -9571,9 +9571,11 @@ static SDValue createVariablePermute(MVT VT, SDValue SrcVec, SDValue IndicesVec,
+       IndicesVT = EVT(VT).changeVectorElementTypeToInteger();
+       IndicesVec = widenSubVector(IndicesVT.getSimpleVT(), IndicesVec, false,
+                                   Subtarget, DAG, SDLoc(IndicesVec));
+-      return extractSubVector(
+-          createVariablePermute(VT, SrcVec, IndicesVec, DL, DAG, Subtarget), 0,
+-          DAG, DL, SizeInBits);
++      SDValue NewSrcVec =
++          createVariablePermute(VT, SrcVec, IndicesVec, DL, DAG, Subtarget);
++      if (NewSrcVec)
++        return extractSubVector(NewSrcVec, 0, DAG, DL, SizeInBits);
++      return SDValue();
+     } else if (SrcVec.getValueSizeInBits() < SizeInBits) {
+       // Widen smaller SrcVec to match VT.
+       SrcVec = widenSubVector(VT, SrcVec, false, Subtarget, DAG, SDLoc(SrcVec));
+-- 
+2.17.1
+

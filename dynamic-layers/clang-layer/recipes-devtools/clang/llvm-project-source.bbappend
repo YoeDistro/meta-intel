@@ -18,6 +18,14 @@ SRC_URI_LLVM10_PATCHES = " \
                    file://llvm10-0005-Remove-__IMAGE_SUPPORT__-macro-for-SPIR-since-SPIR-d.patch \
                    file://llvm10-0006-Avoid-calling-ParseCommandLineOptions-in-BackendUtil.patch \
                    file://llvm10-0007-support-cl_ext_float_atomics.patch \
+                   file://llvm10-0008-ispc-10_0_9_0_fix_for_1767.patch \
+                   file://llvm10-0009-ispc-10_0_fix_for_1788.patch \
+                   file://llvm10-0010-ispc-10_0_fix_for_1793.patch \
+                   file://llvm10-0011-ispc-10_0_fix_for_1844.patch \
+                   file://llvm10-0012-ispc-10_0_i8_shuffle_avx512_i8_i16.patch \
+                   file://llvm10-0013-ispc-10_0_k_reg_mov_avx512_i8_i16.patch \
+                   file://llvm10-0014-ispc-10_0_packed_load_store_avx512skx.patch \
+                   file://llvm10-0015-ispc-10_0_vXi1calling_avx512_i8_i16.patch \
                    "
 
 SRC_URI_LLVM11_PATCHES = " \

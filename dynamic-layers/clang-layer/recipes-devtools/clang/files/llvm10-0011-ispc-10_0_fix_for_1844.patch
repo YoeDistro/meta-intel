@@ -1,0 +1,34 @@
+From 62b05a69b4a185cd0b7535f19742686e19fcaf22 Mon Sep 17 00:00:00 2001
+From: Naveen Saini <naveen.kumar.saini@intel.com>
+Date: Fri, 27 Aug 2021 12:02:37 +0800
+Subject: [PATCH 2/2] Fix for #1844, affects avx512skx-i8x64 and
+ avx512skx-i16x32.
+
+It's a port of 11.0 commit edcfb47ff6d5562e22207f364c65f84302aa346b
+https://reviews.llvm.org/D76312
+
+Upstream-Status: Backport
+
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ llvm/lib/CodeGen/SelectionDAG/DAGCombiner.cpp | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/llvm/lib/CodeGen/SelectionDAG/DAGCombiner.cpp b/llvm/lib/CodeGen/SelectionDAG/DAGCombiner.cpp
+index 2743acc89bca..439a8367dabe 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/DAGCombiner.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/DAGCombiner.cpp
+@@ -10841,7 +10841,9 @@ SDValue DAGCombiner::visitTRUNCATE(SDNode *N) {
+ 
+   // Attempt to pre-truncate BUILD_VECTOR sources.
+   if (N0.getOpcode() == ISD::BUILD_VECTOR && !LegalOperations &&
+-      TLI.isTruncateFree(SrcVT.getScalarType(), VT.getScalarType())) {
++      TLI.isTruncateFree(SrcVT.getScalarType(), VT.getScalarType()) &&
++      // Avoid creating illegal types if running after type legalizer.
++      (!LegalTypes || TLI.isTypeLegal(VT.getScalarType()))) {
+     SDLoc DL(N);
+     EVT SVT = VT.getScalarType();
+     SmallVector<SDValue, 8> TruncOps;
+-- 
+2.17.1
+
