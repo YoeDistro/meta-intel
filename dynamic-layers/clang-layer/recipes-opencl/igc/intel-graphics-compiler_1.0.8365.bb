@@ -14,6 +14,7 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https; \
            file://0003-Improve-Reproducibility-for-src-package.patch \
            file://0004-find-external-llvm-tblgen.patch \
            file://0005-Temporary-LLVM-12-compatiblity-fix.patch \
+           file://0001-LLVM-13-fixes.patch \
           "
 
 SRCREV = "5d5672d6cc0c415dae76648390026f777004bd99"
@@ -24,6 +25,8 @@ export B
 S = "${WORKDIR}/git"
 
 inherit cmake
+
+CXXFLAGS:append = " -Wno-error=deprecated-declarations"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
