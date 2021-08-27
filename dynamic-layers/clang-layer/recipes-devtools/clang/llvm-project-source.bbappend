@@ -29,6 +29,8 @@ SRC_URI_LLVM11_PATCHES = " \
                    file://llvm11-0004-Remove-__IMAGE_SUPPORT__-macro-for-SPIR-since-SPIR-d.patch \
                    file://llvm11-0005-Avoid-calling-ParseCommandLineOptions-in-BackendUtil.patch \
                    file://llvm11-0006-OpenCL-support-cl_ext_float_atomics.patch \
+                   file://llvm11-0007-ispc-11_0_11_1_disable-A-B-A-B-in-InstCombine.patch \
+                   file://llvm11-0008-ispc-11_0_11_1_packed_load_store_avx512.patch \
                    "
 SRC_URI_LLVM12_PATCHES = " \
                    file://llvm12-0001-Remove-__IMAGE_SUPPORT__-macro-for-SPIR-since-SPIR-d.patch \
