@@ -1,33 +1,29 @@
-From 6a0046c523a67b4d21d856ea73861c00b5a9c9fd Mon Sep 17 00:00:00 2001
-From: Anuj Mittal <anuj.mittal@intel.com>
-Date: Mon, 19 Oct 2020 23:29:23 +0800
+From 247a5383e7ae444fd99022a19fe90a59dbedbc98 Mon Sep 17 00:00:00 2001
+From: Naveen Saini <naveen.kumar.saini@intel.com>
+Date: Mon, 30 Aug 2021 17:54:17 +0800
 Subject: [PATCH] demos: use gflags from meta-oe
 
 Upstream-Status: Inappropriate
 
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
 ---
- demos/CMakeLists.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ demos/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/demos/CMakeLists.txt b/demos/CMakeLists.txt
-index c5e3b1ec3..4e78c72a6 100644
+index 1df8f248d..d368d608c 100644
 --- a/demos/CMakeLists.txt
 +++ b/demos/CMakeLists.txt
-@@ -62,11 +62,11 @@ set(CMAKE_CXX_STANDARD 11)
- set(CMAKE_CXX_STANDARD_REQUIRED ON)
- ####################################
- 
--set(GFLAGS_IS_SUBPROJECT TRUE)
-+set(GFLAGS_IS_SUBPROJECT FALSE)
- set(HAVE_SYS_STAT_H 1)
- set(HAVE_INTTYPES_H 1)
+@@ -131,7 +131,7 @@ find_package(OpenCV REQUIRED COMPONENTS core highgui videoio imgproc imgcodecs g
+ find_package(InferenceEngine REQUIRED)
+ find_package(ngraph REQUIRED)
  
 -add_subdirectory(thirdparty/gflags)
 +#add_subdirectory(thirdparty/gflags)
+ add_subdirectory(common/cpp)
+ add_subdirectory(multi_channel_common/cpp)
  
- if(CMAKE_CXX_COMPILER_ID MATCHES "^GNU|(Apple)?Clang$")
-     set(COMPILER_IS_GCC_LIKE TRUE)
 -- 
-2.29.0
+2.17.1
 
