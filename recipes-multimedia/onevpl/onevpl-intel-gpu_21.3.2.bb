@@ -19,7 +19,7 @@ DEPENDS += "libdrm libva intel-media-driver onevpl"
 SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;branch=main;lfs=0 \
             "
 
-SRCREV = "0afbbab1c4d56cdacafb2d56c436c418f51bbb3f"
+SRCREV = "9a8e9626859fbffd631b3d7cf26ac7b4efe6ae3c"
 S = "${WORKDIR}/git"
 
 inherit cmake
