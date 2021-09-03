@@ -20,7 +20,7 @@ COMPATIBLE_HOST:libc-musl = "null"
 
 EXTRA_OECMAKE += "\
                   -DCMAKE_SKIP_RPATH=TRUE \
-                  -DPREFERRED_LLVM_VERSION=${LLVMVERSION} \
+                  -DPREFERRED_LLVM_VERSION="12.0.0" \
                   "
 
 do_install:append:class-native() {
