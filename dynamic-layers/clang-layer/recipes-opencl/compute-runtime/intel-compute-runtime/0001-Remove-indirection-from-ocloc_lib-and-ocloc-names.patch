@@ -1,0 +1,310 @@
+From f4378c2034a1c8be0530cd9d1a7a4263663858f3 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Zolt=C3=A1n=20B=C3=B6sz=C3=B6rm=C3=A9nyi?=
+ <zboszor@gmail.com>
+Date: Fri, 10 Sep 2021 18:38:36 +0200
+Subject: [PATCH] Remove indirection from ocloc_lib and ocloc names
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This fix running ocloc when cross-compiling.
+
+Signed-off-by: Zoltán Böszörményi <zboszor@gmail.com>
+---
+ .../core/test/unit_tests/gen_kernel.cmake     |  4 +-
+ .../source/built_ins/kernels/CMakeLists.txt   |  2 +-
+ .../source/scheduler/scheduler_binary.cmake   |  2 +-
+ opencl/test/unit_test/CMakeLists.txt          | 10 ++--
+ shared/offline_compiler/source/CMakeLists.txt | 59 +++++++++----------
+ .../source/built_ins/kernels/CMakeLists.txt   |  6 +-
+ shared/test/common/test_files/CMakeLists.txt  |  2 +-
+ 7 files changed, 42 insertions(+), 43 deletions(-)
+
+diff --git a/level_zero/core/test/unit_tests/gen_kernel.cmake b/level_zero/core/test/unit_tests/gen_kernel.cmake
+index dac4a943e..0bba1753c 100644
+--- a/level_zero/core/test/unit_tests/gen_kernel.cmake
++++ b/level_zero/core/test/unit_tests/gen_kernel.cmake
+@@ -33,9 +33,9 @@ function(level_zero_gen_kernels target platform_name suffix options)
+     )
+ 
+     add_custom_command(
+-                       COMMAND echo generate ${cloc_cmd_prefix} -q -file ${filename} -device ${platform_name} -out_dir ${outputdir} -options "${options}"
++                       COMMAND echo generate ocloc -q -file ${filename} -device ${platform_name} -out_dir ${outputdir} -options "${options}"
+                        OUTPUT ${output_files}
+-                       COMMAND ${cloc_cmd_prefix} -q -file ${filename} -device ${platform_name} -out_dir ${outputdir} -options "${options}"
++                       COMMAND ocloc -q -file ${filename} -device ${platform_name} -out_dir ${outputdir} -options "${options}"
+                        WORKING_DIRECTORY ${workdir}
+                        DEPENDS ${filepath} ocloc
+     )
+diff --git a/opencl/source/built_ins/kernels/CMakeLists.txt b/opencl/source/built_ins/kernels/CMakeLists.txt
+index 660be4988..1d5b46546 100644
+--- a/opencl/source/built_ins/kernels/CMakeLists.txt
++++ b/opencl/source/built_ins/kernels/CMakeLists.txt
+@@ -76,7 +76,7 @@ if(NOT NEO_DISABLE_BUILTINS_COMPILATION)
+     list(APPEND __cloc__options__ "-cl-kernel-arg-info")
+     add_custom_command(
+                        OUTPUT ${OUTPUT_FILES}
+-                       COMMAND ${cloc_cmd_prefix} -q -file ${FILENAME} -device ${DEFAULT_SUPPORTED_${gen_type}_${platform_type}_PLATFORM} ${builtin_options} -${bits} -out_dir ${OUTPUTDIR} -options "$<JOIN:${__cloc__options__}, >"
++                       COMMAND ocloc -q -file ${FILENAME} -device ${DEFAULT_SUPPORTED_${gen_type}_${platform_type}_PLATFORM} ${builtin_options} -${bits} -out_dir ${OUTPUTDIR} -options "$<JOIN:${__cloc__options__}, >"
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                        DEPENDS ${builtin} ocloc copy_compiler_files
+     )
+diff --git a/opencl/source/scheduler/scheduler_binary.cmake b/opencl/source/scheduler/scheduler_binary.cmake
+index 262810fc9..3cdcb9585 100644
+--- a/opencl/source/scheduler/scheduler_binary.cmake
++++ b/opencl/source/scheduler/scheduler_binary.cmake
+@@ -49,7 +49,7 @@ function(compile_kernel target gen_type platform_type kernel)
+   list(APPEND __cloc__options__ "-cl-intel-disable-a64WA")
+   add_custom_command(
+                      OUTPUT ${OUTPUTPATH}
+-                     COMMAND ${cloc_cmd_prefix} -q -file ${kernel} -device ${DEFAULT_SUPPORTED_${gen_type}_${platform_type}_PLATFORM} -cl-intel-greater-than-4GB-buffer-required -${NEO_BITS} -out_dir ${OUTPUTDIR} -cpp_file -options "$<JOIN:${__cloc__options__}, >" -internal_options "-cl-intel-no-spill"
++                     COMMAND ocloc -q -file ${kernel} -device ${DEFAULT_SUPPORTED_${gen_type}_${platform_type}_PLATFORM} -cl-intel-greater-than-4GB-buffer-required -${NEO_BITS} -out_dir ${OUTPUTDIR} -cpp_file -options "$<JOIN:${__cloc__options__}, >" -internal_options "-cl-intel-no-spill"
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                      DEPENDS ${kernel} ocloc copy_compiler_files
+   )
+diff --git a/opencl/test/unit_test/CMakeLists.txt b/opencl/test/unit_test/CMakeLists.txt
+index 65909be53..07936f675 100644
+--- a/opencl/test/unit_test/CMakeLists.txt
++++ b/opencl/test/unit_test/CMakeLists.txt
+@@ -232,7 +232,7 @@ function(neo_gen_kernels platform_name_with_type platform_name revision_id suffi
+ 
+     add_custom_command(
+                        OUTPUT ${output_files}
+-                       COMMAND ${cloc_cmd_prefix} -q -file ${filename} -device ${platform_name} -${NEO_BITS} -revision_id ${revision_id} -out_dir ${outputdir}
++                       COMMAND ocloc -q -file ${filename} -device ${platform_name} -${NEO_BITS} -revision_id ${revision_id} -out_dir ${outputdir}
+                        WORKING_DIRECTORY ${workdir}
+                        DEPENDS ${filepath} ocloc
+     )
+@@ -265,7 +265,7 @@ function(neo_gen_kernels_with_options platform_name_with_type platform_name revi
+ 
+       add_custom_command(
+                          OUTPUT ${output_files}
+-                         COMMAND ${cloc_cmd_prefix} -file ${filename} -device ${platform_name} -${NEO_BITS} -out_dir ${outputdir} -revision_id ${revision_id} -options ${arg} -options_name
++                         COMMAND ocloc -file ${filename} -device ${platform_name} -${NEO_BITS} -out_dir ${outputdir} -revision_id ${revision_id} -options ${arg} -options_name
+                          WORKING_DIRECTORY ${workdir}
+                          DEPENDS ${filearg} ocloc
+       )
+@@ -304,7 +304,7 @@ function(neo_gen_kernels_with_internal_options platform_name_with_type platform_
+ 
+   add_custom_command(
+                      OUTPUT ${output_files}
+-                     COMMAND ${cloc_cmd_prefix} -file ${filename} -device ${platform_name} -revision_id ${revision_id} -${NEO_BITS} -out_dir ${outputdir} ${output_name} -internal_options ${ARGN}
++                     COMMAND ocloc -file ${filename} -device ${platform_name} -revision_id ${revision_id} -${NEO_BITS} -out_dir ${outputdir} ${output_name} -internal_options ${ARGN}
+                      WORKING_DIRECTORY ${workdir}
+                      DEPENDS ${filearg} ocloc
+   )
+@@ -338,7 +338,7 @@ function(neo_gen_kernel_with_kernel_debug_options platform_name_with_type platfo
+ 
+   add_custom_command(
+                      OUTPUT ${output_files}
+-                     COMMAND ${cloc_cmd_prefix} -q -file ${filename} -device ${platform_name} -revision_id ${revision_id} -${NEO_BITS} -out_dir ${outputdir} -output ${argwospaces} -internal_options ${TEST_KERNEL_kernel_debug_enable} -options "-g"
++                     COMMAND ocloc -q -file ${filename} -device ${platform_name} -revision_id ${revision_id} -${NEO_BITS} -out_dir ${outputdir} -output ${argwospaces} -internal_options ${TEST_KERNEL_kernel_debug_enable} -options "-g"
+                      WORKING_DIRECTORY ${workdir}
+                      DEPENDS ${filepath} ocloc
+   )
+@@ -363,7 +363,7 @@ function(neo_gen_kernel_from_ll platform_name_with_type platform_name suffix fil
+ 
+          add_custom_command(
+                      OUTPUT ${output_files}
+-                     COMMAND ${cloc_cmd_prefix} -q -file ${filename} -output ${output_name} -device ${platform_name} -${NEO_BITS} -out_dir ${outputdir} -internal_options ${compile_options} -llvm_input
++                     COMMAND ocloc -q -file ${filename} -output ${output_name} -device ${platform_name} -${NEO_BITS} -out_dir ${outputdir} -internal_options ${compile_options} -llvm_input
+                      WORKING_DIRECTORY ${workdir}
+                      DEPENDS ${filepath} ocloc
+   )
+diff --git a/shared/offline_compiler/source/CMakeLists.txt b/shared/offline_compiler/source/CMakeLists.txt
+index c6454d2f3..22f4dea1c 100644
+--- a/shared/offline_compiler/source/CMakeLists.txt
++++ b/shared/offline_compiler/source/CMakeLists.txt
+@@ -4,9 +4,8 @@
+ # SPDX-License-Identifier: MIT
+ #
+ 
+-project(${OCLOC_NAME}_lib)
++project(ocloc_lib)
+ 
+-set(OCLOC_NAME "ocloc")
+ set(OCLOC_FOLDER_NAME "offline_compiler")
+ 
+ set(CLOC_LIB_SRCS_LIB
+@@ -149,12 +148,12 @@ set(CLOC_LIB_SRCS
+     ${CLOC_LIB_SRCS_LIB}
+     ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt
+ )
+-add_library(${OCLOC_NAME}_lib SHARED ${CLOC_LIB_SRCS})
++add_library(ocloc_lib SHARED ${CLOC_LIB_SRCS})
+ 
+ add_subdirectories()
+ 
+-create_project_source_tree(${OCLOC_NAME}_lib)
+-set_target_properties(${OCLOC_NAME}_lib PROPERTIES FOLDER ${OCLOC_FOLDER_NAME})
++create_project_source_tree(ocloc_lib)
++set_target_properties(ocloc_lib PROPERTIES FOLDER ${OCLOC_FOLDER_NAME})
+ 
+ set(CLOC_LIB_INCLUDES
+     ${ENGINE_NODE_DIR}
+@@ -165,20 +164,20 @@ set(CLOC_LIB_INCLUDES
+     ${NEO__IGC_INCLUDE_DIR}
+ )
+ 
+-target_include_directories(${OCLOC_NAME}_lib BEFORE PRIVATE ${CLOC_LIB_INCLUDES})
+-target_include_directories(${OCLOC_NAME}_lib BEFORE PRIVATE ${IGA_INCLUDE_DIR})
++target_include_directories(ocloc_lib BEFORE PRIVATE ${CLOC_LIB_INCLUDES})
++target_include_directories(ocloc_lib BEFORE PRIVATE ${IGA_INCLUDE_DIR})
+ 
+-target_compile_definitions(${OCLOC_NAME}_lib PUBLIC ${CLOC_LIB_LIB_FLAGS_DEFINITIONS} ${SUPPORTED_GEN_FLAGS_DEFINITONS} DEFAULT_PLATFORM=${DEFAULT_SUPPORTED_PLATFORM}
++target_compile_definitions(ocloc_lib PUBLIC ${CLOC_LIB_LIB_FLAGS_DEFINITIONS} ${SUPPORTED_GEN_FLAGS_DEFINITONS} DEFAULT_PLATFORM=${DEFAULT_SUPPORTED_PLATFORM}
+                            IGA_LIBRARY_NAME=${CMAKE_SHARED_LIBRARY_PREFIX}${IGA_LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
+ )
+-target_compile_definitions(${OCLOC_NAME}_lib PUBLIC ${NEO__IGC_COMPILE_DEFINITIONS})
++target_compile_definitions(ocloc_lib PUBLIC ${NEO__IGC_COMPILE_DEFINITIONS})
+ 
+ if(MSVC)
+-  target_link_libraries(${OCLOC_NAME}_lib dbghelp)
++  target_link_libraries(ocloc_lib dbghelp)
+ endif()
+ 
+ if(UNIX)
+-  target_link_libraries(${OCLOC_NAME}_lib dl pthread)
++  target_link_libraries(ocloc_lib dl pthread)
+ endif()
+ 
+ set(CLOC_LIB_SRCS_LIB ${CLOC_LIB_SRCS_LIB} PARENT_SCOPE)
+@@ -188,11 +187,11 @@ set(OCLOC_SRCS
+     ${OCLOC_DIRECTORY}/source/main.cpp
+ )
+ 
+-add_executable(${OCLOC_NAME} ${OCLOC_SRCS})
+-target_link_libraries(${OCLOC_NAME} ${OCLOC_NAME}_lib)
++add_executable(ocloc ${OCLOC_SRCS})
++target_link_libraries(ocloc ocloc_lib)
+ 
+-create_project_source_tree(${OCLOC_NAME})
+-set_target_properties(${OCLOC_NAME} PROPERTIES FOLDER ${OCLOC_FOLDER_NAME})
++create_project_source_tree(ocloc)
++set_target_properties(ocloc PROPERTIES FOLDER ${OCLOC_FOLDER_NAME})
+ 
+ if(MSVC)
+   if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+@@ -206,42 +205,42 @@ endif()
+ 
+ if(UNIX)
+   if(NEO_BUILD_DEBUG_SYMBOLS_PACKAGE)
+-    get_filename_component(lib_file_name $<TARGET_FILE:${OCLOC_NAME}_lib> NAME_WE)
++    get_filename_component(lib_file_name $<TARGET_FILE:ocloc_lib> NAME_WE)
+     set(symbols_file_name ${lib_file_name}.debug)
+-    set(debug_symbols_target_name "${STRIP_SYMBOLS_TARGET}_${OCLOC_NAME}_lib")
++    set(debug_symbols_target_name "${STRIP_SYMBOLS_TARGET}_ocloc_lib")
+     add_custom_target(${debug_symbols_target_name}
+                       COMMAND sh -c "objcopy --only-keep-debug ${lib_file_name} ${symbols_file_name}"
+                       COMMAND sh -c "strip -g ${lib_file_name}"
+                       COMMAND sh -c "objcopy --add-gnu-debuglink=${symbols_file_name} ${lib_file_name}"
+     )
+-    add_dependencies(${debug_symbols_target_name} ${OCLOC_NAME}_lib)
++    add_dependencies(${debug_symbols_target_name} ocloc_lib)
+     add_dependencies(${STRIP_SYMBOLS_TARGET} ${debug_symbols_target_name})
+     set_property(GLOBAL APPEND PROPERTY DEBUG_SYMBOL_FILES "${symbols_file_name}")
+   endif()
+ 
+-  set_property(GLOBAL APPEND PROPERTY NEO_OCL_COMPONENTS_LIST ${OCLOC_NAME})
+-  install(FILES $<TARGET_FILE:${OCLOC_NAME}>
++  set_property(GLOBAL APPEND PROPERTY NEO_OCL_COMPONENTS_LIST ocloc)
++  install(FILES $<TARGET_FILE:ocloc>
+           DESTINATION ${CMAKE_INSTALL_BINDIR}
+           PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+-          COMPONENT ${OCLOC_NAME}
++          COMPONENT ocloc
+   )
+-  install(FILES $<TARGET_FILE:${OCLOC_NAME}_lib>
++  install(FILES $<TARGET_FILE:ocloc_lib>
+           DESTINATION ${CMAKE_INSTALL_LIBDIR}
+           PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+-          COMPONENT ${OCLOC_NAME}
++          COMPONENT ocloc
+   )
+   install(FILES ${OCLOC_DIRECTORY}/source/ocloc_api.h
+           DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+           PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+-          COMPONENT ${OCLOC_NAME}
++          COMPONENT ocloc
+   )
+ elseif(WIN32)
+   if(NEO_WINDOWS_INSTALL)
+-    install(TARGETS ${OCLOC_NAME}
++    install(TARGETS ocloc
+             DESTINATION ${CMAKE_INSTALL_BINDIR}
+             COMPONENT ocloc
+     )
+-    install(TARGETS ${OCLOC_NAME}_lib
++    install(TARGETS ocloc_lib
+             DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             COMPONENT ocloc
+     )
+@@ -252,8 +251,8 @@ elseif(WIN32)
+   endif()
+ endif()
+ 
+-set(OCLOC_OUTPUT_NAME "${OCLOC_NAME}${OCLOC_BITNESS_SUFFIX}")
+-set_target_properties(${OCLOC_NAME}_lib PROPERTIES OUTPUT_NAME ${OCLOC_OUTPUT_NAME})
++set(OCLOC_OUTPUT_NAME "ocloc${OCLOC_BITNESS_SUFFIX}")
++set_target_properties(ocloc_lib PROPERTIES OUTPUT_NAME ${OCLOC_OUTPUT_NAME})
+ 
+ add_custom_target(copy_compiler_files DEPENDS ${NEO__IGC_TARGETS})
+ set_target_properties(copy_compiler_files PROPERTIES FOLDER ${OCLOC_FOLDER_NAME})
+@@ -263,8 +262,8 @@ if(WIN32)
+     add_custom_command(
+                        TARGET copy_compiler_files
+                        PRE_BUILD
+-                       COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${OCLOC_NAME}_lib>
+-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:${TARGET_tmp}> $<TARGET_FILE_DIR:${OCLOC_NAME}_lib>
++                       COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:ocloc_lib>
++                       COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:${TARGET_tmp}> $<TARGET_FILE_DIR:ocloc_lib>
+     )
+   endforeach()
+ endif()
+diff --git a/shared/source/built_ins/kernels/CMakeLists.txt b/shared/source/built_ins/kernels/CMakeLists.txt
+index 929b981fe..859ea203b 100644
+--- a/shared/source/built_ins/kernels/CMakeLists.txt
++++ b/shared/source/built_ins/kernels/CMakeLists.txt
+@@ -78,7 +78,7 @@ if(NOT NEO_DISABLE_BUILTINS_COMPILATION)
+     set(INTERNAL_OPTIONS "${${mode}_OPTIONS}")
+     add_custom_command(
+                        OUTPUT ${OUTPUT_FILE_SPV}
+-                       COMMAND ${cloc_cmd_prefix} -q -file ${FILENAME} -spv_only -device ${DEFAULT_SUPPORTED_${gen_type}_${platform_type}_PLATFORM} ${builtin_options} -${bits} -output ${mode}_${BASENAME} -out_dir ${OUTPUTDIR} ${INTERNAL_OPTIONS} -options "$<JOIN:${__cloc__options__}, >"
++                       COMMAND ocloc -q -file ${FILENAME} -spv_only -device ${DEFAULT_SUPPORTED_${gen_type}_${platform_type}_PLATFORM} ${builtin_options} -${bits} -output ${mode}_${BASENAME} -out_dir ${OUTPUTDIR} ${INTERNAL_OPTIONS} -options "$<JOIN:${__cloc__options__}, >"
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                        DEPENDS ${builtin} ocloc copy_compiler_files
+     )
+@@ -94,7 +94,7 @@ if(NOT NEO_DISABLE_BUILTINS_COMPILATION)
+       list(APPEND BUILTINS_COMMANDS "${OUTPUT_FILE_CPP}")
+       add_custom_command(
+                          OUTPUT ${OUTPUT_FILES_BINARIES}
+-                         COMMAND ${cloc_cmd_prefix} -q -file ${OUTPUT_FILE_SPV} -spirv_input -device ${DEFAULT_SUPPORTED_${gen_type}_${platform_type}_PLATFORM} ${builtin_options} -${bits} -output ${mode}_${BASENAME}_${REVISION_ID} -out_dir ${OUTPUTDIR} -revision_id ${REVISION_ID} ${INTERNAL_OPTIONS} -options "$<JOIN:${__cloc__options__}, >"
++                         COMMAND ocloc -q -file ${OUTPUT_FILE_SPV} -spirv_input -device ${DEFAULT_SUPPORTED_${gen_type}_${platform_type}_PLATFORM} ${builtin_options} -${bits} -output ${mode}_${BASENAME}_${REVISION_ID} -out_dir ${OUTPUTDIR} -revision_id ${REVISION_ID} ${INTERNAL_OPTIONS} -options "$<JOIN:${__cloc__options__}, >"
+                          WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                          DEPENDS ${OUTPUT_FILE_SPV} ocloc copy_compiler_files
+       )
+@@ -138,7 +138,7 @@ if(NOT NEO_DISABLE_BUILTINS_COMPILATION)
+     set(OUTPUT_LIST_CPP_FILES ${OUTPUT_LIST_CPP_FILES} ${OUTPUT_FILE_CPP} PARENT_SCOPE)
+     add_custom_command(
+                        OUTPUT ${GENERATED_SPV_INPUT}
+-                       COMMAND ${cloc_cmd_prefix} -q -spv_only -file ${INPUT_FILENAME} -out_dir ${OUTPUTDIR} -output_no_suffix -options "-cl-kernel-arg-info"
++                       COMMAND ocloc -q -spv_only -file ${INPUT_FILENAME} -out_dir ${OUTPUTDIR} -output_no_suffix -options "-cl-kernel-arg-info"
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                        DEPENDS ${INPUT_FILENAME} ocloc copy_compiler_files
+     )
+diff --git a/shared/test/common/test_files/CMakeLists.txt b/shared/test/common/test_files/CMakeLists.txt
+index 999f99fb6..cb7040d61 100644
+--- a/shared/test/common/test_files/CMakeLists.txt
++++ b/shared/test/common/test_files/CMakeLists.txt
+@@ -37,7 +37,7 @@ function(compile_kernels_gen platform_name_with_type revision_id platform_name s
+ 
+     add_custom_command(
+                        OUTPUT ${output_files}
+-                       COMMAND ${cloc_cmd_prefix} -file ${filename} -device ${platform_name} -${NEO_BITS} -out_dir ${outputdir} -revision_id ${revision_id}
++                       COMMAND ocloc -file ${filename} -device ${platform_name} -${NEO_BITS} -out_dir ${outputdir} -revision_id ${revision_id}
+                        WORKING_DIRECTORY ${workdir}
+                        DEPENDS ${filepath} ocloc copy_compiler_files
+     )
+-- 
+2.31.1
+
