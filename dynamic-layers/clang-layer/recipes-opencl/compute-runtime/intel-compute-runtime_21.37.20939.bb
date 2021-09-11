@@ -33,6 +33,7 @@ COMPATIBLE_HOST:libc-musl = "null"
 EXTRA_OECMAKE = " \
                  -DIGC_DIR=${STAGING_INCDIR}/igc \
                  -DBUILD_TYPE=Release \
+                 -DNEO_DISABLE_BUILTINS_COMPILATION=1 \
                  -DSKIP_UNIT_TESTS=1 \
                  -DCCACHE_ALLOWED=FALSE \
                  "
