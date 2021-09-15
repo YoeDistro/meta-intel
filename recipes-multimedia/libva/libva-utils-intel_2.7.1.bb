@@ -10,4 +10,4 @@ SRCREV = "5a24c635f6fb2b9ac31cab3360afca50e1860812"
 S = "${WORKDIR}/git"
 
 PROVIDES = "libva-utils"
-RPROVIDES_${PN} += "libva-uitls"
+RPROVIDES_${PN} += "libva-utils"
