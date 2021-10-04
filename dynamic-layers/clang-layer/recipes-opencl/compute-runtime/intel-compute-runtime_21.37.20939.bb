@@ -9,12 +9,11 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=983b0c493ea3dc3c21a90ff743bf90e4 \
                     file://third_party/opencl_headers/LICENSE;md5=dcefc90f4c3c689ec0c2489064e7273b"
 
 SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https \
-           file://0001-Revert-Change-builtin-kernels-compilation-process.patch \
           "
 
 SRC_URI:append:class-target = "file://allow-to-find-cpp-generation-tool.patch"
 
-SRCREV = "4461fcdc2a0d28cab8c80b6cfc3a11baef707acc"
+SRCREV = "7c1ea18f74e053907a35cc4bf91f621def9b9f38"
 
 S = "${WORKDIR}/git"
 
@@ -33,7 +32,11 @@ EXTRA_OECMAKE = " \
                  -DBUILD_TYPE=Release \
                  -DSKIP_UNIT_TESTS=1 \
                  -DCCACHE_ALLOWED=FALSE \
+                 -DNEO_DISABLE_LD_LLD=ON \
+                 -DNEO_DISABLE_LD_GOLD=ON \
                  "
+EXTRA_OECMAKE:append:class-native = " -DNEO_DISABLE_BUILTINS_COMPILATION=ON"
+
 EXTRA_OECMAKE:append:class-target = " \
                                      -Dcloc_cmd_prefix=ocloc \
                                     "
