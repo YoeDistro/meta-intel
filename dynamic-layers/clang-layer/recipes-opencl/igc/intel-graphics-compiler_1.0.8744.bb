@@ -8,16 +8,15 @@ LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc
                     file://IGC/Compiler/LegalizationPass.cpp;beginline=1;endline=23;md5=4a985f2545dd5a846e205b1e60a51cd9 \
                     file://NOTICES.txt;md5=db621145dfb627436bc90ad600386801"
 
-SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https; \
-           file://0001-skip-execution-of-ElfPackager.patch \
-           file://0002-IGC-VectorCompiler-CMakeLists.txt-link-to-external-L.patch \
+SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc \
+           git://github.com/intel/vc-intrinsics.git;protocol=https;destsuffix=git/vc-intrinsics;name=vc \
+           file://0001-llvm_deps.cmake-don-t-copy-header-file-when-building.patch \
            file://0003-Improve-Reproducibility-for-src-package.patch \
            file://0004-find-external-llvm-tblgen.patch \
-           file://0005-Temporary-LLVM-12-compatiblity-fix.patch \
-           file://0001-LLVM-13-fixes.patch \
-          "
+           "
 
-SRCREV = "5d5672d6cc0c415dae76648390026f777004bd99"
+SRCREV_igc = "3ba8dde8c414a0e47df58b1bba12a64f8ba2089e"
+SRCREV_vc = "e5ad7e02aa4aa21a3cd7b3e5d1f3ec9b95f58872"
 
 # Used to replace with relative path in reproducibility patch
 export B
@@ -26,17 +25,28 @@ S = "${WORKDIR}/git"
 
 inherit cmake
 
-CXXFLAGS:append = " -Wno-error=deprecated-declarations"
+CXXFLAGS:append = " -Wno-error=nonnull"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
 
-DEPENDS += " flex-native bison-native clang opencl-clang vc-intrinsics"
-DEPENDS:append:class-target = " clang-cross-x86_64"
+DEPENDS += " flex-native bison-native clang opencl-clang"
+DEPENDS:append:class-target = " clang-cross-x86_64 intel-graphics-compiler-native"
 
 RDEPENDS:${PN} += "opencl-clang"
 
-EXTRA_OECMAKE = "-DIGC_OPTION__LLVM_PREFERRED_VERSION=${LLVMVERSION} -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 -DIGC_BUILD__VC_ENABLED=OFF -DIGC_BUILD__USE_KHRONOS_SPIRV_TRANSLATOR=ON"
+EXTRA_OECMAKE = " \
+                  -DIGC_OPTION__LLVM_PREFERRED_VERSION=${LLVMVERSION} \
+                  -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 \
+                  -DVC_INTRINSICS_SRC="${S}/vc-intrinsics" \
+                  -DIGC_OPTION__LLVM_MODE=Prebuilds \
+                  -DIGC_BUILD__VC_ENABLED=OFF \
+                  "
+
+do_install:append:class-native () {
+    install -d ${D}${bindir}
+    install ${B}/IGC/Release/elf_packager ${D}${bindir}/
+}
 
 BBCLASSEXTEND = "native nativesdk"
 
