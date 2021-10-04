@@ -13,9 +13,11 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https; \
            file://0002-IGC-VectorCompiler-CMakeLists.txt-link-to-external-L.patch \
            file://0003-Improve-Reproducibility-for-src-package.patch \
            file://0004-find-external-llvm-tblgen.patch \
+           file://0005-Temporary-LLVM-12-compatiblity-fix.patch \
+           file://0001-LLVM-13-fixes.patch \
           "
 
-SRCREV = "9ff8ff3d235cfac683ef91809c64247d6a43b887"
+SRCREV = "5d5672d6cc0c415dae76648390026f777004bd99"
 
 # Used to replace with relative path in reproducibility patch
 export B
@@ -34,7 +36,7 @@ DEPENDS:append:class-target = " clang-cross-x86_64"
 
 RDEPENDS:${PN} += "opencl-clang"
 
-EXTRA_OECMAKE = "-DIGC_OPTION__LLVM_PREFERRED_VERSION=${LLVMVERSION} -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 -DIGC_BUILD__VC_ENABLED=OFF"
+EXTRA_OECMAKE = "-DIGC_OPTION__LLVM_PREFERRED_VERSION=${LLVMVERSION} -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 -DIGC_BUILD__VC_ENABLED=OFF -DIGC_BUILD__USE_KHRONOS_SPIRV_TRANSLATOR=ON"
 
 BBCLASSEXTEND = "native nativesdk"
 
