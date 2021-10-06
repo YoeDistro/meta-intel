@@ -1,0 +1,502 @@
+From fe25ec3db9a48308bd6d3e9fe800e67335f8a369 Mon Sep 17 00:00:00 2001
+From: "Yew, Chang Ching" <chang.ching.yew@intel.com>
+Date: Mon, 4 Oct 2021 13:56:08 +0800
+Subject: [PATCH] [jpegd] Enable JPEG decode error report
+
+Upstream-Status: Submitted
+innersource PR #3318
+
+[Internal]
+    Issue: NA
+    Test: manual. Gst-MSDK with mfxExtDecodeErrorReport
+    OSPR: N/A
+
+Signed-off-by: Cheah, Vincent Beng Keat vincent.beng.keat.cheah@intel.com>
+---
+ .../mjpeg/include/mfx_mjpeg_dec_decode.h      |  2 ++
+ .../decode/mjpeg/src/mfx_mjpeg_dec_decode.cpp | 19 ++++++++++-
+ .../umc/codec/jpeg_dec/include/jpegdec.h      |  1 +
+ .../umc/codec/jpeg_dec/include/jpegdec_base.h | 19 +++++++++++
+ .../jpeg_dec/include/umc_mjpeg_mfx_decode.h   |  2 +-
+ .../include/umc_mjpeg_mfx_decode_base.h       |  4 +--
+ .../shared/umc/codec/jpeg_dec/src/jpegdec.cpp | 17 ++++++++--
+ .../umc/codec/jpeg_dec/src/jpegdec_base.cpp   | 29 +++++++++++++++-
+ .../jpeg_dec/src/umc_mjpeg_mfx_decode.cpp     |  6 ++--
+ .../src/umc_mjpeg_mfx_decode_base.cpp         |  6 ++--
+ api/vpl/mfxstructures.h                       | 33 +++++++++++++++----
+ 11 files changed, 121 insertions(+), 17 deletions(-)
+
+diff --git a/_studio/mfx_lib/decode/mjpeg/include/mfx_mjpeg_dec_decode.h b/_studio/mfx_lib/decode/mjpeg/include/mfx_mjpeg_dec_decode.h
+index c6641d3e71..a2ea6b5cec 100644
+--- a/_studio/mfx_lib/decode/mjpeg/include/mfx_mjpeg_dec_decode.h
++++ b/_studio/mfx_lib/decode/mjpeg/include/mfx_mjpeg_dec_decode.h
+@@ -37,6 +37,7 @@
+ #endif
+ 
+ #include "mfx_task.h"
++#include "umc_media_data.h"
+ 
+ #include "mfx_vpp_jpeg.h"
+ 
+@@ -46,6 +47,7 @@ namespace UMC
+     class JpegFrameConstructor;
+     class MediaDataEx;
+     class FrameData;
++    class MediaData;
+ };
+ 
+ class VideoDECODEMJPEGBase
+diff --git a/_studio/mfx_lib/decode/mjpeg/src/mfx_mjpeg_dec_decode.cpp b/_studio/mfx_lib/decode/mjpeg/src/mfx_mjpeg_dec_decode.cpp
+index 3769fe8a72..0775fbb1be 100644
+--- a/_studio/mfx_lib/decode/mjpeg/src/mfx_mjpeg_dec_decode.cpp
++++ b/_studio/mfx_lib/decode/mjpeg/src/mfx_mjpeg_dec_decode.cpp
+@@ -456,6 +456,14 @@ mfxStatus VideoDECODEMJPEG::DecodeHeader(VideoCORE *core, mfxBitstream *bs, mfxV
+     UMC::Status umcRes = decoder.Init(&umcVideoParams);
+     MFX_CHECK_INIT(umcRes == UMC::UMC_OK);
+ 
++    mfxExtBuffer* extbuf = (bs) ? GetExtendedBuffer(bs->ExtParam, bs->NumExtParam, MFX_EXTBUFF_DECODE_ERROR_REPORT) : NULL;
++
++    if (extbuf)
++    {
++        reinterpret_cast<mfxExtDecodeErrorReport *>(extbuf)->ErrorTypes = 0;
++        in.SetExtBuffer(extbuf);
++    }
++
+     umcRes = decoder.DecodeHeader(&in);
+ 
+     in.Save(bs);
+@@ -770,6 +778,14 @@ mfxStatus VideoDECODEMJPEG::DecodeFrameCheck(mfxBitstream *bs, mfxFrameSurface1
+         MFXMediaDataAdapter src(bs);
+         UMC::MediaDataEx *pSrcData;
+ 
++        mfxExtBuffer* extbuf = (bs) ? GetExtendedBuffer(bs->ExtParam, bs->NumExtParam, MFX_EXTBUFF_DECODE_ERROR_REPORT) : NULL;
++
++        if (extbuf)
++        {
++            reinterpret_cast<mfxExtDecodeErrorReport *>(extbuf)->ErrorTypes = 0;
++            src.SetExtBuffer(extbuf);
++        }
++
+         if (!m_isHeaderFound && bs)
+         {
+             umcRes = pMJPEGVideoDecoder->FindStartOfImage(&src);
+@@ -785,7 +801,8 @@ mfxStatus VideoDECODEMJPEG::DecodeFrameCheck(mfxBitstream *bs, mfxFrameSurface1
+ 
+         if (!m_isHeaderParsed && bs)
+         {
+-            umcRes = pMJPEGVideoDecoder->_GetFrameInfo((uint8_t*)src.GetDataPointer(), src.GetDataSize());
++            umcRes = pMJPEGVideoDecoder->_GetFrameInfo((uint8_t*)src.GetDataPointer(), src.GetDataSize(), &src);
++
+             if (umcRes != UMC::UMC_OK)
+             {
+                 if(umcRes != UMC::UMC_ERR_NOT_ENOUGH_DATA)
+diff --git a/_studio/shared/umc/codec/jpeg_dec/include/jpegdec.h b/_studio/shared/umc/codec/jpeg_dec/include/jpegdec.h
+index 1e70931284..561e1c2889 100644
+--- a/_studio/shared/umc/codec/jpeg_dec/include/jpegdec.h
++++ b/_studio/shared/umc/codec/jpeg_dec/include/jpegdec.h
+@@ -27,6 +27,7 @@
+ #include "omp.h"
+ #endif
+ #include "jpegdec_base.h"
++#include "umc_media_data.h"
+ 
+ class CBaseStreamInput;
+ 
+diff --git a/_studio/shared/umc/codec/jpeg_dec/include/jpegdec_base.h b/_studio/shared/umc/codec/jpeg_dec/include/jpegdec_base.h
+index 5e9c139c2c..42647f871c 100644
+--- a/_studio/shared/umc/codec/jpeg_dec/include/jpegdec_base.h
++++ b/_studio/shared/umc/codec/jpeg_dec/include/jpegdec_base.h
+@@ -29,6 +29,13 @@
+ #include "colorcomp.h"
+ #include "membuffin.h"
+ #include "bitstreamin.h"
++#include "mfxstructures.h"
++#include "umc_media_data.h"
++
++namespace UMC
++{
++    class MediaData;
++};
+ 
+ class CJPEGDecoderBase
+ {
+@@ -146,6 +153,18 @@ public:
+   JERRCODE SkipMarker(void);
+ 
+   JERRCODE DetectSampling(void);
++
++  void SetDecodeErrorTypes(void);
++
++  void SetDecodeErrorReportParam(UMC::MediaData *in)
++  {
++      UMC::MediaData::AuxInfo* aux = (in) ? in->GetAuxInfo(MFX_EXTBUFF_DECODE_ERROR_REPORT) : NULL;
++      m_pDecodeErrorReport = (aux) ? reinterpret_cast<mfxExtDecodeErrorReport*>(aux->ptr) : NULL;
++  }
++
++protected:
++  mfxExtDecodeErrorReport* m_pDecodeErrorReport;
++
+ };
+ 
+ #endif // MFX_ENABLE_MJPEG_VIDEO_DECODE
+diff --git a/_studio/shared/umc/codec/jpeg_dec/include/umc_mjpeg_mfx_decode.h b/_studio/shared/umc/codec/jpeg_dec/include/umc_mjpeg_mfx_decode.h
+index fbe535cd95..2edd4d57a8 100644
+--- a/_studio/shared/umc/codec/jpeg_dec/include/umc_mjpeg_mfx_decode.h
++++ b/_studio/shared/umc/codec/jpeg_dec/include/umc_mjpeg_mfx_decode.h
+@@ -94,7 +94,7 @@ public:
+     JCOLOR GetColorType();
+ 
+     // All memory sizes should come in size_t type
+-    Status _GetFrameInfo(const uint8_t* pBitStream, size_t nSize);
++    Status _GetFrameInfo(const uint8_t* pBitStream, size_t nSize, MediaData *in);
+ 
+     // Allocate the destination frame
+     Status AllocateFrame() override;
+diff --git a/_studio/shared/umc/codec/jpeg_dec/include/umc_mjpeg_mfx_decode_base.h b/_studio/shared/umc/codec/jpeg_dec/include/umc_mjpeg_mfx_decode_base.h
+index 9cee49e9c1..90ce5888ea 100644
+--- a/_studio/shared/umc/codec/jpeg_dec/include/umc_mjpeg_mfx_decode_base.h
++++ b/_studio/shared/umc/codec/jpeg_dec/include/umc_mjpeg_mfx_decode_base.h
+@@ -63,7 +63,7 @@ public:
+     // Close decoding & free all allocated resources
+     virtual Status Close(void);
+ 
+-    virtual Status GetFrame(UMC::MediaDataEx *, UMC::FrameData** , const mfxU32  ) { return MFX_ERR_NONE; };
++    virtual Status GetFrame(UMC::MediaDataEx *, UMC::FrameData** , const mfxU32) { return MFX_ERR_NONE; };
+ 
+     virtual void SetFrameAllocator(FrameAllocator * frameAllocator);
+ 
+@@ -79,7 +79,7 @@ public:
+     Status FindStartOfImage(MediaData * in);
+ 
+     // All memory sizes should come in size_t type
+-    Status _GetFrameInfo(const uint8_t* pBitStream, size_t nSize);
++    Status _GetFrameInfo(const uint8_t* pBitStream, size_t nSize, MediaData *in);
+ 
+     Status SetRotation(uint16_t rotation);
+ 
+diff --git a/_studio/shared/umc/codec/jpeg_dec/src/jpegdec.cpp b/_studio/shared/umc/codec/jpeg_dec/src/jpegdec.cpp
+index 127133ae4c..54441dc534 100644
+--- a/_studio/shared/umc/codec/jpeg_dec/src/jpegdec.cpp
++++ b/_studio/shared/umc/codec/jpeg_dec/src/jpegdec.cpp
+@@ -1120,6 +1120,7 @@ JERRCODE CJPEGDecoder::ParseJPEGBitStream(JOPERATION op)
+       jerr = ParseAPP0();
+       if(JPEG_OK != jerr)
+       {
++        SetDecodeErrorTypes();
+         return jerr;
+       }
+       break;
+@@ -1128,6 +1129,7 @@ JERRCODE CJPEGDecoder::ParseJPEGBitStream(JOPERATION op)
+       jerr = ParseAPP1();
+       if(JPEG_OK != jerr)
+       {
++        SetDecodeErrorTypes();
+         return jerr;
+       }
+       break;
+@@ -1136,6 +1138,7 @@ JERRCODE CJPEGDecoder::ParseJPEGBitStream(JOPERATION op)
+       jerr = ParseAPP14();
+       if(JPEG_OK != jerr)
+       {
++        SetDecodeErrorTypes();
+         return jerr;
+       }
+       break;
+@@ -1152,6 +1155,7 @@ JERRCODE CJPEGDecoder::ParseJPEGBitStream(JOPERATION op)
+       jerr = ParseDQT();
+       if(JPEG_OK != jerr)
+       {
++        SetDecodeErrorTypes();
+         return jerr;
+       }
+       break;
+@@ -1160,6 +1164,7 @@ JERRCODE CJPEGDecoder::ParseJPEGBitStream(JOPERATION op)
+       jerr = ParseSOF0();
+       if(JPEG_OK != jerr)
+       {
++        SetDecodeErrorTypes();
+         return jerr;
+       }
+       break;
+@@ -1206,6 +1211,7 @@ JERRCODE CJPEGDecoder::ParseJPEGBitStream(JOPERATION op)
+       jerr = ParseDHT();
+       if(JPEG_OK != jerr)
+       {
++        SetDecodeErrorTypes();
+         return jerr;
+       }
+       break;
+@@ -1214,6 +1220,7 @@ JERRCODE CJPEGDecoder::ParseJPEGBitStream(JOPERATION op)
+       jerr = ParseDRI();
+       if(JPEG_OK != jerr)
+       {
++        SetDecodeErrorTypes();
+         return jerr;
+       }
+       break;
+@@ -1222,6 +1229,7 @@ JERRCODE CJPEGDecoder::ParseJPEGBitStream(JOPERATION op)
+       jerr = ParseSOS(op);
+       if(JPEG_OK != jerr)
+       {
++        SetDecodeErrorTypes();
+         return jerr;
+       }
+ 
+@@ -1231,7 +1239,10 @@ JERRCODE CJPEGDecoder::ParseJPEGBitStream(JOPERATION op)
+           {
+               jerr = m_BitStreamIn.Seek(-(m_sos_len + 2));
+               if(JPEG_OK != jerr)
++              {
++                  SetDecodeErrorTypes();
+                   return jerr;
++              }
+           }
+           else
+           {
+@@ -1246,7 +1257,10 @@ JERRCODE CJPEGDecoder::ParseJPEGBitStream(JOPERATION op)
+       {
+           jerr = ParseData();
+           if(JPEG_OK != jerr)
++          {
++            SetDecodeErrorTypes();
+             return jerr;
++	  }
+ 
+       }
+       break;
+@@ -1288,10 +1302,10 @@ JERRCODE CJPEGDecoder::ParseJPEGBitStream(JOPERATION op)
+     default:
+       TRC1("-> Unknown marker ",m_marker);
+       TRC0("..Skipping");
++      SetDecodeErrorTypes();
+       jerr = SkipMarker();
+       if(JPEG_OK != jerr)
+         return jerr;
+-
+       break;
+     }
+   }
+@@ -4575,7 +4589,6 @@ JERRCODE CJPEGDecoder::ReadHeader(
+ JERRCODE CJPEGDecoder::ReadData(void)
+ {
+     return ParseJPEGBitStream(JO_READ_DATA);
+-
+ } // CJPEGDecoder::ReadData(void)
+ 
+ JERRCODE CJPEGDecoder::ReadData(uint32_t restartNum, uint32_t restartsToDecode)
+diff --git a/_studio/shared/umc/codec/jpeg_dec/src/jpegdec_base.cpp b/_studio/shared/umc/codec/jpeg_dec/src/jpegdec_base.cpp
+index d6244e827b..4409b51cee 100644
+--- a/_studio/shared/umc/codec/jpeg_dec/src/jpegdec_base.cpp
++++ b/_studio/shared/umc/codec/jpeg_dec/src/jpegdec_base.cpp
+@@ -282,6 +282,23 @@ JERRCODE CJPEGDecoderBase::DetectSampling(void)
+   return JPEG_OK;
+ } // CJPEGDecoderBase::DetectSampling()
+ 
++void CJPEGDecoderBase::SetDecodeErrorTypes(void)
++{
++    if (!m_pDecodeErrorReport)
++        return;
++
++    switch (m_marker)
++    {
++        case JM_APP0: m_pDecodeErrorReport->ErrorTypes |= MFX_ERROR_JPEG_APP0_MARKER; break;
++        case JM_APP14: m_pDecodeErrorReport->ErrorTypes |= MFX_ERROR_JPEG_APP14_MARKER; break;
++        case JM_DQT: m_pDecodeErrorReport->ErrorTypes |= MFX_ERROR_JPEG_DQT_MARKER; break;
++        case JM_SOF0: m_pDecodeErrorReport->ErrorTypes |= MFX_ERROR_JPEG_SOF0_MARKER; break;
++        case JM_DHT: m_pDecodeErrorReport->ErrorTypes |= MFX_ERROR_JPEG_DHT_MARKER; break;
++        case JM_DRI: m_pDecodeErrorReport->ErrorTypes |= MFX_ERROR_JPEG_DRI_MARKER; break;
++        case JM_SOS: m_pDecodeErrorReport->ErrorTypes |= MFX_ERROR_JPEG_SOS_MARKER; break;
++        default: m_pDecodeErrorReport->ErrorTypes |= MFX_ERROR_JPEG_UNKNOWN_MARKER; break;
++    };
++}
+ 
+ JERRCODE CJPEGDecoderBase::NextMarker(JMARKER* marker)
+ {
+@@ -1265,6 +1282,7 @@ JERRCODE CJPEGDecoderBase::ParseJPEGBitStream(JOPERATION op)
+       jerr = ParseAPP0();
+       if(JPEG_OK != jerr)
+       {
++        SetDecodeErrorTypes();
+         return jerr;
+       }
+       break;
+@@ -1273,6 +1291,7 @@ JERRCODE CJPEGDecoderBase::ParseJPEGBitStream(JOPERATION op)
+       jerr = ParseAPP14();
+       if(JPEG_OK != jerr)
+       {
++        SetDecodeErrorTypes();
+         return jerr;
+       }
+       break;
+@@ -1281,6 +1300,7 @@ JERRCODE CJPEGDecoderBase::ParseJPEGBitStream(JOPERATION op)
+       jerr = ParseDQT();
+       if(JPEG_OK != jerr)
+       {
++        SetDecodeErrorTypes();
+         return jerr;
+       }
+       break;
+@@ -1289,6 +1309,7 @@ JERRCODE CJPEGDecoderBase::ParseJPEGBitStream(JOPERATION op)
+       jerr = ParseSOF0();
+       if(JPEG_OK != jerr)
+       {
++        SetDecodeErrorTypes();
+         return jerr;
+       }
+       break;
+@@ -1311,6 +1332,7 @@ JERRCODE CJPEGDecoderBase::ParseJPEGBitStream(JOPERATION op)
+       jerr = ParseDHT();
+       if(JPEG_OK != jerr)
+       {
++        SetDecodeErrorTypes();
+         return jerr;
+       }
+       break;
+@@ -1319,6 +1341,7 @@ JERRCODE CJPEGDecoderBase::ParseJPEGBitStream(JOPERATION op)
+       jerr = ParseDRI();
+       if(JPEG_OK != jerr)
+       {
++        SetDecodeErrorTypes();
+         return jerr;
+       }
+       break;
+@@ -1327,6 +1350,7 @@ JERRCODE CJPEGDecoderBase::ParseJPEGBitStream(JOPERATION op)
+       jerr = ParseSOS(op);
+       if(JPEG_OK != jerr)
+       {
++        SetDecodeErrorTypes();
+         return jerr;
+       }
+ 
+@@ -1336,7 +1360,10 @@ JERRCODE CJPEGDecoderBase::ParseJPEGBitStream(JOPERATION op)
+           {
+               jerr = m_BitStreamIn.Seek(-(m_sos_len + 2));
+               if(JPEG_OK != jerr)
++              {
++                  SetDecodeErrorTypes();
+                   return jerr;
++              }
+           }
+           else
+           {
+@@ -1355,10 +1382,10 @@ JERRCODE CJPEGDecoderBase::ParseJPEGBitStream(JOPERATION op)
+     default:
+       TRC1("-> Unknown marker ",m_marker);
+       TRC0("..Skipping");
++      SetDecodeErrorTypes();
+       jerr = SkipMarker();
+       if(JPEG_OK != jerr)
+         return jerr;
+-
+       break;
+     }
+   }
+diff --git a/_studio/shared/umc/codec/jpeg_dec/src/umc_mjpeg_mfx_decode.cpp b/_studio/shared/umc/codec/jpeg_dec/src/umc_mjpeg_mfx_decode.cpp
+index 01a513e883..0ffcfaf7ab 100644
+--- a/_studio/shared/umc/codec/jpeg_dec/src/umc_mjpeg_mfx_decode.cpp
++++ b/_studio/shared/umc/codec/jpeg_dec/src/umc_mjpeg_mfx_decode.cpp
+@@ -378,7 +378,7 @@ Status MJPEGVideoDecoderMFX::DecodeHeader(MediaData* in)
+         }
+     }
+ 
+-    Status sts = _GetFrameInfo((uint8_t*)in->GetDataPointer(), in->GetDataSize());
++    Status sts = _GetFrameInfo((uint8_t*)in->GetDataPointer(), in->GetDataSize(), in);
+ 
+     if (sts == UMC_ERR_NOT_ENOUGH_DATA &&
+         (!(in->GetFlags() & MediaData::FLAG_VIDEO_DATA_NOT_FULL_FRAME) ||
+@@ -937,7 +937,7 @@ Status MJPEGVideoDecoderMFX::PostProcessing(double pts)
+     return UMC_OK;
+ }
+ 
+-Status MJPEGVideoDecoderMFX::_GetFrameInfo(const uint8_t* pBitStream, size_t nSize)
++Status MJPEGVideoDecoderMFX::_GetFrameInfo(const uint8_t* pBitStream, size_t nSize, MediaData *in)
+ {
+     int32_t   nchannels;
+     int32_t   precision;
+@@ -945,6 +945,8 @@ Status MJPEGVideoDecoderMFX::_GetFrameInfo(const uint8_t* pBitStream, size_t nSi
+     JCOLOR   color;
+     JERRCODE jerr;
+ 
++    m_dec[0]->SetDecodeErrorReportParam(in);
++
+     if (!m_IsInit)
+         return UMC_ERR_NOT_INITIALIZED;
+ 
+diff --git a/_studio/shared/umc/codec/jpeg_dec/src/umc_mjpeg_mfx_decode_base.cpp b/_studio/shared/umc/codec/jpeg_dec/src/umc_mjpeg_mfx_decode_base.cpp
+index 06fd1a681b..3150492ab2 100644
+--- a/_studio/shared/umc/codec/jpeg_dec/src/umc_mjpeg_mfx_decode_base.cpp
++++ b/_studio/shared/umc/codec/jpeg_dec/src/umc_mjpeg_mfx_decode_base.cpp
+@@ -322,7 +322,7 @@ Status MJPEGVideoDecoderBaseMFX::DecodeHeader(MediaData* in)
+         }
+     }
+ 
+-    Status sts = _GetFrameInfo((uint8_t*)in->GetDataPointer(), in->GetDataSize());
++    Status sts = _GetFrameInfo((uint8_t*)in->GetDataPointer(), in->GetDataSize(), in);
+ 
+     if (sts == UMC_ERR_NOT_ENOUGH_DATA &&
+         (!(in->GetFlags() & MediaData::FLAG_VIDEO_DATA_NOT_FULL_FRAME) ||
+@@ -345,7 +345,7 @@ Status MJPEGVideoDecoderBaseMFX::SetRotation(uint16_t rotation)
+     return UMC_OK;
+ }
+ 
+-Status MJPEGVideoDecoderBaseMFX::_GetFrameInfo(const uint8_t* pBitStream, size_t nSize)
++Status MJPEGVideoDecoderBaseMFX::_GetFrameInfo(const uint8_t* pBitStream, size_t nSize, MediaData *in)
+ {
+     int32_t   nchannels;
+     int32_t   precision;
+@@ -353,6 +353,8 @@ Status MJPEGVideoDecoderBaseMFX::_GetFrameInfo(const uint8_t* pBitStream, size_t
+     JCOLOR   color;
+     JERRCODE jerr;
+ 
++    m_decBase->SetDecodeErrorReportParam(in);
++
+     if (!m_IsInit)
+         return UMC_ERR_NOT_INITIALIZED;
+ 
+diff --git a/api/vpl/mfxstructures.h b/api/vpl/mfxstructures.h
+index 879a431602..1bfdaf68c2 100644
+--- a/api/vpl/mfxstructures.h
++++ b/api/vpl/mfxstructures.h
+@@ -3520,12 +3520,33 @@ MFX_PACK_END()
+ 
+ /*! The ErrorTypes enumerator uses bit-ORed values to itemize bitstream error types. */
+ enum {
+-    MFX_ERROR_NO            =        0, /*!< No error in bitstream. */
+-    MFX_ERROR_PPS           = (1 << 0), /*!< Invalid/corrupted PPS. */
+-    MFX_ERROR_SPS           = (1 << 1), /*!< Invalid/corrupted SPS. */
+-    MFX_ERROR_SLICEHEADER   = (1 << 2), /*!< Invalid/corrupted slice header. */
+-    MFX_ERROR_SLICEDATA     = (1 << 3), /*!< Invalid/corrupted slice data. */
+-    MFX_ERROR_FRAME_GAP     = (1 << 4), /*!< Missed frames. */
++    MFX_ERROR_NO                  =        0,  /*!< No error in bitstream. */
++    MFX_ERROR_PPS                 = (1 << 0),  /*!< Invalid/corrupted PPS. */
++    MFX_ERROR_SPS                 = (1 << 1),  /*!< Invalid/corrupted SPS. */
++    MFX_ERROR_SLICEHEADER         = (1 << 2),  /*!< Invalid/corrupted slice header. */
++    MFX_ERROR_SLICEDATA           = (1 << 3),  /*!< Invalid/corrupted slice data. */
++    MFX_ERROR_FRAME_GAP           = (1 << 4),  /*!< Missed frames. */
++    MFX_ERROR_JPEG_APP0_MARKER    = (1 << 5),  /*!< Invalid/corrupted APP0 marker. */
++    MFX_ERROR_JPEG_APP1_MARKER    = (1 << 6),  /*!< Invalid/corrupted APP1 marker. */
++    MFX_ERROR_JPEG_APP2_MARKER    = (1 << 7),  /*!< Invalid/corrupted APP2 marker. */
++    MFX_ERROR_JPEG_APP3_MARKER    = (1 << 8),  /*!< Invalid/corrupted APP3 marker. */
++    MFX_ERROR_JPEG_APP4_MARKER    = (1 << 9),  /*!< Invalid/corrupted APP4 marker. */
++    MFX_ERROR_JPEG_APP5_MARKER    = (1 << 10), /*!< Invalid/corrupted APP5 marker. */
++    MFX_ERROR_JPEG_APP6_MARKER    = (1 << 11), /*!< Invalid/corrupted APP6 marker. */
++    MFX_ERROR_JPEG_APP7_MARKER    = (1 << 12), /*!< Invalid/corrupted APP7 marker. */
++    MFX_ERROR_JPEG_APP8_MARKER    = (1 << 13), /*!< Invalid/corrupted APP8 marker. */
++    MFX_ERROR_JPEG_APP9_MARKER    = (1 << 14), /*!< Invalid/corrupted APP9 marker. */
++    MFX_ERROR_JPEG_APP10_MARKER   = (1 << 15), /*!< Invalid/corrupted APP10 marker. */
++    MFX_ERROR_JPEG_APP11_MARKER   = (1 << 16), /*!< Invalid/corrupted APP11 marker. */
++    MFX_ERROR_JPEG_APP12_MARKER   = (1 << 17), /*!< Invalid/corrupted APP12 marker. */
++    MFX_ERROR_JPEG_APP13_MARKER   = (1 << 18), /*!< Invalid/corrupted APP13 marker. */
++    MFX_ERROR_JPEG_APP14_MARKER   = (1 << 19), /*!< Invalid/corrupted APP14 marker. */
++    MFX_ERROR_JPEG_DQT_MARKER     = (1 << 20), /*!< Invalid/corrupted DQT marker. */
++    MFX_ERROR_JPEG_SOF0_MARKER    = (1 << 21), /*!< Invalid/corrupted SOF0 marker. */
++    MFX_ERROR_JPEG_DHT_MARKER     = (1 << 22), /*!< Invalid/corrupted DHT marker. */
++    MFX_ERROR_JPEG_DRI_MARKER     = (1 << 23), /*!< Invalid/corrupted DRI marker. */
++    MFX_ERROR_JPEG_SOS_MARKER     = (1 << 24), /*!< Invalid/corrupted SOS marker. */
++    MFX_ERROR_JPEG_UNKNOWN_MARKER = (1 << 25), /*!< Unknown Marker. */
+ };
+ 
+ MFX_PACK_BEGIN_USUAL_STRUCT()
+-- 
+2.33.0
+

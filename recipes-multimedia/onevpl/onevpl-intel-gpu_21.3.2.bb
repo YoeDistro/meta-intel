@@ -17,6 +17,7 @@ COMPATIBLE_HOST:x86-x32 = "null"
 DEPENDS += "libdrm libva intel-media-driver onevpl"
 
 SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;branch=main;lfs=0 \
+            file://0001-jpegd-Enable-JPEG-decode-error-report.patch \
             "
 
 SRCREV = "9a8e9626859fbffd631b3d7cf26ac7b4efe6ae3c"
