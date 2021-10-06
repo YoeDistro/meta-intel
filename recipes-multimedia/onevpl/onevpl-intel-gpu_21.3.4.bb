@@ -20,7 +20,7 @@ SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;branc
             file://0001-jpegd-Enable-JPEG-decode-error-report.patch \
             "
 
-SRCREV = "9a8e9626859fbffd631b3d7cf26ac7b4efe6ae3c"
+SRCREV = "51608c724044802cc060b7969084126a3e90ca4a"
 S = "${WORKDIR}/git"
 
 inherit cmake
