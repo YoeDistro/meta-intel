@@ -17,12 +17,12 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=72b9da60da6219d612ce30b746a0fe71  \
 
 SRC_URI = "git://github.com/intel/ipmctl.git;protocol=https;branch=development;name=ipmctl; \
         git://github.com/tianocore/edk2.git;protocol=https;name=edk2;destsuffix=git/edk2; \
-        file://0001-Ignore-STATIC_ASSERT-and-NULL-definition-so-we-can-c.patch;patchdir=edk2 \
+        file://0001-Ignore-STATIC_ASSERTs-and-NULL-define-for-os-and-ut-builds.patch;patchdir=edk2 \
 "
 
-SRCREV_ipmctl = "b7541dfeeca1cfdd9f9c9551d7039d3e9809245d"
-#tag: edk2-stable202102
-SRCREV_edk2 = "ef91b07388e1c0a50c604e5350eeda98428ccea6"
+SRCREV_ipmctl = "3cbc9f7f231f6f03895e0ff8ab797d22075e09b7"
+#tag: edk2-stable202108
+SRCREV_edk2 = "7b4a99be8a39c12d3a7fc4b8db9f0eab4ac688d5"
 
 S = "${WORKDIR}/git"
 
