@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/${BP}/COPYING;md5=a216b4192dc6b777b6f0db56
 SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbe%20stable/${PV}/${BP}.tar.gz \
            "
 
-SRC_URI[sha256sum] = "8156a262e0bb3ef053cac04d61af64c19dd94e9361f997e91e1abf315051d70a"
+SRC_URI[sha256sum] = "6a9644299889a973803fb0d84f4cb0ec4e35708bae14bc38b0d441240a152974"
 
 UPSTREAM_CHECK_URI = "https://sourceforge.net/projects/e1000/files/ixgbe%20stable/"
 UPSTREAM_CHECK_REGEX = "ixgbe%20stable/(?P<pver>\d+(\.\d+)+)/"
