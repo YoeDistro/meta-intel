@@ -7,15 +7,14 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=b48e3de3bfd47c27882a0d85b20823f5 \
                     file://tests/gtests/gtest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
                     file://src/cpu/x64/xbyak/COPYRIGHT;md5=3b9bf048d063d54cdb28964db558bcc7 \
                     file://src/common/ittnotify/LICENSE.BSD;md5=e671ff178b24a95a382ba670503c66fb \
-                    file://doc/assets/mathjax/MathJax.js;endline=17;md5=25a014ad78c3d72a0e15d15f1d007c20 \
                     "
 SECTION = "lib"
 
 inherit pkgconfig cmake ptest
 
 S = "${WORKDIR}/git"
-SRCREV = "e2d45252ae9c3e91671339579e3c0f0061f81d49"
-SRC_URI = "git://github.com/oneapi-src/oneDNN.git;branch=rls-v2.3 \
+SRCREV = "a08d38538efbc70e79ce138ce4ed31b982b5ce42"
+SRC_URI = "git://github.com/oneapi-src/oneDNN.git;branch=rls-v2.4 \
            file://run-ptest \
            "
 
