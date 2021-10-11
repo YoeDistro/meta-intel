@@ -10,6 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c18ea6bb4786a26bf4eee88a7424a408 \
 
 SRC_URI = "git://github.com/oneapi-src/oneVPL.git;protocol=https \
             file://0001-Fix-basename-build-issue-with-musl_libc.patch \
+            file://0001-Extends-errorTypes-to-support-JPEG-errors.patch \
             "
 SRCREV = "cdf7444dc971544d148c51e0d93a2df1bb55dda7"
 S = "${WORKDIR}/git"
