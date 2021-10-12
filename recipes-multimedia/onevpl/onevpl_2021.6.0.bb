@@ -16,7 +16,7 @@ SRCREV = "cdf7444dc971544d148c51e0d93a2df1bb55dda7"
 S = "${WORKDIR}/git"
 
 inherit cmake
-DEPENDS += "libva"
+DEPENDS += "libva pkgconfig-native"
 
 do_install:append() {
         mkdir -p ${D}${datadir}/oneVPL/samples
