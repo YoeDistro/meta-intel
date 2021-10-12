@@ -28,7 +28,7 @@ S = "${WORKDIR}/git"
 
 inherit cmake dos2unix
 
-DEPENDS = "ndctl"
+DEPENDS = "ndctl pkgconfig-native"
 
 EXTRA_OECMAKE = "-DRELEASE=ON"
 
