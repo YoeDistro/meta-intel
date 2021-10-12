@@ -12,7 +12,7 @@ COMPATIBLE_HOST:libc-musl = "null"
 
 inherit cmake systemd features_check
 
-DEPENDS = "metee ace xerces-c libnl libxml2 glib-2.0 glib-2.0-native"
+DEPENDS = "metee ace xerces-c libnl libxml2 glib-2.0 glib-2.0-native pkgconfig-native"
 
 EXTRA_OECMAKE += "-DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3"
 
