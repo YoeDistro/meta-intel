@@ -13,6 +13,7 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;nam
            file://0001-llvm_deps.cmake-don-t-copy-header-file-when-building.patch \
            file://0003-Improve-Reproducibility-for-src-package.patch \
            file://0004-find-external-llvm-tblgen.patch \
+           file://0001-BiF-CMakeLists.txt-remove-opt-from-DEPENDS.patch \
            "
 
 SRCREV_igc = "3ba8dde8c414a0e47df58b1bba12a64f8ba2089e"
@@ -40,12 +41,16 @@ EXTRA_OECMAKE = " \
                   -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 \
                   -DVC_INTRINSICS_SRC="${S}/vc-intrinsics" \
                   -DIGC_OPTION__LLVM_MODE=Prebuilds \
-                  -DIGC_BUILD__VC_ENABLED=OFF \
+                  -DIGC_BUILD__VC_ENABLED=ON \
+                  -DIGC_OPTION__LINK_KHRONOS_SPIRV_TRANSLATOR=ON \
+                  -DIGC_OPTION__USE_KHRONOS_SPIRV_TRANSLATOR_IN_VC=ON \
+                  -DIGC_OPTION__SPIRV_TRANSLATOR_MODE=Prebuilds \
                   "
 
 do_install:append:class-native () {
     install -d ${D}${bindir}
     install ${B}/IGC/Release/elf_packager ${D}${bindir}/
+    install ${B}/IGC/Release/CMCLTranslatorTool ${D}${bindir}/
 }
 
 BBCLASSEXTEND = "native nativesdk"
