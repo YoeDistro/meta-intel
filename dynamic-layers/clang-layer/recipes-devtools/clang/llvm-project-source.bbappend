@@ -23,6 +23,9 @@ SRC_URI_LLVM10_PATCHES = " \
                    file://llvm10-0013-ispc-10_0_k_reg_mov_avx512_i8_i16.patch \
                    file://llvm10-0014-ispc-10_0_packed_load_store_avx512skx.patch \
                    file://llvm10-0015-ispc-10_0_vXi1calling_avx512_i8_i16.patch \
+                   file://llvm10-basic-block-sections-support.patch \
+                   file://llvm10-Enable-the-call-site-info-only-for-g-optimizations.patch \
+                   file://llvm10-Replace-MCTargetOptionsCommandFlags.inc-and-CommandF.patch \
                    "
 
 SRC_URI_LLVM12_PATCHES = " \

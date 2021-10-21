@@ -1,0 +1,2243 @@
+From fd7146658e3b4ce045dfb332c2edf216f76c1e1f Mon Sep 17 00:00:00 2001
+From: serge-sans-paille <sguelton@redhat.com>
+Date: Wed, 4 Mar 2020 00:47:43 +0100
+Subject: [PATCH] Replace MCTargetOptionsCommandFlags.inc and CommandFlags.inc
+ by runtime registration
+
+MCTargetOptionsCommandFlags.inc and CommandFlags.inc are headers which contain
+cl::opt with static storage.
+These headers are meant to be incuded by tools to make it easier to parametrize
+codegen/mc.
+
+However, these headers are also included in at least two libraries: lldCommon
+and handle-llvm. As a result, when creating DYLIB, clang-cpp holds a reference
+to the options, and lldCommon holds another reference. Linking the two in a
+single executable, as zig does[0], results in a double registration.
+
+This patch explores an other approach: the .inc files are moved to regular
+files, and the registration happens on-demand through static declaration of
+options in the constructor of a static object.
+
+[0] https://bugzilla.redhat.com/show_bug.cgi?id=1756977#c5
+
+Differential Revision: https://reviews.llvm.org/D75579
+
+Upstream-Status: Backport
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ .../clang-fuzzer/handle-llvm/handle_llvm.cpp  |  32 +-
+ lld/Common/TargetOptionsCommandFlags.cpp      |  25 +-
+ llvm/include/llvm/CodeGen/CommandFlags.h      | 149 +++++
+ .../llvm/MC/MCTargetOptionsCommandFlags.h     |  54 ++
+ .../llvm/MC/MCTargetOptionsCommandFlags.inc   |  65 --
+ llvm/include/llvm/module.modulemap            |   3 -
+ llvm/lib/CodeGen/CMakeLists.txt               |   1 +
+ llvm/lib/CodeGen/CommandFlags.cpp             | 588 ++++++++++++++++++
+ llvm/lib/MC/CMakeLists.txt                    |   1 +
+ llvm/lib/MC/MCTargetOptionsCommandFlags.cpp   | 105 ++++
+ llvm/tools/dsymutil/DwarfStreamer.cpp         |   7 +-
+ llvm/tools/gold/gold-plugin.cpp               |  16 +-
+ llvm/tools/llc/CMakeLists.txt                 |   1 +
+ llvm/tools/llc/llc.cpp                        |  43 +-
+ llvm/tools/lli/CMakeLists.txt                 |   1 +
+ llvm/tools/lli/lli.cpp                        |  41 +-
+ llvm/tools/llvm-dwp/llvm-dwp.cpp              |   6 +-
+ .../llvm-isel-fuzzer/llvm-isel-fuzzer.cpp     |  17 +-
+ llvm/tools/llvm-lto/CMakeLists.txt            |   5 +-
+ llvm/tools/llvm-lto/llvm-lto.cpp              |  28 +-
+ llvm/tools/llvm-lto2/CMakeLists.txt           |   1 +
+ llvm/tools/llvm-lto2/llvm-lto2.cpp            |  20 +-
+ .../llvm-mc-assemble-fuzzer/CMakeLists.txt    |   1 +
+ .../llvm-mc-assemble-fuzzer.cpp               |  12 +-
+ llvm/tools/llvm-mc/CMakeLists.txt             |   1 +
+ llvm/tools/llvm-mc/llvm-mc.cpp                |   6 +-
+ llvm/tools/llvm-mca/llvm-mca.cpp              |   8 +-
+ .../tools/llvm-opt-fuzzer/llvm-opt-fuzzer.cpp |  16 +-
+ llvm/tools/lto/CMakeLists.txt                 |   4 +-
+ llvm/tools/lto/lto.cpp                        |  35 +-
+ llvm/tools/opt/opt.cpp                        |  23 +-
+ .../DebugInfo/DWARF/DwarfGenerator.cpp        |   6 +-
+ 32 files changed, 1088 insertions(+), 233 deletions(-)
+ create mode 100644 llvm/include/llvm/CodeGen/CommandFlags.h
+ create mode 100644 llvm/include/llvm/MC/MCTargetOptionsCommandFlags.h
+ delete mode 100644 llvm/include/llvm/MC/MCTargetOptionsCommandFlags.inc
+ create mode 100644 llvm/lib/CodeGen/CommandFlags.cpp
+ create mode 100644 llvm/lib/MC/MCTargetOptionsCommandFlags.cpp
+
+diff --git a/clang/tools/clang-fuzzer/handle-llvm/handle_llvm.cpp b/clang/tools/clang-fuzzer/handle-llvm/handle_llvm.cpp
+index d8ab14594185..aefb761cd70c 100644
+--- a/clang/tools/clang-fuzzer/handle-llvm/handle_llvm.cpp
++++ b/clang/tools/clang-fuzzer/handle-llvm/handle_llvm.cpp
+@@ -19,7 +19,7 @@
+ #include "llvm/ADT/Triple.h"
+ #include "llvm/Analysis/TargetLibraryInfo.h"
+ #include "llvm/Analysis/TargetTransformInfo.h"
+-#include "llvm/CodeGen/CommandFlags.inc"
++#include "llvm/CodeGen/CommandFlags.h"
+ #include "llvm/CodeGen/MachineModuleInfo.h"
+ #include "llvm/CodeGen/TargetPassConfig.h"
+ #include "llvm/ExecutionEngine/JITEventListener.h"
+@@ -29,9 +29,9 @@
+ #include "llvm/ExecutionEngine/RTDyldMemoryManager.h"
+ #include "llvm/ExecutionEngine/SectionMemoryManager.h"
+ #include "llvm/IR/IRPrintingPasses.h"
++#include "llvm/IR/LLVMContext.h"
+ #include "llvm/IR/LegacyPassManager.h"
+ #include "llvm/IR/LegacyPassNameParser.h"
+-#include "llvm/IR/LLVMContext.h"
+ #include "llvm/IR/Module.h"
+ #include "llvm/IR/Verifier.h"
+ #include "llvm/IRReader/IRReader.h"
+@@ -42,12 +42,14 @@
+ #include "llvm/Support/TargetRegistry.h"
+ #include "llvm/Support/TargetSelect.h"
+ #include "llvm/Target/TargetMachine.h"
+-#include "llvm/Transforms/IPO/PassManagerBuilder.h"
+ #include "llvm/Transforms/IPO.h"
++#include "llvm/Transforms/IPO/PassManagerBuilder.h"
+ #include "llvm/Transforms/Vectorize.h"
+ 
+ using namespace llvm;
+ 
++static codegen::RegisterCodeGenFlags CGF;
++
+ // Define a type for the functions that are compiled and executed
+ typedef void (*LLVMFunc)(int*, int*, int*, int);
+ 
+@@ -100,15 +102,17 @@ static std::string OptLLVM(const std::string &IR, CodeGenOpt::Level OLvl) {
+     ErrorAndExit("Could not parse IR");
+ 
+   Triple ModuleTriple(M->getTargetTriple());
+-  const TargetOptions Options = InitTargetOptionsFromCodeGenFlags();
++  const TargetOptions Options = codegen::InitTargetOptionsFromCodeGenFlags();
+   std::string E;
+-  const Target *TheTarget = TargetRegistry::lookupTarget(MArch, ModuleTriple, E);
+-  TargetMachine *Machine =
+-      TheTarget->createTargetMachine(M->getTargetTriple(), getCPUStr(),
+-                                     getFeaturesStr(), Options, getRelocModel(),
+-                                     getCodeModel(), OLvl);
++  const Target *TheTarget =
++      TargetRegistry::lookupTarget(codegen::getMArch(), ModuleTriple, E);
++  TargetMachine *Machine = TheTarget->createTargetMachine(
++      M->getTargetTriple(), codegen::getCPUStr(), codegen::getFeaturesStr(),
++      Options, codegen::getExplicitRelocModel(),
++      codegen::getExplicitCodeModel(), OLvl);
+   std::unique_ptr<TargetMachine> TM(Machine);
+-  setFunctionAttributes(getCPUStr(), getFeaturesStr(), *M);
++  codegen::setFunctionAttributes(codegen::getCPUStr(),
++                                 codegen::getFeaturesStr(), *M);
+ 
+   legacy::PassManager Passes;
+   
+@@ -154,14 +158,14 @@ static void CreateAndRunJITFunc(const std::string &IR, CodeGenOpt::Level OLvl) {
+ 
+   std::string ErrorMsg;
+   EngineBuilder builder(std::move(M));
+-  builder.setMArch(MArch);
+-  builder.setMCPU(getCPUStr());
+-  builder.setMAttrs(getFeatureList());
++  builder.setMArch(codegen::getMArch());
++  builder.setMCPU(codegen::getCPUStr());
++  builder.setMAttrs(codegen::getFeatureList());
+   builder.setErrorStr(&ErrorMsg);
+   builder.setEngineKind(EngineKind::JIT);
+   builder.setMCJITMemoryManager(std::make_unique<SectionMemoryManager>());
+   builder.setOptLevel(OLvl);
+-  builder.setTargetOptions(InitTargetOptionsFromCodeGenFlags());
++  builder.setTargetOptions(codegen::InitTargetOptionsFromCodeGenFlags());
+ 
+   std::unique_ptr<ExecutionEngine> EE(builder.create());
+   if (!EE)
+diff --git a/lld/Common/TargetOptionsCommandFlags.cpp b/lld/Common/TargetOptionsCommandFlags.cpp
+index 0137feb63f37..9b166a3e130a 100644
+--- a/lld/Common/TargetOptionsCommandFlags.cpp
++++ b/lld/Common/TargetOptionsCommandFlags.cpp
+@@ -5,35 +5,26 @@
+ // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+ //
+ //===----------------------------------------------------------------------===//
+-//
+-// This file exists as a place for global variables defined in LLVM's
+-// CodeGen/CommandFlags.inc. By putting the resulting object file in
+-// an archive and linking with it, the definitions will automatically be
+-// included when needed and skipped when already present.
+-//
+-//===----------------------------------------------------------------------===//
+ 
+ #include "lld/Common/TargetOptionsCommandFlags.h"
+ 
+-#include "llvm/CodeGen/CommandFlags.inc"
++#include "llvm/CodeGen/CommandFlags.h"
+ #include "llvm/Target/TargetOptions.h"
+ 
+-// Define an externally visible version of
+-// initTargetOptionsFromCodeGenFlags, so that its functionality can be
+-// used without having to include llvm/CodeGen/CommandFlags.inc, which
+-// would lead to multiple definitions of the command line flags.
++static llvm::codegen::RegisterCodeGenFlags CGF;
++
+ llvm::TargetOptions lld::initTargetOptionsFromCodeGenFlags() {
+-  return ::InitTargetOptionsFromCodeGenFlags();
++  return llvm::codegen::InitTargetOptionsFromCodeGenFlags();
+ }
+ 
+ llvm::Optional<llvm::Reloc::Model> lld::getRelocModelFromCMModel() {
+-  return getRelocModel();
++  return llvm::codegen::getExplicitRelocModel();
+ }
+ 
+ llvm::Optional<llvm::CodeModel::Model> lld::getCodeModelFromCMModel() {
+-  return getCodeModel();
++  return llvm::codegen::getExplicitCodeModel();
+ }
+ 
+-std::string lld::getCPUStr() { return ::getCPUStr(); }
++std::string lld::getCPUStr() { return llvm::codegen::getCPUStr(); }
+ 
+-std::vector<std::string> lld::getMAttrs() { return ::MAttrs; }
++std::vector<std::string> lld::getMAttrs() { return llvm::codegen::getMAttrs(); }
+diff --git a/llvm/include/llvm/CodeGen/CommandFlags.h b/llvm/include/llvm/CodeGen/CommandFlags.h
+new file mode 100644
+index 000000000000..cdec26879f73
+--- /dev/null
++++ b/llvm/include/llvm/CodeGen/CommandFlags.h
+@@ -0,0 +1,149 @@
++//===-- CommandFlags.h - Command Line Flags Interface -----------*- C++ -*-===//
++//
++// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
++// See https://llvm.org/LICENSE.txt for license information.
++// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
++//
++//===----------------------------------------------------------------------===//
++//
++// This file contains codegen-specific flags that are shared between different
++// command line tools. The tools "llc" and "opt" both use this file to prevent
++// flag duplication.
++//
++//===----------------------------------------------------------------------===//
++
++#include "llvm/ADT/StringExtras.h"
++#include "llvm/IR/Instructions.h"
++#include "llvm/IR/Intrinsics.h"
++#include "llvm/IR/Module.h"
++#include "llvm/MC/MCTargetOptionsCommandFlags.h"
++#include "llvm/MC/SubtargetFeature.h"
++#include "llvm/Support/CodeGen.h"
++#include "llvm/Support/CommandLine.h"
++#include "llvm/Support/Host.h"
++#include "llvm/Target/TargetMachine.h"
++#include "llvm/Target/TargetOptions.h"
++#include <string>
++
++namespace llvm {
++
++namespace codegen {
++
++std::string getMArch();
++
++std::string getMCPU();
++
++std::vector<std::string> getMAttrs();
++
++Reloc::Model getRelocModel();
++Optional<Reloc::Model> getExplicitRelocModel();
++
++ThreadModel::Model getThreadModel();
++
++CodeModel::Model getCodeModel();
++Optional<CodeModel::Model> getExplicitCodeModel();
++
++llvm::ExceptionHandling getExceptionModel();
++
++CodeGenFileType getFileType();
++Optional<CodeGenFileType> getExplicitFileType();
++
++CodeGenFileType getFileType();
++
++llvm::FramePointer::FP getFramePointerUsage();
++
++bool getEnableUnsafeFPMath();
++
++bool getEnableNoInfsFPMath();
++
++bool getEnableNoNaNsFPMath();
++
++bool getEnableNoSignedZerosFPMath();
++
++bool getEnableNoTrappingFPMath();
++
++llvm::FPDenormal::DenormalMode getDenormalFPMath();
++
++bool getEnableHonorSignDependentRoundingFPMath();
++
++llvm::FloatABI::ABIType getFloatABIForCalls();
++
++llvm::FPOpFusion::FPOpFusionMode getFuseFPOps();
++
++bool getDontPlaceZerosInBSS();
++
++bool getEnableGuaranteedTailCallOpt();
++
++bool getDisableTailCalls();
++
++bool getStackSymbolOrdering();
++
++unsigned getOverrideStackAlignment();
++
++bool getStackRealign();
++
++std::string getTrapFuncName();
++
++bool getUseCtors();
++
++bool getRelaxELFRelocations();
++
++bool getDataSections();
++Optional<bool> getExplicitDataSections();
++
++bool getFunctionSections();
++Optional<bool> getExplicitFunctionSections();
++
++std::string getBBSections();
++
++unsigned getTLSSize();
++
++bool getEmulatedTLS();
++
++bool getUniqueSectionNames();
++
++bool getUniqueBBSectionNames();
++
++llvm::EABI getEABIVersion();
++
++llvm::DebuggerKind getDebuggerTuningOpt();
++
++bool getEnableStackSizeSection();
++
++bool getEnableAddrsig();
++
++bool getEmitCallSiteInfo();
++
++bool getEnableDebugEntryValues();
++
++bool getForceDwarfFrameSection();
++
++/// Create this object with static storage to register codegen-related command
++/// line options.
++struct RegisterCodeGenFlags {
++  RegisterCodeGenFlags();
++};
++
++llvm::BasicBlockSection getBBSectionsMode(llvm::TargetOptions &Options);
++
++// Common utility function tightly tied to the options listed here. Initializes
++// a TargetOptions object with CodeGen flags and returns it.
++TargetOptions InitTargetOptionsFromCodeGenFlags();
++
++std::string getCPUStr();
++
++std::string getFeaturesStr();
++
++std::vector<std::string> getFeatureList();
++
++void renderBoolStringAttr(AttrBuilder &B, StringRef Name, bool Val);
++
++/// Set function attributes of function \p F based on CPU, Features, and command
++/// line flags.
++void setFunctionAttributes(StringRef CPU, StringRef Features, Function &F);
++
++/// Set function attributes of functions in Module M based on CPU,
++/// Features, and command line flags.
++void setFunctionAttributes(StringRef CPU, StringRef Features, Module &M);
++} // namespace codegen
++} // namespace llvm
+diff --git a/llvm/include/llvm/MC/MCTargetOptionsCommandFlags.h b/llvm/include/llvm/MC/MCTargetOptionsCommandFlags.h
+new file mode 100644
+index 000000000000..7a5edf78fdcc
+--- /dev/null
++++ b/llvm/include/llvm/MC/MCTargetOptionsCommandFlags.h
+@@ -0,0 +1,54 @@
++//===-- MCTargetOptionsCommandFlags.h --------------------------*- C++ -*-===//
++//
++// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
++// See https://llvm.org/LICENSE.txt for license information.
++// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
++//
++//===----------------------------------------------------------------------===//
++//
++// This file contains machine code-specific flags that are shared between
++// different command line tools.
++//
++//===----------------------------------------------------------------------===//
++
++#ifndef LLVM_MC_MCTARGETOPTIONSCOMMANDFLAGS_H
++#define LLVM_MC_MCTARGETOPTIONSCOMMANDFLAGS_H
++
++#include "llvm/ADT/Optional.h"
++#include "llvm/MC/MCTargetOptions.h"
++#include "llvm/Support/CommandLine.h"
++
++namespace llvm {
++
++namespace mc {
++
++bool getRelaxAll();
++Optional<bool> getExplicitRelaxAll();
++
++bool getIncrementalLinkerCompatible();
++
++int getDwarfVersion();
++
++bool getShowMCInst();
++
++bool getFatalWarnings();
++
++bool getNoWarn();
++
++bool getNoDeprecatedWarn();
++
++std::string getABIName();
++
++/// Create this object with static storage to register mc-related command
++/// line options.
++struct RegisterMCTargetOptionsFlags {
++  RegisterMCTargetOptionsFlags();
++};
++
++MCTargetOptions InitMCTargetOptionsFromFlags();
++
++} // namespace mc
++
++} // namespace llvm
++
++#endif
+diff --git a/llvm/include/llvm/MC/MCTargetOptionsCommandFlags.inc b/llvm/include/llvm/MC/MCTargetOptionsCommandFlags.inc
+deleted file mode 100644
+index 93e21b626eac..000000000000
+--- a/llvm/include/llvm/MC/MCTargetOptionsCommandFlags.inc
++++ /dev/null
+@@ -1,65 +0,0 @@
+-//===-- MCTargetOptionsCommandFlags.h --------------------------*- C++ -*-===//
+-//
+-// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+-// See https://llvm.org/LICENSE.txt for license information.
+-// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+-//
+-//===----------------------------------------------------------------------===//
+-//
+-// This file contains machine code-specific flags that are shared between
+-// different command line tools.
+-//
+-//===----------------------------------------------------------------------===//
+-
+-#ifndef LLVM_MC_MCTARGETOPTIONSCOMMANDFLAGS_H
+-#define LLVM_MC_MCTARGETOPTIONSCOMMANDFLAGS_H
+-
+-#include "llvm/MC/MCTargetOptions.h"
+-#include "llvm/Support/CommandLine.h"
+-using namespace llvm;
+-
+-static cl::opt<bool> RelaxAll("mc-relax-all",
+-                       cl::desc("When used with filetype=obj, "
+-                                "relax all fixups in the emitted object file"));
+-
+-static cl::opt<bool> IncrementalLinkerCompatible(
+-    "incremental-linker-compatible",
+-    cl::desc(
+-        "When used with filetype=obj, "
+-        "emit an object file which can be used with an incremental linker"));
+-
+-static cl::opt<int> DwarfVersion("dwarf-version", cl::desc("Dwarf version"),
+-                          cl::init(0));
+-
+-static cl::opt<bool> ShowMCInst("asm-show-inst",
+-                         cl::desc("Emit internal instruction representation to "
+-                                  "assembly file"));
+-
+-static cl::opt<bool> FatalWarnings("fatal-warnings",
+-                            cl::desc("Treat warnings as errors"));
+-
+-static cl::opt<bool> NoWarn("no-warn", cl::desc("Suppress all warnings"));
+-static cl::alias NoWarnW("W", cl::desc("Alias for --no-warn"), cl::aliasopt(NoWarn));
+-
+-static cl::opt<bool> NoDeprecatedWarn("no-deprecated-warn",
+-                               cl::desc("Suppress all deprecated warnings"));
+-
+-static cl::opt<std::string>
+-ABIName("target-abi", cl::Hidden,
+-        cl::desc("The name of the ABI to be targeted from the backend."),
+-        cl::init(""));
+-
+-static MCTargetOptions InitMCTargetOptionsFromFlags() {
+-  MCTargetOptions Options;
+-  Options.MCRelaxAll = RelaxAll;
+-  Options.MCIncrementalLinkerCompatible = IncrementalLinkerCompatible;
+-  Options.DwarfVersion = DwarfVersion;
+-  Options.ShowMCInst = ShowMCInst;
+-  Options.ABIName = ABIName;
+-  Options.MCFatalWarnings = FatalWarnings;
+-  Options.MCNoWarn = NoWarn;
+-  Options.MCNoDeprecatedWarn = NoDeprecatedWarn;
+-  return Options;
+-}
+-
+-#endif
+diff --git a/llvm/include/llvm/module.modulemap b/llvm/include/llvm/module.modulemap
+index d281682ae003..d176b3dfd4be 100644
+--- a/llvm/include/llvm/module.modulemap
++++ b/llvm/include/llvm/module.modulemap
+@@ -29,7 +29,6 @@ module LLVM_Backend {
+     exclude header "CodeGen/LinkAllCodegenComponents.h"
+ 
+     // These are intended for (repeated) textual inclusion.
+-    textual header "CodeGen/CommandFlags.inc"
+     textual header "CodeGen/DIEValue.def"
+   }
+ }
+@@ -308,8 +307,6 @@ module LLVM_MC {
+ 
+   umbrella "MC"
+   module * { export * }
+-
+-  textual header "MC/MCTargetOptionsCommandFlags.inc"
+ }
+ 
+ // Used by llvm-tblgen
+diff --git a/llvm/lib/CodeGen/CMakeLists.txt b/llvm/lib/CodeGen/CMakeLists.txt
+index a3916b7c6242..c6be91247017 100644
+--- a/llvm/lib/CodeGen/CMakeLists.txt
++++ b/llvm/lib/CodeGen/CMakeLists.txt
+@@ -14,6 +14,7 @@ add_llvm_component_library(LLVMCodeGen
+   CFIInstrInserter.cpp
+   CodeGen.cpp
+   CodeGenPrepare.cpp
++  CommandFlags.cpp
+   CriticalAntiDepBreaker.cpp
+   DeadMachineInstructionElim.cpp
+   DetectDeadLanes.cpp
+diff --git a/llvm/lib/CodeGen/CommandFlags.cpp b/llvm/lib/CodeGen/CommandFlags.cpp
+new file mode 100644
+index 000000000000..7acb84df582f
+--- /dev/null
++++ b/llvm/lib/CodeGen/CommandFlags.cpp
+@@ -0,0 +1,588 @@
++//===-- CommandFlags.cpp - Command Line Flags Interface ---------*- C++ -*-===//
++//
++// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
++// See https://llvm.org/LICENSE.txt for license information.
++// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
++//
++//===----------------------------------------------------------------------===//
++//
++// This file contains codegen-specific flags that are shared between different
++// command line tools. The tools "llc" and "opt" both use this file to prevent
++// flag duplication.
++//
++//===----------------------------------------------------------------------===//
++
++#include "llvm/CodeGen/CommandFlags.h"
++
++using namespace llvm;
++
++#define CGOPT(TY, NAME)                                                        \
++  static cl::opt<TY> *NAME##View;                                              \
++  TY codegen::get##NAME() {                                                    \
++    assert(NAME##View && "RegisterCodeGenFlags not created.");                 \
++    return *NAME##View;                                                        \
++  }
++
++#define CGLIST(TY, NAME)                                                       \
++  static cl::list<TY> *NAME##View;                                             \
++  std::vector<TY> codegen::get##NAME() {                                       \
++    assert(NAME##View && "RegisterCodeGenFlags not created.");                 \
++    return *NAME##View;                                                        \
++  }
++
++#define CGOPT_EXP(TY, NAME)                                                    \
++  CGOPT(TY, NAME)                                                              \
++  Optional<TY> codegen::getExplicit##NAME() {                                  \
++    if (NAME##View->getNumOccurrences()) {                                     \
++      TY res = *NAME##View;                                                    \
++      return res;                                                              \
++    }                                                                          \
++    return None;                                                               \
++  }
++
++CGOPT(std::string, MArch)
++CGOPT(std::string, MCPU)
++CGLIST(std::string, MAttrs)
++CGOPT_EXP(Reloc::Model, RelocModel)
++CGOPT(ThreadModel::Model, ThreadModel)
++CGOPT_EXP(CodeModel::Model, CodeModel)
++CGOPT(ExceptionHandling, ExceptionModel)
++CGOPT_EXP(CodeGenFileType, FileType)
++CGOPT(FramePointer::FP, FramePointerUsage)
++CGOPT(bool, EnableUnsafeFPMath)
++CGOPT(bool, EnableNoInfsFPMath)
++CGOPT(bool, EnableNoNaNsFPMath)
++CGOPT(bool, EnableNoSignedZerosFPMath)
++CGOPT(bool, EnableNoTrappingFPMath)
++CGOPT(FPDenormal::DenormalMode, DenormalFPMath)
++CGOPT(bool, EnableHonorSignDependentRoundingFPMath)
++CGOPT(FloatABI::ABIType, FloatABIForCalls)
++CGOPT(FPOpFusion::FPOpFusionMode, FuseFPOps)
++CGOPT(bool, DontPlaceZerosInBSS)
++CGOPT(bool, EnableGuaranteedTailCallOpt)
++CGOPT(bool, DisableTailCalls)
++CGOPT(bool, StackSymbolOrdering)
++CGOPT(unsigned, OverrideStackAlignment)
++CGOPT(bool, StackRealign)
++CGOPT(std::string, TrapFuncName)
++CGOPT(bool, UseCtors)
++CGOPT(bool, RelaxELFRelocations)
++CGOPT_EXP(bool, DataSections)
++CGOPT_EXP(bool, FunctionSections)
++CGOPT(std::string, BBSections)
++CGOPT(unsigned, TLSSize)
++CGOPT(bool, EmulatedTLS)
++CGOPT(bool, UniqueSectionNames)
++CGOPT(bool, UniqueBBSectionNames)
++CGOPT(EABI, EABIVersion)
++CGOPT(DebuggerKind, DebuggerTuningOpt)
++CGOPT(bool, EnableStackSizeSection)
++CGOPT(bool, EnableAddrsig)
++CGOPT(bool, EmitCallSiteInfo)
++CGOPT(bool, EnableDebugEntryValues)
++CGOPT(bool, ForceDwarfFrameSection)
++
++codegen::RegisterCodeGenFlags::RegisterCodeGenFlags() {
++#define CGBINDOPT(NAME)                                                        \
++  do {                                                                         \
++    NAME##View = std::addressof(NAME);                                         \
++  } while (0)
++
++  static cl::opt<std::string> MArch(
++      "march", cl::desc("Architecture to generate code for (see --version)"));
++  CGBINDOPT(MArch);
++
++  static cl::opt<std::string> MCPU(
++      "mcpu", cl::desc("Target a specific cpu type (-mcpu=help for details)"),
++      cl::value_desc("cpu-name"), cl::init(""));
++  CGBINDOPT(MCPU);
++
++  static cl::list<std::string> MAttrs(
++      "mattr", cl::CommaSeparated,
++      cl::desc("Target specific attributes (-mattr=help for details)"),
++      cl::value_desc("a1,+a2,-a3,..."));
++  CGBINDOPT(MAttrs);
++
++  static cl::opt<Reloc::Model> RelocModel(
++      "relocation-model", cl::desc("Choose relocation model"),
++      cl::values(
++          clEnumValN(Reloc::Static, "static", "Non-relocatable code"),
++          clEnumValN(Reloc::PIC_, "pic",
++                     "Fully relocatable, position independent code"),
++          clEnumValN(Reloc::DynamicNoPIC, "dynamic-no-pic",
++                     "Relocatable external references, non-relocatable code"),
++          clEnumValN(
++              Reloc::ROPI, "ropi",
++              "Code and read-only data relocatable, accessed PC-relative"),
++          clEnumValN(
++              Reloc::RWPI, "rwpi",
++              "Read-write data relocatable, accessed relative to static base"),
++          clEnumValN(Reloc::ROPI_RWPI, "ropi-rwpi",
++                     "Combination of ropi and rwpi")));
++  CGBINDOPT(RelocModel);
++
++  static cl::opt<ThreadModel::Model> ThreadModel(
++      "thread-model", cl::desc("Choose threading model"),
++      cl::init(ThreadModel::POSIX),
++      cl::values(
++          clEnumValN(ThreadModel::POSIX, "posix", "POSIX thread model"),
++          clEnumValN(ThreadModel::Single, "single", "Single thread model")));
++  CGBINDOPT(ThreadModel);
++
++  static cl::opt<CodeModel::Model> CodeModel(
++      "code-model", cl::desc("Choose code model"),
++      cl::values(clEnumValN(CodeModel::Tiny, "tiny", "Tiny code model"),
++                 clEnumValN(CodeModel::Small, "small", "Small code model"),
++                 clEnumValN(CodeModel::Kernel, "kernel", "Kernel code model"),
++                 clEnumValN(CodeModel::Medium, "medium", "Medium code model"),
++                 clEnumValN(CodeModel::Large, "large", "Large code model")));
++  CGBINDOPT(CodeModel);
++
++  static cl::opt<ExceptionHandling> ExceptionModel(
++      "exception-model", cl::desc("exception model"),
++      cl::init(ExceptionHandling::None),
++      cl::values(
++          clEnumValN(ExceptionHandling::None, "default",
++                     "default exception handling model"),
++          clEnumValN(ExceptionHandling::DwarfCFI, "dwarf",
++                     "DWARF-like CFI based exception handling"),
++          clEnumValN(ExceptionHandling::SjLj, "sjlj",
++                     "SjLj exception handling"),
++          clEnumValN(ExceptionHandling::ARM, "arm", "ARM EHABI exceptions"),
++          clEnumValN(ExceptionHandling::WinEH, "wineh",
++                     "Windows exception model"),
++          clEnumValN(ExceptionHandling::Wasm, "wasm",
++                     "WebAssembly exception handling")));
++  CGBINDOPT(ExceptionModel);
++
++  static cl::opt<CodeGenFileType> FileType(
++      "filetype", cl::init(CGFT_AssemblyFile),
++      cl::desc(
++          "Choose a file type (not all types are supported by all targets):"),
++      cl::values(
++          clEnumValN(CGFT_AssemblyFile, "asm", "Emit an assembly ('.s') file"),
++          clEnumValN(CGFT_ObjectFile, "obj",
++                     "Emit a native object ('.o') file"),
++          clEnumValN(CGFT_Null, "null",
++                     "Emit nothing, for performance testing")));
++  CGBINDOPT(FileType);
++
++  static cl::opt<FramePointer::FP> FramePointerUsage(
++      "frame-pointer",
++      cl::desc("Specify frame pointer elimination optimization"),
++      cl::init(FramePointer::None),
++      cl::values(
++          clEnumValN(FramePointer::All, "all",
++                     "Disable frame pointer elimination"),
++          clEnumValN(FramePointer::NonLeaf, "non-leaf",
++                     "Disable frame pointer elimination for non-leaf frame"),
++          clEnumValN(FramePointer::None, "none",
++                     "Enable frame pointer elimination")));
++  CGBINDOPT(FramePointerUsage);
++
++  static cl::opt<bool> EnableUnsafeFPMath(
++      "enable-unsafe-fp-math",
++      cl::desc("Enable optimizations that may decrease FP precision"),
++      cl::init(false));
++  CGBINDOPT(EnableUnsafeFPMath);
++
++  static cl::opt<bool> EnableNoInfsFPMath(
++      "enable-no-infs-fp-math",
++      cl::desc("Enable FP math optimizations that assume no +-Infs"),
++      cl::init(false));
++  CGBINDOPT(EnableNoInfsFPMath);
++
++  static cl::opt<bool> EnableNoNaNsFPMath(
++      "enable-no-nans-fp-math",
++      cl::desc("Enable FP math optimizations that assume no NaNs"),
++      cl::init(false));
++  CGBINDOPT(EnableNoNaNsFPMath);
++
++  static cl::opt<bool> EnableNoSignedZerosFPMath(
++      "enable-no-signed-zeros-fp-math",
++      cl::desc("Enable FP math optimizations that assume "
++               "the sign of 0 is insignificant"),
++      cl::init(false));
++  CGBINDOPT(EnableNoSignedZerosFPMath);
++
++  static cl::opt<bool> EnableNoTrappingFPMath(
++      "enable-no-trapping-fp-math",
++      cl::desc("Enable setting the FP exceptions build "
++               "attribute not to use exceptions"),
++      cl::init(false));
++  CGBINDOPT(EnableNoTrappingFPMath);
++
++  static cl::opt<FPDenormal::DenormalMode> DenormalFPMath(
++      "denormal-fp-math",
++      cl::desc(
++          "Select which denormal numbers the code is permitted to require"),
++      cl::init(FPDenormal::IEEE),
++      cl::values(
++          clEnumValN(FPDenormal::IEEE, "ieee", "IEEE 754 denormal numbers"),
++          clEnumValN(FPDenormal::PreserveSign, "preserve-sign",
++                     "the sign of a  flushed-to-zero number is preserved "
++                     "in the sign of 0"),
++          clEnumValN(FPDenormal::PositiveZero, "positive-zero",
++                     "denormals are flushed to positive zero")));
++  CGBINDOPT(DenormalFPMath);
++
++  static cl::opt<bool> EnableHonorSignDependentRoundingFPMath(
++      "enable-sign-dependent-rounding-fp-math", cl::Hidden,
++      cl::desc("Force codegen to assume rounding mode can change dynamically"),
++      cl::init(false));
++  CGBINDOPT(EnableHonorSignDependentRoundingFPMath);
++
++  static cl::opt<FloatABI::ABIType> FloatABIForCalls(
++      "float-abi", cl::desc("Choose float ABI type"),
++      cl::init(FloatABI::Default),
++      cl::values(clEnumValN(FloatABI::Default, "default",
++                            "Target default float ABI type"),
++                 clEnumValN(FloatABI::Soft, "soft",
++                            "Soft float ABI (implied by -soft-float)"),
++                 clEnumValN(FloatABI::Hard, "hard",
++                            "Hard float ABI (uses FP registers)")));
++  CGBINDOPT(FloatABIForCalls);
++
++  static cl::opt<FPOpFusion::FPOpFusionMode> FuseFPOps(
++      "fp-contract", cl::desc("Enable aggressive formation of fused FP ops"),
++      cl::init(FPOpFusion::Standard),
++      cl::values(
++          clEnumValN(FPOpFusion::Fast, "fast",
++                     "Fuse FP ops whenever profitable"),
++          clEnumValN(FPOpFusion::Standard, "on", "Only fuse 'blessed' FP ops."),
++          clEnumValN(FPOpFusion::Strict, "off",
++                     "Only fuse FP ops when the result won't be affected.")));
++  CGBINDOPT(FuseFPOps);
++
++  static cl::opt<bool> DontPlaceZerosInBSS(
++      "nozero-initialized-in-bss",
++      cl::desc("Don't place zero-initialized symbols into bss section"),
++      cl::init(false));
++  CGBINDOPT(DontPlaceZerosInBSS);
++
++  static cl::opt<bool> EnableGuaranteedTailCallOpt(
++      "tailcallopt",
++      cl::desc(
++          "Turn fastcc calls into tail calls by (potentially) changing ABI."),
++      cl::init(false));
++  CGBINDOPT(EnableGuaranteedTailCallOpt);
++
++  static cl::opt<bool> DisableTailCalls(
++      "disable-tail-calls", cl::desc("Never emit tail calls"), cl::init(false));
++  CGBINDOPT(DisableTailCalls);
++
++  static cl::opt<bool> StackSymbolOrdering(
++      "stack-symbol-ordering", cl::desc("Order local stack symbols."),
++      cl::init(true));
++  CGBINDOPT(StackSymbolOrdering);
++
++  static cl::opt<unsigned> OverrideStackAlignment(
++      "stack-alignment", cl::desc("Override default stack alignment"),
++      cl::init(0));
++  CGBINDOPT(OverrideStackAlignment);
++
++  static cl::opt<bool> StackRealign(
++      "stackrealign",
++      cl::desc("Force align the stack to the minimum alignment"),
++      cl::init(false));
++  CGBINDOPT(StackRealign);
++
++  static cl::opt<std::string> TrapFuncName(
++      "trap-func", cl::Hidden,
++      cl::desc("Emit a call to trap function rather than a trap instruction"),
++      cl::init(""));
++  CGBINDOPT(TrapFuncName);
++
++  static cl::opt<bool> UseCtors("use-ctors",
++                                cl::desc("Use .ctors instead of .init_array."),
++                                cl::init(false));
++  CGBINDOPT(UseCtors);
++
++  static cl::opt<bool> RelaxELFRelocations(
++      "relax-elf-relocations",
++      cl::desc(
++          "Emit GOTPCRELX/REX_GOTPCRELX instead of GOTPCREL on x86-64 ELF"),
++      cl::init(false));
++  CGBINDOPT(RelaxELFRelocations);
++
++  static cl::opt<bool> DataSections(
++      "data-sections", cl::desc("Emit data into separate sections"),
++      cl::init(false));
++  CGBINDOPT(DataSections);
++
++  static cl::opt<bool> FunctionSections(
++      "function-sections", cl::desc("Emit functions into separate sections"),
++      cl::init(false));
++  CGBINDOPT(FunctionSections);
++
++  static cl::opt<std::string> BBSections(
++      "basicblock-sections",
++      cl::desc("Emit basic blocks into separate sections"),
++      cl::value_desc("all | <function list (file)> | labels | none"),
++      cl::init("none"));
++  CGBINDOPT(BBSections);
++
++  static cl::opt<unsigned> TLSSize(
++      "tls-size", cl::desc("Bit size of immediate TLS offsets"), cl::init(0));
++  CGBINDOPT(TLSSize);
++
++  static cl::opt<bool> EmulatedTLS(
++      "emulated-tls", cl::desc("Use emulated TLS model"), cl::init(false));
++  CGBINDOPT(EmulatedTLS);
++
++  static cl::opt<bool> UniqueSectionNames(
++      "unique-section-names", cl::desc("Give unique names to every section"),
++      cl::init(true));
++  CGBINDOPT(UniqueSectionNames);
++
++  static cl::opt<bool> UniqueBBSectionNames(
++      "unique-bb-section-names",
++      cl::desc("Give unique names to every basic block section"),
++      cl::init(false));
++  CGBINDOPT(UniqueBBSectionNames);
++
++  static cl::opt<EABI> EABIVersion(
++      "meabi", cl::desc("Set EABI type (default depends on triple):"),
++      cl::init(EABI::Default),
++      cl::values(
++          clEnumValN(EABI::Default, "default", "Triple default EABI version"),
++          clEnumValN(EABI::EABI4, "4", "EABI version 4"),
++          clEnumValN(EABI::EABI5, "5", "EABI version 5"),
++          clEnumValN(EABI::GNU, "gnu", "EABI GNU")));
++  CGBINDOPT(EABIVersion);
++
++  static cl::opt<DebuggerKind> DebuggerTuningOpt(
++      "debugger-tune", cl::desc("Tune debug info for a particular debugger"),
++      cl::init(DebuggerKind::Default),
++      cl::values(
++          clEnumValN(DebuggerKind::GDB, "gdb", "gdb"),
++          clEnumValN(DebuggerKind::LLDB, "lldb", "lldb"),
++          clEnumValN(DebuggerKind::SCE, "sce", "SCE targets (e.g. PS4)")));
++  CGBINDOPT(DebuggerTuningOpt);
++
++  static cl::opt<bool> EnableStackSizeSection(
++      "stack-size-section",
++      cl::desc("Emit a section containing stack size metadata"),
++      cl::init(false));
++  CGBINDOPT(EnableStackSizeSection);
++
++  static cl::opt<bool> EnableAddrsig(
++      "addrsig", cl::desc("Emit an address-significance table"),
++      cl::init(false));
++  CGBINDOPT(EnableAddrsig);
++
++  static cl::opt<bool> EmitCallSiteInfo(
++      "emit-call-site-info",
++      cl::desc(
++          "Emit call site debug information, if debug information is enabled."),
++      cl::init(false));
++  CGBINDOPT(EmitCallSiteInfo);
++
++  static cl::opt<bool> EnableDebugEntryValues(
++      "debug-entry-values",
++      cl::desc("Emit debug info about parameter's entry values"),
++      cl::init(false));
++  CGBINDOPT(EnableDebugEntryValues);
++
++  static cl::opt<bool> ForceDwarfFrameSection(
++      "force-dwarf-frame-section",
++      cl::desc("Always emit a debug frame section."), cl::init(false));
++  CGBINDOPT(ForceDwarfFrameSection);
++
++#undef CGBINDOPT
++
++  mc::RegisterMCTargetOptionsFlags();
++}
++
++llvm::BasicBlockSection
++codegen::getBBSectionsMode(llvm::TargetOptions &Options) {
++  if (getBBSections() == "all")
++    return BasicBlockSection::All;
++  else if (getBBSections() == "labels")
++    return BasicBlockSection::Labels;
++  else if (getBBSections() == "none")
++    return BasicBlockSection::None;
++  else {
++    ErrorOr<std::unique_ptr<MemoryBuffer>> MBOrErr =
++        MemoryBuffer::getFile(getBBSections());
++    if (!MBOrErr) {
++      errs() << "Error loading basic block sections function list file: "
++             << MBOrErr.getError().message() << "\n";
++    } else {
++      Options.BBSectionsFuncListBuf = std::move(*MBOrErr);
++    }
++    return BasicBlockSection::List;
++  }
++}
++
++// Common utility function tightly tied to the options listed here. Initializes
++// a TargetOptions object with CodeGen flags and returns it.
++TargetOptions codegen::InitTargetOptionsFromCodeGenFlags() {
++  TargetOptions Options;
++  Options.AllowFPOpFusion = getFuseFPOps();
++  Options.UnsafeFPMath = getEnableUnsafeFPMath();
++  Options.NoInfsFPMath = getEnableNoInfsFPMath();
++  Options.NoNaNsFPMath = getEnableNoNaNsFPMath();
++  Options.NoSignedZerosFPMath = getEnableNoSignedZerosFPMath();
++  Options.NoTrappingFPMath = getEnableNoTrappingFPMath();
++  Options.FPDenormalMode = getDenormalFPMath();
++  Options.HonorSignDependentRoundingFPMathOption =
++      getEnableHonorSignDependentRoundingFPMath();
++  if (getFloatABIForCalls() != FloatABI::Default)
++    Options.FloatABIType = getFloatABIForCalls();
++  Options.NoZerosInBSS = getDontPlaceZerosInBSS();
++  Options.GuaranteedTailCallOpt = getEnableGuaranteedTailCallOpt();
++  Options.StackAlignmentOverride = getOverrideStackAlignment();
++  Options.StackSymbolOrdering = getStackSymbolOrdering();
++  Options.UseInitArray = !getUseCtors();
++  Options.RelaxELFRelocations = getRelaxELFRelocations();
++  Options.DataSections = getDataSections();
++  Options.FunctionSections = getFunctionSections();
++  Options.BBSections = getBBSectionsMode(Options);
++  Options.UniqueSectionNames = getUniqueSectionNames();
++  Options.UniqueBBSectionNames = getUniqueBBSectionNames();
++  Options.TLSSize = getTLSSize();
++  Options.EmulatedTLS = getEmulatedTLS();
++  Options.ExplicitEmulatedTLS = EmulatedTLSView->getNumOccurrences() > 0;
++  Options.ExceptionModel = getExceptionModel();
++  Options.EmitStackSizeSection = getEnableStackSizeSection();
++  Options.EmitAddrsig = getEnableAddrsig();
++  Options.EmitCallSiteInfo = getEmitCallSiteInfo();
++  Options.EnableDebugEntryValues = getEnableDebugEntryValues();
++  Options.ForceDwarfFrameSection = getForceDwarfFrameSection();
++
++  Options.MCOptions = mc::InitMCTargetOptionsFromFlags();
++
++  Options.ThreadModel = getThreadModel();
++  Options.EABIVersion = getEABIVersion();
++  Options.DebuggerTuning = getDebuggerTuningOpt();
++
++  return Options;
++}
++
++std::string codegen::getCPUStr() {
++  // If user asked for the 'native' CPU, autodetect here. If autodection fails,
++  // this will set the CPU to an empty string which tells the target to
++  // pick a basic default.
++  if (getMCPU() == "native")
++    return std::string(sys::getHostCPUName());
++
++  return getMCPU();
++}
++
++std::string codegen::getFeaturesStr() {
++  SubtargetFeatures Features;
++
++  // If user asked for the 'native' CPU, we need to autodetect features.
++  // This is necessary for x86 where the CPU might not support all the
++  // features the autodetected CPU name lists in the target. For example,
++  // not all Sandybridge processors support AVX.
++  if (getMCPU() == "native") {
++    StringMap<bool> HostFeatures;
++    if (sys::getHostCPUFeatures(HostFeatures))
++      for (auto &F : HostFeatures)
++        Features.AddFeature(F.first(), F.second);
++  }
++
++  for (auto const &MAttr : getMAttrs())
++    Features.AddFeature(MAttr);
++
++  return Features.getString();
++}
++
++std::vector<std::string> codegen::getFeatureList() {
++  SubtargetFeatures Features;
++
++  // If user asked for the 'native' CPU, we need to autodetect features.
++  // This is necessary for x86 where the CPU might not support all the
++  // features the autodetected CPU name lists in the target. For example,
++  // not all Sandybridge processors support AVX.
++  if (getMCPU() == "native") {
++    StringMap<bool> HostFeatures;
++    if (sys::getHostCPUFeatures(HostFeatures))
++      for (auto &F : HostFeatures)
++        Features.AddFeature(F.first(), F.second);
++  }
++
++  for (auto const &MAttr : getMAttrs())
++    Features.AddFeature(MAttr);
++
++  return Features.getFeatures();
++}
++
++void codegen::renderBoolStringAttr(AttrBuilder &B, StringRef Name, bool Val) {
++  B.addAttribute(Name, Val ? "true" : "false");
++}
++
++#define HANDLE_BOOL_ATTR(CL, AttrName)                                         \
++  do {                                                                         \
++    if (CL->getNumOccurrences() > 0 && !F.hasFnAttribute(AttrName))            \
++      renderBoolStringAttr(NewAttrs, AttrName, *CL);                           \
++  } while (0)
++
++/// Set function attributes of function \p F based on CPU, Features, and command
++/// line flags.
++void codegen::setFunctionAttributes(StringRef CPU, StringRef Features,
++                                    Function &F) {
++  auto &Ctx = F.getContext();
++  AttributeList Attrs = F.getAttributes();
++  AttrBuilder NewAttrs;
++
++  if (!CPU.empty() && !F.hasFnAttribute("target-cpu"))
++    NewAttrs.addAttribute("target-cpu", CPU);
++  if (!Features.empty()) {
++    // Append the command line features to any that are already on the function.
++    StringRef OldFeatures =
++        F.getFnAttribute("target-features").getValueAsString();
++    if (OldFeatures.empty())
++      NewAttrs.addAttribute("target-features", Features);
++    else {
++      SmallString<256> Appended(OldFeatures);
++      Appended.push_back(',');
++      Appended.append(Features);
++      NewAttrs.addAttribute("target-features", Appended);
++    }
++  }
++  if (FramePointerUsageView->getNumOccurrences() > 0 &&
++      !F.hasFnAttribute("frame-pointer")) {
++    if (getFramePointerUsage() == FramePointer::All)
++      NewAttrs.addAttribute("frame-pointer", "all");
++    else if (getFramePointerUsage() == FramePointer::NonLeaf)
++      NewAttrs.addAttribute("frame-pointer", "non-leaf");
++    else if (getFramePointerUsage() == FramePointer::None)
++      NewAttrs.addAttribute("frame-pointer", "none");
++  }
++  if (DisableTailCallsView->getNumOccurrences() > 0)
++    NewAttrs.addAttribute("disable-tail-calls",
++                          toStringRef(getDisableTailCalls()));
++  if (getStackRealign())
++    NewAttrs.addAttribute("stackrealign");
++
++  HANDLE_BOOL_ATTR(EnableUnsafeFPMathView, "unsafe-fp-math");
++  HANDLE_BOOL_ATTR(EnableNoInfsFPMathView, "no-infs-fp-math");
++  HANDLE_BOOL_ATTR(EnableNoNaNsFPMathView, "no-nans-fp-math");
++  HANDLE_BOOL_ATTR(EnableNoSignedZerosFPMathView, "no-signed-zeros-fp-math");
++
++  if (TrapFuncNameView->getNumOccurrences() > 0)
++    for (auto &B : F)
++      for (auto &I : B)
++        if (auto *Call = dyn_cast<CallInst>(&I))
++          if (const auto *F = Call->getCalledFunction())
++            if (F->getIntrinsicID() == Intrinsic::debugtrap ||
++                F->getIntrinsicID() == Intrinsic::trap)
++              Call->addAttribute(
++                  AttributeList::FunctionIndex,
++                  Attribute::get(Ctx, "trap-func-name", getTrapFuncName()));
++
++  // Let NewAttrs override Attrs.
++  F.setAttributes(
++      Attrs.addAttributes(Ctx, AttributeList::FunctionIndex, NewAttrs));
++}
++
++/// Set function attributes of functions in Module M based on CPU,
++/// Features, and command line flags.
++void codegen::setFunctionAttributes(StringRef CPU, StringRef Features,
++                                    Module &M) {
++  for (Function &F : M)
++    setFunctionAttributes(CPU, Features, F);
++}
+diff --git a/llvm/lib/MC/CMakeLists.txt b/llvm/lib/MC/CMakeLists.txt
+index de2e47d8d9b2..ab809daf5273 100644
+--- a/llvm/lib/MC/CMakeLists.txt
++++ b/llvm/lib/MC/CMakeLists.txt
+@@ -44,6 +44,7 @@ add_llvm_component_library(LLVMMC
+   MCSymbol.cpp
+   MCSymbolELF.cpp
+   MCTargetOptions.cpp
++  MCTargetOptionsCommandFlags.cpp
+   MCValue.cpp
+   MCWasmObjectTargetWriter.cpp
+   MCWasmStreamer.cpp
+diff --git a/llvm/lib/MC/MCTargetOptionsCommandFlags.cpp b/llvm/lib/MC/MCTargetOptionsCommandFlags.cpp
+new file mode 100644
+index 000000000000..3ca34061241a
+--- /dev/null
++++ b/llvm/lib/MC/MCTargetOptionsCommandFlags.cpp
+@@ -0,0 +1,105 @@
++//===-- MCTargetOptionsCommandFlags.cpp --------------------------*- C++
++//-*-===//
++//
++// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
++// See https://llvm.org/LICENSE.txt for license information.
++// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
++//
++//===----------------------------------------------------------------------===//
++//
++// This file contains machine code-specific flags that are shared between
++// different command line tools.
++//
++//===----------------------------------------------------------------------===//
++
++#include "llvm/MC/MCTargetOptionsCommandFlags.h"
++
++using namespace llvm;
++
++#define MCOPT(TY, NAME)                                                        \
++  static cl::opt<TY> *NAME##View;                                              \
++  TY llvm::mc::get##NAME() {                                                   \
++    assert(NAME##View && "RegisterMCTargetOptionsFlags not created.");         \
++    return *NAME##View;                                                        \
++  }
++
++#define MCOPT_EXP(TY, NAME)                                                    \
++  MCOPT(TY, NAME)                                                              \
++  Optional<TY> llvm::mc::getExplicit##NAME() {                                 \
++    if (NAME##View->getNumOccurrences()) {                                     \
++      TY res = *NAME##View;                                                    \
++      return res;                                                              \
++    }                                                                          \
++    return None;                                                               \
++  }
++
++MCOPT_EXP(bool, RelaxAll)
++MCOPT(bool, IncrementalLinkerCompatible)
++MCOPT(int, DwarfVersion)
++MCOPT(bool, ShowMCInst)
++MCOPT(bool, FatalWarnings)
++MCOPT(bool, NoWarn)
++MCOPT(bool, NoDeprecatedWarn)
++MCOPT(std::string, ABIName)
++
++llvm::mc::RegisterMCTargetOptionsFlags::RegisterMCTargetOptionsFlags() {
++#define MCBINDOPT(NAME)                                                        \
++  do {                                                                         \
++    NAME##View = std::addressof(NAME);                                         \
++  } while (0)
++
++  static cl::opt<bool> RelaxAll(
++      "mc-relax-all", cl::desc("When used with filetype=obj, relax all fixups "
++                               "in the emitted object file"));
++  MCBINDOPT(RelaxAll);
++
++  static cl::opt<bool> IncrementalLinkerCompatible(
++      "incremental-linker-compatible",
++      cl::desc(
++          "When used with filetype=obj, "
++          "emit an object file which can be used with an incremental linker"));
++  MCBINDOPT(IncrementalLinkerCompatible);
++
++  static cl::opt<int> DwarfVersion("dwarf-version", cl::desc("Dwarf version"),
++                                   cl::init(0));
++  MCBINDOPT(DwarfVersion);
++
++  static cl::opt<bool> ShowMCInst(
++      "asm-show-inst",
++      cl::desc("Emit internal instruction representation to assembly file"));
++  MCBINDOPT(ShowMCInst);
++
++  static cl::opt<bool> FatalWarnings("fatal-warnings",
++                                     cl::desc("Treat warnings as errors"));
++  MCBINDOPT(FatalWarnings);
++
++  static cl::opt<bool> NoWarn("no-warn", cl::desc("Suppress all warnings"));
++  static cl::alias NoWarnW("W", cl::desc("Alias for --no-warn"),
++                           cl::aliasopt(NoWarn));
++  MCBINDOPT(NoWarn);
++
++  static cl::opt<bool> NoDeprecatedWarn(
++      "no-deprecated-warn", cl::desc("Suppress all deprecated warnings"));
++  MCBINDOPT(NoDeprecatedWarn);
++
++  static cl::opt<std::string> ABIName(
++      "target-abi", cl::Hidden,
++      cl::desc("The name of the ABI to be targeted from the backend."),
++      cl::init(""));
++  MCBINDOPT(ABIName);
++
++#undef MCBINDOPT
++}
++
++MCTargetOptions llvm::mc::InitMCTargetOptionsFromFlags() {
++  MCTargetOptions Options;
++  Options.MCRelaxAll = getRelaxAll();
++  Options.MCIncrementalLinkerCompatible = getIncrementalLinkerCompatible();
++  Options.DwarfVersion = getDwarfVersion();
++  Options.ShowMCInst = getShowMCInst();
++  Options.ABIName = getABIName();
++  Options.MCFatalWarnings = getFatalWarnings();
++  Options.MCNoWarn = getNoWarn();
++  Options.MCNoDeprecatedWarn = getNoDeprecatedWarn();
++  return Options;
++}
+diff --git a/llvm/tools/dsymutil/DwarfStreamer.cpp b/llvm/tools/dsymutil/DwarfStreamer.cpp
+index 3e132c29eada..eb068effbc71 100644
+--- a/llvm/tools/dsymutil/DwarfStreamer.cpp
++++ b/llvm/tools/dsymutil/DwarfStreamer.cpp
+@@ -13,13 +13,16 @@
+ #include "llvm/DWARFLinker/DWARFLinkerCompileUnit.h"
+ #include "llvm/DebugInfo/DWARF/DWARFContext.h"
+ #include "llvm/MC/MCTargetOptions.h"
+-#include "llvm/MC/MCTargetOptionsCommandFlags.inc"
++#include "llvm/MC/MCTargetOptionsCommandFlags.h"
+ #include "llvm/Support/LEB128.h"
+ #include "llvm/Support/TargetRegistry.h"
+ #include "llvm/Target/TargetMachine.h"
+ #include "llvm/Target/TargetOptions.h"
+ 
+ namespace llvm {
++
++static mc::RegisterMCTargetOptionsFlags MOF;
++
+ namespace dsymutil {
+ 
+ /// Retrieve the section named \a SecName in \a Obj.
+@@ -61,7 +64,7 @@ bool DwarfStreamer::init(Triple TheTriple) {
+   if (!MRI)
+     return error(Twine("no register info for target ") + TripleName, Context);
+ 
+-  MCTargetOptions MCOptions = InitMCTargetOptionsFromFlags();
++  MCTargetOptions MCOptions = mc::InitMCTargetOptionsFromFlags();
+   MAI.reset(TheTarget->createMCAsmInfo(*MRI, TripleName, MCOptions));
+   if (!MAI)
+     return error("no asm info for target " + TripleName, Context);
+diff --git a/llvm/tools/gold/gold-plugin.cpp b/llvm/tools/gold/gold-plugin.cpp
+index 406079dad307..95e72b861197 100644
+--- a/llvm/tools/gold/gold-plugin.cpp
++++ b/llvm/tools/gold/gold-plugin.cpp
+@@ -14,7 +14,7 @@
+ #include "llvm/ADT/Statistic.h"
+ #include "llvm/Bitcode/BitcodeReader.h"
+ #include "llvm/Bitcode/BitcodeWriter.h"
+-#include "llvm/CodeGen/CommandFlags.inc"
++#include "llvm/CodeGen/CommandFlags.h"
+ #include "llvm/Config/config.h" // plugin-api.h requires HAVE_STDINT_H
+ #include "llvm/IR/Constants.h"
+ #include "llvm/IR/DiagnosticPrinter.h"
+@@ -50,6 +50,8 @@
+ using namespace llvm;
+ using namespace lto;
+ 
++static codegen::RegisterCodeGenFlags CodeGenFlags;
++
+ // FIXME: Remove when binutils 2.31 (containing gold 1.16) is the minimum
+ // required version.
+ typedef enum ld_plugin_status (*ld_plugin_get_wrap_symbols)(
+@@ -842,21 +844,21 @@ static std::unique_ptr<LTO> createLTO(IndexWriteCallback OnIndexWrite,
+   ThinBackend Backend;
+ 
+   Conf.CPU = options::mcpu;
+-  Conf.Options = InitTargetOptionsFromCodeGenFlags();
++  Conf.Options = codegen::InitTargetOptionsFromCodeGenFlags();
+ 
+   // Disable the new X86 relax relocations since gold might not support them.
+   // FIXME: Check the gold version or add a new option to enable them.
+   Conf.Options.RelaxELFRelocations = false;
+ 
+   // Toggle function/data sections.
+-  if (FunctionSections.getNumOccurrences() == 0)
++  if (!codegen::getExplicitFunctionSections())
+     Conf.Options.FunctionSections = SplitSections;
+-  if (DataSections.getNumOccurrences() == 0)
++  if (!codegen::getExplicitDataSections())
+     Conf.Options.DataSections = SplitSections;
+ 
+-  Conf.MAttrs = MAttrs;
+-  Conf.RelocModel = RelocationModel;
+-  Conf.CodeModel = getCodeModel();
++  Conf.MAttrs = codegen::getMAttrs();
++  Conf.RelocModel = codegen::getExplicitRelocModel();
++  Conf.CodeModel = codegen::getExplicitCodeModel();
+   Conf.CGOptLevel = getCGOptLevel();
+   Conf.DisableVerify = options::DisableVerify;
+   Conf.OptLevel = options::OptLevel;
+diff --git a/llvm/tools/llc/CMakeLists.txt b/llvm/tools/llc/CMakeLists.txt
+index 880deefa539c..479bc6b55b27 100644
+--- a/llvm/tools/llc/CMakeLists.txt
++++ b/llvm/tools/llc/CMakeLists.txt
+@@ -26,4 +26,5 @@ add_llvm_tool(llc
+   intrinsics_gen
+   SUPPORT_PLUGINS
+   )
++
+ export_executable_symbols(llc)
+diff --git a/llvm/tools/llc/llc.cpp b/llvm/tools/llc/llc.cpp
+index b35f8e853c30..4c41ed292fdc 100644
+--- a/llvm/tools/llc/llc.cpp
++++ b/llvm/tools/llc/llc.cpp
+@@ -15,7 +15,7 @@
+ #include "llvm/ADT/STLExtras.h"
+ #include "llvm/ADT/Triple.h"
+ #include "llvm/Analysis/TargetLibraryInfo.h"
+-#include "llvm/CodeGen/CommandFlags.inc"
++#include "llvm/CodeGen/CommandFlags.h"
+ #include "llvm/CodeGen/LinkAllAsmWriterComponents.h"
+ #include "llvm/CodeGen/LinkAllCodegenComponents.h"
+ #include "llvm/CodeGen/MIRParser/MIRParser.h"
+@@ -55,6 +55,8 @@
+ #include <memory>
+ using namespace llvm;
+ 
++static codegen::RegisterCodeGenFlags CGF;
++
+ // General options for llc.  Other pass-specific options are specified
+ // within the corresponding llc passes, and target-specific options
+ // and back-end code generation options are specified with the target machine.
+@@ -202,7 +204,7 @@ static std::unique_ptr<ToolOutputFile> GetOutputStream(const char *TargetName,
+       else
+         OutputFilename = IFN;
+ 
+-      switch (FileType) {
++      switch (codegen::getFileType()) {
+       case CGFT_AssemblyFile:
+         if (TargetName[0] == 'c') {
+           if (TargetName[1] == 0)
+@@ -229,7 +231,7 @@ static std::unique_ptr<ToolOutputFile> GetOutputStream(const char *TargetName,
+ 
+   // Decide if we need "binary" output.
+   bool Binary = false;
+-  switch (FileType) {
++  switch (codegen::getFileType()) {
+   case CGFT_AssemblyFile:
+     break;
+   case CGFT_ObjectFile:
+@@ -395,14 +397,16 @@ static int compileModule(char **argv, LLVMContext &Context) {
+   std::unique_ptr<Module> M;
+   std::unique_ptr<MIRParser> MIR;
+   Triple TheTriple;
+-  std::string CPUStr = getCPUStr(), FeaturesStr = getFeaturesStr();
++  std::string CPUStr = codegen::getCPUStr(),
++              FeaturesStr = codegen::getFeaturesStr();
+ 
+   // Set attributes on functions as loaded from MIR from command line arguments.
+   auto setMIRFunctionAttributes = [&CPUStr, &FeaturesStr](Function &F) {
+-    setFunctionAttributes(CPUStr, FeaturesStr, F);
++    codegen::setFunctionAttributes(CPUStr, FeaturesStr, F);
+   };
+ 
+-  bool SkipModule = MCPU == "help" ||
++  auto MAttrs = codegen::getMAttrs();
++  bool SkipModule = codegen::getMCPU() == "help" ||
+                     (!MAttrs.empty() && MAttrs.front() == "help");
+ 
+   // If user just wants to list available options, skip module loading
+@@ -433,8 +437,8 @@ static int compileModule(char **argv, LLVMContext &Context) {
+ 
+   // Get the target specific parser.
+   std::string Error;
+-  const Target *TheTarget = TargetRegistry::lookupTarget(MArch, TheTriple,
+-                                                         Error);
++  const Target *TheTarget =
++      TargetRegistry::lookupTarget(codegen::getMArch(), TheTriple, Error);
+   if (!TheTarget) {
+     WithColor::error(errs(), argv[0]) << Error;
+     return 1;
+@@ -452,7 +456,7 @@ static int compileModule(char **argv, LLVMContext &Context) {
+   case '3': OLvl = CodeGenOpt::Aggressive; break;
+   }
+ 
+-  TargetOptions Options = InitTargetOptionsFromCodeGenFlags();
++  TargetOptions Options = codegen::InitTargetOptionsFromCodeGenFlags();
+   Options.DisableIntegratedAS = NoIntegratedAssembler;
+   Options.MCOptions.ShowMCEncoding = ShowMCEncoding;
+   Options.MCOptions.MCUseDwarfDirectory = EnableDwarfDirectory;
+@@ -462,8 +466,8 @@ static int compileModule(char **argv, LLVMContext &Context) {
+   Options.MCOptions.SplitDwarfFile = SplitDwarfFile;
+ 
+   std::unique_ptr<TargetMachine> Target(TheTarget->createTargetMachine(
+-      TheTriple.getTriple(), CPUStr, FeaturesStr, Options, getRelocModel(),
+-      getCodeModel(), OLvl));
++      TheTriple.getTriple(), CPUStr, FeaturesStr, Options, codegen::getExplicitRelocModel(),
++      codegen::getExplicitCodeModel(), OLvl));
+ 
+   assert(Target && "Could not allocate target machine!");
+ 
+@@ -474,8 +478,8 @@ static int compileModule(char **argv, LLVMContext &Context) {
+     return 0;
+ 
+   assert(M && "Should have exited if we didn't have a module!");
+-  if (FloatABIForCalls != FloatABI::Default)
+-    Options.FloatABIType = FloatABIForCalls;
++  if (codegen::getFloatABIForCalls() != FloatABI::Default)
++    Options.FloatABIType = codegen::getFloatABIForCalls();
+ 
+   // Figure out where we are going to send the output.
+   std::unique_ptr<ToolOutputFile> Out =
+@@ -522,10 +526,9 @@ static int compileModule(char **argv, LLVMContext &Context) {
+ 
+   // Override function attributes based on CPUStr, FeaturesStr, and command line
+   // flags.
+-  setFunctionAttributes(CPUStr, FeaturesStr, *M);
++  codegen::setFunctionAttributes(CPUStr, FeaturesStr, *M);
+ 
+-  if (RelaxAll.getNumOccurrences() > 0 &&
+-      FileType != CGFT_ObjectFile)
++  if (mc::getExplicitRelaxAll() && codegen::getFileType() != CGFT_ObjectFile)
+     WithColor::warning(errs(), argv[0])
+         << ": warning: ignoring -mc-relax-all because filetype != obj";
+ 
+@@ -536,7 +539,7 @@ static int compileModule(char **argv, LLVMContext &Context) {
+     // so we can memcmp the contents in CompileTwice mode
+     SmallVector<char, 0> Buffer;
+     std::unique_ptr<raw_svector_ostream> BOS;
+-    if ((FileType != CGFT_AssemblyFile &&
++    if ((codegen::getFileType() != CGFT_AssemblyFile &&
+          !Out->os().supportsSeeking()) ||
+         CompileTwice) {
+       BOS = std::make_unique<raw_svector_ostream>(Buffer);
+@@ -575,9 +578,9 @@ static int compileModule(char **argv, LLVMContext &Context) {
+       TPC.setInitialized();
+       PM.add(createPrintMIRPass(*OS));
+       PM.add(createFreeMachineFunctionPass());
+-    } else if (Target->addPassesToEmitFile(PM, *OS,
+-                                           DwoOut ? &DwoOut->os() : nullptr,
+-                                           FileType, NoVerify, MMIWP)) {
++    } else if (Target->addPassesToEmitFile(
++                   PM, *OS, DwoOut ? &DwoOut->os() : nullptr,
++                   codegen::getFileType(), NoVerify, MMIWP)) {
+       WithColor::warning(errs(), argv[0])
+           << "target does not support generation of this"
+           << " file type!\n";
+diff --git a/llvm/tools/lli/CMakeLists.txt b/llvm/tools/lli/CMakeLists.txt
+index db163ad131e8..bc6ef213b8fd 100644
+--- a/llvm/tools/lli/CMakeLists.txt
++++ b/llvm/tools/lli/CMakeLists.txt
+@@ -53,4 +53,5 @@ add_llvm_tool(lli
+   DEPENDS
+   intrinsics_gen
+   )
++
+ export_executable_symbols(lli)
+diff --git a/llvm/tools/lli/lli.cpp b/llvm/tools/lli/lli.cpp
+index 0efd0df2c12b..b6a4e3f2833c 100644
+--- a/llvm/tools/lli/lli.cpp
++++ b/llvm/tools/lli/lli.cpp
+@@ -16,7 +16,7 @@
+ #include "llvm/ADT/StringExtras.h"
+ #include "llvm/ADT/Triple.h"
+ #include "llvm/Bitcode/BitcodeReader.h"
+-#include "llvm/CodeGen/CommandFlags.inc"
++#include "llvm/CodeGen/CommandFlags.h"
+ #include "llvm/CodeGen/LinkAllCodegenComponents.h"
+ #include "llvm/Config/llvm-config.h"
+ #include "llvm/ExecutionEngine/GenericValue.h"
+@@ -67,6 +67,8 @@
+ 
+ using namespace llvm;
+ 
++static codegen::RegisterCodeGenFlags CGF;
++
+ #define DEBUG_TYPE "lli"
+ 
+ namespace {
+@@ -410,13 +412,13 @@ int main(int argc, char **argv, char * const *envp) {
+ 
+   std::string ErrorMsg;
+   EngineBuilder builder(std::move(Owner));
+-  builder.setMArch(MArch);
+-  builder.setMCPU(getCPUStr());
+-  builder.setMAttrs(getFeatureList());
+-  if (RelocModel.getNumOccurrences())
+-    builder.setRelocationModel(RelocModel);
+-  if (CMModel.getNumOccurrences())
+-    builder.setCodeModel(CMModel);
++  builder.setMArch(codegen::getMArch());
++  builder.setMCPU(codegen::getCPUStr());
++  builder.setMAttrs(codegen::getFeatureList());
++  if (auto RM = codegen::getExplicitRelocModel())
++    builder.setRelocationModel(RM.getValue());
++  if (auto CM = codegen::getExplicitCodeModel())
++    builder.setCodeModel(CM.getValue());
+   builder.setErrorStr(&ErrorMsg);
+   builder.setEngineKind(ForceInterpreter
+                         ? EngineKind::Interpreter
+@@ -448,9 +450,9 @@ int main(int argc, char **argv, char * const *envp) {
+ 
+   builder.setOptLevel(getOptLevel());
+ 
+-  TargetOptions Options = InitTargetOptionsFromCodeGenFlags();
+-  if (FloatABIForCalls != FloatABI::Default)
+-    Options.FloatABIType = FloatABIForCalls;
++  TargetOptions Options = codegen::InitTargetOptionsFromCodeGenFlags();
++  if (codegen::getFloatABIForCalls() != FloatABI::Default)
++    Options.FloatABIType = codegen::getFloatABIForCalls();
+ 
+   builder.setTargetOptions(Options);
+ 
+@@ -762,18 +764,15 @@ int runOrcLazyJIT(const char *ProgName) {
+       TT.empty() ? ExitOnErr(orc::JITTargetMachineBuilder::detectHost())
+                  : orc::JITTargetMachineBuilder(Triple(TT)));
+ 
+-  if (!MArch.empty())
+-    Builder.getJITTargetMachineBuilder()->getTargetTriple().setArchName(MArch);
++  if (!codegen::getMArch().empty())
++    Builder.getJITTargetMachineBuilder()->getTargetTriple().setArchName(
++        codegen::getMArch());
+ 
+   Builder.getJITTargetMachineBuilder()
+-      ->setCPU(getCPUStr())
+-      .addFeatures(getFeatureList())
+-      .setRelocationModel(RelocModel.getNumOccurrences()
+-                              ? Optional<Reloc::Model>(RelocModel)
+-                              : None)
+-      .setCodeModel(CMModel.getNumOccurrences()
+-                        ? Optional<CodeModel::Model>(CMModel)
+-                        : None);
++      ->setCPU(codegen::getCPUStr())
++      .addFeatures(codegen::getFeatureList())
++      .setRelocationModel(codegen::getExplicitRelocModel())
++      .setCodeModel(codegen::getExplicitCodeModel());
+ 
+   Builder.setLazyCompileFailureAddr(
+       pointerToJITTargetAddress(exitOnLazyCallThroughFailure));
+diff --git a/llvm/tools/llvm-dwp/llvm-dwp.cpp b/llvm/tools/llvm-dwp/llvm-dwp.cpp
+index 23513ef8fb4e..8cfd433d5da3 100644
+--- a/llvm/tools/llvm-dwp/llvm-dwp.cpp
++++ b/llvm/tools/llvm-dwp/llvm-dwp.cpp
+@@ -27,7 +27,7 @@
+ #include "llvm/MC/MCObjectWriter.h"
+ #include "llvm/MC/MCRegisterInfo.h"
+ #include "llvm/MC/MCStreamer.h"
+-#include "llvm/MC/MCTargetOptionsCommandFlags.inc"
++#include "llvm/MC/MCTargetOptionsCommandFlags.h"
+ #include "llvm/Object/Decompressor.h"
+ #include "llvm/Object/ObjectFile.h"
+ #include "llvm/Support/DataExtractor.h"
+@@ -46,6 +46,8 @@
+ using namespace llvm;
+ using namespace llvm::object;
+ 
++static mc::RegisterMCTargetOptionsFlags MCTargetOptionsFlags;
++
+ cl::OptionCategory DwpCategory("Specific Options");
+ static cl::list<std::string> InputFiles(cl::Positional, cl::ZeroOrMore,
+                                         cl::desc("<input files>"),
+@@ -676,7 +678,7 @@ int main(int argc, char **argv) {
+   if (!MRI)
+     return error(Twine("no register info for target ") + TripleName, Context);
+ 
+-  MCTargetOptions MCOptions = InitMCTargetOptionsFromFlags();
++  MCTargetOptions MCOptions = llvm::mc::InitMCTargetOptionsFromFlags();
+   std::unique_ptr<MCAsmInfo> MAI(
+       TheTarget->createMCAsmInfo(*MRI, TripleName, MCOptions));
+   if (!MAI)
+diff --git a/llvm/tools/llvm-isel-fuzzer/llvm-isel-fuzzer.cpp b/llvm/tools/llvm-isel-fuzzer/llvm-isel-fuzzer.cpp
+index b71ed4a70566..627e9ab4c03f 100644
+--- a/llvm/tools/llvm-isel-fuzzer/llvm-isel-fuzzer.cpp
++++ b/llvm/tools/llvm-isel-fuzzer/llvm-isel-fuzzer.cpp
+@@ -14,7 +14,7 @@
+ #include "llvm/Analysis/TargetLibraryInfo.h"
+ #include "llvm/Bitcode/BitcodeReader.h"
+ #include "llvm/Bitcode/BitcodeWriter.h"
+-#include "llvm/CodeGen/CommandFlags.inc"
++#include "llvm/CodeGen/CommandFlags.h"
+ #include "llvm/FuzzMutate/FuzzerCLI.h"
+ #include "llvm/FuzzMutate/IRMutator.h"
+ #include "llvm/FuzzMutate/Operations.h"
+@@ -35,6 +35,8 @@
+ 
+ using namespace llvm;
+ 
++static codegen::RegisterCodeGenFlags CGF;
++
+ static cl::opt<char>
+ OptLevel("O",
+          cl::desc("Optimization level. [-O0, -O1, -O2, or -O3] "
+@@ -133,14 +135,15 @@ extern "C" LLVM_ATTRIBUTE_USED int LLVMFuzzerInitialize(int *argc,
+   // Get the target specific parser.
+   std::string Error;
+   const Target *TheTarget =
+-      TargetRegistry::lookupTarget(MArch, TheTriple, Error);
++      TargetRegistry::lookupTarget(codegen::getMArch(), TheTriple, Error);
+   if (!TheTarget) {
+     errs() << argv[0] << ": " << Error;
+     return 1;
+   }
+ 
+   // Set up the pipeline like llc does.
+-  std::string CPUStr = getCPUStr(), FeaturesStr = getFeaturesStr();
++  std::string CPUStr = codegen::getCPUStr(),
++              FeaturesStr = codegen::getFeaturesStr();
+ 
+   CodeGenOpt::Level OLvl = CodeGenOpt::Default;
+   switch (OptLevel) {
+@@ -154,10 +157,10 @@ extern "C" LLVM_ATTRIBUTE_USED int LLVMFuzzerInitialize(int *argc,
+   case '3': OLvl = CodeGenOpt::Aggressive; break;
+   }
+ 
+-  TargetOptions Options = InitTargetOptionsFromCodeGenFlags();
+-  TM.reset(TheTarget->createTargetMachine(TheTriple.getTriple(), CPUStr,
+-                                          FeaturesStr, Options, getRelocModel(),
+-                                          getCodeModel(), OLvl));
++  TargetOptions Options = codegen::InitTargetOptionsFromCodeGenFlags();
++  TM.reset(TheTarget->createTargetMachine(
++      TheTriple.getTriple(), CPUStr, FeaturesStr, Options,
++      codegen::getExplicitRelocModel(), codegen::getExplicitCodeModel(), OLvl));
+   assert(TM && "Could not allocate target machine!");
+ 
+   // Make sure we print the summary and the current unit when LLVM errors out.
+diff --git a/llvm/tools/llvm-lto/CMakeLists.txt b/llvm/tools/llvm-lto/CMakeLists.txt
+index 69868fb870c0..5128e713eecf 100644
+--- a/llvm/tools/llvm-lto/CMakeLists.txt
++++ b/llvm/tools/llvm-lto/CMakeLists.txt
+@@ -5,6 +5,7 @@ set(LLVM_LINK_COMPONENTS
+   AllTargetsInfos
+   BitReader
+   BitWriter
++  CodeGen
+   Core
+   IRReader
+   LTO
+@@ -17,7 +18,5 @@ set(LLVM_LINK_COMPONENTS
+ add_llvm_tool(llvm-lto
+   llvm-lto.cpp
+ 
+-  DEPENDS
+-  intrinsics_gen
++  DEPENDS intrinsics_gen
+   )
+-
+diff --git a/llvm/tools/llvm-lto/llvm-lto.cpp b/llvm/tools/llvm-lto/llvm-lto.cpp
+index b47e68e82850..7886426e8945 100644
+--- a/llvm/tools/llvm-lto/llvm-lto.cpp
++++ b/llvm/tools/llvm-lto/llvm-lto.cpp
+@@ -21,7 +21,7 @@
+ #include "llvm/ADT/Twine.h"
+ #include "llvm/Bitcode/BitcodeReader.h"
+ #include "llvm/Bitcode/BitcodeWriter.h"
+-#include "llvm/CodeGen/CommandFlags.inc"
++#include "llvm/CodeGen/CommandFlags.h"
+ #include "llvm/IR/DiagnosticInfo.h"
+ #include "llvm/IR/DiagnosticPrinter.h"
+ #include "llvm/IR/LLVMContext.h"
+@@ -62,6 +62,8 @@
+ 
+ using namespace llvm;
+ 
++static codegen::RegisterCodeGenFlags CGF;
++
+ static cl::opt<char>
+     OptLevel("O", cl::desc("Optimization level. [-O0, -O1, -O2, or -O3] "
+                            "(default = '-O2')"),
+@@ -521,7 +523,7 @@ public:
+   ThinLTOCodeGenerator ThinGenerator;
+ 
+   ThinLTOProcessing(const TargetOptions &Options) {
+-    ThinGenerator.setCodePICModel(getRelocModel());
++    ThinGenerator.setCodePICModel(codegen::getExplicitRelocModel());
+     ThinGenerator.setTargetOptions(Options);
+     ThinGenerator.setCacheDir(ThinLTOCacheDir);
+     ThinGenerator.setCachePruningInterval(ThinLTOCachePruningInterval);
+@@ -873,7 +875,7 @@ int main(int argc, char **argv) {
+   InitializeAllAsmParsers();
+ 
+   // set up the TargetOptions for the machine
+-  TargetOptions Options = InitTargetOptionsFromCodeGenFlags();
++  TargetOptions Options = codegen::InitTargetOptionsFromCodeGenFlags();
+ 
+   if (ListSymbolsOnly) {
+     listSymbols(Options);
+@@ -929,7 +931,7 @@ int main(int argc, char **argv) {
+   if (UseDiagnosticHandler)
+     CodeGen.setDiagnosticHandler(handleDiagnostics, nullptr);
+ 
+-  CodeGen.setCodePICModel(getRelocModel());
++  CodeGen.setCodePICModel(codegen::getExplicitRelocModel());
+   CodeGen.setFreestanding(EnableFreestanding);
+ 
+   CodeGen.setDebugInfo(LTO_DEBUG_MODEL_DWARF);
+@@ -980,22 +982,18 @@ int main(int argc, char **argv) {
+     CodeGen.addMustPreserveSymbol(KeptDSOSyms[i]);
+ 
+   // Set cpu and attrs strings for the default target/subtarget.
+-  CodeGen.setCpu(MCPU.c_str());
++  CodeGen.setCpu(codegen::getMCPU().c_str());
+ 
+   CodeGen.setOptLevel(OptLevel - '0');
+ 
+-  std::string attrs;
+-  for (unsigned i = 0; i < MAttrs.size(); ++i) {
+-    if (i > 0)
+-      attrs.append(",");
+-    attrs.append(MAttrs[i]);
+-  }
+-
+-  if (!attrs.empty())
++  auto MAttrs = codegen::getMAttrs();
++  if (!MAttrs.empty()) {
++    std::string attrs = join(MAttrs, ",");
+     CodeGen.setAttr(attrs);
++  }
+ 
+-  if (FileType.getNumOccurrences())
+-    CodeGen.setFileType(FileType);
++  if (auto FT = codegen::getExplicitFileType())
++    CodeGen.setFileType(FT.getValue());
+ 
+   if (!OutputFilename.empty()) {
+     if (!CodeGen.optimize(DisableVerify, DisableInline, DisableGVNLoadPRE,
+diff --git a/llvm/tools/llvm-lto2/CMakeLists.txt b/llvm/tools/llvm-lto2/CMakeLists.txt
+index fa2d8624fd94..4d3364175b04 100644
+--- a/llvm/tools/llvm-lto2/CMakeLists.txt
++++ b/llvm/tools/llvm-lto2/CMakeLists.txt
+@@ -4,6 +4,7 @@ set(LLVM_LINK_COMPONENTS
+   AllTargetsDescs
+   AllTargetsInfos
+   BitReader
++  CodeGen
+   Core
+   Linker
+   LTO
+diff --git a/llvm/tools/llvm-lto2/llvm-lto2.cpp b/llvm/tools/llvm-lto2/llvm-lto2.cpp
+index 67a677dd45fb..142ba605aa2a 100644
+--- a/llvm/tools/llvm-lto2/llvm-lto2.cpp
++++ b/llvm/tools/llvm-lto2/llvm-lto2.cpp
+@@ -16,7 +16,7 @@
+ //===----------------------------------------------------------------------===//
+ 
+ #include "llvm/Bitcode/BitcodeReader.h"
+-#include "llvm/CodeGen/CommandFlags.inc"
++#include "llvm/CodeGen/CommandFlags.h"
+ #include "llvm/IR/DiagnosticPrinter.h"
+ #include "llvm/LTO/Caching.h"
+ #include "llvm/LTO/LTO.h"
+@@ -29,6 +29,8 @@
+ using namespace llvm;
+ using namespace lto;
+ 
++static codegen::RegisterCodeGenFlags CGF;
++
+ static cl::opt<char>
+     OptLevel("O", cl::desc("Optimization level. [-O0, -O1, -O2, or -O3] "
+                            "(default = '-O2')"),
+@@ -217,12 +219,12 @@ static int run(int argc, char **argv) {
+       exit(1);
+   };
+ 
+-  Conf.CPU = MCPU;
+-  Conf.Options = InitTargetOptionsFromCodeGenFlags();
+-  Conf.MAttrs = MAttrs;
+-  if (auto RM = getRelocModel())
+-    Conf.RelocModel = *RM;
+-  Conf.CodeModel = getCodeModel();
++  Conf.CPU = codegen::getMCPU();
++  Conf.Options = codegen::InitTargetOptionsFromCodeGenFlags();
++  Conf.MAttrs = codegen::getMAttrs();
++  if (auto RM = codegen::getExplicitRelocModel())
++    Conf.RelocModel = RM.getValue();
++  Conf.CodeModel = codegen::getExplicitCodeModel();
+ 
+   Conf.DebugPassManager = DebugPassManager;
+ 
+@@ -264,8 +266,8 @@ static int run(int argc, char **argv) {
+     return 1;
+   }
+ 
+-  if (FileType.getNumOccurrences())
+-    Conf.CGFileType = FileType;
++  if (auto FT = codegen::getExplicitFileType())
++    Conf.CGFileType = FT.getValue();
+ 
+   Conf.OverrideTriple = OverrideTriple;
+   Conf.DefaultTriple = DefaultTriple;
+diff --git a/llvm/tools/llvm-mc-assemble-fuzzer/CMakeLists.txt b/llvm/tools/llvm-mc-assemble-fuzzer/CMakeLists.txt
+index fb6befd3c54a..6bbc502e2eee 100644
+--- a/llvm/tools/llvm-mc-assemble-fuzzer/CMakeLists.txt
++++ b/llvm/tools/llvm-mc-assemble-fuzzer/CMakeLists.txt
+@@ -7,6 +7,7 @@ set(LLVM_LINK_COMPONENTS
+     MCParser
+     Support
+ )
++
+ add_llvm_fuzzer(llvm-mc-assemble-fuzzer
+   llvm-mc-assemble-fuzzer.cpp
+   )
+diff --git a/llvm/tools/llvm-mc-assemble-fuzzer/llvm-mc-assemble-fuzzer.cpp b/llvm/tools/llvm-mc-assemble-fuzzer/llvm-mc-assemble-fuzzer.cpp
+index 6c5961f7027c..29699c634bfa 100644
+--- a/llvm/tools/llvm-mc-assemble-fuzzer/llvm-mc-assemble-fuzzer.cpp
++++ b/llvm/tools/llvm-mc-assemble-fuzzer/llvm-mc-assemble-fuzzer.cpp
+@@ -9,7 +9,6 @@
+ //===----------------------------------------------------------------------===//
+ 
+ #include "llvm-c/Target.h"
+-#include "llvm/MC/SubtargetFeature.h"
+ #include "llvm/MC/MCAsmBackend.h"
+ #include "llvm/MC/MCAsmInfo.h"
+ #include "llvm/MC/MCCodeEmitter.h"
+@@ -24,15 +23,16 @@
+ #include "llvm/MC/MCSectionMachO.h"
+ #include "llvm/MC/MCStreamer.h"
+ #include "llvm/MC/MCSubtargetInfo.h"
+-#include "llvm/MC/MCTargetOptionsCommandFlags.inc"
+-#include "llvm/Support/MemoryBuffer.h"
++#include "llvm/MC/MCTargetOptionsCommandFlags.h"
++#include "llvm/MC/SubtargetFeature.h"
+ #include "llvm/Support/CommandLine.h"
+ #include "llvm/Support/FileUtilities.h"
+-#include "llvm/Support/raw_ostream.h"
++#include "llvm/Support/MemoryBuffer.h"
+ #include "llvm/Support/SourceMgr.h"
+-#include "llvm/Support/TargetSelect.h"
+ #include "llvm/Support/TargetRegistry.h"
++#include "llvm/Support/TargetSelect.h"
+ #include "llvm/Support/ToolOutputFile.h"
++#include "llvm/Support/raw_ostream.h"
+ 
+ using namespace llvm;
+ 
+@@ -161,7 +161,7 @@ int AssembleOneInput(const uint8_t *Data, size_t Size) {
+     abort();
+   }
+ 
+-  MCTargetOptions MCOptions = InitMCTargetOptionsFromFlags();
++  MCTargetOptions MCOptions = mc::InitMCTargetOptionsFromFlags();
+   std::unique_ptr<MCAsmInfo> MAI(
+       TheTarget->createMCAsmInfo(*MRI, TripleName, MCOptions));
+   if (!MAI) {
+diff --git a/llvm/tools/llvm-mc/CMakeLists.txt b/llvm/tools/llvm-mc/CMakeLists.txt
+index 15c6dda1b258..94add70b6943 100644
+--- a/llvm/tools/llvm-mc/CMakeLists.txt
++++ b/llvm/tools/llvm-mc/CMakeLists.txt
+@@ -4,6 +4,7 @@ set(LLVM_LINK_COMPONENTS
+   AllTargetsDescs
+   AllTargetsDisassemblers
+   AllTargetsInfos
++  CodeGen
+   MC
+   MCParser
+   Support
+diff --git a/llvm/tools/llvm-mc/llvm-mc.cpp b/llvm/tools/llvm-mc/llvm-mc.cpp
+index 6aa347d98be2..8c1b3cf2cab0 100644
+--- a/llvm/tools/llvm-mc/llvm-mc.cpp
++++ b/llvm/tools/llvm-mc/llvm-mc.cpp
+@@ -25,7 +25,7 @@
+ #include "llvm/MC/MCRegisterInfo.h"
+ #include "llvm/MC/MCStreamer.h"
+ #include "llvm/MC/MCSubtargetInfo.h"
+-#include "llvm/MC/MCTargetOptionsCommandFlags.inc"
++#include "llvm/MC/MCTargetOptionsCommandFlags.h"
+ #include "llvm/Support/CommandLine.h"
+ #include "llvm/Support/Compression.h"
+ #include "llvm/Support/FileUtilities.h"
+@@ -41,6 +41,8 @@
+ 
+ using namespace llvm;
+ 
++static mc::RegisterMCTargetOptionsFlags MOF;
++
+ static cl::opt<std::string>
+ InputFilename(cl::Positional, cl::desc("<input file>"), cl::init("-"));
+ 
+@@ -317,7 +319,7 @@ int main(int argc, char **argv) {
+   cl::AddExtraVersionPrinter(TargetRegistry::printRegisteredTargetsForVersion);
+ 
+   cl::ParseCommandLineOptions(argc, argv, "llvm machine code playground\n");
+-  const MCTargetOptions MCOptions = InitMCTargetOptionsFromFlags();
++  const MCTargetOptions MCOptions = mc::InitMCTargetOptionsFromFlags();
+   setDwarfDebugFlags(argc, argv);
+ 
+   setDwarfDebugProducer();
+diff --git a/llvm/tools/llvm-mca/llvm-mca.cpp b/llvm/tools/llvm-mca/llvm-mca.cpp
+index fff5906bb59b..eca86768aa5c 100644
+--- a/llvm/tools/llvm-mca/llvm-mca.cpp
++++ b/llvm/tools/llvm-mca/llvm-mca.cpp
+@@ -39,7 +39,7 @@
+ #include "llvm/MC/MCObjectFileInfo.h"
+ #include "llvm/MC/MCRegisterInfo.h"
+ #include "llvm/MC/MCSubtargetInfo.h"
+-#include "llvm/MC/MCTargetOptionsCommandFlags.inc"
++#include "llvm/MC/MCTargetOptionsCommandFlags.h"
+ #include "llvm/MCA/CodeEmitter.h"
+ #include "llvm/MCA/Context.h"
+ #include "llvm/MCA/InstrBuilder.h"
+@@ -62,6 +62,8 @@
+ 
+ using namespace llvm;
+ 
++static mc::RegisterMCTargetOptionsFlags MOF;
++
+ static cl::OptionCategory ToolOptions("Tool Options");
+ static cl::OptionCategory ViewOptions("View Options");
+ 
+@@ -353,7 +355,7 @@ int main(int argc, char **argv) {
+   std::unique_ptr<MCRegisterInfo> MRI(TheTarget->createMCRegInfo(TripleName));
+   assert(MRI && "Unable to create target register info!");
+ 
+-  MCTargetOptions MCOptions = InitMCTargetOptionsFromFlags();
++  MCTargetOptions MCOptions = mc::InitMCTargetOptionsFromFlags();
+   std::unique_ptr<MCAsmInfo> MAI(
+       TheTarget->createMCAsmInfo(*MRI, TripleName, MCOptions));
+   assert(MAI && "Unable to create target asm info!");
+@@ -443,7 +445,7 @@ int main(int argc, char **argv) {
+       TheTarget->createMCCodeEmitter(*MCII, *MRI, Ctx));
+ 
+   std::unique_ptr<MCAsmBackend> MAB(TheTarget->createMCAsmBackend(
+-      *STI, *MRI, InitMCTargetOptionsFromFlags()));
++      *STI, *MRI, mc::InitMCTargetOptionsFromFlags()));
+ 
+   for (const std::unique_ptr<mca::CodeRegion> &Region : Regions) {
+     // Skip empty code regions.
+diff --git a/llvm/tools/llvm-opt-fuzzer/llvm-opt-fuzzer.cpp b/llvm/tools/llvm-opt-fuzzer/llvm-opt-fuzzer.cpp
+index cd6c7d380cc6..e353e333f580 100644
+--- a/llvm/tools/llvm-opt-fuzzer/llvm-opt-fuzzer.cpp
++++ b/llvm/tools/llvm-opt-fuzzer/llvm-opt-fuzzer.cpp
+@@ -12,7 +12,7 @@
+ 
+ #include "llvm/Bitcode/BitcodeReader.h"
+ #include "llvm/Bitcode/BitcodeWriter.h"
+-#include "llvm/CodeGen/CommandFlags.inc"
++#include "llvm/CodeGen/CommandFlags.h"
+ #include "llvm/FuzzMutate/FuzzerCLI.h"
+ #include "llvm/FuzzMutate/IRMutator.h"
+ #include "llvm/IR/Verifier.h"
+@@ -24,6 +24,8 @@
+ 
+ using namespace llvm;
+ 
++static codegen::RegisterCodeGenFlags CGF;
++
+ static cl::opt<std::string>
+     TargetTripleStr("mtriple", cl::desc("Override target triple for module"));
+ 
+@@ -124,7 +126,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+ 
+   M->setTargetTriple(TM->getTargetTriple().normalize());
+   M->setDataLayout(TM->createDataLayout());
+-  setFunctionAttributes(TM->getTargetCPU(), TM->getTargetFeatureString(), *M);
++  codegen::setFunctionAttributes(TM->getTargetCPU(),
++                                 TM->getTargetFeatureString(), *M);
+ 
+   // Create pass pipeline
+   //
+@@ -214,16 +217,17 @@ extern "C" LLVM_ATTRIBUTE_USED int LLVMFuzzerInitialize(
+ 
+   std::string Error;
+   const Target *TheTarget =
+-      TargetRegistry::lookupTarget(MArch, TargetTriple, Error);
++      TargetRegistry::lookupTarget(codegen::getMArch(), TargetTriple, Error);
+   if (!TheTarget) {
+     errs() << *argv[0] << ": " << Error;
+     exit(1);
+   }
+ 
+-  TargetOptions Options = InitTargetOptionsFromCodeGenFlags();
++  TargetOptions Options = codegen::InitTargetOptionsFromCodeGenFlags();
+   TM.reset(TheTarget->createTargetMachine(
+-      TargetTriple.getTriple(), getCPUStr(), getFeaturesStr(),
+-     Options, getRelocModel(), getCodeModel(), CodeGenOpt::Default));
++      TargetTriple.getTriple(), codegen::getCPUStr(), codegen::getFeaturesStr(),
++      Options, codegen::getExplicitRelocModel(),
++      codegen::getExplicitCodeModel(), CodeGenOpt::Default));
+   assert(TM && "Could not allocate target machine!");
+ 
+   // Check that pass pipeline is specified and correct
+diff --git a/llvm/tools/lto/CMakeLists.txt b/llvm/tools/lto/CMakeLists.txt
+index b86e4abd01a7..2963f97cad88 100644
+--- a/llvm/tools/lto/CMakeLists.txt
++++ b/llvm/tools/lto/CMakeLists.txt
+@@ -6,6 +6,7 @@ set(LLVM_LINK_COMPONENTS
+   AllTargetsInfos
+   BitReader
+   Core
++  CodeGen
+   LTO
+   MC
+   MCDisassembler
+@@ -20,7 +21,8 @@ set(SOURCES
+ 
+ set(LLVM_EXPORTED_SYMBOL_FILE ${CMAKE_CURRENT_SOURCE_DIR}/lto.exports)
+ 
+-add_llvm_library(LTO SHARED INSTALL_WITH_TOOLCHAIN ${SOURCES} DEPENDS intrinsics_gen)
++add_llvm_library(LTO SHARED INSTALL_WITH_TOOLCHAIN ${SOURCES} DEPENDS
++    intrinsics_gen)
+ 
+ install(FILES ${LLVM_MAIN_INCLUDE_DIR}/llvm-c/lto.h
+   DESTINATION include/llvm-c
+diff --git a/llvm/tools/lto/lto.cpp b/llvm/tools/lto/lto.cpp
+index 9933af94de1e..6d207b76685f 100644
+--- a/llvm/tools/lto/lto.cpp
++++ b/llvm/tools/lto/lto.cpp
+@@ -15,7 +15,7 @@
+ #include "llvm/ADT/STLExtras.h"
+ #include "llvm/ADT/StringExtras.h"
+ #include "llvm/Bitcode/BitcodeReader.h"
+-#include "llvm/CodeGen/CommandFlags.inc"
++#include "llvm/CodeGen/CommandFlags.h"
+ #include "llvm/IR/DiagnosticInfo.h"
+ #include "llvm/IR/DiagnosticPrinter.h"
+ #include "llvm/IR/LLVMContext.h"
+@@ -28,6 +28,10 @@
+ #include "llvm/Support/TargetSelect.h"
+ #include "llvm/Support/raw_ostream.h"
+ 
++using namespace llvm;
++
++static codegen::RegisterCodeGenFlags CGF;
++
+ // extra command-line flags needed for LTOCodeGenerator
+ static cl::opt<char>
+ OptLevel("O",
+@@ -154,14 +158,9 @@ DEFINE_SIMPLE_CONVERSION_FUNCTIONS(LTOModule, lto_module_t)
+ // Convert the subtarget features into a string to pass to LTOCodeGenerator.
+ static void lto_add_attrs(lto_code_gen_t cg) {
+   LTOCodeGenerator *CG = unwrap(cg);
+-  if (MAttrs.size()) {
+-    std::string attrs;
+-    for (unsigned i = 0; i < MAttrs.size(); ++i) {
+-      if (i > 0)
+-        attrs.append(",");
+-      attrs.append(MAttrs[i]);
+-    }
+-
++  auto MAttrs = codegen::getMAttrs();
++  if (!MAttrs.empty()) {
++    std::string attrs = join(MAttrs, ",");
+     CG->setAttr(attrs);
+   }
+ 
+@@ -219,7 +218,7 @@ lto_module_is_object_file_in_memory_for_target(const void* mem,
+ 
+ lto_module_t lto_module_create(const char* path) {
+   lto_initialize();
+-  llvm::TargetOptions Options = InitTargetOptionsFromCodeGenFlags();
++  llvm::TargetOptions Options = codegen::InitTargetOptionsFromCodeGenFlags();
+   ErrorOr<std::unique_ptr<LTOModule>> M =
+       LTOModule::createFromFile(*LTOContext, StringRef(path), Options);
+   if (!M)
+@@ -229,7 +228,7 @@ lto_module_t lto_module_create(const char* path) {
+ 
+ lto_module_t lto_module_create_from_fd(int fd, const char *path, size_t size) {
+   lto_initialize();
+-  llvm::TargetOptions Options = InitTargetOptionsFromCodeGenFlags();
++  llvm::TargetOptions Options = codegen::InitTargetOptionsFromCodeGenFlags();
+   ErrorOr<std::unique_ptr<LTOModule>> M = LTOModule::createFromOpenFile(
+       *LTOContext, fd, StringRef(path), size, Options);
+   if (!M)
+@@ -242,7 +241,7 @@ lto_module_t lto_module_create_from_fd_at_offset(int fd, const char *path,
+                                                  size_t map_size,
+                                                  off_t offset) {
+   lto_initialize();
+-  llvm::TargetOptions Options = InitTargetOptionsFromCodeGenFlags();
++  llvm::TargetOptions Options = codegen::InitTargetOptionsFromCodeGenFlags();
+   ErrorOr<std::unique_ptr<LTOModule>> M = LTOModule::createFromOpenFileSlice(
+       *LTOContext, fd, StringRef(path), map_size, offset, Options);
+   if (!M)
+@@ -252,7 +251,7 @@ lto_module_t lto_module_create_from_fd_at_offset(int fd, const char *path,
+ 
+ lto_module_t lto_module_create_from_memory(const void* mem, size_t length) {
+   lto_initialize();
+-  llvm::TargetOptions Options = InitTargetOptionsFromCodeGenFlags();
++  llvm::TargetOptions Options = codegen::InitTargetOptionsFromCodeGenFlags();
+   ErrorOr<std::unique_ptr<LTOModule>> M =
+       LTOModule::createFromBuffer(*LTOContext, mem, length, Options);
+   if (!M)
+@@ -264,7 +263,7 @@ lto_module_t lto_module_create_from_memory_with_path(const void* mem,
+                                                      size_t length,
+                                                      const char *path) {
+   lto_initialize();
+-  llvm::TargetOptions Options = InitTargetOptionsFromCodeGenFlags();
++  llvm::TargetOptions Options = codegen::InitTargetOptionsFromCodeGenFlags();
+   ErrorOr<std::unique_ptr<LTOModule>> M = LTOModule::createFromBuffer(
+       *LTOContext, mem, length, Options, StringRef(path));
+   if (!M)
+@@ -275,7 +274,7 @@ lto_module_t lto_module_create_from_memory_with_path(const void* mem,
+ lto_module_t lto_module_create_in_local_context(const void *mem, size_t length,
+                                                 const char *path) {
+   lto_initialize();
+-  llvm::TargetOptions Options = InitTargetOptionsFromCodeGenFlags();
++  llvm::TargetOptions Options = codegen::InitTargetOptionsFromCodeGenFlags();
+ 
+   // Create a local context. Ownership will be transferred to LTOModule.
+   std::unique_ptr<LLVMContext> Context = std::make_unique<LLVMContext>();
+@@ -294,7 +293,7 @@ lto_module_t lto_module_create_in_codegen_context(const void *mem,
+                                                   const char *path,
+                                                   lto_code_gen_t cg) {
+   lto_initialize();
+-  llvm::TargetOptions Options = InitTargetOptionsFromCodeGenFlags();
++  llvm::TargetOptions Options = codegen::InitTargetOptionsFromCodeGenFlags();
+   ErrorOr<std::unique_ptr<LTOModule>> M = LTOModule::createFromBuffer(
+       unwrap(cg)->getContext(), mem, length, Options, StringRef(path));
+   return wrap(M->release());
+@@ -336,7 +335,7 @@ void lto_codegen_set_diagnostic_handler(lto_code_gen_t cg,
+ static lto_code_gen_t createCodeGen(bool InLocalContext) {
+   lto_initialize();
+ 
+-  TargetOptions Options = InitTargetOptionsFromCodeGenFlags();
++  TargetOptions Options = codegen::InitTargetOptionsFromCodeGenFlags();
+ 
+   LibLTOCodeGenerator *CodeGen =
+       InLocalContext ? new LibLTOCodeGenerator(std::make_unique<LLVMContext>())
+@@ -484,7 +483,7 @@ void lto_codegen_set_should_embed_uselists(lto_code_gen_t cg,
+ thinlto_code_gen_t thinlto_create_codegen(void) {
+   lto_initialize();
+   ThinLTOCodeGenerator *CodeGen = new ThinLTOCodeGenerator();
+-  CodeGen->setTargetOptions(InitTargetOptionsFromCodeGenFlags());
++  CodeGen->setTargetOptions(codegen::InitTargetOptionsFromCodeGenFlags());
+   CodeGen->setFreestanding(EnableFreestanding);
+ 
+   if (OptLevel.getNumOccurrences()) {
+diff --git a/llvm/tools/opt/opt.cpp b/llvm/tools/opt/opt.cpp
+index 75a6cdc3892b..8d619ef76b7a 100644
+--- a/llvm/tools/opt/opt.cpp
++++ b/llvm/tools/opt/opt.cpp
+@@ -22,7 +22,7 @@
+ #include "llvm/Analysis/TargetLibraryInfo.h"
+ #include "llvm/Analysis/TargetTransformInfo.h"
+ #include "llvm/Bitcode/BitcodeWriterPass.h"
+-#include "llvm/CodeGen/CommandFlags.inc"
++#include "llvm/CodeGen/CommandFlags.h"
+ #include "llvm/CodeGen/TargetPassConfig.h"
+ #include "llvm/Config/llvm-config.h"
+ #include "llvm/IR/DataLayout.h"
+@@ -61,6 +61,8 @@
+ using namespace llvm;
+ using namespace opt_tool;
+ 
++static codegen::RegisterCodeGenFlags CFG;
++
+ // The OptimizationList is automatically populated with registered Passes by the
+ // PassNameParser.
+ //
+@@ -470,16 +472,17 @@ static TargetMachine* GetTargetMachine(Triple TheTriple, StringRef CPUStr,
+                                        StringRef FeaturesStr,
+                                        const TargetOptions &Options) {
+   std::string Error;
+-  const Target *TheTarget = TargetRegistry::lookupTarget(MArch, TheTriple,
+-                                                         Error);
++  const Target *TheTarget =
++      TargetRegistry::lookupTarget(codegen::getMArch(), TheTriple, Error);
+   // Some modules don't specify a triple, and this is okay.
+   if (!TheTarget) {
+     return nullptr;
+   }
+ 
+-  return TheTarget->createTargetMachine(TheTriple.getTriple(), CPUStr,
+-                                        FeaturesStr, Options, getRelocModel(),
+-                                        getCodeModel(), GetCodeGenOptLevel());
++  return TheTarget->createTargetMachine(
++      TheTriple.getTriple(), codegen::getCPUStr(), codegen::getFeaturesStr(),
++      Options, codegen::getExplicitRelocModel(),
++      codegen::getExplicitCodeModel(), GetCodeGenOptLevel());
+ }
+ 
+ #ifdef BUILD_EXAMPLES
+@@ -659,11 +662,11 @@ int main(int argc, char **argv) {
+   Triple ModuleTriple(M->getTargetTriple());
+   std::string CPUStr, FeaturesStr;
+   TargetMachine *Machine = nullptr;
+-  const TargetOptions Options = InitTargetOptionsFromCodeGenFlags();
++  const TargetOptions Options = codegen::InitTargetOptionsFromCodeGenFlags();
+ 
+   if (ModuleTriple.getArch()) {
+-    CPUStr = getCPUStr();
+-    FeaturesStr = getFeaturesStr();
++    CPUStr = codegen::getCPUStr();
++    FeaturesStr = codegen::getFeaturesStr();
+     Machine = GetTargetMachine(ModuleTriple, CPUStr, FeaturesStr, Options);
+   } else if (ModuleTriple.getArchName() != "unknown" &&
+              ModuleTriple.getArchName() != "") {
+@@ -676,7 +679,7 @@ int main(int argc, char **argv) {
+ 
+   // Override function attributes based on CPUStr, FeaturesStr, and command line
+   // flags.
+-  setFunctionAttributes(CPUStr, FeaturesStr, *M);
++  codegen::setFunctionAttributes(CPUStr, FeaturesStr, *M);
+ 
+   // If the output is set to be emitted to standard out, and standard out is a
+   // console, print out a warning message and refuse to do it.  We don't
+diff --git a/llvm/unittests/DebugInfo/DWARF/DwarfGenerator.cpp b/llvm/unittests/DebugInfo/DWARF/DwarfGenerator.cpp
+index 472d4dd6ad1e..32d1d3c91ff2 100644
+--- a/llvm/unittests/DebugInfo/DWARF/DwarfGenerator.cpp
++++ b/llvm/unittests/DebugInfo/DWARF/DwarfGenerator.cpp
+@@ -25,7 +25,7 @@
+ #include "llvm/MC/MCRegisterInfo.h"
+ #include "llvm/MC/MCStreamer.h"
+ #include "llvm/MC/MCSubtargetInfo.h"
+-#include "llvm/MC/MCTargetOptionsCommandFlags.inc"
++#include "llvm/MC/MCTargetOptionsCommandFlags.h"
+ #include "llvm/PassAnalysisSupport.h"
+ #include "llvm/Support/TargetRegistry.h"
+ #include "llvm/Support/raw_ostream.h"
+@@ -36,6 +36,8 @@
+ using namespace llvm;
+ using namespace dwarf;
+ 
++mc::RegisterMCTargetOptionsFlags MOF;
++
+ namespace {} // end anonymous namespace
+ 
+ //===----------------------------------------------------------------------===//
+@@ -410,7 +412,7 @@ llvm::Error dwarfgen::Generator::init(Triple TheTriple, uint16_t V) {
+                                        TripleName,
+                                    inconvertibleErrorCode());
+ 
+-  MCTargetOptions MCOptions = InitMCTargetOptionsFromFlags();
++  MCTargetOptions MCOptions = mc::InitMCTargetOptionsFromFlags();
+   MAI.reset(TheTarget->createMCAsmInfo(*MRI, TripleName, MCOptions));
+   if (!MAI)
+     return make_error<StringError>("no asm info for target " + TripleName,
+-- 
+2.33.1
+

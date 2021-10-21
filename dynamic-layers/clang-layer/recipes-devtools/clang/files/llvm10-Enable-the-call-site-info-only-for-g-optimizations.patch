@@ -1,0 +1,550 @@
+From 447cb2e1b2f0d8bdcfd8a0b39f47d28de50b5d82 Mon Sep 17 00:00:00 2001
+From: Djordje Todorovic <djordje.todorovic@syrmia.com>
+Date: Mon, 9 Mar 2020 11:02:35 +0100
+Subject: [PATCH] Enable the call site info only for -g + optimizations
+
+Emit call site info only in the case of '-g' + 'O>0' level.
+
+Differential Revision: https://reviews.llvm.org/D75175
+
+Upstream-Status: Backport [https://github.com/llvm/llvm-project/commit/c15c68abdc6f1afece637bdedba808676191a8e6]
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ clang/include/clang/Basic/CodeGenOptions.def               | 2 ++
+ clang/lib/CodeGen/BackendUtil.cpp                          | 1 +
+ clang/lib/Frontend/CompilerInvocation.cpp                  | 4 +++-
+ llvm/include/llvm/CodeGen/CommandFlags.inc                 | 7 +++++++
+ llvm/include/llvm/Target/TargetOptions.h                   | 7 ++++++-
+ llvm/lib/CodeGen/MIRParser/MIRParser.cpp                   | 4 ++--
+ llvm/lib/CodeGen/MachineFunction.cpp                       | 2 +-
+ llvm/lib/CodeGen/SelectionDAG/ScheduleDAGSDNodes.cpp       | 2 +-
+ llvm/lib/Target/AArch64/AArch64ISelLowering.cpp            | 2 +-
+ llvm/lib/Target/ARM/ARMISelLowering.cpp                    | 2 +-
+ llvm/lib/Target/X86/X86ISelLowering.cpp                    | 2 +-
+ llvm/test/CodeGen/MIR/Hexagon/bundled-call-site-info.mir   | 2 +-
+ llvm/test/CodeGen/X86/call-site-info-output.ll             | 4 ++--
+ llvm/test/DebugInfo/AArch64/call-site-info-output.ll       | 2 +-
+ llvm/test/DebugInfo/ARM/call-site-info-output.ll           | 2 +-
+ .../MIR/AArch64/dbgcall-site-interpret-movzxi.mir          | 2 +-
+ .../DebugInfo/MIR/AArch64/dbgcall-site-interpretation.mir  | 2 +-
+ llvm/test/DebugInfo/MIR/AArch64/dbgcall-site-orr-moves.mir | 2 +-
+ .../test/DebugInfo/MIR/AArch64/implicit-def-dead-scope.mir | 2 +-
+ .../test/DebugInfo/MIR/ARM/dbgcall-site-interpretation.mir | 2 +-
+ .../DebugInfo/MIR/ARM/dbgcall-site-propagated-value.mir    | 2 +-
+ llvm/test/DebugInfo/MIR/ARM/if-coverter-call-site-info.mir | 2 +-
+ .../MIR/Hexagon/dbgcall-site-instr-before-bundled-call.mir | 2 +-
+ .../MIR/Hexagon/live-debug-values-bundled-entry-values.mir | 2 +-
+ llvm/test/DebugInfo/MIR/SystemZ/call-site-lzer.mir         | 2 +-
+ llvm/test/DebugInfo/MIR/X86/DW_OP_entry_value.mir          | 2 +-
+ llvm/test/DebugInfo/MIR/X86/dbg-call-site-spilled-arg.mir  | 2 +-
+ .../test/DebugInfo/MIR/X86/dbgcall-site-copy-super-sub.mir | 2 +-
+ .../test/DebugInfo/MIR/X86/dbgcall-site-interpretation.mir | 2 +-
+ .../DebugInfo/MIR/X86/dbgcall-site-lea-interpretation.mir  | 2 +-
+ llvm/test/DebugInfo/MIR/X86/dbgcall-site-reference.mir     | 2 +-
+ .../DebugInfo/MIR/X86/dbgcall-site-two-fwd-reg-defs.mir    | 2 +-
+ llvm/test/DebugInfo/MIR/X86/dbginfo-entryvals.mir          | 2 +-
+ llvm/test/DebugInfo/MIR/X86/debug-call-site-param.mir      | 4 ++--
+ .../DebugInfo/MIR/X86/entry-value-of-modified-param.mir    | 2 +-
+ llvm/test/DebugInfo/MIR/X86/entry-values-diamond-bbs.mir   | 2 +-
+ .../DebugInfo/MIR/X86/propagate-entry-value-cross-bbs.mir  | 2 +-
+ .../test/DebugInfo/MIR/X86/unreachable-block-call-site.mir | 2 +-
+ llvm/test/DebugInfo/X86/dbgcall-site-64-bit-imms.ll        | 2 +-
+ llvm/test/DebugInfo/X86/dbgcall-site-zero-valued-imms.ll   | 2 +-
+ .../tools/llvm-dwarfdump/X86/stats-dbg-callsite-info.ll    | 2 +-
+ 41 files changed, 58 insertions(+), 41 deletions(-)
+
+diff --git a/clang/include/clang/Basic/CodeGenOptions.def b/clang/include/clang/Basic/CodeGenOptions.def
+index 1ecae98b13b1..6a6a9465273f 100644
+--- a/clang/include/clang/Basic/CodeGenOptions.def
++++ b/clang/include/clang/Basic/CodeGenOptions.def
+@@ -64,6 +64,8 @@ CODEGENOPT(DebugPassManager, 1, 0) ///< Prints debug information for the new
+                                    ///< pass manager.
+ CODEGENOPT(DisableRedZone    , 1, 0) ///< Set when -mno-red-zone is enabled.
+ CODEGENOPT(EnableDebugEntryValues, 1, 0) ///< Emit call site parameter dbg info
++CODEGENOPT(EmitCallSiteInfo, 1, 0) ///< Emit call site info only in the case of
++                                   ///< '-g' + 'O>0' level.
+ CODEGENOPT(IndirectTlsSegRefs, 1, 0) ///< Set when -mno-tls-direct-seg-refs
+                                      ///< is specified.
+ CODEGENOPT(DisableTailCalls  , 1, 0) ///< Do not emit tail calls.
+diff --git a/clang/lib/CodeGen/BackendUtil.cpp b/clang/lib/CodeGen/BackendUtil.cpp
+index db8fd4166d7a..db09f9b641fe 100644
+--- a/clang/lib/CodeGen/BackendUtil.cpp
++++ b/clang/lib/CodeGen/BackendUtil.cpp
+@@ -482,6 +482,7 @@ static void initTargetOptions(llvm::TargetOptions &Options,
+   Options.EmitAddrsig = CodeGenOpts.Addrsig;
+   Options.EnableDebugEntryValues = CodeGenOpts.EnableDebugEntryValues;
+   Options.ForceDwarfFrameSection = CodeGenOpts.ForceDwarfFrameSection;
++  Options.EmitCallSiteInfo = CodeGenOpts.EmitCallSiteInfo;
+ 
+   Options.MCOptions.SplitDwarfFile = CodeGenOpts.SplitDwarfFile;
+   Options.MCOptions.MCRelaxAll = CodeGenOpts.RelaxAll;
+diff --git a/clang/lib/Frontend/CompilerInvocation.cpp b/clang/lib/Frontend/CompilerInvocation.cpp
+index 18fa06bf3c6d..2e73dcbdebe4 100644
+--- a/clang/lib/Frontend/CompilerInvocation.cpp
++++ b/clang/lib/Frontend/CompilerInvocation.cpp
+@@ -789,8 +789,10 @@ static bool ParseCodeGenArgs(CodeGenOptions &Opts, ArgList &Args, InputKind IK,
+ 
+   llvm::Triple T(TargetOpts.Triple);
+   if (Opts.OptimizationLevel > 0 && Opts.hasReducedDebugInfo() &&
+-      llvm::is_contained(DebugEntryValueArchs, T.getArch()))
++      llvm::is_contained(DebugEntryValueArchs, T.getArch())) {
+     Opts.EnableDebugEntryValues = Args.hasArg(OPT_femit_debug_entry_values);
++    Opts.EmitCallSiteInfo = true;
++  }
+ 
+   Opts.DisableO0ImplyOptNone = Args.hasArg(OPT_disable_O0_optnone);
+   Opts.DisableRedZone = Args.hasArg(OPT_disable_red_zone);
+diff --git a/llvm/include/llvm/CodeGen/CommandFlags.inc b/llvm/include/llvm/CodeGen/CommandFlags.inc
+index 6475a5b19edb..36073fe9cc98 100644
+--- a/llvm/include/llvm/CodeGen/CommandFlags.inc
++++ b/llvm/include/llvm/CodeGen/CommandFlags.inc
+@@ -286,6 +286,12 @@ static cl::opt<bool>
+     EnableAddrsig("addrsig", cl::desc("Emit an address-significance table"),
+                   cl::init(false));
+ 
++static cl::opt<bool> EmitCallSiteInfo(
++    "emit-call-site-info",
++    cl::desc(
++        "Emit call site debug information, if debug information is enabled."),
++    cl::init(false));
++
+ static cl::opt<bool>
+     EnableDebugEntryValues("debug-entry-values",
+                            cl::desc("Emit debug info about parameter's entry values"),
+@@ -349,6 +355,7 @@ static TargetOptions InitTargetOptionsFromCodeGenFlags() {
+   Options.ExceptionModel = ExceptionModel;
+   Options.EmitStackSizeSection = EnableStackSizeSection;
+   Options.EmitAddrsig = EnableAddrsig;
++  Options.EmitCallSiteInfo = EmitCallSiteInfo;
+   Options.EnableDebugEntryValues = EnableDebugEntryValues;
+   Options.ForceDwarfFrameSection = ForceDwarfFrameSection;
+ 
+diff --git a/llvm/include/llvm/Target/TargetOptions.h b/llvm/include/llvm/Target/TargetOptions.h
+index d27c7b0178f0..9378e290bed1 100644
+--- a/llvm/include/llvm/Target/TargetOptions.h
++++ b/llvm/include/llvm/Target/TargetOptions.h
+@@ -134,7 +134,8 @@ namespace llvm {
+           EmulatedTLS(false), ExplicitEmulatedTLS(false), EnableIPRA(false),
+           EmitStackSizeSection(false), EnableMachineOutliner(false),
+           SupportsDefaultOutlining(false), EmitAddrsig(false),
+-          EnableDebugEntryValues(false), ForceDwarfFrameSection(false) {}
++          EmitCallSiteInfo(false), EnableDebugEntryValues(false),
++          ForceDwarfFrameSection(false) {}
+ 
+     /// PrintMachineCode - This flag is enabled when the -print-machineinstrs
+     /// option is specified on the command line, and should enable debugging
+@@ -281,6 +282,10 @@ namespace llvm {
+     /// to selectively generate basic block sections.
+     std::shared_ptr<MemoryBuffer> BBSectionsFuncListBuf;
+ 
++    /// The flag enables call site info production. It is used only for debug
++    /// info, and it is restricted only to optimized code. This can be used for
++    /// something else, so that should be controlled in the frontend.
++    unsigned EmitCallSiteInfo : 1;
+     /// Emit debug info about parameter's entry values.
+     unsigned EnableDebugEntryValues : 1;
+ 
+diff --git a/llvm/lib/CodeGen/MIRParser/MIRParser.cpp b/llvm/lib/CodeGen/MIRParser/MIRParser.cpp
+index 10157c746b46..f955bdc6186a 100644
+--- a/llvm/lib/CodeGen/MIRParser/MIRParser.cpp
++++ b/llvm/lib/CodeGen/MIRParser/MIRParser.cpp
+@@ -381,11 +381,11 @@ bool MIRParserImpl::initializeCallSiteInfo(
+       CSInfo.emplace_back(Reg, ArgRegPair.ArgNo);
+     }
+ 
+-    if (TM.Options.EnableDebugEntryValues)
++    if (TM.Options.EmitCallSiteInfo)
+       MF.addCallArgsForwardingRegs(&*CallI, std::move(CSInfo));
+   }
+ 
+-  if (YamlMF.CallSitesInfo.size() && !TM.Options.EnableDebugEntryValues)
++  if (YamlMF.CallSitesInfo.size() && !TM.Options.EmitCallSiteInfo)
+     return error(Twine("Call site info provided but not used"));
+   return false;
+ }
+diff --git a/llvm/lib/CodeGen/MachineFunction.cpp b/llvm/lib/CodeGen/MachineFunction.cpp
+index 4612690644fe..c3795b7ed314 100644
+--- a/llvm/lib/CodeGen/MachineFunction.cpp
++++ b/llvm/lib/CodeGen/MachineFunction.cpp
+@@ -855,7 +855,7 @@ MachineFunction::CallSiteInfoMap::iterator
+ MachineFunction::getCallSiteInfo(const MachineInstr *MI) {
+   assert(MI->isCall() && "Call site info refers only to call instructions!");
+ 
+-  if (!Target.Options.EnableDebugEntryValues)
++  if (!Target.Options.EmitCallSiteInfo)
+     return CallSitesInfo.end();
+   return CallSitesInfo.find(MI);
+ }
+diff --git a/llvm/lib/CodeGen/SelectionDAG/ScheduleDAGSDNodes.cpp b/llvm/lib/CodeGen/SelectionDAG/ScheduleDAGSDNodes.cpp
+index 0e4d783e3505..52099f24aca5 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/ScheduleDAGSDNodes.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/ScheduleDAGSDNodes.cpp
+@@ -863,7 +863,7 @@ EmitSchedule(MachineBasicBlock::iterator &InsertPos) {
+       MI = &*std::next(Before);
+     }
+ 
+-    if (MI->isCall() && DAG->getTarget().Options.EnableDebugEntryValues)
++    if (MI->isCall() && DAG->getTarget().Options.EmitCallSiteInfo)
+       MF.addCallArgsForwardingRegs(MI, DAG->getSDCallSiteInfo(Node));
+ 
+     return MI;
+diff --git a/llvm/lib/Target/AArch64/AArch64ISelLowering.cpp b/llvm/lib/Target/AArch64/AArch64ISelLowering.cpp
+index 23f05eaad944..63ff3031a5e8 100644
+--- a/llvm/lib/Target/AArch64/AArch64ISelLowering.cpp
++++ b/llvm/lib/Target/AArch64/AArch64ISelLowering.cpp
+@@ -4132,7 +4132,7 @@ AArch64TargetLowering::LowerCall(CallLoweringInfo &CLI,
+         RegsToPass.emplace_back(VA.getLocReg(), Arg);
+         RegsUsed.insert(VA.getLocReg());
+         const TargetOptions &Options = DAG.getTarget().Options;
+-        if (Options.EnableDebugEntryValues)
++        if (Options.EmitCallSiteInfo)
+           CSInfo.emplace_back(VA.getLocReg(), i);
+       }
+     } else {
+diff --git a/llvm/lib/Target/ARM/ARMISelLowering.cpp b/llvm/lib/Target/ARM/ARMISelLowering.cpp
+index 9f504b1eaa42..5589ba34a2ac 100644
+--- a/llvm/lib/Target/ARM/ARMISelLowering.cpp
++++ b/llvm/lib/Target/ARM/ARMISelLowering.cpp
+@@ -2222,7 +2222,7 @@ ARMTargetLowering::LowerCall(TargetLowering::CallLoweringInfo &CLI,
+         isThisReturn = true;
+       }
+       const TargetOptions &Options = DAG.getTarget().Options;
+-      if (Options.EnableDebugEntryValues)
++      if (Options.EmitCallSiteInfo)
+         CSInfo.emplace_back(VA.getLocReg(), i);
+       RegsToPass.push_back(std::make_pair(VA.getLocReg(), Arg));
+     } else if (isByVal) {
+diff --git a/llvm/lib/Target/X86/X86ISelLowering.cpp b/llvm/lib/Target/X86/X86ISelLowering.cpp
+index d5de94aeb8a2..4808bdf6ddc2 100644
+--- a/llvm/lib/Target/X86/X86ISelLowering.cpp
++++ b/llvm/lib/Target/X86/X86ISelLowering.cpp
+@@ -4030,7 +4030,7 @@ X86TargetLowering::LowerCall(TargetLowering::CallLoweringInfo &CLI,
+     } else if (VA.isRegLoc()) {
+       RegsToPass.push_back(std::make_pair(VA.getLocReg(), Arg));
+       const TargetOptions &Options = DAG.getTarget().Options;
+-      if (Options.EnableDebugEntryValues)
++      if (Options.EmitCallSiteInfo)
+         CSInfo.emplace_back(VA.getLocReg(), I);
+       if (isVarArg && IsWin64) {
+         // Win64 ABI requires argument XMM reg to be copied to the corresponding
+diff --git a/llvm/test/CodeGen/MIR/Hexagon/bundled-call-site-info.mir b/llvm/test/CodeGen/MIR/Hexagon/bundled-call-site-info.mir
+index 5ffa0293a2e1..fec542223fc9 100644
+--- a/llvm/test/CodeGen/MIR/Hexagon/bundled-call-site-info.mir
++++ b/llvm/test/CodeGen/MIR/Hexagon/bundled-call-site-info.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -debug-entry-values -run-pass=none -verify-machineinstrs -o - %s | FileCheck %s
++# RUN: llc -emit-call-site-info -debug-entry-values -run-pass=none -verify-machineinstrs -o - %s | FileCheck %s
+ 
+ # Verify that it is possible to read and write MIR where a callSites entry
+ # points to a call residing in a bundle. The offset should point to the call
+diff --git a/llvm/test/CodeGen/X86/call-site-info-output.ll b/llvm/test/CodeGen/X86/call-site-info-output.ll
+index 4b1e236aadfe..a0438f0c2b98 100644
+--- a/llvm/test/CodeGen/X86/call-site-info-output.ll
++++ b/llvm/test/CodeGen/X86/call-site-info-output.ll
+@@ -1,6 +1,6 @@
+ ; Test call site info MIR printer and parser.Parser assertions and machine
+ ; verifier will check the rest;
+-; RUN: llc -debug-entry-values %s -stop-before=finalize-isel -o %t.mir
++; RUN: llc -emit-call-site-info -debug-entry-values %s -stop-before=finalize-isel -o %t.mir
+ ; RUN: cat %t.mir | FileCheck %s
+ ; CHECK: name: fn2
+ ; CHECK: callSites:
+@@ -10,7 +10,7 @@
+ ; CHECK-NEXT:   arg: 0, reg: '$edi'
+ ; CHECK-NEXT:   arg: 1, reg: '$esi'
+ ; CHECK-NEXT:   arg: 2, reg: '$edx'
+-; RUN: llc -debug-entry-values %t.mir -run-pass=finalize-isel -o -| FileCheck %s --check-prefix=PARSER
++; RUN: llc -emit-call-site-info -debug-entry-values %t.mir -run-pass=finalize-isel -o -| FileCheck %s --check-prefix=PARSER
+ ; Verify that we are able to parse output mir and that we are getting the same result.
+ ; PARSER: name: fn2
+ ; PARSER: callSites:
+diff --git a/llvm/test/DebugInfo/AArch64/call-site-info-output.ll b/llvm/test/DebugInfo/AArch64/call-site-info-output.ll
+index d52d6962f3c4..17d9f7f18762 100644
+--- a/llvm/test/DebugInfo/AArch64/call-site-info-output.ll
++++ b/llvm/test/DebugInfo/AArch64/call-site-info-output.ll
+@@ -1,4 +1,4 @@
+-; RUN: llc -mtriple aarch64-linux-gnu -debug-entry-values %s -o - -stop-before=finalize-isel | FileCheck %s
++; RUN: llc -emit-call-site-info -mtriple aarch64-linux-gnu -debug-entry-values %s -o - -stop-before=finalize-isel | FileCheck %s
+ ; Verify that Selection DAG knows how to recognize simple function parameter forwarding registers.
+ ; Produced from:
+ ; extern int fn1(int,int,int);
+diff --git a/llvm/test/DebugInfo/ARM/call-site-info-output.ll b/llvm/test/DebugInfo/ARM/call-site-info-output.ll
+index 9255a7d57dde..ed726dfe753f 100644
+--- a/llvm/test/DebugInfo/ARM/call-site-info-output.ll
++++ b/llvm/test/DebugInfo/ARM/call-site-info-output.ll
+@@ -1,4 +1,4 @@
+-; RUN: llc -mtriple arm-linux-gnu -debug-entry-values %s -o - -stop-before=finalize-isel | FileCheck %s
++; RUN: llc -emit-call-site-info -mtriple arm-linux-gnu -debug-entry-values %s -o - -stop-before=finalize-isel | FileCheck %s
+ ; Verify that Selection DAG knows how to recognize simple function parameter forwarding registers.
+ ; Produced from:
+ ; extern int fn1(int,int,int);
+diff --git a/llvm/test/DebugInfo/MIR/AArch64/dbgcall-site-interpret-movzxi.mir b/llvm/test/DebugInfo/MIR/AArch64/dbgcall-site-interpret-movzxi.mir
+index dc7561ca6400..057779a90721 100644
+--- a/llvm/test/DebugInfo/MIR/AArch64/dbgcall-site-interpret-movzxi.mir
++++ b/llvm/test/DebugInfo/MIR/AArch64/dbgcall-site-interpret-movzxi.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -mtriple aarch64-linux-gnu -debug-entry-values -start-after=machineverifier -filetype=obj %s -o -| llvm-dwarfdump -| FileCheck %s
++# RUN: llc -emit-call-site-info -mtriple aarch64-linux-gnu -debug-entry-values -start-after=machineverifier -filetype=obj %s -o -| llvm-dwarfdump -| FileCheck %s
+ #
+ # Based on the following C reproducer:
+ #
+diff --git a/llvm/test/DebugInfo/MIR/AArch64/dbgcall-site-interpretation.mir b/llvm/test/DebugInfo/MIR/AArch64/dbgcall-site-interpretation.mir
+index 0371ccef603e..d925bc395878 100644
+--- a/llvm/test/DebugInfo/MIR/AArch64/dbgcall-site-interpretation.mir
++++ b/llvm/test/DebugInfo/MIR/AArch64/dbgcall-site-interpretation.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -mtriple aarch64-linux-gnu -debug-entry-values -start-after=machineverifier -filetype=obj %s -o -| llvm-dwarfdump -| FileCheck %s
++# RUN: llc -emit-call-site-info -mtriple aarch64-linux-gnu -debug-entry-values -start-after=machineverifier -filetype=obj %s -o -| llvm-dwarfdump -| FileCheck %s
+ # Following code is used for producing this test case. Note that
+ # some of argument loading instruction are modified in order to
+ # cover certain cases.
+diff --git a/llvm/test/DebugInfo/MIR/AArch64/dbgcall-site-orr-moves.mir b/llvm/test/DebugInfo/MIR/AArch64/dbgcall-site-orr-moves.mir
+index 916a14022ba5..4a87dad3b9b5 100644
+--- a/llvm/test/DebugInfo/MIR/AArch64/dbgcall-site-orr-moves.mir
++++ b/llvm/test/DebugInfo/MIR/AArch64/dbgcall-site-orr-moves.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -debug-entry-values -start-after=livedebugvalues -filetype=obj -o - %s | llvm-dwarfdump - | FileCheck %s
++# RUN: llc -emit-call-site-info -debug-entry-values -start-after=livedebugvalues -filetype=obj -o - %s | llvm-dwarfdump - | FileCheck %s
+ 
+ # Based on the following C reproducer:
+ #
+diff --git a/llvm/test/DebugInfo/MIR/AArch64/implicit-def-dead-scope.mir b/llvm/test/DebugInfo/MIR/AArch64/implicit-def-dead-scope.mir
+index fbf9b3454689..d85f2d25391d 100644
+--- a/llvm/test/DebugInfo/MIR/AArch64/implicit-def-dead-scope.mir
++++ b/llvm/test/DebugInfo/MIR/AArch64/implicit-def-dead-scope.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -start-after=livedebugvalues -filetype=obj -o - %s \
++# RUN: llc -emit-call-site-info -start-after=livedebugvalues -filetype=obj -o - %s \
+ # RUN:   | llvm-dwarfdump -v - | FileCheck %s
+ 
+ # This tests for a crash in DwarfDebug's singular DBG_VALUE range promotion when
+diff --git a/llvm/test/DebugInfo/MIR/ARM/dbgcall-site-interpretation.mir b/llvm/test/DebugInfo/MIR/ARM/dbgcall-site-interpretation.mir
+index ce8dc97f0e72..0ae4e6ec485c 100644
+--- a/llvm/test/DebugInfo/MIR/ARM/dbgcall-site-interpretation.mir
++++ b/llvm/test/DebugInfo/MIR/ARM/dbgcall-site-interpretation.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -mtriple=arm-linux-gnueabi -debug-entry-values -filetype=obj -start-after=machineverifier %s -o -| llvm-dwarfdump -| FileCheck %s
++# RUN: llc -emit-call-site-info -mtriple=arm-linux-gnueabi -debug-entry-values -filetype=obj -start-after=machineverifier %s -o -| llvm-dwarfdump -| FileCheck %s
+ # Following code is used for producing this test case. Note that
+ # some of argument loading instruction are modified in order to
+ # cover certain cases.
+diff --git a/llvm/test/DebugInfo/MIR/ARM/dbgcall-site-propagated-value.mir b/llvm/test/DebugInfo/MIR/ARM/dbgcall-site-propagated-value.mir
+index 9001c8ba8eea..5b84d9e9627f 100644
+--- a/llvm/test/DebugInfo/MIR/ARM/dbgcall-site-propagated-value.mir
++++ b/llvm/test/DebugInfo/MIR/ARM/dbgcall-site-propagated-value.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -debug-entry-values -run-pass=livedebugvalues -o - %s | FileCheck %s
++# RUN: llc -emit-call-site-info -debug-entry-values -run-pass=livedebugvalues -o - %s | FileCheck %s
+ 
+ # Based on the following C reproducer:
+ #
+diff --git a/llvm/test/DebugInfo/MIR/ARM/if-coverter-call-site-info.mir b/llvm/test/DebugInfo/MIR/ARM/if-coverter-call-site-info.mir
+index aa7b54c1e5bb..11e9c4c90836 100644
+--- a/llvm/test/DebugInfo/MIR/ARM/if-coverter-call-site-info.mir
++++ b/llvm/test/DebugInfo/MIR/ARM/if-coverter-call-site-info.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -mtriple=arm-linux-gnu -debug-entry-values -run-pass if-converter %s -o -| FileCheck %s
++# RUN: llc -emit-call-site-info -mtriple=arm-linux-gnu -debug-entry-values -run-pass if-converter %s -o -| FileCheck %s
+ 
+ # Vefify that the call site info will be updated after the optimization.
+ # This test case would previously trigger an assertion when
+diff --git a/llvm/test/DebugInfo/MIR/Hexagon/dbgcall-site-instr-before-bundled-call.mir b/llvm/test/DebugInfo/MIR/Hexagon/dbgcall-site-instr-before-bundled-call.mir
+index 8ae628af2c09..3ae23d4189bf 100644
+--- a/llvm/test/DebugInfo/MIR/Hexagon/dbgcall-site-instr-before-bundled-call.mir
++++ b/llvm/test/DebugInfo/MIR/Hexagon/dbgcall-site-instr-before-bundled-call.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -mtriple hexagon -debug-entry-values -start-after=machineverifier -filetype=obj %s -o - | llvm-dwarfdump - | FileCheck %s
++# RUN: llc -mtriple hexagon -emit-call-site-info -debug-entry-values -start-after=machineverifier -filetype=obj %s -o - | llvm-dwarfdump - | FileCheck %s
+ 
+ # Based on the following C reproducer:
+ #
+diff --git a/llvm/test/DebugInfo/MIR/Hexagon/live-debug-values-bundled-entry-values.mir b/llvm/test/DebugInfo/MIR/Hexagon/live-debug-values-bundled-entry-values.mir
+index ff0a539dd15d..8bb0b3202acd 100644
+--- a/llvm/test/DebugInfo/MIR/Hexagon/live-debug-values-bundled-entry-values.mir
++++ b/llvm/test/DebugInfo/MIR/Hexagon/live-debug-values-bundled-entry-values.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -debug-entry-values -run-pass=livedebugvalues -o - %s | FileCheck %s
++# RUN: llc -emit-call-site-info -debug-entry-values -run-pass=livedebugvalues -o - %s | FileCheck %s
+ 
+ # Verify that the entry values for the input parameters are inserted after the
+ # bundles which contains the registers' clobbering instructions (the calls to
+diff --git a/llvm/test/DebugInfo/MIR/SystemZ/call-site-lzer.mir b/llvm/test/DebugInfo/MIR/SystemZ/call-site-lzer.mir
+index 8a4e8b5632c2..3cf41467f7f9 100644
+--- a/llvm/test/DebugInfo/MIR/SystemZ/call-site-lzer.mir
++++ b/llvm/test/DebugInfo/MIR/SystemZ/call-site-lzer.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -debug-entry-values -start-after=livedebugvalues -o - %s | FileCheck %s
++# RUN: llc -emit-call-site-info -debug-entry-values -start-after=livedebugvalues -o - %s | FileCheck %s
+ 
+ # This test would previously trigger an assertion when trying to describe the
+ # call site value for callee()'s float parameter.
+diff --git a/llvm/test/DebugInfo/MIR/X86/DW_OP_entry_value.mir b/llvm/test/DebugInfo/MIR/X86/DW_OP_entry_value.mir
+index e6fe5d2de878..4e5a07321d42 100644
+--- a/llvm/test/DebugInfo/MIR/X86/DW_OP_entry_value.mir
++++ b/llvm/test/DebugInfo/MIR/X86/DW_OP_entry_value.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -debug-entry-values -start-before=livedebugvalues -mtriple=x86_64-apple-darwin -o %t %s -filetype=obj
++# RUN: llc -emit-call-site-info -debug-entry-values -start-before=livedebugvalues -mtriple=x86_64-apple-darwin -o %t %s -filetype=obj
+ # RUN: llvm-dwarfdump %t | FileCheck %s
+ #
+ # int global;
+diff --git a/llvm/test/DebugInfo/MIR/X86/dbg-call-site-spilled-arg.mir b/llvm/test/DebugInfo/MIR/X86/dbg-call-site-spilled-arg.mir
+index c32a1155d038..edeef2c7aed4 100644
+--- a/llvm/test/DebugInfo/MIR/X86/dbg-call-site-spilled-arg.mir
++++ b/llvm/test/DebugInfo/MIR/X86/dbg-call-site-spilled-arg.mir
+@@ -1,6 +1,6 @@
+ # Check that llvm can describe a call site parameter which resides in a spill slot.
+ #
+-# RUN: llc -debug-entry-values -start-after=machineverifier -filetype=obj %s -o - | llvm-dwarfdump - | FileCheck %s
++# RUN: llc -emit-call-site-info -debug-entry-values -start-after=machineverifier -filetype=obj %s -o - | llvm-dwarfdump - | FileCheck %s
+ # 
+ # Command:
+ # $ ~/src/builds/llvm-project-master-RA/bin/clang -g -Xclang -femit-debug-entry-values -O2 -c -o spill.o spill.cc -mllvm -stop-before=machineverifier -o spill.mir
+diff --git a/llvm/test/DebugInfo/MIR/X86/dbgcall-site-copy-super-sub.mir b/llvm/test/DebugInfo/MIR/X86/dbgcall-site-copy-super-sub.mir
+index a2d51a203512..01a2b887a60b 100644
+--- a/llvm/test/DebugInfo/MIR/X86/dbgcall-site-copy-super-sub.mir
++++ b/llvm/test/DebugInfo/MIR/X86/dbgcall-site-copy-super-sub.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -debug-entry-values -start-after=livedebugvalues -filetype=obj %s -o -| llvm-dwarfdump -| FileCheck %s
++# RUN: llc -emit-call-site-info -debug-entry-values -start-after=livedebugvalues -filetype=obj %s -o -| llvm-dwarfdump -| FileCheck %s
+ 
+ # Based on the following reproducer:
+ #
+diff --git a/llvm/test/DebugInfo/MIR/X86/dbgcall-site-interpretation.mir b/llvm/test/DebugInfo/MIR/X86/dbgcall-site-interpretation.mir
+index f9e9459f1abd..104bc0146798 100644
+--- a/llvm/test/DebugInfo/MIR/X86/dbgcall-site-interpretation.mir
++++ b/llvm/test/DebugInfo/MIR/X86/dbgcall-site-interpretation.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -debug-entry-values -start-after=machineverifier -filetype=obj %s -o -| llvm-dwarfdump -| FileCheck %s
++# RUN: llc -emit-call-site-info -debug-entry-values -start-after=machineverifier -filetype=obj %s -o -| llvm-dwarfdump -| FileCheck %s
+ #
+ # CHECK:        DW_TAG_GNU_call_site
+ # CHECK-NEXT:     DW_AT_abstract_origin {{.*}} "foo"
+diff --git a/llvm/test/DebugInfo/MIR/X86/dbgcall-site-lea-interpretation.mir b/llvm/test/DebugInfo/MIR/X86/dbgcall-site-lea-interpretation.mir
+index 1bb70f6d4530..4d88fa9aab74 100644
+--- a/llvm/test/DebugInfo/MIR/X86/dbgcall-site-lea-interpretation.mir
++++ b/llvm/test/DebugInfo/MIR/X86/dbgcall-site-lea-interpretation.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -debug-entry-values -start-after=machineverifier -filetype=obj %s -o -| llvm-dwarfdump -| FileCheck %s
++# RUN: llc -emit-call-site-info -debug-entry-values -start-after=machineverifier -filetype=obj %s -o -| llvm-dwarfdump -| FileCheck %s
+ # CHECK:        DW_TAG_GNU_call_site
+ # CHECK-NEXT:     DW_AT_abstract_origin {{.*}} "foo")
+ # CHECK-NEXT:     DW_AT_low_pc {{.*}}
+diff --git a/llvm/test/DebugInfo/MIR/X86/dbgcall-site-reference.mir b/llvm/test/DebugInfo/MIR/X86/dbgcall-site-reference.mir
+index 235787573f51..81af598ba194 100644
+--- a/llvm/test/DebugInfo/MIR/X86/dbgcall-site-reference.mir
++++ b/llvm/test/DebugInfo/MIR/X86/dbgcall-site-reference.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -debug-entry-values -start-before=livedebugvalues -filetype=obj -o - %s | llvm-dwarfdump - | FileCheck %s
++# RUN: llc -emit-call-site-info -debug-entry-values -start-before=livedebugvalues -filetype=obj -o - %s | llvm-dwarfdump - | FileCheck %s
+ 
+ # Based on the following C++ code:
+ # struct A { A(A &) {} };
+diff --git a/llvm/test/DebugInfo/MIR/X86/dbgcall-site-two-fwd-reg-defs.mir b/llvm/test/DebugInfo/MIR/X86/dbgcall-site-two-fwd-reg-defs.mir
+index db0934c595c3..46adedd1be44 100644
+--- a/llvm/test/DebugInfo/MIR/X86/dbgcall-site-two-fwd-reg-defs.mir
++++ b/llvm/test/DebugInfo/MIR/X86/dbgcall-site-two-fwd-reg-defs.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -O1 -debug-entry-values -start-after=livedebugvalues -filetype=obj %s -o - | llvm-dwarfdump - | FileCheck %s
++# RUN: llc -O1 -emit-call-site-info -debug-entry-values -start-after=livedebugvalues -filetype=obj %s -o - | llvm-dwarfdump - | FileCheck %s
+ 
+ # Based on the following C reproducer:
+ #
+diff --git a/llvm/test/DebugInfo/MIR/X86/dbginfo-entryvals.mir b/llvm/test/DebugInfo/MIR/X86/dbginfo-entryvals.mir
+index 5d203029936e..1d7b64f169d1 100644
+--- a/llvm/test/DebugInfo/MIR/X86/dbginfo-entryvals.mir
++++ b/llvm/test/DebugInfo/MIR/X86/dbginfo-entryvals.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -debug-entry-values -run-pass=livedebugvalues -march=x86-64 -o - %s | FileCheck %s
++# RUN: llc -emit-call-site-info -debug-entry-values -run-pass=livedebugvalues -march=x86-64 -o - %s | FileCheck %s
+ #
+ #extern void fn2(int);
+ #
+diff --git a/llvm/test/DebugInfo/MIR/X86/debug-call-site-param.mir b/llvm/test/DebugInfo/MIR/X86/debug-call-site-param.mir
+index e79be66cd4e3..c39bc4db50be 100644
+--- a/llvm/test/DebugInfo/MIR/X86/debug-call-site-param.mir
++++ b/llvm/test/DebugInfo/MIR/X86/debug-call-site-param.mir
+@@ -2,8 +2,8 @@
+ # When the debugger tuning is set to gdb, use GNU opcodes.
+ # For lldb, use the standard DWARF5 opcodes.
+ 
+-# RUN: llc -debug-entry-values -debugger-tune=gdb -filetype=obj -mtriple=x86_64-unknown-unknown -start-after=machineverifier -o - %s | llvm-dwarfdump - | FileCheck %s -check-prefixes=CHECK-GNU
+-# RUN: llc -debug-entry-values -debugger-tune=lldb -filetype=obj -mtriple=x86_64-unknown-unknown -start-after=machineverifier -o - %s | llvm-dwarfdump - | FileCheck %s -check-prefixes=CHECK-DWARF5
++# RUN: llc -emit-call-site-info -debug-entry-values -debugger-tune=gdb -filetype=obj -mtriple=x86_64-unknown-unknown -start-after=machineverifier -o - %s | llvm-dwarfdump - | FileCheck %s -check-prefixes=CHECK-GNU
++# RUN: llc -emit-call-site-info -debug-entry-values -debugger-tune=lldb -filetype=obj -mtriple=x86_64-unknown-unknown -start-after=machineverifier -o - %s | llvm-dwarfdump - | FileCheck %s -check-prefixes=CHECK-DWARF5
+ #
+ # extern void foo(int *a, int b, int c, int d, int e, int f);
+ # extern int getVal();
+diff --git a/llvm/test/DebugInfo/MIR/X86/entry-value-of-modified-param.mir b/llvm/test/DebugInfo/MIR/X86/entry-value-of-modified-param.mir
+index 8d121c3a30b9..c7f15aaaa562 100644
+--- a/llvm/test/DebugInfo/MIR/X86/entry-value-of-modified-param.mir
++++ b/llvm/test/DebugInfo/MIR/X86/entry-value-of-modified-param.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -debug-entry-values -run-pass=livedebugvalues -march=x86-64 -o - %s | FileCheck %s
++# RUN: llc -emit-call-site-info -debug-entry-values -run-pass=livedebugvalues -march=x86-64 -o - %s | FileCheck %s
+ #
+ #extern void fn1 (int, int, int);
+ #
+diff --git a/llvm/test/DebugInfo/MIR/X86/entry-values-diamond-bbs.mir b/llvm/test/DebugInfo/MIR/X86/entry-values-diamond-bbs.mir
+index 2396daada876..aa8fdd7afd47 100644
+--- a/llvm/test/DebugInfo/MIR/X86/entry-values-diamond-bbs.mir
++++ b/llvm/test/DebugInfo/MIR/X86/entry-values-diamond-bbs.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -debug-entry-values -run-pass=livedebugvalues -march=x86-64 -o - %s | FileCheck %s
++# RUN: llc -emit-call-site-info -debug-entry-values -run-pass=livedebugvalues -march=x86-64 -o - %s | FileCheck %s
+ #
+ # The test case was artificially adjusted, in order to make proper diamond basic
+ # block structure relevant to the debug entry values propagation.
+diff --git a/llvm/test/DebugInfo/MIR/X86/propagate-entry-value-cross-bbs.mir b/llvm/test/DebugInfo/MIR/X86/propagate-entry-value-cross-bbs.mir
+index 86b1cddaa462..c5af863954bf 100644
+--- a/llvm/test/DebugInfo/MIR/X86/propagate-entry-value-cross-bbs.mir
++++ b/llvm/test/DebugInfo/MIR/X86/propagate-entry-value-cross-bbs.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -debug-entry-values -run-pass=livedebugvalues -march=x86-64 -o - %s | FileCheck %s
++# RUN: llc -emit-call-site-info -debug-entry-values -run-pass=livedebugvalues -march=x86-64 -o - %s | FileCheck %s
+ #
+ #extern void fn1 (int, int, int);
+ #__attribute__((noinline))
+diff --git a/llvm/test/DebugInfo/MIR/X86/unreachable-block-call-site.mir b/llvm/test/DebugInfo/MIR/X86/unreachable-block-call-site.mir
+index d282d796f6d7..ea9c12b5a192 100644
+--- a/llvm/test/DebugInfo/MIR/X86/unreachable-block-call-site.mir
++++ b/llvm/test/DebugInfo/MIR/X86/unreachable-block-call-site.mir
+@@ -1,4 +1,4 @@
+-# RUN: llc -mtriple=x86_64-pc-linux -debug-entry-values -run-pass=unreachable-mbb-elimination -o - %s | FileCheck %s
++# RUN: llc -mtriple=x86_64-pc-linux -emit-call-site-info -debug-entry-values -run-pass=unreachable-mbb-elimination -o - %s | FileCheck %s
+ 
+ # Verify that the call site information for the call residing in the eliminated
+ # block is removed. This test case would previously trigger an assertion when
+diff --git a/llvm/test/DebugInfo/X86/dbgcall-site-64-bit-imms.ll b/llvm/test/DebugInfo/X86/dbgcall-site-64-bit-imms.ll
+index b698f1cdbfe8..b8cd9574cc63 100644
+--- a/llvm/test/DebugInfo/X86/dbgcall-site-64-bit-imms.ll
++++ b/llvm/test/DebugInfo/X86/dbgcall-site-64-bit-imms.ll
+@@ -1,4 +1,4 @@
+-; RUN: llc -O1 -debug-entry-values -filetype=obj -o - %s | llvm-dwarfdump - | FileCheck %s
++; RUN: llc -O1 -emit-call-site-info -debug-entry-values -filetype=obj -o - %s | llvm-dwarfdump - | FileCheck %s
+ 
+ ; Verify that the 64-bit call site immediates are not truncated.
+ ;
+diff --git a/llvm/test/DebugInfo/X86/dbgcall-site-zero-valued-imms.ll b/llvm/test/DebugInfo/X86/dbgcall-site-zero-valued-imms.ll
+index 9fe67f82a2b4..5d37774f55d6 100644
+--- a/llvm/test/DebugInfo/X86/dbgcall-site-zero-valued-imms.ll
++++ b/llvm/test/DebugInfo/X86/dbgcall-site-zero-valued-imms.ll
+@@ -1,4 +1,4 @@
+-; RUN: llc -O3 -debug-entry-values -filetype=obj -o - %s | llvm-dwarfdump - | FileCheck %s
++; RUN: llc -O3 -emit-call-site-info -debug-entry-values -filetype=obj -o - %s | llvm-dwarfdump - | FileCheck %s
+ 
+ target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+ target triple = "x86_64-unknown-linux-gnu"
+diff --git a/llvm/test/tools/llvm-dwarfdump/X86/stats-dbg-callsite-info.ll b/llvm/test/tools/llvm-dwarfdump/X86/stats-dbg-callsite-info.ll
+index c304e9d768a5..d126757398ff 100644
+--- a/llvm/test/tools/llvm-dwarfdump/X86/stats-dbg-callsite-info.ll
++++ b/llvm/test/tools/llvm-dwarfdump/X86/stats-dbg-callsite-info.ll
+@@ -1,4 +1,4 @@
+-; RUN: llc -debug-entry-values %s -o - -filetype=obj \
++; RUN: llc -emit-call-site-info -debug-entry-values %s -o - -filetype=obj \
+ ; RUN:   | llvm-dwarfdump -statistics - | FileCheck %s
+ ;
+ ; The LLVM IR file was generated on this source code by using
+-- 
+2.33.1
+
