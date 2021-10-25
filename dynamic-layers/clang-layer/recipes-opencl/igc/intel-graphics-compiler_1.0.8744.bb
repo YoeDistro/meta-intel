@@ -24,7 +24,7 @@ export B
 
 S = "${WORKDIR}/git"
 
-inherit cmake
+inherit cmake pkgconfig
 
 CXXFLAGS:append = " -Wno-error=nonnull"
 
@@ -36,21 +36,22 @@ DEPENDS:append:class-target = " clang-cross-x86_64 intel-graphics-compiler-nativ
 
 RDEPENDS:${PN} += "opencl-clang"
 
+PACKAGECONFIG ??= "vc"
+PACKAGECONFIG[vc] = "-DIGC_BUILD__VC_ENABLED=ON -DIGC_OPTION__LINK_KHRONOS_SPIRV_TRANSLATOR=ON -DIGC_OPTION__USE_KHRONOS_SPIRV_TRANSLATOR_IN_VC=ON -DIGC_OPTION__SPIRV_TRANSLATOR_MODE=Prebuilds,-DIGC_BUILD__VC_ENABLED=OFF,"
+
 EXTRA_OECMAKE = " \
                   -DIGC_OPTION__LLVM_PREFERRED_VERSION=${LLVMVERSION} \
                   -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 \
                   -DVC_INTRINSICS_SRC="${S}/vc-intrinsics" \
                   -DIGC_OPTION__LLVM_MODE=Prebuilds \
-                  -DIGC_BUILD__VC_ENABLED=ON \
-                  -DIGC_OPTION__LINK_KHRONOS_SPIRV_TRANSLATOR=ON \
-                  -DIGC_OPTION__USE_KHRONOS_SPIRV_TRANSLATOR_IN_VC=ON \
-                  -DIGC_OPTION__SPIRV_TRANSLATOR_MODE=Prebuilds \
                   "
 
 do_install:append:class-native () {
     install -d ${D}${bindir}
     install ${B}/IGC/Release/elf_packager ${D}${bindir}/
-    install ${B}/IGC/Release/CMCLTranslatorTool ${D}${bindir}/
+    if ${@bb.utils.contains('PACKAGECONFIG', 'vc', 'true', 'false', d)}; then
+        install ${B}/IGC/Release/CMCLTranslatorTool ${D}${bindir}/
+    fi
 }
 
 BBCLASSEXTEND = "native nativesdk"
