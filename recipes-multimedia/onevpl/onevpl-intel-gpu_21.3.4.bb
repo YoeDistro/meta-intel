@@ -18,6 +18,7 @@ DEPENDS += "libdrm libva intel-media-driver onevpl pkgconfig-native"
 
 SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;branch=main;lfs=0 \
             file://0001-jpegd-Enable-JPEG-decode-error-report.patch \
+            file://0001-Adding-missing-device-ID-4692-for-ADL-S.patch \
             "
 
 SRCREV = "51608c724044802cc060b7969084126a3e90ca4a"
