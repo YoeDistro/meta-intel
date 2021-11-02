@@ -29,7 +29,7 @@ S = "${WORKDIR}/git"
 
 SYSTEMD_SERVICE:${PN} = "lms.service"
 
-SRC_URI = "git://github.com/intel/lms.git \
+SRC_URI = "git://github.com/intel/lms.git;branch=master;protocol=https \
            "
 SRCREV = "6ef4440c40783aad218efa6df8768d8c99380c2b"
 

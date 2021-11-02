@@ -8,7 +8,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=c18ea6bb4786a26bf4eee88a7424a408 \
                     file://third-party-programs.txt;md5=67727fd253b1b4574cd9eea78a2b0620"
 
-SRC_URI = "git://github.com/oneapi-src/oneVPL.git;protocol=https \
+SRC_URI = "git://github.com/oneapi-src/oneVPL.git;protocol=https;branch=master \
             file://0001-Fix-basename-build-issue-with-musl_libc.patch \
             file://0001-Extends-errorTypes-to-support-JPEG-errors.patch \
             "

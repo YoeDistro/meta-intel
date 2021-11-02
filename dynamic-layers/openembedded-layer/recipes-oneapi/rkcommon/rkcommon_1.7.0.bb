@@ -10,7 +10,7 @@ inherit pkgconfig cmake
 
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://github.com/ospray/rkcommon.git;protocol=https \
+SRC_URI = "git://github.com/ospray/rkcommon.git;protocol=https;branch=master \
             "
 SRCREV = "8d76e418568a928401e35049a4e17019970df23a"
 

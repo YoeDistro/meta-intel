@@ -12,7 +12,7 @@ inherit pkgconfig cmake
 
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://github.com/ospray/ospray.git;protocol=https \
+SRC_URI = "git://github.com/ospray/ospray.git;protocol=https;branch=master \
             "
 SRCREV = "5269850081d1c7d6da59b3c4f3cbac5c732374ba"
 

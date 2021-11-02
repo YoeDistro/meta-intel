@@ -4,7 +4,7 @@ DESCRIPTION = "This repository includes optimized deep learning \
 models and a set of demos to expedite development of high-performance \
 deep learning inference applications."
 
-SRC_URI = "git://github.com/opencv/open_model_zoo.git;protocol=git;branch=master \
+SRC_URI = "git://github.com/opencv/open_model_zoo.git;protocol=https;branch=master \
            file://0001-use-oe-gflags.patch \
            "
 
