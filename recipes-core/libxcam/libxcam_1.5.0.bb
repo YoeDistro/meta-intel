@@ -8,7 +8,7 @@ inherit autotools pkgconfig
 
 S = "${WORKDIR}/git"
 SRCREV = "231a1d5243cd45c7a6b511b667f1ec52178fdda8"
-SRC_URI = "git://github.com/intel/libxcam.git;branch=1.5.0; \
+SRC_URI = "git://github.com/intel/libxcam.git;branch=1.5.0;protocol=https \
 "
 
 COMPATIBLE_HOST:libc-musl = "null"

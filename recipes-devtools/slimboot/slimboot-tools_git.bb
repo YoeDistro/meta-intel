@@ -4,7 +4,7 @@ binary file format understood by Slim Bootloader to load and initialize\
 Operating Systems or Hypervisors."
 HOMEPAGE = "https://slimbootloader.github.io/tools/index.html"
 
-SRC_URI = "git://github.com/slimbootloader/slimbootloader;protocol=https"
+SRC_URI = "git://github.com/slimbootloader/slimbootloader;protocol=https;branch=master"
 SRCREV = "9f146afd47e0ca204521826a583d55388850b216"
 PV = "0.0.0+git${SRCPV}"
 LICENSE = "BSD-2-Clause-Patent"

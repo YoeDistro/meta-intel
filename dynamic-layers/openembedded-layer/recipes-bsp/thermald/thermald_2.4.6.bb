@@ -10,7 +10,7 @@ DEPENDS = "dbus dbus-glib dbus-glib-native libxml2 glib-2.0 glib-2.0-native upow
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ea8831610e926e2e469075b52bf08848"
 
-SRC_URI = "git://github.com/intel/thermal_daemon/ \
+SRC_URI = "git://github.com/intel/thermal_daemon/;branch=master;protocol=https \
            "
 
 SRCREV = "dddba484b23562d421cdaf1703dabc602e1968e7"

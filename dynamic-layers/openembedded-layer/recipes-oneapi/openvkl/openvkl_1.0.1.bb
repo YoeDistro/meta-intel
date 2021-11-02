@@ -18,7 +18,7 @@ inherit pkgconfig cmake
 
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://github.com/openvkl/openvkl.git;protocol=https \
+SRC_URI = "git://github.com/openvkl/openvkl.git;protocol=https;branch=master \
            "
 SRCREV = "dcdd2e1f839ca03c6fe6036d824a5db1cdaabcdb"
 

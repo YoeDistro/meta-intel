@@ -4,7 +4,7 @@ to install Java applets on DAL FW and communicate with them"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=833126f14614a3276708a4d7c9734645"
 
-SRC_URI = "git://github.com/intel/dynamic-application-loader-host-interface.git;protocol=https"
+SRC_URI = "git://github.com/intel/dynamic-application-loader-host-interface.git;protocol=https;branch=master"
 
 inherit cmake useradd systemd pkgconfig update-rc.d
 

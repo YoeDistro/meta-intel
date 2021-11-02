@@ -7,7 +7,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=465fe90caea3edd6a2cecb3f0c28a654"
 
 SRC_URI = " \
-            git://github.com/intel/gmmlib.git;protocol=https \
+            git://github.com/intel/gmmlib.git;protocol=https;branch=master \
             "
 
 SRCREV = "9253eb8b949515d2a5030f99163a35567fe81838"

@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=72b9da60da6219d612ce30b746a0fe71  \
                     file://edk2/License.txt;md5=6123e5bf044a66db96c4ce88a36b2d08"
 
 SRC_URI = "git://github.com/intel/ipmctl.git;protocol=https;branch=development;name=ipmctl; \
-        git://github.com/tianocore/edk2.git;protocol=https;name=edk2;destsuffix=git/edk2; \
+        git://github.com/tianocore/edk2.git;protocol=https;name=edk2;destsuffix=git/edk2;branch=master \
         file://0001-Ignore-STATIC_ASSERTs-and-NULL-define-for-os-and-ut-builds.patch;patchdir=edk2 \
 "
 

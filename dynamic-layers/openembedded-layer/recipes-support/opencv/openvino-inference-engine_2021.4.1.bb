@@ -4,12 +4,12 @@ DESCRIPTION = "This toolkit allows developers to deploy pre-trained \
 deep learning models through a high-level C++ Inference Engine API \
 integrated with application logic."
 
-SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=git;branch=releases/2021/4;lfs=0 \
+SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=releases/2021/4;lfs=0 \
            https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/usb-ma2x8x/firmware_usb-ma2x8x_1736.zip;name=usb_ma2x8x \
            https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/pcie-ma2x8x/firmware_pcie-ma2x8x_1736.zip;name=pcie_ma2x8x \
            git://github.com/openvinotoolkit/oneDNN.git;protocol=https;destsuffix=git/inference-engine/thirdparty/mkl-dnn;name=mkl;nobranch=1 \
-           git://github.com/herumi/xbyak.git;protocol=https;destsuffix=git/thirdparty/xbyak;name=xbyak \
-           git://github.com/pybind/pybind11.git;protocol=https;destsuffix=git/ngraph/python/pybind11;name=pybind11 \
+           git://github.com/herumi/xbyak.git;protocol=https;destsuffix=git/thirdparty/xbyak;name=xbyak;branch=master \
+           git://github.com/pybind/pybind11.git;protocol=https;destsuffix=git/ngraph/python/pybind11;name=pybind11;branch=master \
            file://0001-inference-engine-use-system-installed-packages.patch \
            file://0002-Disable-Werror.patch \
            file://0003-inference-engine-installation-fixes.patch \

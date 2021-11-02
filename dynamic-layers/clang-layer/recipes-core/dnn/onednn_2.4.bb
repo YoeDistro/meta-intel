@@ -14,7 +14,7 @@ inherit pkgconfig cmake ptest
 
 S = "${WORKDIR}/git"
 SRCREV = "a08d38538efbc70e79ce138ce4ed31b982b5ce42"
-SRC_URI = "git://github.com/oneapi-src/oneDNN.git;branch=rls-v2.4 \
+SRC_URI = "git://github.com/oneapi-src/oneDNN.git;branch=rls-v2.4;protocol=https \
            file://run-ptest \
            "
 

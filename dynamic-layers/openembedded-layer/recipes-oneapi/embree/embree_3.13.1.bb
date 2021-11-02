@@ -13,7 +13,7 @@ inherit pkgconfig cmake
 
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://github.com/embree/embree.git;protocol=https \
+SRC_URI = "git://github.com/embree/embree.git;protocol=https;branch=master \
             "
 SRCREV = "12b99393438a4cc9e478e33459eed78bec6233fd"
 

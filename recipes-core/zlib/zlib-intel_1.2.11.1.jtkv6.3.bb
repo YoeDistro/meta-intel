@@ -7,7 +7,7 @@ SUMMARY = "Zlib Compression Library (Intel-tuned)"
 PROVIDES = "zlib"
 
 SRC_URI:remove = "${SOURCEFORGE_MIRROR}/libpng/${BPN}/${PV}/${BPN}-${PV}.tar.xz"
-SRC_URI:prepend = "git://github.com/jtkukunas/zlib.git;protocol=git "
+SRC_URI:prepend = "git://github.com/jtkukunas/zlib.git;protocol=https;branch=master "
 
 SRCREV = "a43a247bfa16ec5368747b5b64f11ea5ca033010"
 S = "${WORKDIR}/git"

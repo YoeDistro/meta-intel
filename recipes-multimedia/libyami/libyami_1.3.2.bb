@@ -8,7 +8,7 @@ BUGTRACKER = "https://github.com/intel/libyami/issues/new"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-SRC_URI = "git://github.com/intel/libyami.git;branch=apache \
+SRC_URI = "git://github.com/intel/libyami.git;branch=apache;protocol=https \
 "
 SRCREV = "08606d0a43e0ef15e5b61cc13563169370ce8715"
 S = "${WORKDIR}/git"
