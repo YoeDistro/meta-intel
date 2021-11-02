@@ -1,0 +1,24 @@
+From 7b575fc23d246373425c3682e83634203aadc4a6 Mon Sep 17 00:00:00 2001
+From: Naveen Saini <naveen.kumar.saini@intel.com>
+Date: Thu, 17 Jun 2021 12:35:36 +0800
+Subject: [PATCH 3/4] CMakeLists.txt: exclude host system headers
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+diff --git a/sources/ippcp/crypto_mb/CMakeLists.txt b/sources/ippcp/crypto_mb/CMakeLists.txt
+index d1f3994..db9635b 100644
+--- a/sources/ippcp/crypto_mb/CMakeLists.txt
++++ b/sources/ippcp/crypto_mb/CMakeLists.txt
+@@ -75,7 +75,6 @@ endif()
+ include_directories(
+      ${MB_INCLUDE_DIRS}
+      $<$<C_COMPILER_ID:Intel>:$ENV{ROOT}/compiler/include $ENV{ROOT}/compiler/include/icc>
+-     $<$<NOT:$<C_COMPILER_ID:Intel>>:${CMAKE_SYSTEM_INCLUDE_PATH}>
+      $<$<OR:$<C_COMPILER_ID:Intel>,$<BOOL:${MSVC_IDE}>>:$ENV{INCLUDE}>
+ )
+ 
+-- 
+2.17.1
+

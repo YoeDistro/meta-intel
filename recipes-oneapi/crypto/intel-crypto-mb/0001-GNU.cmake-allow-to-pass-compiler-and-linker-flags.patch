@@ -1,0 +1,29 @@
+From c440800cae91f857949255cc63993426bdaefb26 Mon Sep 17 00:00:00 2001
+From: Naveen Saini <naveen.kumar.saini@intel.com>
+Date: Wed, 16 Jun 2021 20:54:33 +0800
+Subject: [PATCH 1/4] GNU.cmake: allow to pass compiler and linker flags
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ sources/ippcp/crypto_mb/src/cmake/linux/GNU.cmake | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/sources/ippcp/crypto_mb/src/cmake/linux/GNU.cmake b/sources/ippcp/crypto_mb/src/cmake/linux/GNU.cmake
+index 5d148a1..4cb2289 100644
+--- a/sources/ippcp/crypto_mb/src/cmake/linux/GNU.cmake
++++ b/sources/ippcp/crypto_mb/src/cmake/linux/GNU.cmake
+@@ -56,7 +56,8 @@ set(LINK_FLAGS_DYNAMIC "${LINK_FLAGS_DYNAMIC} ${CRYPTO_MB_SOURCES_DIR}/cmake/dll
+ # Compiler flags
+ 
+ # Tells the compiler to align functions and loops
+-set(CMAKE_C_FLAGS " -falign-functions=32 -falign-loops=32")
++set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -falign-functions=32 -falign-loops=32")
++
+ # Ensures that compilation takes place in a freestanding environment
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffreestanding")
+ 
+-- 
+2.17.1
+
