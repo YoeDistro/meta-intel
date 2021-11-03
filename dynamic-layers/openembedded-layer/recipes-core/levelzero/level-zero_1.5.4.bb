@@ -29,3 +29,4 @@ FILES:${PN}-loader = "${libdir}"
 # PN-loader (non -dev/-dbg/nativesdk- package) contains symlink .so
 INSANE_SKIP:${PN}-loader = "dev-so"
 INSANE_SKIP:${PN}-samples = "dev-so"
+ALLOW_EMPTY:${PN} = "1"
