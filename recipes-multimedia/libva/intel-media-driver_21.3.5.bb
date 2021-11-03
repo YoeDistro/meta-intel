@@ -19,6 +19,7 @@ REQUIRED_DISTRO_FEATURES = "opengl"
 DEPENDS += "libva gmmlib"
 
 SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;nobranch=1 \
+           file://0001-MOS-user-setting-reentrant.patch \
           "
 
 SRCREV = "ec4dc5d653733c21f8bf390794674052b5abdb09"

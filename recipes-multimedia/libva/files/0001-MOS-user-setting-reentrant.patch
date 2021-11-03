@@ -1,0 +1,476 @@
+From b2c07abaf546f84529b39cb4ae443ed2a5bc35e9 Mon Sep 17 00:00:00 2001
+From: jinchung <you@example.com>
+Date: Wed, 3 Nov 2021 14:02:51 +0000
+Subject: [PATCH] [MOS] user setting reentrant
+
+Fix for registry key reentrant on Linux during multiple processes
+
+Upstream-Status: Submitted [internal innersource]
+innersource PR #45124
+
+Signed-off-by: Teng, Jin Chung <jin.chung.teng@intel.com>
+Signed-off-by: Wang, Pingli <pingli.wang@intel.com>
+---
+ .../common/os/mos_utilities_specific.cpp      |   2 +-
+ .../linux/common/os/mos_utilities_specific.h  |   2 +-
+ .../agnostic/common/os/mos_utilities_next.cpp |  15 ++-
+ .../agnostic/common/os/mos_utilities_next.h   |   2 +-
+ .../common/os/mos_utilities_specific_next.cpp | 107 +++++++-----------
+ .../common/os/mos_utilities_specific_next.h   |  71 ++++++------
+ 6 files changed, 89 insertions(+), 110 deletions(-)
+
+diff --git a/media_driver/linux/common/os/mos_utilities_specific.cpp b/media_driver/linux/common/os/mos_utilities_specific.cpp
+index ae414360..62eb4593 100644
+--- a/media_driver/linux/common/os/mos_utilities_specific.cpp
++++ b/media_driver/linux/common/os/mos_utilities_specific.cpp
+@@ -589,7 +589,7 @@ static int32_t _UserFeature_FindValue(MOS_UF_KEY UFKey, char * const pcValueName
+ 
+     iResult = -1;
+ 
+-    for ( i = 0; i < (int32_t)UFKey.ulValueNum; i++ )
++    for ( i = 0; i < UFKey.ulValueNum; i++ )
+     {
+         iResult = strcmp(UFKey.pValueArray[i].pcValueName, pcValueName);
+         if ( iResult == 0 )
+diff --git a/media_driver/linux/common/os/mos_utilities_specific.h b/media_driver/linux/common/os/mos_utilities_specific.h
+index 81d84537..3d1cda35 100644
+--- a/media_driver/linux/common/os/mos_utilities_specific.h
++++ b/media_driver/linux/common/os/mos_utilities_specific.h
+@@ -116,7 +116,7 @@ typedef struct _MOS_UF_VALUE {
+ typedef struct _MOS_UF_KEY {
+     void              *UFKey;
+     char              pcKeyName[MAX_USERFEATURE_LINE_LENGTH];
+-    uint32_t          ulValueNum;
++    int32_t           ulValueNum;
+     MOS_UF_VALUE     *pValueArray;
+ } MOS_UF_KEY;
+ 
+diff --git a/media_softlet/agnostic/common/os/mos_utilities_next.cpp b/media_softlet/agnostic/common/os/mos_utilities_next.cpp
+index 8427ec17..74ba75b9 100644
+--- a/media_softlet/agnostic/common/os/mos_utilities_next.cpp
++++ b/media_softlet/agnostic/common/os/mos_utilities_next.cpp
+@@ -1930,9 +1930,18 @@ MOS_STATUS MosUtilities::MosUserFeatureReadValueFromMapID(
+                        &ufKey,
+                        ufInfo)) != MOS_STATUS_SUCCESS)
+     {
+-        MOS_OS_NORMALMESSAGE("Failed to open user feature for reading eStatus:%d.", eStatus);
+-        eStatus = MOS_STATUS_USER_FEATURE_KEY_OPEN_FAILED;
+-        goto finish;
++        MOS_OS_NORMALMESSAGE("Failed to open user feature for concurrency.");
++        if ((eStatus = MosUserFeatureOpen(
++                 pUserFeature->Type,
++                 pUserFeature->pcPath,
++                 KEY_READ,
++                 &ufKey,
++                 ufInfo)) != MOS_STATUS_SUCCESS)
++        {
++            MOS_OS_NORMALMESSAGE("Failed to open user feature for reading eStatus:%d.", eStatus);
++            eStatus = MOS_STATUS_USER_FEATURE_KEY_OPEN_FAILED;
++            goto finish;
++        }
+     }
+ 
+     // Initialize Read Value
+diff --git a/media_softlet/agnostic/common/os/mos_utilities_next.h b/media_softlet/agnostic/common/os/mos_utilities_next.h
+index f492a2c7..65aa3729 100644
+--- a/media_softlet/agnostic/common/os/mos_utilities_next.h
++++ b/media_softlet/agnostic/common/os/mos_utilities_next.h
+@@ -653,7 +653,7 @@ public:
+     //!
+     //! \brief    Unlink the user feature key Desc Fields table items to key value map
+     //! \details  Unlink the user feature key Desc Fields table items to key value map
+-    //!           according to ID sequence and do some post processing by calling MOS_DestroyUserFeatureData
++    //!           according to ID sequence and do some post processing by calling MOSDestroyUserFeatureData
+     //! \param    [in] pUserFeatureKey
+     //!           Pointer to the User Feature Value needed to be destroyed
+     //! \return   MOS_STATUS
+diff --git a/media_softlet/linux/common/os/mos_utilities_specific_next.cpp b/media_softlet/linux/common/os/mos_utilities_specific_next.cpp
+index 81ee4bdf..584ba086 100644
+--- a/media_softlet/linux/common/os/mos_utilities_specific_next.cpp
++++ b/media_softlet/linux/common/os/mos_utilities_specific_next.cpp
+@@ -47,7 +47,8 @@
+ #include <unistd.h>  // fork
+ #include <algorithm>
+ 
+-const char *MosUtilitiesSpecificNext::m_szUserFeatureFile = USER_FEATURE_FILE;
++const char           *MosUtilitiesSpecificNext::m_szUserFeatureFile     = USER_FEATURE_FILE;
++MOS_PUF_KEYLIST      MosUtilitiesSpecificNext::m_ufKeyList              = nullptr;
+ 
+ double MosUtilities::MosGetTime()
+ {
+@@ -540,7 +541,7 @@ void MosUtilities::MosSleep(uint32_t mSec)
+ 
+     iResult = -1;
+ 
+-    for ( i = 0; i < (int32_t)UFKey.ulValueNum; i++ )
++    for ( i = 0; i < UFKey.ulValueNum; i++ )
+     {
+         iResult = strcmp(UFKey.pValueArray[i].pcValueName, pcValueName);
+         if ( iResult == 0 )
+@@ -566,7 +567,7 @@ MOS_STATUS MosUtilitiesSpecificNext::UserFeatureAdd(MOS_PUF_KEYLIST *pKeyList, M
+         return MOS_STATUS_INVALID_PARAMETER;
+     }
+ 
+-    pNewNode = (MOS_UF_KEYNODE*)MOS_AllocMemory(sizeof(MOS_UF_KEYNODE));
++    pNewNode = (MOS_UF_KEYNODE*)MOS_AllocAndZeroMemory(sizeof(MOS_UF_KEYNODE));
+     if (pNewNode == nullptr)
+     {
+         return MOS_STATUS_NO_SPACE;
+@@ -604,41 +605,34 @@ MOS_STATUS MosUtilitiesSpecificNext::UserFeatureSet(MOS_PUF_KEYLIST *pKeyList, M
+     }
+ 
+     // Prepare the ValueBuff of the NewKey
+-    if ((ulValueBuf = MOS_AllocMemory(NewKey.pValueArray[0].ulValueLen)) == nullptr)
++    if ((ulValueBuf = MOS_AllocAndZeroMemory(NewKey.pValueArray[0].ulValueLen)) == nullptr)
+     {
+          return MOS_STATUS_NO_SPACE;
+     }
++    MOS_AtomicIncrement(&MosUtilities::m_mosMemAllocFakeCounter);  //ulValueBuf does not count it, because it is freed after the MEMNJA final report.
++    MOS_OS_NORMALMESSAGE("ulValueBuf %p for key %s", ulValueBuf, NewKey.pValueArray[0].pcValueName);
+ 
+     if ( (iPos = UserFeatureFindValue(*Key, NewKey.pValueArray[0].pcValueName)) == NOT_FOUND)
+     {
+         //not found, add a new value to key struct.
+         //reallocate memory for appending this value.
+-        pValueArray = (MOS_UF_VALUE*)MOS_AllocMemory(sizeof(MOS_UF_VALUE)*(Key->ulValueNum+1));
+-        if (pValueArray == nullptr)
++        iPos = MOS_AtomicIncrement(&Key->ulValueNum);
++        if (iPos >= UF_CAPABILITY)
+         {
+-            MOS_FreeMemory(ulValueBuf);
+-            return MOS_STATUS_NO_SPACE;
++            MOS_OS_ASSERTMESSAGE("user setting value icount %d must less than UF_CAPABILITY(64)", iPos);
++            return MOS_STATUS_USER_FEATURE_KEY_READ_FAILED;
+         }
+ 
+-        MosUtilities::MosSecureMemcpy(pValueArray,
+-                        sizeof(MOS_UF_VALUE)*(Key->ulValueNum),
+-                        Key->pValueArray,
+-                        sizeof(MOS_UF_VALUE)*(Key->ulValueNum));
+-
+-        MOS_FreeMemory(Key->pValueArray);
+-
+-        Key->pValueArray = pValueArray;
+-
+-        iPos = Key->ulValueNum;
+-        MosUtilities::MosSecureStrcpy(Key->pValueArray[Key->ulValueNum].pcValueName,
++        MosUtilities::MosSecureStrcpy(Key->pValueArray[iPos].pcValueName,
+             MAX_USERFEATURE_LINE_LENGTH,
+             NewKey.pValueArray[0].pcValueName);
+-        Key->ulValueNum ++;
+     }
+     else
+     {
+         //if found, the previous value buffer needs to be freed before reallocating
+         MOS_FreeMemory(Key->pValueArray[iPos].ulValueBuf);
++        MOS_AtomicDecrement(&MosUtilities::m_mosMemAllocFakeCounter);
++        MOS_OS_NORMALMESSAGE("ulValueBuf %p for key %s", ulValueBuf, NewKey.pValueArray[0].pcValueName);
+     }
+ 
+     Key->pValueArray[iPos].ulValueLen  = NewKey.pValueArray[0].ulValueLen;
+@@ -733,7 +727,7 @@ MOS_STATUS  MosUtilitiesSpecificNext::UserFeatureDumpFile(const char * const szF
+     iCurId    =  0;
+     eStatus  =  MOS_STATUS_SUCCESS;
+ 
+-    CurKey = (MOS_UF_KEY*)MOS_AllocMemory(sizeof(MOS_UF_KEY));
++    CurKey = (MOS_UF_KEY*)MOS_AllocAndZeroMemory(sizeof(MOS_UF_KEY));
+     if (CurKey == nullptr)
+     {
+         return MOS_STATUS_NO_SPACE;
+@@ -771,7 +765,7 @@ MOS_STATUS  MosUtilitiesSpecificNext::UserFeatureDumpFile(const char * const szF
+                     // if the CurKey didn't be added in pKeyList, free it.
+                     MOS_FreeMemory(CurKey);
+                 }
+-                CurKey = (MOS_UF_KEY*)MOS_AllocMemory(sizeof(MOS_UF_KEY));
++                CurKey = (MOS_UF_KEY*)MOS_AllocAndZeroMemory(sizeof(MOS_UF_KEY));
+                 if (CurKey == nullptr)
+                 {
+                     eStatus = MOS_STATUS_NO_SPACE;
+@@ -796,7 +790,7 @@ MOS_STATUS  MosUtilitiesSpecificNext::UserFeatureDumpFile(const char * const szF
+             CurKey->ulValueNum = 0;
+ 
+             // allocate capability length for valuearray.
+-            CurValue = (MOS_UF_VALUE*)MOS_AllocMemory(sizeof(MOS_UF_VALUE)*UF_CAPABILITY);
++            CurValue = (MOS_UF_VALUE*)MOS_AllocAndZeroMemory(sizeof(MOS_UF_VALUE)*UF_CAPABILITY);
+             if (CurValue == nullptr)
+             {
+                 eStatus = MOS_STATUS_NO_SPACE;
+@@ -826,6 +820,7 @@ MOS_STATUS  MosUtilitiesSpecificNext::UserFeatureDumpFile(const char * const szF
+                 if (iCount < 0 || iCount >= UF_CAPABILITY)
+                 {
+                     eStatus = MOS_STATUS_USER_FEATURE_KEY_READ_FAILED;
++                    MOS_OS_ASSERTMESSAGE("user setting value icount %d, and it must meet  0 < icount < UF_CAPABILITY(64)", iCount);
+                     break;
+                 }
+ 
+@@ -987,7 +982,7 @@ MOS_STATUS MosUtilitiesSpecificNext::UserFeatureDumpDataToFile(const char *szFil
+         fprintf(File, "%s\n", UF_KEY_ID);
+         fprintf(File,  "\t0x%.8x\n", (uint32_t)(uintptr_t)pKeyTmp->pElem->UFKey);
+         fprintf(File,  "\t%s\n", pKeyTmp->pElem->pcKeyName);
+-        for ( j = 0; j < (int32_t)pKeyTmp->pElem->ulValueNum; j ++ )
++        for ( j = 0; j < pKeyTmp->pElem->ulValueNum; j ++ )
+         {
+             fprintf(File, "\t\t%s\n", UF_VALUE_ID);
+             if ( strlen(pKeyTmp->pElem->pValueArray[j].pcValueName) > 0 )
+@@ -1015,10 +1010,9 @@ MOS_STATUS MosUtilitiesSpecificNext::UserFeatureDumpDataToFile(const char *szFil
+                     break;
+                 } //switch (pKeyTmp->pElem->pValueArray[j].ulValueType)
+             }
+-        } // for ( j = 0; j < (int32_t)pKeyTmp->pElem->ulValueNum; j ++ )
++        } // for ( j = 0; j < pKeyTmp->pElem->ulValueNum; j ++ )
+     } //for (pKeyTmp = pKeyList; pKeyTmp; pKeyTmp = pKeyTmp->pNext)
+     fclose(File);
+-    MosUtilities::MosUserFeatureNotifyChangeKeyValue(nullptr, false, nullptr, true);
+ 
+     return MOS_STATUS_SUCCESS;
+ }
+@@ -1055,12 +1049,10 @@ MOS_STATUS  MosUtilitiesSpecificNext::UserFeatureSetValue(
+     MOS_UF_KEY          NewKey;
+     MOS_UF_VALUE        NewValue;
+     MOS_STATUS          eStatus;
+-    MOS_PUF_KEYLIST     pKeyList;
+ 
+     eStatus   = MOS_STATUS_UNKNOWN;
+-    pKeyList   = nullptr;
+ 
+-    if ( (strKey== nullptr) || (pcValueName == nullptr) )
++    if ((strKey == nullptr) || (pcValueName == nullptr) || (m_ufKeyList == nullptr))
+     {
+         return MOS_STATUS_INVALID_PARAMETER;
+     }
+@@ -1083,18 +1075,11 @@ MOS_STATUS  MosUtilitiesSpecificNext::UserFeatureSetValue(
+     NewKey.pValueArray = &NewValue;
+     NewKey.ulValueNum = 1;
+ 
+-    if ((eStatus = UserFeatureDumpFile(m_szUserFeatureFile, &pKeyList)) != MOS_STATUS_SUCCESS)
++    if ( ( eStatus = UserFeatureSet(&MosUtilitiesSpecificNext::m_ufKeyList, NewKey)) == MOS_STATUS_SUCCESS )
+     {
+-        UserFeatureFreeKeyList(pKeyList);
+-        return eStatus;
++        MosUtilities::MosUserFeatureNotifyChangeKeyValue(nullptr, false, nullptr, true);
+     }
+ 
+-    if ( ( eStatus = UserFeatureSet(&pKeyList, NewKey)) == MOS_STATUS_SUCCESS )
+-    {
+-        eStatus = UserFeatureDumpDataToFile(m_szUserFeatureFile, pKeyList);
+-    }
+-
+-    UserFeatureFreeKeyList(pKeyList);
+     return eStatus;
+ }
+ 
+@@ -1114,9 +1099,9 @@ MOS_STATUS MosUtilitiesSpecificNext::UserFeatureQueryValue(
+     char                strTempValueName[MAX_USERFEATURE_LINE_LENGTH];
+ 
+     eStatus   = MOS_STATUS_UNKNOWN;
+-    pKeyList   = nullptr;
++    pKeyList   = MosUtilitiesSpecificNext::m_ufKeyList;
+ 
+-    if ( (strKey == nullptr) || (pcValueName == nullptr))
++    if ( (strKey == nullptr) || (pcValueName == nullptr) || (pKeyList == nullptr))
+     {
+         return MOS_STATUS_INVALID_PARAMETER;
+     }
+@@ -1129,21 +1114,17 @@ MOS_STATUS MosUtilitiesSpecificNext::UserFeatureQueryValue(
+     NewKey.pValueArray = &NewValue;
+     NewKey.ulValueNum = 1;
+ 
+-    if ((eStatus = UserFeatureDumpFile(m_szUserFeatureFile, &pKeyList)) == MOS_STATUS_SUCCESS)
++    if ( (eStatus = UserFeatureQuery(pKeyList, &NewKey)) == MOS_STATUS_SUCCESS )
+     {
+-        if ( (eStatus = UserFeatureQuery(pKeyList, &NewKey)) == MOS_STATUS_SUCCESS )
++        if(uiValueType != nullptr)
+         {
+-            if(uiValueType != nullptr)
+-            {
+-                *uiValueType = NewKey.pValueArray[0].ulValueType;
+-            }
+-            if (nDataSize != nullptr)
+-            {
+-                *nDataSize   = NewKey.pValueArray[0].ulValueLen;
+-            }
++            *uiValueType = NewKey.pValueArray[0].ulValueType;
++        }
++        if (nDataSize != nullptr)
++        {
++            *nDataSize   = NewKey.pValueArray[0].ulValueLen;
+         }
+     }
+-    UserFeatureFreeKeyList(pKeyList);
+ 
+     return eStatus;
+ }
+@@ -1155,16 +1136,9 @@ MOS_STATUS MosUtilitiesSpecificNext::UserFeatureGetKeyIdbyName(const char  *pcKe
+     MOS_STATUS          eStatus;
+     MOS_PUF_KEYLIST     pTempNode;
+ 
+-    pKeyList   = nullptr;
++    pKeyList   = MosUtilitiesSpecificNext::m_ufKeyList;
+     iResult    = -1;
+ 
+-    if ((eStatus = UserFeatureDumpFile(m_szUserFeatureFile, &pKeyList)) !=
+-        MOS_STATUS_SUCCESS )
+-    {
+-        UserFeatureFreeKeyList(pKeyList);
+-        return eStatus;
+-    }
+-
+     eStatus   = MOS_STATUS_INVALID_PARAMETER;
+ 
+     for(pTempNode=pKeyList; pTempNode; pTempNode=pTempNode->pNext)
+@@ -1177,7 +1151,6 @@ MOS_STATUS MosUtilitiesSpecificNext::UserFeatureGetKeyIdbyName(const char  *pcKe
+             break;
+         }
+     }
+-    UserFeatureFreeKeyList(pKeyList);
+ 
+     return eStatus;
+ }
+@@ -1188,7 +1161,7 @@ MOS_STATUS MosUtilitiesSpecificNext::UserFeatureGetKeyNamebyId(void  *UFKey, cha
+     MOS_PUF_KEYLIST     pTempNode;
+     MOS_STATUS          eStatus;
+ 
+-    pKeyList   = nullptr;
++    pKeyList   = MosUtilitiesSpecificNext::m_ufKeyList;
+ 
+     switch((uintptr_t)UFKey)
+     {
+@@ -1201,13 +1174,6 @@ MOS_STATUS MosUtilitiesSpecificNext::UserFeatureGetKeyNamebyId(void  *UFKey, cha
+         eStatus = MOS_STATUS_SUCCESS;
+         break;
+     default:
+-        if ((eStatus = UserFeatureDumpFile(m_szUserFeatureFile, &pKeyList)) !=
+-            MOS_STATUS_SUCCESS )
+-        {
+-            UserFeatureFreeKeyList(pKeyList);
+-            return eStatus;
+-        }
+-
+         eStatus   = MOS_STATUS_UNKNOWN;
+ 
+         for(pTempNode=pKeyList;pTempNode;pTempNode=pTempNode->pNext)
+@@ -1219,7 +1185,6 @@ MOS_STATUS MosUtilitiesSpecificNext::UserFeatureGetKeyNamebyId(void  *UFKey, cha
+                 break;
+             }
+         }
+-        UserFeatureFreeKeyList(pKeyList);
+         break;
+     }
+ 
+@@ -1364,6 +1329,7 @@ MOS_STATUS MosUtilities::MosOsUtilitiesInit(MOS_CONTEXT_HANDLE mosCtx)
+         //Init MOS User Feature Key from mos desc table
+         eStatus = MosDeclareUserFeatureKeysForAllDescFields();
+ 
++        MosUtilitiesSpecificNext::UserFeatureDumpFile(MosUtilitiesSpecificNext::m_szUserFeatureFile, &MosUtilitiesSpecificNext::m_ufKeyList);
+ #if _MEDIA_RESERVED
+         m_codecUserFeatureExt = new CodechalUserSettingsMgr();
+         m_vpUserFeatureExt    = new VphalUserSettingsMgr();
+@@ -1425,6 +1391,9 @@ MOS_STATUS MosUtilities::MosOsUtilitiesClose(MOS_CONTEXT_HANDLE mosCtx)
+         // so if there still is another active lib instance, logs would still be printed.
+         MosUtilDebug::MosMessageClose();
+ #endif
++        MosUtilitiesSpecificNext::UserFeatureDumpDataToFile(MosUtilitiesSpecificNext::m_szUserFeatureFile, MosUtilitiesSpecificNext::m_ufKeyList);
++        MosUtilitiesSpecificNext::UserFeatureFreeKeyList(MosUtilitiesSpecificNext::m_ufKeyList);
++        MosUtilitiesSpecificNext::m_ufKeyList = nullptr;
+     }
+     m_mutexLock.Unlock();
+     return eStatus;
+diff --git a/media_softlet/linux/common/os/mos_utilities_specific_next.h b/media_softlet/linux/common/os/mos_utilities_specific_next.h
+index 792123a6..878ce4e6 100644
+--- a/media_softlet/linux/common/os/mos_utilities_specific_next.h
++++ b/media_softlet/linux/common/os/mos_utilities_specific_next.h
+@@ -110,6 +110,41 @@ static MOS_STATUS MosUserFeatureOpenKeyFile(
+     uint32_t   samDesired,
+     void       **phkResult);
+ 
++/*----------------------------------------------------------------------------
++    | Name      : UserFeatureDumpFile
++    | Purpose   : This function read the whole User Feature File and dump User Feature File
++    |             data to key linked list.
++    | Arguments : szFileName         [in]  User Feature File name.
++    |             pKeyList           [out] Key Linked list.
++    | Returns   : MOS_STATUS_SUCCESS           Operation success.
++    |             MOS_STATUS_USER_FEATURE_KEY_READ_FAILED  User Feature File can't be open as read.
++    |             MOS_STATUS_NO_SPACE          no space left for allocate
++    |             MOS_STATUS_UNKNOWN           unknown user feature type found in User Feature File
++    |             MOS_STATUS_INVALID_PARAMETER unknown items found in User Feature File
++    | Comments  :
++    \---------------------------------------------------------------------------*/
++static MOS_STATUS UserFeatureDumpFile(const char *const szFileName, MOS_PUF_KEYLIST *pKeyList);
++
++/*----------------------------------------------------------------------------
++| Name      : UserFeatureDumpDataToFile
++| Purpose   : This function dump key linked list data to File.
++| Arguments : szFileName             [in] A handle to the File.
++|             pKeyList               [in] Reserved, any LPDWORD type value.
++| Returns   : MOS_STATUS_SUCCESS                        Operation success.
++|             MOS_STATUS_USER_FEATURE_KEY_WRITE_FAILED  File can't be written.
++| Comments  :
++\---------------------------------------------------------------------------*/
++
++static MOS_STATUS UserFeatureDumpDataToFile(const char *szFileName, MOS_PUF_KEYLIST pKeyList);
++
++/*----------------------------------------------------------------------------
++| Name      : UserFeatureFreeKeyList
++| Purpose   : Free key list
++| Arguments : pKeyList           [in] key list to be free.
++| Returns   : None
++| Comments  :
++\---------------------------------------------------------------------------*/
++static void UserFeatureFreeKeyList(MOS_PUF_KEYLIST pKeyList);
+ 
+ private:
+ 
+@@ -174,41 +209,6 @@ private:
+ 
+     static MOS_STATUS UserFeatureReadNextTokenFromFile(FILE *pFile, const char *szFormat, char  *szToken);
+ 
+-    /*----------------------------------------------------------------------------
+-    | Name      : UserFeatureDumpFile
+-    | Purpose   : This function read the whole User Feature File and dump User Feature File
+-    |             data to key linked list.
+-    | Arguments : szFileName         [in]  User Feature File name.
+-    |             pKeyList           [out] Key Linked list.
+-    | Returns   : MOS_STATUS_SUCCESS           Operation success.
+-    |             MOS_STATUS_USER_FEATURE_KEY_READ_FAILED  User Feature File can't be open as read.
+-    |             MOS_STATUS_NO_SPACE          no space left for allocate
+-    |             MOS_STATUS_UNKNOWN           unknown user feature type found in User Feature File
+-    |             MOS_STATUS_INVALID_PARAMETER unknown items found in User Feature File
+-    | Comments  :
+-    \---------------------------------------------------------------------------*/
+-    static MOS_STATUS UserFeatureDumpFile(const char * const szFileName, MOS_PUF_KEYLIST* pKeyList);
+-
+-    /*----------------------------------------------------------------------------
+-    | Name      : UserFeatureDumpDataToFile
+-    | Purpose   : This function dump key linked list data to File.
+-    | Arguments : szFileName             [in] A handle to the File.
+-    |             pKeyList               [in] Reserved, any LPDWORD type value.
+-    | Returns   : MOS_STATUS_SUCCESS                        Operation success.
+-    |             MOS_STATUS_USER_FEATURE_KEY_WRITE_FAILED  File can't be written.
+-    | Comments  :
+-    \---------------------------------------------------------------------------*/
+-    static MOS_STATUS UserFeatureDumpDataToFile(const char *szFileName, MOS_PUF_KEYLIST pKeyList);
+-
+-    /*----------------------------------------------------------------------------
+-    | Name      : UserFeatureFreeKeyList
+-    | Purpose   : Free key list
+-    | Arguments : pKeyList           [in] key list to be free.
+-    | Returns   : None
+-    | Comments  :
+-    \---------------------------------------------------------------------------*/
+-    static void UserFeatureFreeKeyList(MOS_PUF_KEYLIST pKeyList);
+-
+     /*----------------------------------------------------------------------------
+     | Name      : UserFeatureSetValue
+     | Purpose   : Modify or add a value of the specified user feature key.
+@@ -290,6 +290,7 @@ private:
+ 
+ public:
+     static const char*          m_szUserFeatureFile;
++    static MOS_PUF_KEYLIST      m_ufKeyList;
+     static int32_t              m_mosTraceFd;
+     static const char* const    m_mosTracePath;
+     static std::map<std::string, std::map<std::string, std::string>> m_regBuffer;
+-- 
+2.31.1
+
