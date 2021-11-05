@@ -37,3 +37,9 @@ do_configure:prepend() {
         ln -sf edk2/${dir} ${S}
     done
 }
+
+do_install:append() {
+    # Remove /var/log/ipmctl as anything created in /var/log will not be
+    # available when tmpfs is mounted at /var/volatile/log.
+    rm -rf ${D}${localstatedir}/log
+} 
