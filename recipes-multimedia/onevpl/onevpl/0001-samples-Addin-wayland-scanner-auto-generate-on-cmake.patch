@@ -1,0 +1,98 @@
+From 6ef9dd02e297ae20da422f2f3f4f298061efd6e9 Mon Sep 17 00:00:00 2001
+From: "Ung, Teng En" <teng.en.ung@intel.com>
+Date: Fri, 15 Oct 2021 11:55:13 +0000
+Subject: [PATCH 1/3] samples: Addin wayland-scanner auto generate on cmake.
+
+Upstream-Status: Submitted
+innersource PR #269
+
+---
+ tools/legacy/sample_common/CMakeLists.txt     | 21 ++++++++++
+ .../legacy/sample_misc/wayland/CMakeLists.txt | 39 +++++++++++++++++++
+ 2 files changed, 60 insertions(+)
+
+diff --git a/tools/legacy/sample_common/CMakeLists.txt b/tools/legacy/sample_common/CMakeLists.txt
+index 0ff83aa4..0ed8b390 100644
+--- a/tools/legacy/sample_common/CMakeLists.txt
++++ b/tools/legacy/sample_common/CMakeLists.txt
+@@ -92,6 +92,27 @@ if(UNIX)
+         target_include_directories(
+           ${TARGET}
+           PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../sample_misc/wayland/include)
++
++        pkg_check_modules(PKG_WAYLAND_SCANNER "wayland-scanner>=1.15")
++        pkg_check_modules(PKG_WAYLAND_PROTCOLS "wayland-protocols>=1.15")
++
++        if(PKG_WAYLAND_SCANNER_FOUND AND PKG_WAYLAND_PROTCOLS_FOUND)
++          pkg_get_variable(WAYLAND_PROTOCOLS_PATH wayland-protocols pkgdatadir)
++          if(WAYLAND_PROTOCOLS_PATH)
++            find_file(
++                WAYLAND_LINUX_DMABUF_XML_PATH linux-dmabuf-unstable-v1.xml
++                PATHS ${WAYLAND_PROTOCOLS_PATH}/unstable/linux-dmabuf
++                NO_DEFAULT_PATH)
++          endif()
++        endif()
++
++        if(WAYLAND_LINUX_DMABUF_XML_PATH)
++          target_compile_definitions(
++            ${TARGET} PUBLIC -DWAYLAND_LINUX_DMABUF_SUPPORT)
++          target_include_directories(
++            ${TARGET}
++            PUBLIC ${CMAKE_BINARY_DIR}/tools/legacy/sample_misc/wayland)
++        endif()
+       else()
+         message(
+           WARNING
+diff --git a/tools/legacy/sample_misc/wayland/CMakeLists.txt b/tools/legacy/sample_misc/wayland/CMakeLists.txt
+index 1fe98da4..01e6029b 100644
+--- a/tools/legacy/sample_misc/wayland/CMakeLists.txt
++++ b/tools/legacy/sample_misc/wayland/CMakeLists.txt
+@@ -29,6 +29,45 @@ target_sources(
+           ${CMAKE_CURRENT_SOURCE_DIR}/src/listener_wayland.cpp
+           ${CMAKE_CURRENT_SOURCE_DIR}/src/wayland-drm-protocol.c)
+ 
++if(PKG_WAYLAND_SCANNER_FOUND AND PKG_WAYLAND_PROTCOLS_FOUND AND WAYLAND_LINUX_DMABUF_XML_PATH)
++  pkg_get_variable(WAYLAND_SCANNER_BIN_PATH wayland-scanner bindir)
++  pkg_get_variable(WAYLAND_SCANNER_BIN wayland-scanner wayland_scanner)
++
++  if(WAYLAND_SCANNER_BIN_PATH AND WAYLAND_SCANNER_BIN)
++    execute_process(
++        COMMAND "${WAYLAND_SCANNER_BIN_PATH}\/${WAYLAND_SCANNER_BIN}"
++                "client-header" "${WAYLAND_LINUX_DMABUF_XML_PATH}"
++                "tools/legacy/sample_misc/wayland/linux-dmabuf-unstable-v1.h"
++        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
++        RESULT_VARIABLE WAYLAND_SCANNER_RESULT)
++    if (WAYLAND_SCANNER_RESULT)
++      message(ERROR "Failed to generate linux-dmabuf-unstable-v1.h")
++      return()
++    endif()
++
++    execute_process(
++        COMMAND "${WAYLAND_SCANNER_BIN_PATH}\/${WAYLAND_SCANNER_BIN}"
++                "private-code" "${WAYLAND_LINUX_DMABUF_XML_PATH}"
++                "tools/legacy/sample_misc/wayland/linux-dmabuf-unstable-v1.c"
++        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
++        RESULT_VARIABLE WAYLAND_SCANNER_RESULT)
++    if (WAYLAND_SCANNER_RESULT)
++      message(ERROR "Failed to generate linux-dmabuf-unstable-v1.c")
++      return()
++    endif()
++
++    include_directories(
++      ${CMAKE_BINARY_DIR}/tools/legacy/sample_misc/wayland)
++    add_definitions(-DWAYLAND_LINUX_DMABUF_SUPPORT)
++    target_sources(
++      ${TARGET}
++      PRIVATE ${CMAKE_BINARY_DIR}/tools/legacy/sample_misc/wayland/linux-dmabuf-unstable-v1.c)
++  else()
++    message(ERROR "Don't know how to execute wayland-scanner.")
++    return()
++  endif()
++endif()
++
+ target_link_libraries(${TARGET} sample_common wayland-client va drm drm_intel)
+ 
+ install(TARGETS ${TARGET} LIBRARY DESTINATION ${_TOOLS_LIB_PATH})
+-- 
+2.31.1
+
