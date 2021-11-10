@@ -15,6 +15,7 @@ SRC_URI = "git://github.com/oneapi-src/oneVPL.git;protocol=https;branch=master \
             file://0001-sample_misc-Addin-basic-wayland-dmabuf-support.patch \
             file://0001-sample_misc-use-wayland-dmabuf-to-render-nv12.patch \
             file://0001-samples-use-find_program-to-detect-wayland-scanner-i.patch \
+            file://0001-sample_decode-Add-VDSFC-CSC-for-AVC-HEVC.patch \
             "
 SRCREV = "cdf7444dc971544d148c51e0d93a2df1bb55dda7"
 S = "${WORKDIR}/git"
