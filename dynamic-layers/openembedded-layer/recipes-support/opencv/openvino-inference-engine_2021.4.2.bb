@@ -5,8 +5,8 @@ deep learning models through a high-level C++ Inference Engine API \
 integrated with application logic."
 
 SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=releases/2021/4;lfs=0 \
-           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/usb-ma2x8x/firmware_usb-ma2x8x_1736.zip;name=usb_ma2x8x \
-           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/pcie-ma2x8x/firmware_pcie-ma2x8x_1736.zip;name=pcie_ma2x8x \
+           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/usb-ma2x8x/firmware_usb-ma2x8x_1875.zip;name=usb_ma2x8x \
+           https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/pcie-ma2x8x/firmware_pcie-ma2x8x_1875.zip;name=pcie_ma2x8x \
            git://github.com/openvinotoolkit/oneDNN.git;protocol=https;destsuffix=git/inference-engine/thirdparty/mkl-dnn;name=mkl;nobranch=1 \
            git://github.com/herumi/xbyak.git;protocol=https;destsuffix=git/thirdparty/xbyak;name=xbyak;branch=master \
            git://github.com/pybind/pybind11.git;protocol=https;destsuffix=git/ngraph/python/pybind11;name=pybind11;branch=master \
@@ -16,13 +16,13 @@ SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=r
            file://0001-dont-install-licenses-and-version-file.patch \
            "
 
-SRCREV = "c2bfbf29fbc44f9a3c8403d77da5be7e45cbbb4f"
-SRCREV_mkl = "e0381c369fc3bed487b0dcfef7e9fcb2e0aea575"
+SRCREV = "6c4462759e8974c0ce5b36ad22972a1c6ded76a8"
+SRCREV_mkl = "60f41b3a9988ce7b1bc85c4f1ce7f9443bc91c9d"
 SRCREV_xbyak = "8d1e41b650890080fb77548372b6236bbd4079f9"
 SRCREV_pybind11 = "3b1dbebabc801c9cf6f0953a4c20b904d444f879"
 
-SRC_URI[usb_ma2x8x.sha256sum] = "28ed086ac52b964d9a1f5a54c017237d2d03ea39013e7910df678b176b9ce0c3"
-SRC_URI[pcie_ma2x8x.sha256sum] = "c2268e700eb597329376cbe830eeb6504203d765a1bde4da917242ca535a7ab3"
+SRC_URI[usb_ma2x8x.sha256sum] = "e65fcc1c6b0f3e9d814e53022c212ec0a2b83197a9df38badb298fb85ccf3acf"
+SRC_URI[pcie_ma2x8x.sha256sum] = "b11368fec2036d96fb703d2a40b171184fefe89f27e74a988ef1ca34260a2bc5"
 
 LICENSE = "Apache-2.0 & ISSL & MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
