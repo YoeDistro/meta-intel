@@ -128,3 +128,5 @@ FILES:${PN}-vpu-firmware += "${libdir}/*.mvcmd"
 PACKAGES =+ "${PN}-${PYTHON_PN}"
 
 FILES:${PN}-${PYTHON_PN} = "${PYTHON_SITEPACKAGES_DIR}/openvino"
+
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
