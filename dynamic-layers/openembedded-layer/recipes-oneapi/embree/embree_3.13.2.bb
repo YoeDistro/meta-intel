@@ -15,7 +15,7 @@ S = "${WORKDIR}/git"
 
 SRC_URI = "git://github.com/embree/embree.git;protocol=https;branch=master \
             "
-SRCREV = "12b99393438a4cc9e478e33459eed78bec6233fd"
+SRCREV = "d7157470e089098b9c7323f608835ed50453e606"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
