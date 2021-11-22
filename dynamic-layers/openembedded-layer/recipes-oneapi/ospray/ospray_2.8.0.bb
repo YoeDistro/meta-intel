@@ -14,7 +14,7 @@ S = "${WORKDIR}/git"
 
 SRC_URI = "git://github.com/ospray/ospray.git;protocol=https;branch=master \
             "
-SRCREV = "5269850081d1c7d6da59b3c4f3cbac5c732374ba"
+SRCREV = "fe4b3806f8626b22defbeda172609aa7c8c74a2e"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
