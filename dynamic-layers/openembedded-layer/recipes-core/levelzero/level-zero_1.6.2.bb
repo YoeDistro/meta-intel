@@ -1,10 +1,31 @@
+# FIXME: the LIC_FILES_CHKSUM values have been updated by 'devtool upgrade'.
+# The following is the difference between the old and the new license text.
+# Please update the LICENSE value if needed, and summarize the changes in
+# the commit message via 'License-Update:' tag.
+# (example: 'License-Update: copyright years updated.')
+#
+# The changes:
+#
+# --- LICENSE
+# +++ LICENSE
+# @@ -1,6 +1,6 @@
+#  MIT License
+#  
+# -Copyright (c) 2019 Intel Corporation
+# +Copyright (C) 2019-2021 Intel Corporation
+#  
+#  Permission is hereby granted, free of charge, to any person obtaining a copy
+#  of this software and associated documentation files (the "Software"), to deal
+# 
+#
+
 SUMMARY = "oneAPI Level Zero Specification Headers and Loader"
 HOMEPAGE = "https://github.com/oneapi-src/level-zero"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=8956dfdba7f8169c4005d1e9753ffddc"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=97957beb2f7808ffa247e5d93e6442cc"
 
 SRC_URI = "git://github.com/oneapi-src/level-zero.git;protocol=https;branch=master"
-SRCREV = "d84a5a2b1913629f85f09b1107f2b4467b3113cf"
+SRCREV = "7afa8a6dda56d4baef950c0a9d5ef8d8b0e14c4e"
 S = "${WORKDIR}/git"
 
 inherit cmake
