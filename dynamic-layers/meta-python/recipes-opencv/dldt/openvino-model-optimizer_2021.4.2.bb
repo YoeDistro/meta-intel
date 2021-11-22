@@ -33,3 +33,5 @@ RDEPENDS:${PN} += " \
                     "
 
 FILES:${PN} += "${datadir}/openvino"
+
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
