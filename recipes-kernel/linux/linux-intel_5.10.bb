@@ -6,13 +6,14 @@ KMETA_BRANCH = "yocto-5.10"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 SRC_URI:append = " file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch \
+                    file://0001-io-mapping-Cleanup-atomic-iomap.patch \
                    "
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "5.10.59"
-SRCREV_machine ?= "9efba09f984bb30bd3ea01a811c500eb26356a15"
-SRCREV_meta ?= "f8afd84b117f336477846b9e22178ebefb26c08d"
+LINUX_VERSION ?= "5.10.78"
+SRCREV_machine ?= "4e8162d8163c74e46a9f0bafb860f42249702791"
+SRCREV_meta ?= "64fb693a6c11f21bab3ff9bb8dcb65a70abe05e3"
 
 # For Crystalforest and Romley
 KERNEL_MODULE_AUTOLOAD:append:core2-32-intel-common = " uio"
