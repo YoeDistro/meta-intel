@@ -22,6 +22,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPLv3;md5=9eef91148a9b14ec7f9df333daebc746 \
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/jejb/sbsigntools.git;protocol=https;name=sbsigntools;branch=master \
            git://github.com/rustyrussell/ccan.git;protocol=https;destsuffix=git/lib/ccan.git;name=ccan;branch=master \
            file://0001-configure-Fixup-build-dependencies-for-cross-compili.patch \
+           file://0002-fix-openssl-3-0.patch \
           "
 
 SRCREV_sbsigntools  ?= "f12484869c9590682ac3253d583bf59b890bb826"
@@ -79,3 +80,5 @@ EXTRA_OEMAKE = "\
               -I${STAGING_INCDIR_NATIVE} \
               -I${STAGING_INCDIR_NATIVE}/efi/${@efi_arch(d)}' \
     "
+
+CFLAGS:append = " -Wno-error"
