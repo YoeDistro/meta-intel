@@ -9,9 +9,9 @@ SRC_URI_append = " file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurs
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "5.4.143"
-SRCREV_machine ?= "8246417e2e14117a0a9f3625c2122fc26c92c6bd"
-SRCREV_meta ?= "b8c82ba37370e4698ff0c42f3e54b8b4f2fb4ac0"
+LINUX_VERSION ?= "5.4.170"
+SRCREV_machine ?= "36f93ff941f127f4137ab369aecbdd995fb58c66"
+SRCREV_meta ?= "98cce1c95fcc9a26965cbc5f038fd71d53c387c8"
 
 # For Crystalforest and Romley
 KERNEL_MODULE_AUTOLOAD_append_core2-32-intel-common = " uio"
@@ -19,3 +19,8 @@ KERNEL_MODULE_AUTOLOAD_append_corei7-64-intel-common = " uio"
 
 # Functionality flags
 KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc features/security/security.scc"
+
+# Kernel config 'CONFIG_GPIO_LYNXPOINT' goes by a different name 'CONFIG_PINCTRL_LYNXPOINT' in
+# linux-intel 5.4 specifically. This causes a warning during kernel config audit. Suppress the
+# harmless warning for now.
+KCONF_BSP_AUDIT_LEVEL = "0"
