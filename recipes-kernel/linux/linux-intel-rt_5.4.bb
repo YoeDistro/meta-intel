@@ -17,8 +17,13 @@ KMETA_BRANCH = "yocto-5.4"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "5.4.143"
-SRCREV_machine ?= "2dc0f2c1ee89b9ce92944e397f2619062ebb77f8"
-SRCREV_meta ?= "b8c82ba37370e4698ff0c42f3e54b8b4f2fb4ac0"
+LINUX_VERSION ?= "5.4.170"
+SRCREV_machine ?= "196e38246d15096460031f4a17913922c006b12d"
+SRCREV_meta ?= "98cce1c95fcc9a26965cbc5f038fd71d53c387c8"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
+
+# Kernel config 'CONFIG_GPIO_LYNXPOINT' goes by a different name 'CONFIG_PINCTRL_LYNXPOINT' in
+# linux-intel 5.4 specifically. This causes a warning during kernel config audit. Suppress the
+# harmless warning for now.
+KCONF_BSP_AUDIT_LEVEL = "0"
