@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=ea8831610e926e2e469075b52bf08848"
 SRC_URI = "git://github.com/intel/thermal_daemon/;branch=master;protocol=https \
            "
 
-SRCREV = "dddba484b23562d421cdaf1703dabc602e1968e7"
+SRCREV = "f04746138602c623558be0561e4d1a37579710c7"
 S = "${WORKDIR}/git"
 
 inherit pkgconfig autotools systemd gtk-doc
