@@ -12,7 +12,7 @@ HOMEPAGE = "https://software.intel.com/content/www/us/en/develop/tools/oneapi/co
 LICENSE = "ISSL"
 
 LIC_FILES_CHKSUM = " \
-                     file://opt/intel/oneapi/lib/licensing/mkl/license.txt;md5=4867389dfbeb11811d66cdcbcc8712a6 \
+                     file://opt/intel/oneapi/lib/licensing/mkl/license.txt;md5=0c8b92562c3c165187e2c15ff638855e \
                      file://opt/intel/oneapi/lib/licensing/mkl/third-party-programs-benchmarks.txt;md5=cb98e1a1f14c05ea85a979ea8982e7a4 \
                      file://opt/intel/oneapi/lib/licensing/mkl/third-party-programs-ipp.txt;md5=a4b2bf15e38f5c1267cdafed18bc0b09 \
                      file://opt/intel/oneapi/lib/licensing/mkl/third-party-programs-openmp.txt;md5=6b3c1aa2a11393060074c0346ce21e49 \
@@ -25,8 +25,8 @@ SRC_URI = " \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-runtime-mkl-common-${PV}_all.deb;subdir=${BPN};name=common \
             "
 
-SRC_URI[runtime.sha256sum] = "0ff97d07e6db5d55edf9a744b0b0ee0ea75866e80ab5510f596c57d5535c20d4"
-SRC_URI[common.sha256sum] = "70ecfe07b2f888f66938a0e207aa8cb0637eb8d4deb659f6f6d924b8ee70a76e"
+SRC_URI[runtime.sha256sum] = "b20e0f7400fbbc55d8489f9f3ef35a8c8df7f5af7d87903bf305703e3a2ebc3b"
+SRC_URI[common.sha256sum] = "bff8b2bfedbd09c9e6d0366cca3d4de80af521302bd5938fe6fa0128c6839041"
 
 S = "${WORKDIR}/${BPN}"
 
