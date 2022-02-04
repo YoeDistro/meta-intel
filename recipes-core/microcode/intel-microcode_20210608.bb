@@ -34,12 +34,6 @@ do_compile() {
 	${STAGING_DIR_NATIVE}${sbindir_native}/iucode_tool \
 		${UCODE_FILTER_PARAMETERS} \
 		--overwrite \
-		--write-to=${WORKDIR}/microcode_${PV}.bin \
-		${S}/intel-ucode/* ${S}/intel-ucode-with-caveats/*
-
-	${STAGING_DIR_NATIVE}${sbindir_native}/iucode_tool \
-		${UCODE_FILTER_PARAMETERS} \
-		--overwrite \
 		--write-earlyfw=${WORKDIR}/microcode_${PV}.cpio \
 		${S}/intel-ucode/* ${S}/intel-ucode-with-caveats/*
 }
@@ -47,6 +41,7 @@ do_compile() {
 do_install() {
 	install -d ${D}${nonarch_base_libdir}/firmware/intel-ucode/
 	${STAGING_DIR_NATIVE}${sbindir_native}/iucode_tool \
+	${UCODE_FILTER_PARAMETERS} \
 	--write-firmware=${D}${nonarch_base_libdir}/firmware/intel-ucode \
 	${S}/intel-ucode/* ${S}/intel-ucode-with-caveats/*
 }
