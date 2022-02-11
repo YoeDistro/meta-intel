@@ -35,7 +35,7 @@ SRC_URI = "git://github.com/Intel-Media-SDK/MediaSDK.git;protocol=https;nobranch
            file://0001-FindITT.cmake-fix-detection-of-header-library.patch \
            "
 
-SRCREV = "2b2922e15f353bc542d64f8ef15a248d88bfd2ce"
+SRCREV = "0db73aa1b2dec5b61900ee54db3fa574de6d1752"
 S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^intel-mediasdk-(?P<pver>(\d+(\.\d+)+))$"
