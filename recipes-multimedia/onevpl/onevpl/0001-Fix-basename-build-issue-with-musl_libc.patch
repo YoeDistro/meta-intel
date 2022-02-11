@@ -1,7 +1,7 @@
-From d16afe9f9302e4995f12d699019eba170bb6db21 Mon Sep 17 00:00:00 2001
+From 72ceb46b43a7a74d20ced961aaff9366ccce53a9 Mon Sep 17 00:00:00 2001
 From: "Yew, Chang Ching" <chang.ching.yew@intel.com>
-Date: Fri, 8 Oct 2021 08:45:39 +0800
-Subject: [PATCH] Fix basename() build issue with musl_libc
+Date: Mon, 24 Jan 2022 20:49:50 +0800
+Subject: [PATCH 1/5] Fix basename() build issue with musl_libc
 
 Upstream-Status: Submitted
 innersource PR #264
@@ -12,7 +12,7 @@ Signed-off-by: Yew, Chang Ching <chang.ching.yew@intel.com>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/tools/legacy/sample_common/src/vaapi_utils.cpp b/tools/legacy/sample_common/src/vaapi_utils.cpp
-index b69dbe44..9382535a 100644
+index 86193d17..db71d413 100644
 --- a/tools/legacy/sample_common/src/vaapi_utils.cpp
 +++ b/tools/legacy/sample_common/src/vaapi_utils.cpp
 @@ -7,6 +7,7 @@
@@ -23,15 +23,15 @@ index b69dbe44..9382535a 100644
      #include <dlfcn.h>
      #include <stdexcept>
  
-@@ -26,7 +27,7 @@ SimpleLoader::SimpleLoader(const char* name) {
+@@ -24,7 +25,7 @@ namespace MfxLoader {
+ 
+ SimpleLoader::SimpleLoader(const char* name) {
      dlerror();
-     so_handle = dlopen(name, RTLD_GLOBAL | RTLD_NOW);
+-    so_handle = dlopen(name, RTLD_GLOBAL | RTLD_NOW);
++    so_handle = dlopen(basename((char *)name), RTLD_GLOBAL | RTLD_NOW);
      if (NULL == so_handle) {
--        so_handle = dlopen(basename(name), RTLD_GLOBAL | RTLD_NOW);
-+        so_handle = dlopen(basename((char *)name), RTLD_GLOBAL | RTLD_NOW);
-         if (NULL == so_handle) {
-             std::cerr << dlerror() << std::endl;
-             throw std::runtime_error("Can't load library");
+         std::cerr << dlerror() << std::endl;
+         throw std::runtime_error("Can't load library");
 -- 
-2.33.0
+2.34.1
 

@@ -1,4 +1,4 @@
-From 0091d3fea76e64ffbd537b2ae47b8912c89c09d7 Mon Sep 17 00:00:00 2001
+From e2b5041b272e0cb8b3c4c9d332b0bbc3dda05e69 Mon Sep 17 00:00:00 2001
 From: "Ung, Teng En" <teng.en.ung@intel.com>
 Date: Fri, 8 Oct 2021 14:38:45 +0000
 Subject: [PATCH 3/3] sample_misc: use wayland dmabuf to render nv12
@@ -7,14 +7,14 @@ Upstream-Status: Submitted
 innersource PR #269
 
 ---
- .../sample_misc/wayland/src/class_wayland.cpp | 60 +++++++++++++++----
+ .../sample_misc/wayland/src/class_wayland.cpp      | 60 +++++++++++++++++-----
  1 file changed, 47 insertions(+), 13 deletions(-)
 
 diff --git a/tools/legacy/sample_misc/wayland/src/class_wayland.cpp b/tools/legacy/sample_misc/wayland/src/class_wayland.cpp
-index dc2fc718..d2e7e4e2 100644
+index 7eac204..68fcea4 100644
 --- a/tools/legacy/sample_misc/wayland/src/class_wayland.cpp
 +++ b/tools/legacy/sample_misc/wayland/src/class_wayland.cpp
-@@ -26,6 +26,7 @@ or https://software.intel.com/en-us/media-client-solutions-support.
+@@ -13,6 +13,7 @@
  #include <iostream>
  extern "C" {
  #include <drm.h>
@@ -22,7 +22,7 @@ index dc2fc718..d2e7e4e2 100644
  #include <intel_bufmgr.h>
  #include <xf86drm.h>
  }
-@@ -305,20 +306,53 @@ struct wl_buffer* Wayland::CreatePrimeBuffer(uint32_t name,
+@@ -292,20 +293,53 @@ struct wl_buffer* Wayland::CreatePrimeBuffer(uint32_t name,
                                               int32_t offsets[3],
                                               int32_t pitches[3]) {
      struct wl_buffer* buffer = NULL;
@@ -90,5 +90,5 @@ index dc2fc718..d2e7e4e2 100644
  }
  
 -- 
-2.31.1
+2.7.4
 
