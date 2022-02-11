@@ -1,0 +1,44 @@
+From a31f63721adbc39a96d75ba170669afd2e53c948 Mon Sep 17 00:00:00 2001
+From: Sudarshan S <sudarshan.s@intel.com>
+Date: Wed, 19 Jan 2022 16:06:10 +0530
+Subject: [PATCH 2/2] Add support for ADL-N: Enable the cmake options
+
+This patch was imported from iHD media-driver git server
+(https://github.com/intel/media-driver.git) as of pull request
+https://github.com/intel/media-driver/pull/1327
+
+Upstream status: submitted
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
+---
+ media_driver/cmake/linux/media_gen_flags_linux.cmake | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/media_driver/cmake/linux/media_gen_flags_linux.cmake b/media_driver/cmake/linux/media_gen_flags_linux.cmake
+index 936b09309..b8f256288 100644
+--- a/media_driver/cmake/linux/media_gen_flags_linux.cmake
++++ b/media_driver/cmake/linux/media_gen_flags_linux.cmake
+@@ -81,6 +81,10 @@ cmake_dependent_option(GEN12_ADLP
+     "Enabled ADLP support (Gen12)" ON
+     "GEN12_TGLLP" OFF)
+ 
++cmake_dependent_option(GEN12_ADLN
++    "Enabled ADLN support (Gen12)" ON
++    "GEN12_TGLLP" OFF)
++
+ cmake_dependent_option(Xe_M
+     "Enabled support for Xehp_sdv+ platforms" ON
+     "ENABLE_PRODUCTION_KMD" OFF)
+@@ -184,6 +188,10 @@ if(GEN12_ADLP)
+     add_definitions(-DIGFX_GEN12_ADLP_SUPPORTED)
+ endif()
+ 
++if(GEN12_ADLN)
++    add_definitions(-DIGFX_GEN12_ADLN_SUPPORTED)
++endif()
++
+ if(DG2)
+     add_definitions(-DIGFX_DG2_SUPPORTED)
+     add_definitions(-DIGFX_DG2_CMFCPATCH_SUPPORTED)
+-- 
+2.34.1
+
