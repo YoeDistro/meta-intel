@@ -1,0 +1,27 @@
+From 34a7b0803102c5a6d669efe617ff29623ef12a63 Mon Sep 17 00:00:00 2001
+From: Dmitry Rogozhkin <dmitry.v.rogozhkin@intel.com>
+Date: Wed, 9 Feb 2022 16:35:46 -0800
+Subject: [PATCH] build: fix build with gcc-11
+
+Fixes: oneapi-src/oneVPL-intel-gpu#196
+
+Signed-off-by: Dmitry Rogozhkin <dmitry.v.rogozhkin@intel.com>
+
+Upstream-Status: Backport
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ _studio/shared/mfx_logging/include/mfx_utils_logging.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/_studio/shared/mfx_logging/include/mfx_utils_logging.h b/_studio/shared/mfx_logging/include/mfx_utils_logging.h
+index e48928b3f..af6af8d2e 100644
+--- a/_studio/shared/mfx_logging/include/mfx_utils_logging.h
++++ b/_studio/shared/mfx_logging/include/mfx_utils_logging.h
+@@ -25,6 +25,7 @@
+ 
+ #include <iostream>
+ #include <thread>
++#include <memory>
+ #include <mutex>
+ #include <string>
+ #include <map>

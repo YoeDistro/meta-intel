@@ -17,13 +17,10 @@ COMPATIBLE_HOST:x86-x32 = "null"
 DEPENDS += "libdrm libva intel-media-driver onevpl pkgconfig-native"
 
 SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;branch=main;lfs=0 \
-            file://0001-jpegd-Enable-JPEG-decode-error-report.patch \
-            file://0001-Adding-missing-device-ID-4692-for-ADL-S.patch \
-            file://0001-HEVCd-Add-frame-info-check-and-update-ChromaFormat-i.patch \
-            file://0001-AVCd-Add-frame-info-check-and-update-ChromaFormat-in.patch \
+           file://fix-gcc11-2-error.patch \
             "
 
-SRCREV = "51608c724044802cc060b7969084126a3e90ca4a"
+SRCREV = "6676f7652249bb20ad51d229012f8a6ef26f67b0"
 S = "${WORKDIR}/git"
 
 inherit cmake
