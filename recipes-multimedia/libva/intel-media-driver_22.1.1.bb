@@ -19,11 +19,9 @@ REQUIRED_DISTRO_FEATURES = "opengl"
 DEPENDS += "libva gmmlib"
 
 SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;nobranch=1 \
-           file://0001-MOS-user-setting-reentrant.patch \
-           file://0001-Media-Common-Fix-the-user-setting-memory-free.patch \
           "
 
-SRCREV = "ec4dc5d653733c21f8bf390794674052b5abdb09"
+SRCREV = "31c1b995f49ef118a4b02f0b8e45bccdacf0d15e"
 S = "${WORKDIR}/git"
 
 COMPATIBLE_HOST:x86-x32 = "null"
