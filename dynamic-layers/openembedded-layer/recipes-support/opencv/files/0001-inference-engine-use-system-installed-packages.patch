@@ -1,51 +1,44 @@
-From 47ff7f056d219a8a9f02a8b533e1d32972b84589 Mon Sep 17 00:00:00 2001
+From b0f30ab7ecdac98afa72a31371a393a73f855b3c Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
-Date: Thu, 8 Apr 2021 14:19:51 +0800
-Subject: [PATCH] inference-engine: use system installed packages
+Date: Thu, 7 Apr 2022 21:39:26 +0800
+Subject: [PATCH] Use system installed dependencies
 
-Use installed versions of ade, protobuf, zlib and tbb.
-
-Don't fetch pybind11 at runtime and use the one that we have fetched while
-running do_fetch.
+Use the system versions of libva, tbb, OpenCV, ade and zlib.
 
 Upstream-Status: Inappropriate
-
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+
 ---
- cmake/dependencies.cmake                      | 19 --------
- inference-engine/CMakeLists.txt               |  6 +--
- inference-engine/cmake/dependencies.cmake     | 45 -------------------
- inference-engine/cmake/ie_parallel.cmake      |  2 +-
- .../templates/InferenceEngineConfig.cmake.in  | 10 -----
- inference-engine/samples/CMakeLists.txt       |  3 +-
- .../src/inference_engine/CMakeLists.txt       |  4 +-
- .../common_test_utils/CMakeLists.txt          |  4 +-
- .../unit_test_utils/CMakeLists.txt            |  3 +-
- inference-engine/thirdparty/CMakeLists.txt    |  5 +--
- ngraph/python/CMakeLists.txt                  | 12 +----
- tests/fuzz/src/CMakeLists.txt                 |  1 -
- thirdparty/CMakeLists.txt                     |  1 -
- thirdparty/cnpy/CMakeLists.txt                |  4 +-
- 14 files changed, 14 insertions(+), 105 deletions(-)
+ cmake/dependencies.cmake                | 75 -------------------------
+ cmake/extra_modules.cmake               |  4 +-
+ cmake/templates/OpenVINOConfig.cmake.in |  9 ---
+ src/cmake/ie_parallel.cmake             |  2 +-
+ src/plugins/intel_gpu/include/va/va.h   |  6 --
+ tests/fuzz/src/CMakeLists.txt           |  3 +-
+ thirdparty/CMakeLists.txt               | 26 ++++-----
+ thirdparty/cnpy/CMakeLists.txt          |  2 +-
+ 8 files changed, 15 insertions(+), 112 deletions(-)
+ delete mode 100644 src/plugins/intel_gpu/include/va/va.h
 
 diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
-index 6cb15a077e..74d4ac4124 100644
+index e2f941fcd..1fcc358ef 100644
 --- a/cmake/dependencies.cmake
 +++ b/cmake/dependencies.cmake
-@@ -7,23 +7,4 @@ set_temp_directory(TEMP "${IE_MAIN_SOURCE_DIR}")
- if(CMAKE_CROSSCOMPILING AND CMAKE_HOST_SYSTEM_NAME MATCHES Linux AND CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "amd64.*|x86_64.*|AMD64.*")
-     set(protoc_version "3.7.1")
+@@ -29,26 +29,6 @@ endif()
  
+ if(CMAKE_CROSSCOMPILING AND CMAKE_HOST_SYSTEM_NAME MATCHES Linux AND CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "amd64.*|x86_64.*|AMD64.*")
+     set(protoc_version "3.18.2")
+-
 -    RESOLVE_DEPENDENCY(SYSTEM_PROTOC_ROOT
 -        ARCHIVE_LIN "protoc-${protoc_version}-linux-x86_64.tar.gz"
 -        TARGET_PATH "${TEMP}/protoc-${protoc_version}-linux-x86_64"
--        SHA256 "a1bedd5c05ca51e49f8f254faa3d7331e05b3a806c151fb111d582f154d0fee8"
+-        SHA256 "42fde2b6044c1f74c7e86d4e03b43aac87128ddf57ac6ed8c4eab7a1e21bbf21"
 -    )
 -    debug_message(STATUS "host protoc-${protoc_version} root path = " ${SYSTEM_PROTOC_ROOT})
 -
 -    reset_deps_cache(SYSTEM_PROTOC)
 -
--    find_program(
+-    find_host_program(
 -        SYSTEM_PROTOC
 -        NAMES protoc
 -        PATHS "${SYSTEM_PROTOC_ROOT}/bin"
@@ -56,57 +49,29 @@ index 6cb15a077e..74d4ac4124 100644
 -
 -    update_deps_cache(SYSTEM_PROTOC "${SYSTEM_PROTOC}" "Path to host protoc for ONNX Importer")
  endif()
-diff --git a/inference-engine/CMakeLists.txt b/inference-engine/CMakeLists.txt
-index 1ac7fd8bf6..0615873110 100644
---- a/inference-engine/CMakeLists.txt
-+++ b/inference-engine/CMakeLists.txt
-@@ -18,7 +18,7 @@ function(ie_developer_export_targets)
- endfunction()
  
- function(ie_developer_export)
--    set(all_dev_targets gflags ie_libraries)
-+    set(all_dev_targets ie_libraries)
-     foreach(component IN LISTS openvino_export_components)
-         export(TARGETS ${${component}} NAMESPACE IE::
-                APPEND FILE "${CMAKE_BINARY_DIR}/${component}_dev_targets.cmake")
-@@ -142,7 +142,7 @@ endif()
- # Developer package
- #
+ if(ENABLE_INTEL_MYRIAD)
+@@ -102,61 +82,6 @@ if(THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO")
+         set(IE_PATH_TO_DEPS "${THIRDPARTY_SERVER_PATH}")
+     endif()
  
--openvino_developer_export_targets(COMPONENT openvino_common TARGETS format_reader gflags ie_samples_utils)
-+openvino_developer_export_targets(COMPONENT openvino_common TARGETS format_reader ie_samples_utils)
- 
- # for Template plugin
- if(NGRAPH_INTERPRETER_ENABLE)
-@@ -158,7 +158,7 @@ function(ie_generate_dev_package_config)
-     configure_package_config_file("${InferenceEngine_SOURCE_DIR}/cmake/templates/InferenceEngineDeveloperPackageConfig.cmake.in"
-                                 "${CMAKE_BINARY_DIR}/InferenceEngineDeveloperPackageConfig.cmake"
-                                 INSTALL_DESTINATION share # not used
--                                PATH_VARS "OpenVINO_MAIN_SOURCE_DIR;IE_MAIN_SOURCE_DIR;gflags_BINARY_DIR"
-+                                PATH_VARS "OpenVINO_MAIN_SOURCE_DIR;IE_MAIN_SOURCE_DIR"
-                                 NO_CHECK_REQUIRED_COMPONENTS_MACRO)
- 
-     configure_file("${IE_MAIN_SOURCE_DIR}/cmake/templates/InferenceEngineConfig-version.cmake.in"
-diff --git a/inference-engine/cmake/dependencies.cmake b/inference-engine/cmake/dependencies.cmake
-index b270c46f2d..5f85197a85 100644
---- a/inference-engine/cmake/dependencies.cmake
-+++ b/inference-engine/cmake/dependencies.cmake
-@@ -81,51 +81,6 @@ endif ()
- if (THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO")
-     reset_deps_cache(TBBROOT TBB_DIR)
- 
--    if (WIN32 AND X86_64)
--        #TODO: add target_path to be platform specific as well, to avoid following if
+-    if(WIN32 AND X86_64)
+-        # TODO: add target_path to be platform specific as well, to avoid following if
 -        RESOLVE_DEPENDENCY(TBB
 -                ARCHIVE_WIN "tbb2020_20200415_win.zip"
 -                TARGET_PATH "${TEMP}/tbb"
 -                ENVIRONMENT "TBBROOT"
 -                SHA256 "f1c9b9e2861efdaa01552bd25312ccbc5feeb45551e5f91ae61e29221c5c1479")
--        RESOLVE_DEPENDENCY(TBBBIND_2_4
--                ARCHIVE_WIN "tbbbind_2_4_static_win_v2.zip"
--                TARGET_PATH "${TEMP}/tbbbind_2_4"
--                ENVIRONMENT "TBBBIND_2_4_ROOT"
--                SHA256 "90dc165652f6ac2ed3014c71e57f797fcc4b11e1498a468e3d2c85deb2a4186a")
+-        if(ENABLE_TBBBIND_2_5)
+-            RESOLVE_DEPENDENCY(TBBBIND_2_5
+-                    ARCHIVE_WIN "tbbbind_2_5_static_win_v1.zip"
+-                    TARGET_PATH "${TEMP}/tbbbind_2_5"
+-                    ENVIRONMENT "TBBBIND_2_5_ROOT"
+-                    SHA256 "a67afeea8cf194f97968c800dab5b5459972908295242e282045d6b8953573c1")
+-        else()
+-            message(WARNING "prebuilt TBBBIND_2_5 is not available.
+-    Build oneTBB from sources and set TBBROOT environment var before OpenVINO cmake configure")
+-        endif()
 -    elseif(ANDROID)  # Should be before LINUX due LINUX is detected as well
 -        RESOLVE_DEPENDENCY(TBB
 -                ARCHIVE_ANDROID "tbb2020_20200404_android.tgz"
@@ -119,11 +84,16 @@ index b270c46f2d..5f85197a85 100644
 -                TARGET_PATH "${TEMP}/tbb"
 -                ENVIRONMENT "TBBROOT"
 -                SHA256 "95b2f3b0b70c7376a0c7de351a355c2c514b42c4966e77e3e34271a599501008")
--        RESOLVE_DEPENDENCY(TBBBIND_2_4
--                ARCHIVE_LIN "tbbbind_2_4_static_lin_v2.tgz"
--                TARGET_PATH "${TEMP}/tbbbind_2_4"
--                ENVIRONMENT "TBBBIND_2_4_ROOT"
--                SHA256 "6dc926258c6cd3cba0f5c2cc672fd2ad599a1650fe95ab11122e8f361a726cb6")
+-        if(ENABLE_TBBBIND_2_5)
+-            RESOLVE_DEPENDENCY(TBBBIND_2_5
+-                    ARCHIVE_LIN "tbbbind_2_5_static_lin_v2.tgz"
+-                    TARGET_PATH "${TEMP}/tbbbind_2_5"
+-                    ENVIRONMENT "TBBBIND_2_5_ROOT"
+-                    SHA256 "865e7894c58402233caf0d1b288056e0e6ab2bf7c9d00c9dc60561c484bc90f4")
+-        else()
+-            message(WARNING "prebuilt TBBBIND_2_5 is not available.
+-    Build oneTBB from sources and set TBBROOT environment var before OpenVINO cmake configure")
+-        endif()
 -    elseif(LINUX AND AARCH64)
 -        RESOLVE_DEPENDENCY(TBB
 -                ARCHIVE_LIN "keembay/tbb2020_38404_kmb_lic.tgz"
@@ -141,159 +111,80 @@ index b270c46f2d..5f85197a85 100644
 -    endif()
 -
      update_deps_cache(TBBROOT "${TBB}" "Path to TBB root folder")
-     update_deps_cache(TBB_DIR "${TBB}/cmake" "Path to TBB cmake folder")
+     if(EXISTS "${TBBROOT}/lib/cmake/TBB/TBBConfig.cmake")
+         # oneTBB case
+diff --git a/cmake/extra_modules.cmake b/cmake/extra_modules.cmake
+index e33e4378f..f0cacdf6f 100644
+--- a/cmake/extra_modules.cmake
++++ b/cmake/extra_modules.cmake
+@@ -18,7 +18,7 @@ function(ie_generate_dev_package_config)
+     configure_package_config_file("${OpenVINO_SOURCE_DIR}/cmake/templates/InferenceEngineDeveloperPackageConfig.cmake.in"
+                                   "${CMAKE_BINARY_DIR}/InferenceEngineDeveloperPackageConfig.cmake"
+                                   INSTALL_DESTINATION share # not used
+-                                  PATH_VARS "OpenVINO_SOURCE_DIR;gflags_BINARY_DIR"
++                                  PATH_VARS "OpenVINO_SOURCE_DIR"
+                                   NO_CHECK_REQUIRED_COMPONENTS_MACRO)
  
-diff --git a/inference-engine/cmake/ie_parallel.cmake b/inference-engine/cmake/ie_parallel.cmake
-index edf3d2f2b2..6579d0f7ea 100644
---- a/inference-engine/cmake/ie_parallel.cmake
-+++ b/inference-engine/cmake/ie_parallel.cmake
-@@ -26,7 +26,7 @@ function(set_ie_threading_interface_for TARGET_NAME)
-             find_dependency(TBB COMPONENTS tbb tbbmalloc)
-         endif()
-         set(TBB_FOUND ${TBB_FOUND} PARENT_SCOPE)
--        set(TBB_IMPORTED_TARGETS ${TBB_IMPORTED_TARGETS} PARENT_SCOPE)
-+        set(TBB_IMPORTED_TARGETS "tbb;tbbmalloc" PARENT_SCOPE)
-         set(TBB_VERSION ${TBB_VERSION} PARENT_SCOPE)
-         if (NOT TBB_FOUND)
-             ext_message(WARNING "TBB was not found by the configured TBB_DIR/TBBROOT path.\
-diff --git a/inference-engine/cmake/templates/InferenceEngineConfig.cmake.in b/inference-engine/cmake/templates/InferenceEngineConfig.cmake.in
-index 261edbf3d7..bf217a789a 100644
---- a/inference-engine/cmake/templates/InferenceEngineConfig.cmake.in
-+++ b/inference-engine/cmake/templates/InferenceEngineConfig.cmake.in
-@@ -86,16 +86,6 @@ endfunction()
- set(IE_PACKAGE_PREFIX_DIR "${PACKAGE_PREFIX_DIR}")
+     configure_file("${OpenVINO_SOURCE_DIR}/cmake/templates/InferenceEngineConfig-version.cmake.in"
+@@ -45,7 +45,7 @@ function(ov_generate_dev_package_config)
+     configure_package_config_file("${OpenVINO_SOURCE_DIR}/cmake/templates/OpenVINODeveloperPackageConfig.cmake.in"
+                                   "${CMAKE_BINARY_DIR}/OpenVINODeveloperPackageConfig.cmake"
+                                   INSTALL_DESTINATION share # not used
+-                                  PATH_VARS "OpenVINO_SOURCE_DIR;gflags_BINARY_DIR"
++                                  PATH_VARS "OpenVINO_SOURCE_DIR"
+                                   NO_CHECK_REQUIRED_COMPONENTS_MACRO)
+ 
+     configure_file("${OpenVINO_SOURCE_DIR}/cmake/templates/OpenVINOConfig-version.cmake.in"
+diff --git a/cmake/templates/OpenVINOConfig.cmake.in b/cmake/templates/OpenVINOConfig.cmake.in
+index 00e892f2b..7c686fa07 100644
+--- a/cmake/templates/OpenVINOConfig.cmake.in
++++ b/cmake/templates/OpenVINOConfig.cmake.in
+@@ -146,15 +146,6 @@ set(_ov_package_prefix_dir "${PACKAGE_PREFIX_DIR}")
  
  set(THREADING "@THREADING@")
--if(THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO" AND NOT TBB_FOUND)
+ if((THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO") AND NOT TBB_FOUND)
 -    set_and_check(_tbb_dir "@PACKAGE_IE_TBB_DIR@")
--    _ie_find_dependency(TBB
+-    _ov_find_dependency(TBB
 -                        COMPONENTS tbb tbbmalloc
 -                        CONFIG
 -                        PATHS ${TBBROOT}/cmake
 -                              ${_tbb_dir}
 -                        NO_CMAKE_FIND_ROOT_PATH
 -                        NO_DEFAULT_PATH)
--endif()
- 
- set_and_check(_ngraph_dir "@PACKAGE_IE_NGRAPH_DIR@")
- _ie_find_dependency(ngraph
-diff --git a/inference-engine/samples/CMakeLists.txt b/inference-engine/samples/CMakeLists.txt
-index 7924c56779..ae93857944 100644
---- a/inference-engine/samples/CMakeLists.txt
-+++ b/inference-engine/samples/CMakeLists.txt
-@@ -126,11 +126,10 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/gflags")
-         add_subdirectory(thirdparty/gflags EXCLUDE_FROM_ALL)
-         set_target_properties(gflags_nothreads_static PROPERTIES FOLDER thirdparty)
-     endfunction()
--    add_gflags()
-+    #add_gflags()
- endif()
- 
- if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/zlib")
--    add_subdirectory(thirdparty/zlib EXCLUDE_FROM_ALL)
- endif()
- 
- if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/cnpy")
-diff --git a/inference-engine/src/inference_engine/CMakeLists.txt b/inference-engine/src/inference_engine/CMakeLists.txt
-index e8ed1a5c4c..2fcb0bed4a 100644
---- a/inference-engine/src/inference_engine/CMakeLists.txt
-+++ b/inference-engine/src/inference_engine/CMakeLists.txt
-@@ -290,8 +290,8 @@ configure_package_config_file("${InferenceEngine_SOURCE_DIR}/cmake/templates/Inf
-                                INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}"
-                                PATH_VARS ${PATH_VARS})
- 
--set(IE_INCLUDE_DIR "include")
--set(IE_NGRAPH_DIR "../ngraph/cmake")
-+set(IE_INCLUDE_DIR "../../include")
-+set(IE_NGRAPH_DIR "ngraph")
- set(IE_TBB_DIR "${IE_TBB_DIR_INSTALL}")
- set(IE_PARALLEL_CMAKE "share/ie_parallel.cmake")
- 
-diff --git a/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt b/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt
-index 5e8643dc5d..031557efc3 100644
---- a/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt
-+++ b/inference-engine/tests/ie_test_utils/common_test_utils/CMakeLists.txt
-@@ -43,7 +43,7 @@ function(add_gtest_libraries)
-                           PROPERTIES FOLDER thirdparty)
- endfunction()
- 
--add_gtest_libraries()
-+#add_gtest_libraries()
- 
- if (MSVC)
-     set(PUGI pugixml_mt)
-@@ -52,8 +52,6 @@ else ()
- endif ()
- 
- list(APPEND EXPORT_DEPENDENCIES
--        gtest
--        gtest_main
-         )
- 
- set(TARGET_NAME commonTestUtils)
-diff --git a/inference-engine/tests/ie_test_utils/unit_test_utils/CMakeLists.txt b/inference-engine/tests/ie_test_utils/unit_test_utils/CMakeLists.txt
-index 7c1d89eabf..2fbd8fc324 100644
---- a/inference-engine/tests/ie_test_utils/unit_test_utils/CMakeLists.txt
-+++ b/inference-engine/tests/ie_test_utils/unit_test_utils/CMakeLists.txt
-@@ -8,8 +8,7 @@ add_subdirectory(mocks/mock_engine)
- 
- list(APPEND EXPORT_DEPENDENCIES
-         commonTestUtils_s
--        inference_engine_s
--        gmock)
-+        inference_engine_s)
- 
- addIeTarget(
-         NAME ${TARGET_NAME}
-diff --git a/inference-engine/thirdparty/CMakeLists.txt b/inference-engine/thirdparty/CMakeLists.txt
-index f028ebdd8a..9c5bd53466 100644
---- a/inference-engine/thirdparty/CMakeLists.txt
-+++ b/inference-engine/thirdparty/CMakeLists.txt
-@@ -62,14 +62,13 @@ else()
-     target_include_directories(pugixml INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pugixml/src>")
- endif()
- 
--add_subdirectory(ade EXCLUDE_FROM_ALL)
- add_subdirectory(fluid/modules/gapi)
- 
--set_target_properties(ade fluid PROPERTIES FOLDER thirdparty)
-+set_target_properties(fluid PROPERTIES FOLDER thirdparty)
- 
- # developer package
- 
--openvino_developer_export_targets(COMPONENT openvino_common TARGETS ade fluid)
-+openvino_developer_export_targets(COMPONENT openvino_common TARGETS fluid)
- 
- if (NOT USE_SYSTEM_PUGIXML)
-     set_target_properties(pugixml PROPERTIES FOLDER thirdparty)
-diff --git a/ngraph/python/CMakeLists.txt b/ngraph/python/CMakeLists.txt
-index 501bfffb4b..b45612c19c 100644
---- a/ngraph/python/CMakeLists.txt
-+++ b/ngraph/python/CMakeLists.txt
-@@ -17,17 +17,7 @@ endif()
- 
- include(FetchContent)
- 
--FetchContent_Declare(
--    pybind11
--    GIT_REPOSITORY "https://github.com/pybind/pybind11.git"
--    GIT_TAG        "v2.5.0"
--)
 -
--FetchContent_GetProperties(pybind11)
--if(NOT pybind11_POPULATED)
--    FetchContent_Populate(pybind11)
--    add_subdirectory(${pybind11_SOURCE_DIR} ${pybind11_BINARY_DIR})
--endif()
-+add_subdirectory(pybind11)
- 
- # PYTHON_VERSION_MAJOR and PYTHON_VERSION_MINOR are defined inside pybind11
- set(PYTHON_VERSION python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR})
+     set(install_tbbbind "@install_tbbbind@")
+     if(install_tbbbind)
+         set_and_check(_tbb_bind_dir "@PACKAGE_IE_TBBBIND_DIR@")
+diff --git a/src/cmake/ie_parallel.cmake b/src/cmake/ie_parallel.cmake
+index a036b019c..031f1ea48 100644
+--- a/src/cmake/ie_parallel.cmake
++++ b/src/cmake/ie_parallel.cmake
+@@ -34,7 +34,7 @@ function(set_ie_threading_interface_for TARGET_NAME)
+             endforeach()
+         endif()
+         set(TBB_FOUND ${TBB_FOUND} PARENT_SCOPE)
+-        set(TBB_IMPORTED_TARGETS ${TBB_IMPORTED_TARGETS} PARENT_SCOPE)
++        set(TBB_IMPORTED_TARGETS "tbb;tbbmalloc"  PARENT_SCOPE)
+         set(TBB_VERSION ${TBB_VERSION} PARENT_SCOPE)
+         if (NOT TBB_FOUND)
+             set(THREADING "SEQ" PARENT_SCOPE)
+diff --git a/src/plugins/intel_gpu/include/va/va.h b/src/plugins/intel_gpu/include/va/va.h
+deleted file mode 100644
+index 5c8a5c6f6..000000000
+--- a/src/plugins/intel_gpu/include/va/va.h
++++ /dev/null
+@@ -1,6 +0,0 @@
+-// Copyright (C) 2018-2022 Intel Corporation
+-// SPDX-License-Identifier: Apache-2.0
+-//
+-
+-typedef cl_uint VASurfaceID;
+-typedef void* VADisplay;
 diff --git a/tests/fuzz/src/CMakeLists.txt b/tests/fuzz/src/CMakeLists.txt
-index b9400d9e7e..669938526c 100644
+index 5e6b7b168..a81c51bb7 100644
 --- a/tests/fuzz/src/CMakeLists.txt
 +++ b/tests/fuzz/src/CMakeLists.txt
-@@ -10,7 +10,6 @@ add_custom_target(fuzz)
+@@ -10,14 +10,13 @@ add_custom_target(fuzz)
  FILE(GLOB tests "*-fuzzer.cc")
  
  add_subdirectory(../../../thirdparty/cnpy ${CMAKE_CURRENT_BINARY_DIR}/cnpy)
@@ -301,33 +192,105 @@ index b9400d9e7e..669938526c 100644
  
  foreach(test_source ${tests})
      get_filename_component(test_name ${test_source} NAME_WE)
+     add_fuzzer(${test_name} ${test_source})
+ 
+     target_link_libraries(${test_name} PRIVATE
+-        openvino::runtime cnpy zlib)
++        openvino::runtime cnpy z)
+ 
+     add_dependencies(fuzz ${test_name})
+ 
 diff --git a/thirdparty/CMakeLists.txt b/thirdparty/CMakeLists.txt
-index 2c6b656408..4e86bd21ef 100644
+index 2d61c5fd7..97b372998 100644
 --- a/thirdparty/CMakeLists.txt
 +++ b/thirdparty/CMakeLists.txt
-@@ -5,6 +5,5 @@
+@@ -12,10 +12,9 @@ endif()
+ 
  add_subdirectory(ittapi)
- add_subdirectory(itt_collector)
- add_subdirectory(xbyak EXCLUDE_FROM_ALL)
+ add_subdirectory(itt_collector EXCLUDE_FROM_ALL)
 -add_subdirectory(zlib EXCLUDE_FROM_ALL)
  add_subdirectory(cnpy EXCLUDE_FROM_ALL)
- openvino_developer_export_targets(COMPONENT openvino_common TARGETS xbyak)
+ if(ENABLE_INTEL_GPU)
+-    add_subdirectory(ocl)
++	#add_subdirectory(ocl)
+ endif()
+ 
+ add_subdirectory(xbyak EXCLUDE_FROM_ALL)
+@@ -52,21 +51,16 @@ endif()
+ add_library(ocv_hal INTERFACE)
+ target_include_directories(ocv_hal INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/ocv")
+ 
+-add_subdirectory(ade EXCLUDE_FROM_ALL)
+ add_subdirectory(fluid/modules/gapi EXCLUDE_FROM_ALL)
+-set_target_properties(ade fluid PROPERTIES FOLDER thirdparty)
+-openvino_developer_export_targets(COMPONENT openvino_common TARGETS ade fluid)
++set_target_properties(fluid PROPERTIES FOLDER thirdparty)
++openvino_developer_export_targets(COMPONENT openvino_common TARGETS fluid)
+ 
+-ov_install_static_lib(ade openvino_common)
+ ov_install_static_lib(fluid openvino_common)
+ 
+ #
+ # Gflags
+ #
+ 
+-add_subdirectory(gflags EXCLUDE_FROM_ALL)
+-openvino_developer_export_targets(COMPONENT openvino_common TARGETS gflags)
+-
+ #
+ # Google Tests framework
+ #
+@@ -89,13 +83,13 @@ if(ENABLE_OV_PADDLE_FRONTEND OR ENABLE_OV_ONNX_FRONTEND OR ENABLE_OV_TF_FRONTEND
+             set(Protobuf_DEBUG ON)
+         endif()
+         find_package(Protobuf 3.18.2 REQUIRED)
+-        set(Protobuf_LITE_LIBRARIES protobuf::libprotobuf-lite)
+-        set(Protobuf_LIBRARIES protobuf::libprotobuf)
+-        set(SYSTEM_PROTOC protobuf::protoc)
++	set(Protobuf_LITE_LIBRARIES protobuf::libprotobuf-lite)
++	set(Protobuf_LIBRARIES protobuf::libprotobuf)
++	#set(SYSTEM_PROTOC protobuf::protoc)
+         set(PROTOC_EXECUTABLE ${SYSTEM_PROTOC})
+ 
+         foreach(target ${SYSTEM_PROTOC} ${Protobuf_LIBRARIES} ${Protobuf_LITE_LIBRARIES})
+-            set_property(TARGET ${target} PROPERTY IMPORTED_GLOBAL TRUE)
++		#set_property(TARGET ${target} PROPERTY IMPORTED_GLOBAL TRUE)
+         endforeach()
+     else()
+         add_subdirectory(protobuf EXCLUDE_FROM_ALL)
+@@ -104,8 +98,8 @@ if(ENABLE_OV_PADDLE_FRONTEND OR ENABLE_OV_ONNX_FRONTEND OR ENABLE_OV_TF_FRONTEND
+     # forward variables used in the other places
+     set(SYSTEM_PROTOC ${SYSTEM_PROTOC} PARENT_SCOPE)
+     set(PROTOC_EXECUTABLE ${PROTOC_EXECUTABLE} PARENT_SCOPE)
+-    set(Protobuf_LIBRARIES ${Protobuf_LIBRARIES} PARENT_SCOPE)
+-    set(Protobuf_LITE_LIBRARIES ${Protobuf_LITE_LIBRARIES} PARENT_SCOPE)
++    set(Protobuf_LIBRARIES ${Protobuf_LIBRARY} PARENT_SCOPE)
++    set(Protobuf_LITE_LIBRARIES ${Protobuf_LITE_LIBRARY} PARENT_SCOPE)
+     set(Protobuf_INCLUDE_DIRS ${Protobuf_INCLUDE_DIRS} PARENT_SCOPE)
+     set(Protobuf_IN_FRONTEND ON PARENT_SCOPE)
+ 
+@@ -116,7 +110,7 @@ if(ENABLE_OV_PADDLE_FRONTEND OR ENABLE_OV_ONNX_FRONTEND OR ENABLE_OV_TF_FRONTEND
+             set(link_type INTERFACE)
+         endif()
+         if(CMAKE_COMPILER_IS_GNUCXX OR OV_COMPILER_IS_CLANG)
+-            target_compile_options(${target} ${link_type} -Wno-undef)
++		#target_compile_options(${target} ${link_type} -Wno-undef)
+         endif()
+     endforeach()
+ endif()
 diff --git a/thirdparty/cnpy/CMakeLists.txt b/thirdparty/cnpy/CMakeLists.txt
-index 5571cd5f78..e30604927a 100644
+index 041031e92..793de9845 100644
 --- a/thirdparty/cnpy/CMakeLists.txt
 +++ b/thirdparty/cnpy/CMakeLists.txt
-@@ -14,8 +14,8 @@ if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
-     target_compile_options(${TARGET_NAME} PUBLIC -Wno-unused-variable)
+@@ -13,7 +13,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "^(Apple)?Clang$")
+                                           PRIVATE -Wno-all)
  endif()
  
 -target_link_libraries(${TARGET_NAME} PUBLIC zlib)
 +target_link_libraries(${TARGET_NAME} PUBLIC z)
- target_include_directories(${TARGET_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}"
-                                                  "${CMAKE_CURRENT_SOURCE_DIR}/..")
+ target_include_directories(${TARGET_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
  
--set_target_properties(cnpy PROPERTIES FOLDER thirdparty)
-\ No newline at end of file
-+set_target_properties(cnpy PROPERTIES FOLDER thirdparty)
+ set_target_properties(${TARGET_NAME} PROPERTIES FOLDER thirdparty)
 -- 
-2.32.0
+2.35.1
 
