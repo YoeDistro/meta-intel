@@ -42,6 +42,6 @@ PACKAGES += "${PN}-script"
 FILES:${PN}-script += "${sysconfdir}/network/set_irq_affinity"
 
 # This was fixed in kernel v4.4
-CVE_CHECK_WHITELIST += "CVE-2015-1142857"
+CVE_CHECK_IGNORE += "CVE-2015-1142857"
 
 EXCLUDE_FROM_WORLD = "1"

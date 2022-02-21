@@ -43,4 +43,4 @@ do_install:append() {
 RDEPENDS:${PN} += "ace"
 
 # This CVE is for Lan Management System software and not this lms.
-CVE_CHECK_WHITELIST += "CVE-2018-1000535"
+CVE_CHECK_IGNORE += "CVE-2018-1000535"
