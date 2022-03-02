@@ -1,6 +1,6 @@
-From 149b34de80e7f9f5331c285b862776cdd4b02ee3 Mon Sep 17 00:00:00 2001
+From b2099e7184d48a6d05c8713b6fd5dac0e2e70963 Mon Sep 17 00:00:00 2001
 From: Mikko Ylinen <mikko.ylinen@linux.intel.com>
-Date: Fri, 7 Apr 2017 12:06:14 +0300
+Date: Wed, 2 Mar 2022 10:55:35 +0800
 Subject: [PATCH] ovmf: RefkitTestCA: TEST UEFI SecureBoot
 
 This patch adds refkit-db.cer (via xxd -i) in OVMF's db
@@ -10,24 +10,20 @@ application. It's used for testing purposes only.
 Images signed with refkit-db keys are allowed to boot.
 
 Signed-off-by: Mikko Ylinen <mikko.ylinen@linux.intel.com>
-
-[ Change location of key to AuthData.c ]
-Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
-
-%% original patch: 0001-ovmf-RefkitTestCA-TEST-UEFI-SecureBoot.patch
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
 ---
- OvmfPkg/EnrollDefaultKeys/AuthData.c          | 68 +++++++++++++++++++
- OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c |  1 +
+ OvmfPkg/EnrollDefaultKeys/AuthData.c          | 69 +++++++++++++++++++
+ OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c |  3 +
  OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.h |  2 +
- 3 files changed, 71 insertions(+)
+ 3 files changed, 74 insertions(+)
 
 diff --git a/OvmfPkg/EnrollDefaultKeys/AuthData.c b/OvmfPkg/EnrollDefaultKeys/AuthData.c
-index 3b4856a01f..7109766296 100644
+index 53ee7f7003..127131cd05 100644
 --- a/OvmfPkg/EnrollDefaultKeys/AuthData.c
 +++ b/OvmfPkg/EnrollDefaultKeys/AuthData.c
-@@ -398,6 +398,74 @@ CONST UINT8 mMicrosoftUefiCa[] = {
+@@ -395,6 +395,75 @@ CONST UINT8  mMicrosoftUefiCa[] = {
  
- CONST UINTN mSizeOfMicrosoftUefiCa = sizeof mMicrosoftUefiCa;
+ CONST UINTN  mSizeOfMicrosoftUefiCa = sizeof mMicrosoftUefiCa;
  
 +CONST UINT8 mRefkitTestCA[] = {
 +  0x30, 0x82, 0x02, 0xfb, 0x30, 0x82, 0x01, 0xe3, 0xa0, 0x03, 0x02, 0x01,
@@ -97,32 +93,35 @@ index 3b4856a01f..7109766296 100644
 +};
 +
 +CONST UINTN mSizeOfRefkitTestCA = sizeof mRefkitTestCA;
- 
++
  //
  // The Microsoft.UefiSecureBootLogo.Tests.OutOfBoxConfirmDBXisPresent test case
+ // of the Secure Boot Logo Test in the Microsoft Hardware Certification Kit
 diff --git a/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c
-index f45cb799f7..fb1252e768 100644
+index 094e4c821b..0a7eef54dc 100644
 --- a/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c
 +++ b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.c
-@@ -615,6 +615,7 @@ ShellAppMain (
-                &gEfiCertX509Guid,
-                mMicrosoftPca,    mSizeOfMicrosoftPca,    &gMicrosoftVendorGuid,
-                mMicrosoftUefiCa, mSizeOfMicrosoftUefiCa, &gMicrosoftVendorGuid,
-+               mRefkitTestCA,    mSizeOfRefkitTestCA,    &gEfiCallerIdGuid,
-                NULL);
+@@ -702,6 +702,9 @@ ShellAppMain (
+                mMicrosoftUefiCa,
+                mSizeOfMicrosoftUefiCa,
+                &gMicrosoftVendorGuid,
++               mRefkitTestCA,
++               mSizeOfRefkitTestCA,
++               &gEfiCallerIdGuid,
+                NULL
+                );
    }
-   if (EFI_ERROR (Status)) {
 diff --git a/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.h b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.h
-index 8e61f0a77b..e3fa046f95 100644
+index 56da9c71d6..8de1dfe4e0 100644
 --- a/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.h
 +++ b/OvmfPkg/EnrollDefaultKeys/EnrollDefaultKeys.h
-@@ -135,4 +135,6 @@ extern CONST UINTN mSizeOfMicrosoftUefiCa;
- extern CONST UINT8 mSha256OfDevNull[];
- extern CONST UINTN mSizeOfSha256OfDevNull;
+@@ -133,4 +133,6 @@ extern CONST UINTN  mSizeOfMicrosoftUefiCa;
+ extern CONST UINT8  mSha256OfDevNull[];
+ extern CONST UINTN  mSizeOfSha256OfDevNull;
  
 +extern CONST UINT8 mRefkitTestCA[];
 +extern CONST UINTN mSizeOfRefkitTestCA;
  #endif /* ENROLL_DEFAULT_KEYS_H_ */
 -- 
-2.21.0
+2.17.1
 
