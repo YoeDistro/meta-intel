@@ -1,6 +1,6 @@
-From 3f3f81bde7d9d80921515ed0bf7fe36e69319bc4 Mon Sep 17 00:00:00 2001
+From 493e886d6dae2ed7bdc12ed03f717ee0e98dfe09 Mon Sep 17 00:00:00 2001
 From: Naveen Saini <naveen.kumar.saini@intel.com>
-Date: Wed, 30 Jun 2021 13:47:41 +0800
+Date: Thu, 24 Feb 2022 20:01:11 +0530
 Subject: [PATCH] cmake: don't build for 32-bit targets
 
 Error log:
@@ -20,10 +20,10 @@ Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/cmake/GenerateBuiltins.cmake b/cmake/GenerateBuiltins.cmake
-index 15a74788..db30f809 100644
+index fa228247..7adc7e52 100644
 --- a/cmake/GenerateBuiltins.cmake
 +++ b/cmake/GenerateBuiltins.cmake
-@@ -249,7 +249,7 @@ function(builtin_to_cpp bit os_name arch supported_archs supported_oses resultFi
+@@ -272,7 +272,7 @@ function(builtin_to_cpp bit os_name arch supported_archs supported_oses resultFi
              #   In this case headers will be installed in /usr/arm-linux-gnueabihf/include and will not be picked up
              #   by clang by default. So the following line adds such path explicitly. If this path doesn't exist and
              #   the headers can be found in other locations, this should not be a problem.
@@ -32,7 +32,7 @@ index 15a74788..db30f809 100644
          endif()
      endif()
  
-@@ -331,7 +331,7 @@ function (generate_target_builtins resultList)
+@@ -354,7 +354,7 @@ function (generate_target_builtins resultList)
      set(regular_targets ${ARGN})
      list(FILTER regular_targets EXCLUDE REGEX wasm)
      foreach (ispc_target ${regular_targets})
@@ -41,7 +41,7 @@ index 15a74788..db30f809 100644
              foreach (os_name ${TARGET_OS_LIST_FOR_LL})
                  target_ll_to_cpp(target-${ispc_target} ${bit} ${os_name} output${os_name}${bit})
                  list(APPEND tmpList ${output${os_name}${bit}})
-@@ -392,7 +392,7 @@ function (generate_common_builtins resultList)
+@@ -415,7 +415,7 @@ function (generate_common_builtins resultList)
      endif()
  
      message (STATUS "ISPC will be built with support of ${supported_oses} for ${supported_archs}")
@@ -50,14 +50,14 @@ index 15a74788..db30f809 100644
          foreach (os_name "windows" "linux" "freebsd" "macos" "android" "ios" "ps4" "web")
              foreach (arch "x86" "arm" "wasm32")
                  builtin_to_cpp(${bit} ${os_name} ${arch} "${supported_archs}" "${supported_oses}" res${bit}${os_name}${arch})
-@@ -405,7 +405,7 @@ function (generate_common_builtins resultList)
+@@ -428,7 +428,7 @@ function (generate_common_builtins resultList)
          endforeach()
      endforeach()
-     if (GENX_ENABLED)
+     if (XE_ENABLED)
 -        foreach (bit 32 64)
 +        foreach (bit 64)
-             builtin_genx_to_cpp(${bit} res_genx_${bit})
-             list(APPEND tmpList ${res_genx_${bit}} )
+             builtin_xe_to_cpp(${bit} res_xe_${bit})
+             list(APPEND tmpList ${res_xe_${bit}} )
              if(MSVC)
 -- 
 2.17.1

@@ -11,12 +11,12 @@ inherit cmake python3native
 
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://github.com/ispc/ispc.git;protocol=https;branch=releases/v1.16.x \
+SRC_URI = "git://github.com/ispc/ispc.git;protocol=https;branch=main \
            file://0001-CMakeLists.txt-link-with-libclang-cpp-library-instea.patch \
            file://0002-cmake-don-t-build-for-32-bit-targets.patch \
-           file://8b5d0f26916e776bc3664e6a4dc68eff3a198d7a.patch \
+           file://0001-Enable-LLVM-15.0-support.patch \
            "
-SRCREV = "ae404c1da54422bc70696fbdaa4055bca0d1711e"
+SRCREV = "7ad8429369a4d5ced6b524fdfffe623939d8fe9a"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 

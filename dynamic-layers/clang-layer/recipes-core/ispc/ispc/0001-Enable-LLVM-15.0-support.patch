@@ -1,0 +1,52 @@
+From 9b722217a2818bc4335bf2c7d3293d30aa5977b1 Mon Sep 17 00:00:00 2001
+From: Dmitry Babokin <dmitry.y.babokin@intel.com>
+Date: Fri, 4 Feb 2022 16:45:34 -0800
+Subject: [PATCH 01/24] Enable LLVM 15.0 support
+
+Upstream-Status: Backport [https://github.com/ispc/ispc/commit/9b722217a2818bc4335bf2c7d3293d30aa5977b1]
+
+Signed-off-by: Dmitry Babokin <dmitry.y.babokin@intel.com>
+---
+ src/ispc.h         | 4 ++--
+ src/ispc_version.h | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/src/ispc.h b/src/ispc.h
+index 362c2b93..581d5de6 100644
+--- a/src/ispc.h
++++ b/src/ispc.h
+@@ -1,5 +1,5 @@
+ /*
+-  Copyright (c) 2010-2021, Intel Corporation
++  Copyright (c) 2010-2022, Intel Corporation
+   All rights reserved.
+ 
+   Redistribution and use in source and binary forms, with or without
+@@ -42,7 +42,7 @@
+ #include "target_registry.h"
+ 
+ #if ISPC_LLVM_VERSION < OLDEST_SUPPORTED_LLVM || ISPC_LLVM_VERSION > LATEST_SUPPORTED_LLVM
+-#error "Only LLVM 11.0 - 13.0 and 14.0 development branch are supported"
++#error "Only LLVM 11.0 - 14.0 and 15.0 development branch are supported"
+ #endif
+ 
+ #if defined(_WIN32) || defined(_WIN64)
+diff --git a/src/ispc_version.h b/src/ispc_version.h
+index e8487e5b..04a3cf64 100644
+--- a/src/ispc_version.h
++++ b/src/ispc_version.h
+@@ -50,9 +50,10 @@
+ #define ISPC_LLVM_12_0 120000
+ #define ISPC_LLVM_13_0 130000
+ #define ISPC_LLVM_14_0 140000
++#define ISPC_LLVM_15_0 150000
+ 
+ #define OLDEST_SUPPORTED_LLVM ISPC_LLVM_10_0
+-#define LATEST_SUPPORTED_LLVM ISPC_LLVM_14_0
++#define LATEST_SUPPORTED_LLVM ISPC_LLVM_15_0
+ 
+ #ifdef __ispc__xstr
+ #undef __ispc__xstr
+-- 
+2.17.1
+
