@@ -12,7 +12,7 @@ S = "${WORKDIR}/git"
 
 SRC_URI = "git://github.com/ospray/rkcommon.git;protocol=https;branch=master \
             "
-SRCREV = "27a18810ab7a8832a75bb136ade3ea9c32583e16"
+SRCREV = "8636cc74a254178175601a656b58faefb299fd43"
 
 DEPENDS = "tbb"
 
