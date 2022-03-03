@@ -6,18 +6,23 @@ hardware architecture."
 LICENSE = "MIT & BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc/LICENSE.TXT;md5=311cfc1a5b54bab8ed34a0b5fba4373e \
                     file://IGC/Compiler/LegalizationPass.cpp;beginline=1;endline=23;md5=4a985f2545dd5a846e205b1e60a51cd9 \
-                    file://NOTICES.txt;md5=db621145dfb627436bc90ad600386801"
+                    file://NOTICES.txt;md5=7f4fbc3eb2c34807465e63b1ec3c9d1a"
 
 SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=master \
            git://github.com/intel/vc-intrinsics.git;protocol=https;destsuffix=git/vc-intrinsics;name=vc;branch=master \
+           git://github.com/KhronosGroup/SPIRV-Tools.git;protocol=https;destsuffix=SPIRV-Tools;name=spirv-tools;branch=master \
+           git://github.com/KhronosGroup/SPIRV-Headers.git;protocol=https;destsuffix=SPIRV-Headers;name=spirv-headers;branch=master \
            file://0001-llvm_deps.cmake-don-t-copy-header-file-when-building.patch \
            file://0003-Improve-Reproducibility-for-src-package.patch \
            file://0004-find-external-llvm-tblgen.patch \
            file://0001-BiF-CMakeLists.txt-remove-opt-from-DEPENDS.patch \
+           file://0001-llvm-link-external.patch \
            "
 
-SRCREV_igc = "3ba8dde8c414a0e47df58b1bba12a64f8ba2089e"
-SRCREV_vc = "e5ad7e02aa4aa21a3cd7b3e5d1f3ec9b95f58872"
+SRCREV_igc = "775a850f9b0c2d7249503b47ad6bd39a4eb9b3d7"
+SRCREV_vc = "5066d947985dd0c5107765daec5f24f735f3259a"
+SRCREV_spirv-tools = "eeb973f5020a5f0e92ad6da879bc4df9f5985a1c"
+SRCREV_spirv-headers = "ae217c17809fadb232ec94b29304b4afcd417bb4"
 
 # Used to replace with relative path in reproducibility patch
 export B
