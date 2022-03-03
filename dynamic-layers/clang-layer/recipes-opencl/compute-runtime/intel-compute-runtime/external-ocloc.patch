@@ -1,0 +1,40 @@
+From 1189028d9f77265edf6258a66f8ecadf3aad556a Mon Sep 17 00:00:00 2001
+From: Dongwon Kim <dongwon.kim@intel.com>
+Date: Wed, 2 Mar 2022 15:52:45 -0800
+Subject: [PATCH] external ocloc
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Dongwon Kim <dongwon.kim@intel.com>
+---
+ cmake/ocloc_cmd_prefix.cmake | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/cmake/ocloc_cmd_prefix.cmake b/cmake/ocloc_cmd_prefix.cmake
+index 9b6bd3cd3..0aba48709 100644
+--- a/cmake/ocloc_cmd_prefix.cmake
++++ b/cmake/ocloc_cmd_prefix.cmake
+@@ -4,12 +4,14 @@
+ # SPDX-License-Identifier: MIT
+ #
+ 
+-if(WIN32)
+-  set(ocloc_cmd_prefix ocloc)
+-else()
+-  if(DEFINED NEO__IGC_LIBRARY_PATH)
+-    set(ocloc_cmd_prefix LD_LIBRARY_PATH=${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++if(NOT DEFINED ocloc_cmd_prefix)
++  if(WIN32)
++    set(ocloc_cmd_prefix ocloc)
+   else()
+-    set(ocloc_cmd_prefix LD_LIBRARY_PATH=$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++    if(DEFINED NEO__IGC_LIBRARY_PATH)
++      set(ocloc_cmd_prefix LD_LIBRARY_PATH=${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++    else()
++      set(ocloc_cmd_prefix LD_LIBRARY_PATH=$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++    endif()
+   endif()
+ endif()
+-- 
+2.20.1
+
