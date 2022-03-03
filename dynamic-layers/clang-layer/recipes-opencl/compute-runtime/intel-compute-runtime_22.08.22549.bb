@@ -5,15 +5,17 @@ on OpenCL(TM) compute stacks supporting the GEN graphics hardware \
 architecture."
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE.md;md5=983b0c493ea3dc3c21a90ff743bf90e4 \
+LIC_FILES_CHKSUM = "file://LICENSE.md;md5=9280143b568466d8fbe385f838078b93 \
                     file://third_party/opencl_headers/LICENSE;md5=dcefc90f4c3c689ec0c2489064e7273b"
 
 SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https;branch=master \
           "
 
-SRC_URI:append:class-target = "file://allow-to-find-cpp-generation-tool.patch"
+SRC_URI:append:class-target = "file://allow-to-find-cpp-generation-tool.patch \
+                               file://external-ocloc.patch \
+                              "
 
-SRCREV = "3269e719a3ee7bcd97c50ec2cfe78fc8674adec0"
+SRCREV = "315769424d4b59a29b11ebb4d6418a0ac0a0eeac"
 
 S = "${WORKDIR}/git"
 
@@ -38,7 +40,7 @@ EXTRA_OECMAKE = " \
 EXTRA_OECMAKE:append:class-native = " -DNEO_DISABLE_BUILTINS_COMPILATION=ON"
 
 EXTRA_OECMAKE:append:class-target = " \
-                                     -Dcloc_cmd_prefix=ocloc \
+                                     -Docloc_cmd_prefix=ocloc \
                                     "
 
 PACKAGECONFIG ??= ""
