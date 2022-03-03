@@ -3,7 +3,7 @@ DESCRIPTION = "The Instrumentation and Tracing Technology (ITT) API enables \
 application to generate and control the collection of trace data during its \
 execution across different Intel tools."
 
-LICENSE = "BSD-3-Clause & GPLv2"
+LICENSE = "BSD-3-Clause & GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSES/BSD-3-Clause.txt;md5=c551872bcf41ce707df54c722edeca7b \
                     file://LICENSES/GPL-2.0-only.txt;md5=e2d76e7801260c21b90eea3605508ad6 \
                     "
