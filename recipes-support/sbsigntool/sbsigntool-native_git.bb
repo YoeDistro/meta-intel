@@ -1,5 +1,5 @@
 DESCRIPTION = "Utility for signing and verifying files for UEFI Secure Boot"
-LICENSE = "GPLv3 & LGPL-2.1 & LGPL-3.0 & MIT"
+LICENSE = "GPL-3.0-only & LGPL-2.1-only & LGPL-3.0-only & MIT"
 
 # sbsigntool statically links to libccan.a which is built with modules
 # passed to "create-ccan-tree" (and their dependencies). Therefore,

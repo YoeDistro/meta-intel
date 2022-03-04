@@ -1,7 +1,7 @@
 SUMMARY = "Intel Wireless LinuxCore kernel driver"
 DESCRIPTION = "Intel Wireless LinuxCore kernel driver"
 SECTION = "kernel"
-LICENSE = "GPL-2.0"
+LICENSE = "GPL-2.0-only"
 
 REQUIRED_DISTRO_FEATURES = "wifi"
 

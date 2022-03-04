@@ -7,7 +7,7 @@ The guest OS loading this driver must support MSI-X interrupts."
 
 HOMEPAGE = "https://sourceforge.net/projects/e1000/"
 SECTION = "kernel/network"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/${BP}/COPYING;md5=a216b4192dc6b777b6f0db560e9a8417"
 
 SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/${PV}/${BP}.tar.gz \

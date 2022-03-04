@@ -12,7 +12,7 @@ DESCRIPTION = "iucode_tool is a program to manipulate Intel i686 and X86-64\
 HOMEPAGE = "https://gitlab.com/iucode-tool/"
 BUGTRACKER = "https://bugs.debian.org/cgi-bin/pkgreport.cgi?ordering=normal;archive=0;src=iucode-tool;repeatmerged=0"
 
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://iucode_tool.c;beginline=1;endline=15;md5=71eeab3190360ff0267101b570874756"
 
