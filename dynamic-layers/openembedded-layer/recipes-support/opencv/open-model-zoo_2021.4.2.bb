@@ -26,7 +26,6 @@ RDEPENDS:${PN} += " \
                    python3-defusedxml \
                    python3-networkx \
                    python3-protobuf \
-                   python3-test-generator \
                    python3-requests \
                    python3-pyyaml \
                    python3-numpy \
