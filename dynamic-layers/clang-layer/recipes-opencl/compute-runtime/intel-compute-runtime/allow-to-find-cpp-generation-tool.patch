@@ -1,4 +1,4 @@
-From 47ae5d13ad021076f5a79f245e33bcb228b0a0da Mon Sep 17 00:00:00 2001
+From 40e9344d37d62158e6c9f72919f0595ef5fde61a Mon Sep 17 00:00:00 2001
 From: Dongwon Kim <dongwon.kim@intel.com>
 Date: Sat, 21 Aug 2021 16:09:39 -0700
 Subject: [PATCH] Build not able to locate cpp_generation_tool.
@@ -7,15 +7,16 @@ Upstream-Status: Inappropriate [oe specific]
 
 Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
 Signed-off-by: Dongwon Kim <dongwon.kim@intel.com>
+
 ---
  shared/source/built_ins/kernels/CMakeLists.txt | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/shared/source/built_ins/kernels/CMakeLists.txt b/shared/source/built_ins/kernels/CMakeLists.txt
-index 929b981fe..57cd3d4b3 100644
+index 769e2a100..eef25747e 100644
 --- a/shared/source/built_ins/kernels/CMakeLists.txt
 +++ b/shared/source/built_ins/kernels/CMakeLists.txt
-@@ -100,9 +100,9 @@ if(NOT NEO_DISABLE_BUILTINS_COMPILATION)
+@@ -94,9 +94,9 @@ function(compile_builtin core_type platform_type builtin bits builtin_options mo
        )
        add_custom_command(
                           OUTPUT ${OUTPUT_FILE_CPP}
@@ -25,9 +26,9 @@ index 929b981fe..57cd3d4b3 100644
 -                         DEPENDS ${OUTPUT_FILES_BINARIES} $<TARGET_FILE:cpp_generate_tool>
 +                         DEPENDS ${OUTPUT_FILES_BINARIES} cpp_generate_tool
        )
-     endforeach()
-     set(BUILTINS_COMMANDS ${BUILTINS_COMMANDS} PARENT_SCOPE)
-@@ -144,9 +144,9 @@ if(NOT NEO_DISABLE_BUILTINS_COMPILATION)
+       list(APPEND BUILTINS_COMMANDS "${OUTPUT_FILE_CPP}")
+     else()
+@@ -147,9 +147,9 @@ function(generate_cpp_spirv builtin)
      )
      add_custom_command(
                         OUTPUT ${OUTPUT_FILE_CPP}
@@ -37,8 +38,5 @@ index 929b981fe..57cd3d4b3 100644
 -                       DEPENDS ${GENERATED_SPV_INPUT} $<TARGET_FILE:cpp_generate_tool>
 +                       DEPENDS ${GENERATED_SPV_INPUT} cpp_generate_tool
      )
-   endfunction()
- 
--- 
-2.32.0
-
+     set(OUTPUT_LIST_CPP_FILES ${OUTPUT_LIST_CPP_FILES} ${OUTPUT_FILE_CPP} PARENT_SCOPE)
+   else()
