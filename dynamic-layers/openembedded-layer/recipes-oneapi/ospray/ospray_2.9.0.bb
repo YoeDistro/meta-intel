@@ -14,7 +14,7 @@ S = "${WORKDIR}/git"
 
 SRC_URI = "git://github.com/ospray/ospray.git;protocol=https;branch=master \
             "
-SRCREV = "fe4b3806f8626b22defbeda172609aa7c8c74a2e"
+SRCREV = "bc891f413f5657a31faa273992fda61d3666eef7"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
@@ -22,8 +22,8 @@ DEPENDS = "rkcommon ispc-native openvkl embree"
 
 EXTRA_OECMAKE += " \
                   -DISPC_EXECUTABLE=${STAGING_BINDIR_NATIVE}/ispc \
-                  -DOSPRAY_APPS_BENCHMARK=OFF \
-                  -DOSPRAY_APPS_TESTING=OFF \
+                  -DOSPRAY_ENABLE_APPS_BENCHMARK=OFF \
+                  -DOSPRAY_ENABLE_APPS_TESTING=OFF \
                   "
 
 PACKAGES =+ "${PN}-apps"
