@@ -14,6 +14,7 @@ SRC_URI = "git://github.com/oneapi-src/oneVPL.git;protocol=https;branch=master \
             file://0002-sample_misc-Addin-basic-wayland-dmabuf-support.patch \
             file://0003-sample_misc-use-wayland-dmabuf-to-render-nv12.patch \
             file://0001-sample_common-Fix-regression-of-missing-mutex-init.patch \
+            file://0001-sample_common-Fix-missing-UYUV-fourcc-enc-input.patch \
             "
 SRCREV = "efc259f8b7ee5c334bca1a904a503186038bbbdd"
 S = "${WORKDIR}/git"
