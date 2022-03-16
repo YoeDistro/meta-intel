@@ -1,0 +1,45 @@
+From b4549bb765d279b5ba042c6340e1dd69d0890b64 Mon Sep 17 00:00:00 2001
+From: Naveen Saini <naveen.kumar.saini@intel.com>
+Date: Thu, 10 Mar 2022 14:30:01 +0800
+Subject: [PATCH 2/2] cmake: exclude Yocto build flags
+
+Ipp-crypto has its own set of flags and -march values,
+which causes conflict with default -march=nehalem in gcc
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ sources/ippcp/crypto_mb/src/CMakeLists.txt        | 2 +-
+ sources/ippcp/crypto_mb/src/cmake/linux/GNU.cmake | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/sources/ippcp/crypto_mb/src/CMakeLists.txt b/sources/ippcp/crypto_mb/src/CMakeLists.txt
+index 1ca1a8c..5284d62 100644
+--- a/sources/ippcp/crypto_mb/src/CMakeLists.txt
++++ b/sources/ippcp/crypto_mb/src/CMakeLists.txt
+@@ -81,7 +81,7 @@ endif()
+ set(MB_LIB_TARGET ${MB_DYN_LIB_TARGET})
+ 
+ set_source_files_properties(${CRYPTO_MB_SOURCES} PROPERTIES COMPILE_DEFINITIONS  "${AVX512_LIBRARY_DEFINES}"
+-                                                            COMPILE_FLAGS        "${AVX512_CFLAGS} ${CMAKE_ASM_FLAGS} ${CMAKE_C_FLAGS_SECURITY}")
++                                                            COMPILE_FLAGS        "${AVX512_CFLAGS} ${CMAKE_C_FLAGS_SECURITY}")
+ 
+ # Don't specify architectural flags for the assembler for this sources, because of the bug in Intel® C Compiler under MacOS: error: invalid instruction mnemonic 'vkmovb'
+ # The bug has been fixed since version 2021.3. This is a workaround to support older versions of Intel® C Compiler.
+diff --git a/sources/ippcp/crypto_mb/src/cmake/linux/GNU.cmake b/sources/ippcp/crypto_mb/src/cmake/linux/GNU.cmake
+index a2abeeb..aadd6e2 100644
+--- a/sources/ippcp/crypto_mb/src/cmake/linux/GNU.cmake
++++ b/sources/ippcp/crypto_mb/src/cmake/linux/GNU.cmake
+@@ -58,7 +58,7 @@ set(LINK_FLAGS_DYNAMIC "${LINK_FLAGS_DYNAMIC} ${CRYPTO_MB_SOURCES_DIR}/cmake/dll
+ # Compiler flags
+ 
+ # Tells the compiler to align functions and loops
+-set(CMAKE_C_FLAGS " -falign-functions=32 -falign-loops=32")
++set(CMAKE_C_FLAGS " -falign-functions=32 -falign-loops=32 ${TOOLCHAIN_OPTIONS}")
+ # Ensures that compilation takes place in a freestanding environment
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffreestanding")
+ 
+-- 
+2.17.1
+
