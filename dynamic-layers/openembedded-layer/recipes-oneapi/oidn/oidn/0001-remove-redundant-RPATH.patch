@@ -1,0 +1,37 @@
+From 46b7de8c4ae0cc34805c2a11356c5a730fb8760a Mon Sep 17 00:00:00 2001
+From: Ezhilarasan <ezhilarasanx.s@intel.com>
+Date: Fri, 4 Mar 2022 21:04:47 +0530
+Subject: [PATCH] remove-redundant-RPATH
+
+Error Log:
+ERROR: oidn-1.4.3-r0 do_package_qa: QA Issue: oidn: /usr/lib/libOpenImageDenoise.so.1.4.3 contains probably-redundant RPATH /usr/lib
+oidn: /usr/bin/oidnTest contains probably-redundant RPATH /usr/lib
+oidn: /usr/bin/oidnDenoise contains probably-redundant RPATH /usr/lib
+oidn: /usr/bin/oidnBenchmark contains probably-redundant RPATH /usr/lib [useless-rpaths]
+ERROR: oidn-1.4.3-r0 do_package_qa: Fatal QA errors were found, failing task.
+
+Remove the redundant RPATH
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Ezhilarasan <ezhilarasanx.s@intel.com>
+---
+ cmake/oidn_package.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/oidn_package.cmake b/cmake/oidn_package.cmake
+index 1f76af8..46c0854 100644
+--- a/cmake/oidn_package.cmake
++++ b/cmake/oidn_package.cmake
+@@ -29,7 +29,7 @@ if(OIDN_ZIP_MODE)
+     set(CMAKE_INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
+   endif()
+ else()
+-  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}")
++#  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}")
+ endif()
+ 
+ ## -----------------------------------------------------------------------------
+-- 
+2.17.1
+
