@@ -17,6 +17,8 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;nam
            file://0004-find-external-llvm-tblgen.patch \
            file://0001-BiF-CMakeLists.txt-remove-opt-from-DEPENDS.patch \
            file://0001-llvm-link-external.patch \
+           file://fix-header.patch \
+           file://4369c970d4e02258b3c53e854faaa34197124a33.patch \
            "
 
 SRCREV_igc = "775a850f9b0c2d7249503b47ad6bd39a4eb9b3d7"
