@@ -11,6 +11,8 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https; \
            file://0001-skip-execution-of-ElfPackager.patch \
            file://a58dd6de4c29595a0f93cff167b487d777e4559e.patch \
            file://0001-IGA-Add-missing-header.patch \
+           file://4369c970d4e02258b3c53e854faaa34197124a33.patch \
+           file://fix-header.patch \
           "
 
 SRCREV = "577887bf74c51a6084058836720fe58f8c35ca58"

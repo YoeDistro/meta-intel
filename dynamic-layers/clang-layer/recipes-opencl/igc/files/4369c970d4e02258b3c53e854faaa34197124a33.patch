@@ -1,0 +1,27 @@
+From 79a95322fc5ae21c3380f6455b28b931c98b2d13 Mon Sep 17 00:00:00 2001
+From: Marcin Naczk <marcin.naczk@intel.com>
+Date: Tue, 22 Feb 2022 13:09:54 +0000
+Subject: [PATCH] Upgrade github Action build IGC
+
+- Fix build IGC on Ubuntu 22.04 by adding missing include
+
+Upstream-Status: Backport
+Part of: https://github.com/intel/intel-graphics-compiler/commit/4369c970d4e02258b3c53e854faaa34197124a33
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+
+---
+ visa/iga/IGALibrary/IR/SWSBSetter.hpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/visa/iga/IGALibrary/IR/SWSBSetter.hpp b/visa/iga/IGALibrary/IR/SWSBSetter.hpp
+index 5a7ad75c0..02d52add2 100644
+--- a/visa/iga/IGALibrary/IR/SWSBSetter.hpp
++++ b/visa/iga/IGALibrary/IR/SWSBSetter.hpp
+@@ -32,6 +32,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ #include "Operand.hpp"
+ #include "../ErrorHandler.hpp"
+ #include "RegDeps.hpp"
++#include <limits>
+ 
+ namespace iga
+ {
