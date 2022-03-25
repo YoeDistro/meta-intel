@@ -13,7 +13,7 @@ QB_CPU:intel-skylake-64 = "-cpu Skylake-Client"
 QB_CPU_KVM:intel-skylake-64 = "-cpu Skylake-Client"
 
 QB_AUDIO_DRV = "alsa"
-QB_AUDIO_OPT = "-soundhw ac97,es1370"
+QB_AUDIO_OPT = "-device AC97"
 QB_KERNEL_CMDLINE_APPEND = " oprofile.timer=1"
 # Add the 'virtio-rng-pci' device otherwise the guest may run out of entropy
 QB_OPT_APPEND = " -usb -usbdevice tablet -device virtio-rng-pci"
