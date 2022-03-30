@@ -54,4 +54,3 @@ RECIPE_MAINTAINER:pn-secureboot-selftest-image-signed = "Anuj Mittal <anuj.mitta
 RECIPE_MAINTAINER:pn-secureboot-selftest-image-unsigned = "Anuj Mittal <anuj.mittal@intel.com>"
 RECIPE_MAINTAINER:pn-thermald = "Anuj Mittal <anuj.mittal@intel.com>"
 RECIPE_MAINTAINER:pn-xf86-video-ast = "Anuj Mittal <anuj.mittal@intel.com>"
-RECIPE_MAINTAINER:pn-zlib-intel = "Naveen Saini <naveen.kumar.saini@intel.com>"
