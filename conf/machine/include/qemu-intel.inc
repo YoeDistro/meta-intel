@@ -2,7 +2,7 @@
 # distro content (in particular the kernel) less than qemu.inc.
 
 # Ensure that qemu gets built when building images.
-EXTRA_IMAGEDEPENDS += "qemu-native qemu-helper-native"
+EXTRA_IMAGEDEPENDS += "qemu-system-native qemu-helper-native:do_addto_recipe_sysroot"
 
 # Build ovmf firmware for uefi support in qemu.
 EXTRA_IMAGEDEPENDS += "ovmf"
