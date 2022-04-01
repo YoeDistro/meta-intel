@@ -9,6 +9,8 @@ PROVIDES = "zlib"
 SRC_URI = "git://github.com/jtkukunas/zlib.git;protocol=https;branch=master \
            file://ldflags-tests.patch \
            file://run-ptest \
+           file://CVE-2018-25032-fuzz-fixed.patch \
+           file://fix-removed-last-lit.patch \
            "
 
 SRCREV = "a43a247bfa16ec5368747b5b64f11ea5ca033010"

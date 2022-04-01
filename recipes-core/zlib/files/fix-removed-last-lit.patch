@@ -1,0 +1,41 @@
+From bf7f8fd281afee27c160cd1e904b2ff52eb9e493 Mon Sep 17 00:00:00 2001
+From: Chee Yang Lee <chee.yang.lee@intel.com>
+Date: Thu, 31 Mar 2022 22:00:10 +0800
+Subject: [PATCH] fix removed last_lit
+
+last_lit removed and replaced with sym_next while fix for
+CVE-2018-25032. causing build error for deflate_medium.c.
+
+| deflate_medium.c: In function 'deflate_medium':
+| deflate_medium.c:308:12: error: 'deflate_state' {aka 'struct
+internal_state'} has no member named 'last_lit'; did you mean
+'last_flush'?
+|   308 |     if (s->last_lit)
+|       |            ^~~~~~~~
+|       |            last_flush
+| make: *** [Makefile:307: deflate_medium.lo] Error 1
+
+
+Upstream-Status: Inappropriate 
+[upstream have not taken the CVE fix patches]
+Signed-off-by: Chee Yang Lee <chee.yang.lee@intel.com>
+---
+ deflate_medium.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/deflate_medium.c b/deflate_medium.c
+index 582e8b2..30f7633 100644
+--- a/deflate_medium.c
++++ b/deflate_medium.c
+@@ -305,7 +305,7 @@ block_state deflate_medium(deflate_state *s, int flush)
+         FLUSH_BLOCK(s, 1);
+         return finish_done;
+     }
+-    if (s->last_lit)
++    if (s->sym_next)
+         FLUSH_BLOCK(s, 0);
+     return block_done;
+ }
+-- 
+2.35.1
+
