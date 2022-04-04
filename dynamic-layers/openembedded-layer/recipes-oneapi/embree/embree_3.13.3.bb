@@ -18,6 +18,7 @@ SRC_URI = "git://github.com/embree/embree.git;protocol=https;branch=master \
 SRCREV = "0835461a5dd1659696524303dc9cb2f2300ae156"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
+COMPATIBLE_HOST:libc-musl = "null"
 
 DEPENDS = "tbb jpeg libpng glfw ispc-native"
 

@@ -17,6 +17,7 @@ SRC_URI = "git://github.com/ospray/ospray.git;protocol=https;branch=master \
 SRCREV = "bc891f413f5657a31faa273992fda61d3666eef7"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
+COMPATIBLE_HOST:libc-musl = "null"
 
 DEPENDS = "rkcommon ispc-native openvkl embree"
 

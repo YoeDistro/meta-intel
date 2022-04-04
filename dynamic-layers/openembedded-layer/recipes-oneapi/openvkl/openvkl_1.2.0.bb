@@ -23,6 +23,7 @@ SRC_URI = "git://github.com/openvkl/openvkl.git;protocol=https;branch=master \
 SRCREV = "5da393e9edc8becebbf41c9bb6cb9b87aa0b1e93"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
+COMPATIBLE_HOST:libc-musl = "null"
 
 DEPENDS = "ispc-native rkcommon embree"
 
