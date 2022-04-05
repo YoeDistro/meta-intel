@@ -2,9 +2,9 @@ require opencl-clang.inc
 
 SRC_URI:append = " file://0001-don-t-redefine-LLVM_TABLEGEN_EXE.patch \
            "
-SRCREV = "0f36f940b25b8e7661cfaf8a7c11fdbb7d853223"
+SRCREV = "06c7c0d7f5cbd13810d79489a533fa6c5b6c7d9f"
 
-BRANCH = "ocl-open-130"
+BRANCH = "ocl-open-140"
 
 DEPENDS += " spirv-llvm-translator"
 
