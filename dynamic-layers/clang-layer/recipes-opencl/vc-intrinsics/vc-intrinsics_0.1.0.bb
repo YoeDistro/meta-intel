@@ -6,11 +6,14 @@ targeting GPU"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://Readme.md;beginline=1;endline=7;md5=3b2db19c3b0877bb312b7adbcb815adc"
 
-SRC_URI = "git://github.com/intel/vc-intrinsics.git;protocol=https;;branch=master \
+SRC_URI = "git://github.com/intel/vc-intrinsics.git;protocol=https;branch=master \
           "
-SRCREV = "a2f2f10dc61c8161c57cf33ed606c8e3ccf3a921"
+SRCREV = "99ac111c2604a47d865bd4d7996be8cfaf2af146"
 
 S = "${WORKDIR}/git"
+
+PE = "1"
+PV .= "+git${SRCPV}"
 
 inherit cmake
 
