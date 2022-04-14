@@ -25,7 +25,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=97957beb2f7808ffa247e5d93e6442cc"
 
 SRC_URI = "git://github.com/oneapi-src/level-zero.git;protocol=https;branch=master"
-SRCREV = "78f08cc338d70ac60a8f61084ad194fa0dbc90b0"
+SRCREV = "bb7fff05b801e26c3d7858e03e509d1089914d59"
 S = "${WORKDIR}/git"
 
 inherit cmake
