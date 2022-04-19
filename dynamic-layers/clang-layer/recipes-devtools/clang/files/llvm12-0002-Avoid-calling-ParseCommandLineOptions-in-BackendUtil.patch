@@ -1,7 +1,7 @@
-From 06cf750d2ef892eaa4f0ff5d0a9e9e5c49697264 Mon Sep 17 00:00:00 2001
+From 60854c328d8729b2ef10b9bb4dcbcc282f43c5e7 Mon Sep 17 00:00:00 2001
 From: Raphael Isemann <teemperor@gmail.com>
 Date: Thu, 1 Apr 2021 18:41:44 +0200
-Subject: [PATCH 2/3] Avoid calling ParseCommandLineOptions in BackendUtil if
+Subject: [PATCH] Avoid calling ParseCommandLineOptions in BackendUtil if
  possible
 
 Calling `ParseCommandLineOptions` should only be called from `main` as the
@@ -20,18 +20,18 @@ Reviewed By: JDevlieghere
 
 Differential Revision: https://reviews.llvm.org/D99740
 
-Upstream-Status: Backport [Taken from opencl-clang patches; https://github.com/intel/opencl-clang/blob/ocl-open-120/patches/clang/0002-Avoid-calling-ParseCommandLineOptions-in-BackendUtil.patch]
-
+Upstream-Status: Backport [https://github.com/llvm/llvm-project/commit/60854c328d8729b2ef10b9bb4dcbcc282f43c5e7]
 Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+
 ---
  clang/lib/CodeGen/BackendUtil.cpp | 8 ++++++++
  1 file changed, 8 insertions(+)
 
 diff --git a/clang/lib/CodeGen/BackendUtil.cpp b/clang/lib/CodeGen/BackendUtil.cpp
-index 52bcd971dc8c..f9f891247530 100644
+index 41eafd13d97c..00d92e7beadd 100644
 --- a/clang/lib/CodeGen/BackendUtil.cpp
 +++ b/clang/lib/CodeGen/BackendUtil.cpp
-@@ -850,7 +850,15 @@ static void setCommandLineOpts(const CodeGenOptions &CodeGenOpts) {
+@@ -871,7 +871,15 @@ static void setCommandLineOpts(const CodeGenOptions &CodeGenOpts) {
      BackendArgs.push_back("-limit-float-precision");
      BackendArgs.push_back(CodeGenOpts.LimitFloatPrecision.c_str());
    }
@@ -48,5 +48,5 @@ index 52bcd971dc8c..f9f891247530 100644
                                      BackendArgs.data());
  }
 -- 
-2.17.1
+2.29.2
 
