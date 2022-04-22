@@ -29,6 +29,11 @@ EXTRA_OECMAKE += " \
                   -DISPC_NO_DUMPS=ON  \
                   -DARM_ENABLED=OFF  \
                   -DISPC_CROSS=ON  \
+                  -DISPC_ANDROID_TARGET=OFF  \
+                  -DISPC_FREEBSD_TARGET=OFF  \
+                  -DISPC_WINDOWS_TARGET=OFF  \
+                  -DISPC_IOS_TARGET=OFF  \
+                  -DISPC_PS4_TARGET=OFF  \
                   -DSYSROOT_DIR=${STAGING_DIR_NATIVE}  \
                   "
 
