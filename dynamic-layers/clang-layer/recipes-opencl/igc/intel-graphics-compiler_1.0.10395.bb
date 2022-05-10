@@ -26,6 +26,8 @@ SRCREV_vc = "5066d947985dd0c5107765daec5f24f735f3259a"
 SRCREV_spirv-tools = "eeb973f5020a5f0e92ad6da879bc4df9f5985a1c"
 SRCREV_spirv-headers = "ae217c17809fadb232ec94b29304b4afcd417bb4"
 
+SRCREV_FORMAT = "igc_vc_spirv-tools_spirv-headers"
+
 # Used to replace with relative path in reproducibility patch
 export B
 
