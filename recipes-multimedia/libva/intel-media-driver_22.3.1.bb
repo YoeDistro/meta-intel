@@ -19,12 +19,10 @@ REQUIRED_DISTRO_FEATURES = "opengl"
 DEPENDS += "libva gmmlib"
 
 SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;nobranch=1 \
-           file://0001-upstream-ADLN.patch \
-           file://0002-Add-support-for-ADL-N-Enable-the-cmake-options.patch \
            file://c8457540aed1ab9424661087276fb788c0e3aabb.patch \
           "
 
-SRCREV = "31c1b995f49ef118a4b02f0b8e45bccdacf0d15e"
+SRCREV = "6547f46584633a7619440b39b34908e13c8c857d"
 S = "${WORKDIR}/git"
 
 COMPATIBLE_HOST:x86-x32 = "null"
