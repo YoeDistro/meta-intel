@@ -16,11 +16,14 @@ COMPATIBLE_HOST:x86-x32 = "null"
 
 DEPENDS += "libdrm libva intel-media-driver onevpl pkgconfig-native"
 
-SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;branch=main;lfs=0 \
-           file://fix-gcc11-2-error.patch \
+SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;branch=intel-onevpl-22.3;lfs=0 \
             "
 
-SRCREV = "6676f7652249bb20ad51d229012f8a6ef26f67b0"
+SRCREV = "0f7e5f41160bb5a48e24f7cec2ced1ef9dd9c5be"
 S = "${WORKDIR}/git"
+
+FILES:${PN} += " \
+                ${libdir}/libmfx-gen/enctools.so \
+               "
 
 inherit cmake
