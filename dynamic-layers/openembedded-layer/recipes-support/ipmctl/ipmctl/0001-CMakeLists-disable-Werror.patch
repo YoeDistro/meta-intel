@@ -1,0 +1,38 @@
+From ef56be8e6bf2ea273cbeb960f3131164e7b517b6 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Wed, 18 May 2022 12:24:03 +0800
+Subject: [PATCH] CMakeLists: disable Werror
+
+gcc12 highlights minor warnings that cause the build to fail. Ignore
+those until they aren't fixed upstream.
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 418483f7..c019fea0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -146,7 +146,7 @@ else()
+   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-strict-aliasing -D_FORTIFY_SOURCE=2")
+   if(LNX_BUILD)
+     #A few warnings yet to resolve under esx
+-    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Werror")
++    #set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Werror")
+     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Werror")
+   endif()
+   set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0 -ggdb")
+@@ -791,4 +791,4 @@ if(ESX_BUILD)
+   include(CMake/esx.cmake)
+ endif()
+ 
+-add_subdirectory(src/os/nvm_api_sample)
+\ No newline at end of file
++add_subdirectory(src/os/nvm_api_sample)
+-- 
+2.35.3
+
