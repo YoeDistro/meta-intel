@@ -1,0 +1,234 @@
+Upstream-Status: Backport
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+
+From ac01f74924ea9df977466d28fce1a049abc22a9d Mon Sep 17 00:00:00 2001
+From: Mateusz Jablonski <mateusz.jablonski@intel.com>
+Date: Thu, 28 Apr 2022 16:50:16 +0000
+Subject: [PATCH] style: fix gcc12 compilation errors
+
+Signed-off-by: Mateusz Jablonski <mateusz.jablonski@intel.com>
+---
+ level_zero/core/source/cmdlist/cmdlist_hw.inl                 | 3 +++
+ .../core/test/black_box_tests/zello_ipc_copy_dma_buf.cpp      | 4 ++--
+ .../core/test/black_box_tests/zello_ipc_copy_dma_buf_p2p.cpp  | 4 ++--
+ .../core/test/unit_tests/sources/device/test_device.cpp       | 4 +++-
+ opencl/source/command_queue/command_queue.cpp                 | 2 +-
+ opencl/source/event/event.cpp                                 | 4 ++++
+ opencl/source/event/event.h                                   | 1 +
+ shared/source/device_binary_format/ar/ar_encoder.cpp          | 3 ++-
+ shared/source/gen12lp/command_stream_receiver_hw_gen12lp.cpp  | 1 +
+ shared/source/helpers/blit_commands_helper_xehp_and_later.inl | 1 +
+ shared/source/os_interface/windows/wddm/adapter_info.cpp      | 4 ++--
+ shared/test/common/helpers/memory_management.cpp              | 4 ++--
+ 12 files changed, 24 insertions(+), 11 deletions(-)
+
+diff --git a/level_zero/core/source/cmdlist/cmdlist_hw.inl b/level_zero/core/source/cmdlist/cmdlist_hw.inl
+index 67a31118804..d06212346d3 100644
+--- a/level_zero/core/source/cmdlist/cmdlist_hw.inl
++++ b/level_zero/core/source/cmdlist/cmdlist_hw.inl
+@@ -432,6 +432,7 @@ ze_result_t CommandListCoreFamily<gfxCoreFamily>::appendImageCopyFromMemory(ze_i
+     switch (bytesPerPixel) {
+     default:
+         UNRECOVERABLE_IF(true);
++        break;
+     case 1u:
+         builtinKernel = device->getBuiltinFunctionsLib()->getImageFunction(ImageBuiltin::CopyBufferToImage3dBytes);
+         break;
+@@ -548,6 +549,7 @@ ze_result_t CommandListCoreFamily<gfxCoreFamily>::appendImageCopyToMemory(void *
+     switch (bytesPerPixel) {
+     default:
+         UNRECOVERABLE_IF(true);
++        break;
+     case 1u:
+         builtinKernel = device->getBuiltinFunctionsLib()->getImageFunction(ImageBuiltin::CopyImage3dToBufferBytes);
+         break;
+@@ -1700,6 +1702,7 @@ inline uint64_t CommandListCoreFamily<gfxCoreFamily>::getInputBufferSize(NEO::Im
+     switch (imageType) {
+     default:
+         UNRECOVERABLE_IF(true);
++        break;
+     case NEO::ImageType::Image1D:
+     case NEO::ImageType::Image1DArray:
+         return bytesPerPixel * region->width;
+diff --git a/level_zero/core/test/black_box_tests/zello_ipc_copy_dma_buf.cpp b/level_zero/core/test/black_box_tests/zello_ipc_copy_dma_buf.cpp
+index a48b385f77b..9814a368c93 100644
+--- a/level_zero/core/test/black_box_tests/zello_ipc_copy_dma_buf.cpp
++++ b/level_zero/core/test/black_box_tests/zello_ipc_copy_dma_buf.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2020-2021 Intel Corporation
++ * Copyright (C) 2020-2022 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -69,7 +69,7 @@ static int recvmsg_fd(int socket) {
+     }
+ 
+     struct cmsghdr *controlHeader = CMSG_FIRSTHDR(&msgHeader);
+-    if (CMSG_DATA(controlHeader) == nullptr) {
++    if (!CMSG_DATA(controlHeader)) {
+         return -1;
+     }
+     memmove(&fd, CMSG_DATA(controlHeader), sizeof(int));
+diff --git a/level_zero/core/test/black_box_tests/zello_ipc_copy_dma_buf_p2p.cpp b/level_zero/core/test/black_box_tests/zello_ipc_copy_dma_buf_p2p.cpp
+index d7577c8d71a..28b42799a84 100644
+--- a/level_zero/core/test/black_box_tests/zello_ipc_copy_dma_buf_p2p.cpp
++++ b/level_zero/core/test/black_box_tests/zello_ipc_copy_dma_buf_p2p.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2020-2021 Intel Corporation
++ * Copyright (C) 2020-2022 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -69,7 +69,7 @@ static int recvmsg_fd(int socket) {
+     }
+ 
+     struct cmsghdr *controlHeader = CMSG_FIRSTHDR(&msgHeader);
+-    if (CMSG_DATA(controlHeader) == nullptr) {
++    if (!CMSG_DATA(controlHeader)) {
+         return -1;
+     }
+     memmove(&fd, CMSG_DATA(controlHeader), sizeof(int));
+diff --git a/level_zero/core/test/unit_tests/sources/device/test_device.cpp b/level_zero/core/test/unit_tests/sources/device/test_device.cpp
+index b807f8a015e..c49adc0ee3b 100644
+--- a/level_zero/core/test/unit_tests/sources/device/test_device.cpp
++++ b/level_zero/core/test/unit_tests/sources/device/test_device.cpp
+@@ -915,7 +915,9 @@ TEST_F(DeviceTest, givenKernelPropertiesStructureWhenKernelPropertiesCalledThenA
+     device->getKernelProperties(&kernelProperties);
+ 
+     EXPECT_NE(kernelPropertiesBefore.spirvVersionSupported, kernelProperties.spirvVersionSupported);
+-    EXPECT_NE(kernelPropertiesBefore.nativeKernelSupported.id, kernelProperties.nativeKernelSupported.id);
++    uint8_t *nativeKernelSupportedIdPointerBefore = kernelPropertiesBefore.nativeKernelSupported.id;
++    uint8_t *nativeKernelSupportedIdPointerNow = kernelProperties.nativeKernelSupported.id;
++    EXPECT_NE(nativeKernelSupportedIdPointerBefore, nativeKernelSupportedIdPointerNow);
+ 
+     EXPECT_TRUE(kernelPropertiesBefore.flags & ZE_DEVICE_MODULE_FLAG_FP16);
+     if (hardwareInfo.capabilityTable.ftrSupportsInteger64BitAtomics) {
+diff --git a/opencl/source/command_queue/command_queue.cpp b/opencl/source/command_queue/command_queue.cpp
+index 841f76d384c..b554bcecbb1 100644
+--- a/opencl/source/command_queue/command_queue.cpp
++++ b/opencl/source/command_queue/command_queue.cpp
+@@ -345,7 +345,7 @@ uint32_t CommandQueue::getTaskLevelFromWaitList(uint32_t taskLevel,
+                                                 const cl_event *eventWaitList) {
+     for (auto iEvent = 0u; iEvent < numEventsInWaitList; ++iEvent) {
+         auto pEvent = (Event *)(eventWaitList[iEvent]);
+-        uint32_t eventTaskLevel = pEvent->taskLevel;
++        uint32_t eventTaskLevel = pEvent->peekTaskLevel();
+         taskLevel = std::max(taskLevel, eventTaskLevel);
+     }
+     return taskLevel;
+diff --git a/opencl/source/event/event.cpp b/opencl/source/event/event.cpp
+index 87e07ef3d78..9275b13f8cc 100644
+--- a/opencl/source/event/event.cpp
++++ b/opencl/source/event/event.cpp
+@@ -870,4 +870,8 @@ bool Event::checkUserEventDependencies(cl_uint numEventsInWaitList, const cl_eve
+     return userEventsDependencies;
+ }
+ 
++uint32_t Event::peekTaskLevel() const {
++    return taskLevel;
++}
++
+ } // namespace NEO
+diff --git a/opencl/source/event/event.h b/opencl/source/event/event.h
+index 999e3fab182..4594c0e505d 100644
+--- a/opencl/source/event/event.h
++++ b/opencl/source/event/event.h
+@@ -134,6 +134,7 @@ class Event : public BaseObject<_cl_event>, public IDNode<Event> {
+     std::unique_ptr<FlushStampTracker> flushStamp;
+     std::atomic<uint32_t> taskLevel;
+ 
++    uint32_t peekTaskLevel() const;
+     void addChild(Event &e);
+ 
+     virtual bool setStatus(cl_int status);
+diff --git a/shared/source/device_binary_format/ar/ar_encoder.cpp b/shared/source/device_binary_format/ar/ar_encoder.cpp
+index c6856b8040c..467b2303f00 100644
+--- a/shared/source/device_binary_format/ar/ar_encoder.cpp
++++ b/shared/source/device_binary_format/ar/ar_encoder.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2020 Intel Corporation
++ * Copyright (C) 2020-2022 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -55,6 +55,7 @@ ArFileEntryHeader *ArEncoder::appendFileEntry(const ConstStringRef fileName, con
+ 
+ std::vector<uint8_t> ArEncoder::encode() const {
+     std::vector<uint8_t> ret;
++    ret.reserve(arMagic.size() + 1);
+     ret.insert(ret.end(), reinterpret_cast<const uint8_t *>(arMagic.begin()), reinterpret_cast<const uint8_t *>(arMagic.end()));
+     ret.insert(ret.end(), this->fileEntries.begin(), this->fileEntries.end());
+     return ret;
+diff --git a/shared/source/gen12lp/command_stream_receiver_hw_gen12lp.cpp b/shared/source/gen12lp/command_stream_receiver_hw_gen12lp.cpp
+index c3a7df7e4c0..52083487772 100644
+--- a/shared/source/gen12lp/command_stream_receiver_hw_gen12lp.cpp
++++ b/shared/source/gen12lp/command_stream_receiver_hw_gen12lp.cpp
+@@ -39,6 +39,7 @@ void BlitCommandsHelper<Family>::appendColorDepth(const BlitProperties &blitProp
+     switch (blitProperites.bytesPerPixel) {
+     default:
+         UNRECOVERABLE_IF(true);
++        break;
+     case 1:
+         blitCmd.setColorDepth(XY_BLOCK_COPY_BLT::COLOR_DEPTH::COLOR_DEPTH_8_BIT_COLOR);
+         break;
+diff --git a/shared/source/helpers/blit_commands_helper_xehp_and_later.inl b/shared/source/helpers/blit_commands_helper_xehp_and_later.inl
+index 97b218b8b12..b456f5bedab 100644
+--- a/shared/source/helpers/blit_commands_helper_xehp_and_later.inl
++++ b/shared/source/helpers/blit_commands_helper_xehp_and_later.inl
+@@ -246,6 +246,7 @@ void BlitCommandsHelper<GfxFamily>::appendColorDepth(const BlitProperties &blitP
+         switch (blitProperties.bytesPerPixel) {
+         default:
+             UNRECOVERABLE_IF(true);
++            break;
+         case 1:
+             blitCmd.setColorDepth(XY_BLOCK_COPY_BLT::COLOR_DEPTH::COLOR_DEPTH_8_BIT_COLOR);
+             break;
+diff --git a/shared/source/os_interface/windows/wddm/adapter_info.cpp b/shared/source/os_interface/windows/wddm/adapter_info.cpp
+index 6092bf23bd9..aecff6cd606 100644
+--- a/shared/source/os_interface/windows/wddm/adapter_info.cpp
++++ b/shared/source/os_interface/windows/wddm/adapter_info.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2021 Intel Corporation
++ * Copyright (C) 2021-2022 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -28,7 +28,7 @@ std::wstring queryAdapterDriverStorePath(const Gdi &gdi, D3DKMT_HANDLE adapter)
+     DEBUG_BREAK_IF(queryRegistryInfoSizeDesc.Status != D3DDDI_QUERYREGISTRY_STATUS_BUFFER_OVERFLOW);
+ 
+     const auto privateDataSizeNeeded = queryRegistryInfoSizeDesc.OutputValueSize + sizeof(D3DDDI_QUERYREGISTRY_INFO);
+-    std::unique_ptr<uint64_t> storage{new uint64_t[(privateDataSizeNeeded + sizeof(uint64_t) - 1) / sizeof(uint64_t)]};
++    auto storage = std::make_unique<uint64_t[]>((privateDataSizeNeeded + sizeof(uint64_t) - 1) / sizeof(uint64_t));
+     D3DDDI_QUERYREGISTRY_INFO &queryRegistryInfoValueDesc = *reinterpret_cast<D3DDDI_QUERYREGISTRY_INFO *>(storage.get());
+     queryRegistryInfoValueDesc = {};
+     queryRegistryInfoValueDesc.QueryType = D3DDDI_QUERYREGISTRY_DRIVERSTOREPATH;
+diff --git a/shared/test/common/helpers/memory_management.cpp b/shared/test/common/helpers/memory_management.cpp
+index 501b6cdf18e..3558d7fb6d0 100644
+--- a/shared/test/common/helpers/memory_management.cpp
++++ b/shared/test/common/helpers/memory_management.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2018-2021 Intel Corporation
++ * Copyright (C) 2018-2022 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -213,13 +213,13 @@ static void deallocate(void *p) {
+ #endif
+             eventDeallocation.fastLeakDetectionEnabled = fastLeakDetectionEnabled;
+         }
+-        free(p);
+ 
+         if (fastLeakDetectionEnabled && p && fastLeaksDetectionMode == LeakDetectionMode::STANDARD) {
+             auto currentIndex = fastEventsDeallocatedCount++;
+             fastEventsDeallocated[currentIndex] = p;
+             assert(currentIndex <= fastEvents);
+         }
++        free(p);
+     }
+ }
+ int detectLeaks() {
