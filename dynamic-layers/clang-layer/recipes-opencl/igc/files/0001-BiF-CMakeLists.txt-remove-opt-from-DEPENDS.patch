@@ -1,4 +1,4 @@
-From 6f6997066040c5f33bf05ffde36a9800dcde1fcf Mon Sep 17 00:00:00 2001
+From 16fb6c022380bbb3c48f21372fcb1da7f30d3903 Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Tue, 12 Oct 2021 23:46:42 +0800
 Subject: [PATCH] BiF/CMakeLists.txt: remove opt from DEPENDS
@@ -18,18 +18,18 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/IGC/VectorCompiler/lib/BiF/CMakeLists.txt b/IGC/VectorCompiler/lib/BiF/CMakeLists.txt
-index 5d9a901d7..66e59e399 100644
+index be8e5557e..07ab40382 100644
 --- a/IGC/VectorCompiler/lib/BiF/CMakeLists.txt
 +++ b/IGC/VectorCompiler/lib/BiF/CMakeLists.txt
-@@ -88,7 +88,7 @@ function(vc_embed_bif RES_FILE CMCL_SRC_PATH BIF_NAME PTR_BIT_SIZE)
+@@ -112,7 +112,7 @@ function(vc_build_bif RES_FILE CMCL_SRC_PATH BIF_NAME PTR_BIT_SIZE)
    add_custom_command(OUTPUT ${BIF_OPT_BC_PATH}
      COMMAND ${LLVM_OPT_EXE} --O2 -o ${BIF_OPT_BC_NAME} ${BIF_CMCL_BC_NAME}
-     COMMENT "vc_embed_bif: running opt with O2: ${BIF_CMCL_BC_NAME} -> ${BIF_OPT_BC_NAME}"
+     COMMENT "vc_build_bif: running opt with O2: ${BIF_CMCL_BC_NAME} -> ${BIF_OPT_BC_NAME}"
 -    DEPENDS opt ${BIF_CMCL_BC_PATH})
 +    DEPENDS ${BIF_CMCL_BC_PATH})
-   add_custom_command(
-     OUTPUT ${BIF_CPP_PATH}
-     COMMAND ${PYTHON_EXECUTABLE} ${RESOURCE_EMBEDDER_SCRIPT} ${BIF_OPT_BC_NAME} ${BIF_CPP_NAME}
+   set(${RES_FILE} ${BIF_OPT_BC_NAME} PARENT_SCOPE)
+ endfunction()
+ 
 -- 
-2.32.0
+2.35.3
 
