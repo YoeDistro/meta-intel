@@ -9,14 +9,13 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=9280143b568466d8fbe385f838078b93 \
                     file://third_party/opencl_headers/LICENSE;md5=dcefc90f4c3c689ec0c2489064e7273b"
 
 SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https;branch=master \
-           file://ac01f74924ea9df977466d28fce1a049abc22a9d.patch \
           "
 
 SRC_URI:append:class-target = "file://allow-to-find-cpp-generation-tool.patch \
                                file://external-ocloc.patch \
                               "
 
-SRCREV = "c0b7f05897bd5d1185f816c32f98fa2afcf36611"
+SRCREV = "8c894fad5eb79231290725d4ed3665d101fd9d9a"
 
 S = "${WORKDIR}/git"
 
@@ -38,7 +37,6 @@ EXTRA_OECMAKE = " \
                  -DNEO_DISABLE_LD_LLD=ON \
                  -DNEO_DISABLE_LD_GOLD=ON \
                  "
-EXTRA_OECMAKE:append:class-native = " -DNEO_DISABLE_BUILTINS_COMPILATION=ON"
 
 EXTRA_OECMAKE:append:class-target = " \
                                      -Docloc_cmd_prefix=ocloc \
