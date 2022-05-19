@@ -14,6 +14,8 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;nam
            file://0003-Improve-Reproducibility-for-src-package.patch \
            file://0004-find-external-llvm-tblgen.patch \
            file://0001-BiF-CMakeLists.txt-remove-opt-from-DEPENDS.patch \
+           file://0001-Don-t-accept-nullptr-as-GEP-element-type.patch \
+           file://0002-LLVM13-changed-MCContext-constructor.patch \
            "
 
 SRCREV_igc = "3ba8dde8c414a0e47df58b1bba12a64f8ba2089e"

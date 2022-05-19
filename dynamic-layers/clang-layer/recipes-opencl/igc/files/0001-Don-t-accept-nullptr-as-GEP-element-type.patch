@@ -1,0 +1,182 @@
+From 9c68deb3f913a3d055112a28103ec2933ca7b09c Mon Sep 17 00:00:00 2001
+From: Marcin Naczk <marcin.naczk@intel.com>
+Date: Tue, 17 May 2022 10:36:56 +0000
+Subject: [PATCH 1/2] Don't accept nullptr as GEP element type
+
+LLVM13 IR don't accept nullptr as GEP element type
+https://reviews.llvm.org/D105653
+
+Upstream-Status: Backport
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ IGC/AdaptorOCL/SPIRV/SPIRVReader.cpp                      | 5 +++--
+ IGC/Compiler/CustomSafeOptPass.cpp                        | 8 +++++---
+ IGC/Compiler/LegalizationPass.cpp                         | 3 ++-
+ .../IGCInstCombiner/7.0/InstructionCombining.cpp          | 3 ++-
+ .../OpenCLPasses/LocalBuffers/InlineLocalsResolution.cpp  | 5 +++--
+ .../ProgramScopeConstantResolution.cpp                    | 3 ++-
+ IGC/Compiler/Optimizer/Scalarizer.cpp                     | 3 ++-
+ IGC/Compiler/PromoteResourceToDirectAS.cpp                | 6 +++---
+ 8 files changed, 22 insertions(+), 14 deletions(-)
+
+diff --git a/IGC/AdaptorOCL/SPIRV/SPIRVReader.cpp b/IGC/AdaptorOCL/SPIRV/SPIRVReader.cpp
+index ae5510c6a..0f4fca87c 100644
+--- a/IGC/AdaptorOCL/SPIRV/SPIRVReader.cpp
++++ b/IGC/AdaptorOCL/SPIRV/SPIRVReader.cpp
+@@ -3368,17 +3368,18 @@ SPIRVToLLVM::transValueWithoutDecoration(SPIRVValue *BV, Function *F,
+   case OpInBoundsPtrAccessChain: {
+     auto AC = static_cast<SPIRVAccessChainBase *>(BV);
+     auto Base = transValue(AC->getBase(), F, BB);
++    Type *BaseTy = cast<PointerType>(Base->getType())->getPointerElementType();
+     auto Index = transValue(AC->getIndices(), F, BB);
+     if (!AC->hasPtrIndex())
+       Index.insert(Index.begin(), getInt32(M, 0));
+     auto IsInbound = AC->isInBounds();
+     Value *V = nullptr;
+     if (BB) {
+-      auto GEP = GetElementPtrInst::Create(nullptr, Base, Index, BV->getName(), BB);
++      auto GEP = GetElementPtrInst::Create(BaseTy, Base, Index, BV->getName(), BB);
+       GEP->setIsInBounds(IsInbound);
+       V = GEP;
+     } else {
+-      V = ConstantExpr::getGetElementPtr(nullptr, dyn_cast<Constant>(Base), Index, IsInbound);
++      V = ConstantExpr::getGetElementPtr(BaseTy, dyn_cast<Constant>(Base), Index, IsInbound);
+     }
+     return mapValue(BV, V);
+     }
+diff --git a/IGC/Compiler/CustomSafeOptPass.cpp b/IGC/Compiler/CustomSafeOptPass.cpp
+index 83223b3cb..33547077e 100644
+--- a/IGC/Compiler/CustomSafeOptPass.cpp
++++ b/IGC/Compiler/CustomSafeOptPass.cpp
+@@ -410,7 +410,8 @@ void CustomSafeOptPass::visitAllocaInst(AllocaInst& I)
+                 gepArg1 = BinaryOperator::CreateSub(pGEP->getOperand(2), IRB.getInt32(index_lb), "reducedIndex", pGEP);
+             }
+             llvm::Value* gepArg[] = { pGEP->getOperand(1), gepArg1 };
+-            llvm::Value* pGEPnew = GetElementPtrInst::Create(nullptr, newAlloca, gepArg, "", pGEP);
++            Type *BaseTy = cast<PointerType>(newAlloca->getType())->getPointerElementType();
++            llvm::Value* pGEPnew = GetElementPtrInst::Create(BaseTy, newAlloca, gepArg, "", pGEP);
+             pGEP->replaceAllUsesWith(pGEPnew);
+         }
+     }
+@@ -478,10 +479,11 @@ void CustomSafeOptPass::visitLoadInst(LoadInst& load)
+             SmallVector<Value*, 8> indices;
+             indices.append(gep->idx_begin(), gep->idx_end());
+             indices[selIdx] = sel->getOperand(1);
+-            GetElementPtrInst* gep1 = GetElementPtrInst::Create(nullptr, gep->getPointerOperand(), indices, gep->getName(), gep);
++            Type *BaseTy = cast<PointerType>(gep->getPointerOperand()->getType())->getPointerElementType();
++            GetElementPtrInst* gep1 = GetElementPtrInst::Create(BaseTy, gep->getPointerOperand(), indices, gep->getName(), gep);
+             gep1->setDebugLoc(gep->getDebugLoc());
+             indices[selIdx] = sel->getOperand(2);
+-            GetElementPtrInst* gep2 = GetElementPtrInst::Create(nullptr, gep->getPointerOperand(), indices, gep->getName(), gep);
++            GetElementPtrInst* gep2 = GetElementPtrInst::Create(BaseTy, gep->getPointerOperand(), indices, gep->getName(), gep);
+             gep2->setDebugLoc(gep->getDebugLoc());
+             LoadInst* load1 = cast<LoadInst>(load.clone());
+             load1->insertBefore(&load);
+diff --git a/IGC/Compiler/LegalizationPass.cpp b/IGC/Compiler/LegalizationPass.cpp
+index 0586e1b40..fbb3fe894 100644
+--- a/IGC/Compiler/LegalizationPass.cpp
++++ b/IGC/Compiler/LegalizationPass.cpp
+@@ -1568,7 +1568,8 @@ void Legalization::RecursivelyChangePointerType(Instruction* oldPtr, Instruction
+         if (GetElementPtrInst * gep = dyn_cast<GetElementPtrInst>(*II))
+         {
+             SmallVector<Value*, 8> Idx(gep->idx_begin(), gep->idx_end());
+-            GetElementPtrInst* newGep = GetElementPtrInst::Create(nullptr, newPtr, Idx, "", gep);
++            Type *BaseTy = cast<PointerType>(newPtr->getType())->getPointerElementType();
++            GetElementPtrInst* newGep = GetElementPtrInst::Create(BaseTy, newPtr, Idx, "", gep);
+             RecursivelyChangePointerType(gep, newGep);
+         }
+         else if (LoadInst * load = dyn_cast<LoadInst>(*II))
+diff --git a/IGC/Compiler/Optimizer/IGCInstCombiner/7.0/InstructionCombining.cpp b/IGC/Compiler/Optimizer/IGCInstCombiner/7.0/InstructionCombining.cpp
+index ea5c450fb..94b6bd2be 100644
+--- a/IGC/Compiler/Optimizer/IGCInstCombiner/7.0/InstructionCombining.cpp
++++ b/IGC/Compiler/Optimizer/IGCInstCombiner/7.0/InstructionCombining.cpp
+@@ -1675,7 +1675,8 @@ Instruction* InstCombiner::visitGetElementPtrInst(GetElementPtrInst& GEP) {
+                         auto* NewSrc = cast<GetElementPtrInst>(
+                             Builder.CreateGEP(SO0, GO1, Src->getName()));
+                         NewSrc->setIsInBounds(Src->isInBounds());
+-                        auto* NewGEP = GetElementPtrInst::Create(nullptr, NewSrc, { SO1 });
++                        Type *BaseTy = cast<PointerType>(NewSrc->getType())->getPointerElementType();
++                        auto* NewGEP = GetElementPtrInst::Create(BaseTy, NewSrc, { SO1 });
+                         NewGEP->setIsInBounds(GEP.isInBounds());
+                         return NewGEP;
+                     }
+diff --git a/IGC/Compiler/Optimizer/OpenCLPasses/LocalBuffers/InlineLocalsResolution.cpp b/IGC/Compiler/Optimizer/OpenCLPasses/LocalBuffers/InlineLocalsResolution.cpp
+index be585df75..4a31ca474 100644
+--- a/IGC/Compiler/Optimizer/OpenCLPasses/LocalBuffers/InlineLocalsResolution.cpp
++++ b/IGC/Compiler/Optimizer/OpenCLPasses/LocalBuffers/InlineLocalsResolution.cpp
+@@ -179,9 +179,10 @@ bool InlineLocalsResolution::runOnModule(Module& M)
+                 Value* sizeConstant = ConstantInt::get(Type::getInt32Ty(C), Offset);
+                 SmallVector<Value*, 1> idx(1, sizeConstant);
+                 Instruction* pInsertBefore = &(*F.begin()->getFirstInsertionPt());
+-                Type* pLocalCharPtrType = Type::getInt8Ty(C)->getPointerTo(ADDRESS_SPACE_LOCAL);
++                Type* pCharType = Type::getInt8Ty(C);
++                Type* pLocalCharPtrType = pCharType->getPointerTo(ADDRESS_SPACE_LOCAL);
+                 Instruction* pCharPtr = BitCastInst::CreatePointerCast(arg, pLocalCharPtrType, "localToChar", pInsertBefore);
+-                Value* pMovedCharPtr = GetElementPtrInst::Create(nullptr, pCharPtr, idx, "movedLocal", pInsertBefore);
++                Value* pMovedCharPtr = GetElementPtrInst::Create(pCharType, pCharPtr, idx, "movedLocal", pInsertBefore);
+ 
+                 Value* pMovedPtr = CastInst::CreatePointerCast(pMovedCharPtr, ptrType, "charToLocal", pInsertBefore);
+ 
+diff --git a/IGC/Compiler/Optimizer/OpenCLPasses/ProgramScopeConstants/ProgramScopeConstantResolution.cpp b/IGC/Compiler/Optimizer/OpenCLPasses/ProgramScopeConstants/ProgramScopeConstantResolution.cpp
+index 64e48a247..d56472191 100644
+--- a/IGC/Compiler/Optimizer/OpenCLPasses/ProgramScopeConstants/ProgramScopeConstantResolution.cpp
++++ b/IGC/Compiler/Optimizer/OpenCLPasses/ProgramScopeConstants/ProgramScopeConstantResolution.cpp
+@@ -190,7 +190,8 @@ bool ProgramScopeConstantResolution::runOnModule(Module& M)
+                 Instruction* pEntryPoint = &(*userFunc->getEntryBlock().getFirstInsertionPt());
+ 
+                 // Create a GEP to get to the right offset in the constant buffer
+-                GetElementPtrInst* gep = GetElementPtrInst::Create(nullptr, &*bufArg, pOffset, "off" + pGlobalVar->getName(), pEntryPoint);
++                Type *BaseTy = cast<PointerType>((&*bufArg)->getType())->getPointerElementType();
++                GetElementPtrInst* gep = GetElementPtrInst::Create(BaseTy, &*bufArg, pOffset, "off" + pGlobalVar->getName(), pEntryPoint);
+                 // Cast it back to the correct type.
+                 CastInst* pNewVal = CastInst::CreatePointerCast(gep, pGlobalVar->getType(), "cast" + pGlobalVar->getName(), pEntryPoint);
+ 
+diff --git a/IGC/Compiler/Optimizer/Scalarizer.cpp b/IGC/Compiler/Optimizer/Scalarizer.cpp
+index 768cb6da2..75ec2ff0d 100644
+--- a/IGC/Compiler/Optimizer/Scalarizer.cpp
++++ b/IGC/Compiler/Optimizer/Scalarizer.cpp
+@@ -994,7 +994,8 @@ void ScalarizeFunction::scalarizeInstruction(GetElementPtrInst* GI)
+         auto op1 = baseValue->getType()->isVectorTy() ? operand1[i] : baseValue;
+         auto op2 = indexValue->getType()->isVectorTy() ? operand2[i] : indexValue;
+ 
+-        Value* newGEP = GetElementPtrInst::Create(nullptr, op1, op2, "", GI);
++        Type *BaseTy = cast<PointerType>(op1->getType())->getPointerElementType();
++        Value* newGEP = GetElementPtrInst::Create(BaseTy, op1, op2, "", GI);
+         Value* constIndex = ConstantInt::get(Type::getInt32Ty(context()), i);
+         Instruction* insert = InsertElementInst::Create(assembledVector,
+             newGEP, constIndex, "assembled.vect", GI);
+diff --git a/IGC/Compiler/PromoteResourceToDirectAS.cpp b/IGC/Compiler/PromoteResourceToDirectAS.cpp
+index 4d9ccf20c..555b1f9a8 100644
+--- a/IGC/Compiler/PromoteResourceToDirectAS.cpp
++++ b/IGC/Compiler/PromoteResourceToDirectAS.cpp
+@@ -297,6 +297,7 @@ bool PatchGetElementPtr(const std::vector<Value*>& instList, Type* dstTy, unsign
+     unsigned numInstructions = instList.size();
+     Value* patchedInst = patchedSourcePtr;
+     dstPtr = nullptr;
++    Type* patchTy = nullptr;
+ 
+     // Find all the instructions we need to patch, starting from the top.
+     // If there is more than one GEP instruction, we need to patch all of them, as well
+@@ -326,7 +327,6 @@ bool PatchGetElementPtr(const std::vector<Value*>& instList, Type* dstTy, unsign
+ 
+     if (!patchedInst)
+     {
+-        Type* patchTy = nullptr;
+         if (patchInstructions.size() > 0)
+         {
+             // Get the original pointer type before any GEPs or bitcasts modifies it
+@@ -349,9 +349,9 @@ bool PatchGetElementPtr(const std::vector<Value*>& instList, Type* dstTy, unsign
+             llvm::SmallVector<llvm::Value*, 4> gepArgs(gepInst->idx_begin(), gepInst->idx_end());
+             // Create the new GEP instruction
+             if (gepInst->isInBounds())
+-                patchedInst = GetElementPtrInst::CreateInBounds(nullptr, patchedInst, gepArgs, "", gepInst);
++                patchedInst = GetElementPtrInst::CreateInBounds(patchTy, patchedInst, gepArgs, "", gepInst);
+             else
+-                patchedInst = GetElementPtrInst::Create(nullptr, patchedInst, gepArgs, "", gepInst);
++                patchedInst = GetElementPtrInst::Create(patchTy, patchedInst, gepArgs, "", gepInst);
+ 
+             if (GetElementPtrInst* gepPatchedInst = dyn_cast<GetElementPtrInst>(patchedInst))
+             {
+-- 
+2.35.3
+
