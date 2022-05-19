@@ -34,7 +34,6 @@ EXTRA_OECMAKE = " \
                  -DCCACHE_ALLOWED=FALSE \
                  -DNEO_DISABLE_LD_LLD=ON \
                  -DNEO_DISABLE_LD_GOLD=ON \
-                 -DNEO_DISABLE_BUILTINS_COMPILATION=ON \
                  "
 EXTRA_OECMAKE:append:class-target = " \
                                      -Dcloc_cmd_prefix=ocloc \
