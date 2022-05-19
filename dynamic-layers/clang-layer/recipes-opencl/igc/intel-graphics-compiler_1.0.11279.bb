@@ -3,28 +3,26 @@ DESCRIPTION = "The Intel(R) Graphics Compiler for OpenCL(TM) is an \
 llvm based compiler for OpenCL(TM) targeting Intel Gen graphics \
 hardware architecture."
 
-LICENSE = "MIT & BSD-3-Clause"
+LICENSE = "MIT & Apache-2.0"
 LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc/LICENSE.TXT;md5=311cfc1a5b54bab8ed34a0b5fba4373e \
-                    file://IGC/Compiler/LegalizationPass.cpp;beginline=1;endline=23;md5=4a985f2545dd5a846e205b1e60a51cd9 \
+                    file://LICENSE.md;md5=488d74376edf2765f6e78d271543dde3 \
                     file://NOTICES.txt;md5=7f4fbc3eb2c34807465e63b1ec3c9d1a"
 
 SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=master \
            git://github.com/intel/vc-intrinsics.git;protocol=https;destsuffix=git/vc-intrinsics;name=vc;branch=master \
-           git://github.com/KhronosGroup/SPIRV-Tools.git;protocol=https;destsuffix=SPIRV-Tools;name=spirv-tools;branch=master \
+           git://github.com/KhronosGroup/SPIRV-Tools.git;protocol=https;destsuffix=SPIRV-Tools;name=spirv-tools;branch=sdk-1.3.204 \
            git://github.com/KhronosGroup/SPIRV-Headers.git;protocol=https;destsuffix=SPIRV-Headers;name=spirv-headers;branch=master \
-           file://0001-llvm_deps.cmake-don-t-copy-header-file-when-building.patch \
            file://0003-Improve-Reproducibility-for-src-package.patch \
-           file://0004-find-external-llvm-tblgen.patch \
            file://0001-BiF-CMakeLists.txt-remove-opt-from-DEPENDS.patch \
-           file://0001-llvm-link-external.patch \
-           file://fix-header.patch \
-           file://4369c970d4e02258b3c53e854faaa34197124a33.patch \
+           file://991fd3d661efcb4fb6df63b76310d6e634b05c39.patch \
            "
 
-SRCREV_igc = "775a850f9b0c2d7249503b47ad6bd39a4eb9b3d7"
-SRCREV_vc = "5066d947985dd0c5107765daec5f24f735f3259a"
-SRCREV_spirv-tools = "eeb973f5020a5f0e92ad6da879bc4df9f5985a1c"
-SRCREV_spirv-headers = "ae217c17809fadb232ec94b29304b4afcd417bb4"
+SRC_URI:append:class-native = " file://0001-fix-tblgen.patch"
+
+SRCREV_igc = "b2c14d219dc4d3e384f217ef6bd2c2db1bd6b9ce"
+SRCREV_vc = "4ce354da51f219bbdfa9c4cd5d8f640e92e38511"
+SRCREV_spirv-tools = "45dd184c790d6bfc78a5a74a10c37e888b1823fa"
+SRCREV_spirv-headers = "b42ba6d92faf6b4938e6f22ddd186dbdacc98d78"
 
 SRCREV_FORMAT = "igc_vc_spirv-tools_spirv-headers"
 
@@ -53,6 +51,8 @@ EXTRA_OECMAKE = " \
                   -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 \
                   -DVC_INTRINSICS_SRC="${S}/vc-intrinsics" \
                   -DIGC_OPTION__LLVM_MODE=Prebuilds \
+                  -DLLVM_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
+                  -DLLVM_LINK_EXE=${STAGING_BINDIR_NATIVE}/llvm-link \
                   "
 
 do_install:append:class-native () {
@@ -60,6 +60,7 @@ do_install:append:class-native () {
     install ${B}/IGC/Release/elf_packager ${D}${bindir}/
     if ${@bb.utils.contains('PACKAGECONFIG', 'vc', 'true', 'false', d)}; then
         install ${B}/IGC/Release/CMCLTranslatorTool ${D}${bindir}/
+        install ${B}/IGC/Release/vcb ${D}${bindir}/
     fi
 }
 
