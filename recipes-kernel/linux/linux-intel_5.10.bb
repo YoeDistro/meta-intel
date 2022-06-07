@@ -7,12 +7,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 SRC_URI:append = " file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch \
                     file://0001-io-mapping-Cleanup-atomic-iomap.patch \
+                    file://0001-regulator-consumer-Add-missing-stubs-to-regulator-co.patch \
                    "
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "5.10.100"
-SRCREV_machine ?= "8e5c6f8269920b343e40bdf7b3b1a33918009395"
+LINUX_VERSION ?= "5.10.115"
+SRCREV_machine ?= "9d73f92a1109a0f9e916edb861214ce1cea6863a"
 SRCREV_meta ?= "64fb693a6c11f21bab3ff9bb8dcb65a70abe05e3"
 
 # For Crystalforest and Romley
