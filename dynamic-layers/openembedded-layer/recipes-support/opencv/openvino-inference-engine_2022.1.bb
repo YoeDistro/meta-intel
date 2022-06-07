@@ -13,7 +13,7 @@ SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=r
            git://github.com/pybind/pybind11.git;protocol=https;destsuffix=git/src/bindings/python/thirdparty/pybind11;name=pybind11;branch=master \
            git://github.com/protocolbuffers/protobuf.git;protocol=https;destsuffix=git/thirdparty/protobuf/protobuf;name=protobuf;branch=3.18.x \
            git://github.com/nlohmann/json.git;protocol=https;destsuffix=git/thirdparty/json/nlohmann_json;name=json;branch=master \
-           git://github.com/pboettch/json-schema-validator.git;protocol=https;destsuffix=git/thirdparty/json/nlohmann_json_schema_validator;name=jsonschema;branch=master \
+           git://github.com/pboettch/json-schema-validator.git;protocol=https;destsuffix=git/thirdparty/json/nlohmann_json_schema_validator;name=jsonschema;branch=main \
            git://github.com/openvinotoolkit/open_model_zoo.git;protocol=https;destsuffix=git/thirdparty/open_model_zoo;name=omz;branch=releases/2022/1 \
            file://0001-inference-engine-use-system-installed-packages.patch \
            file://0002-inference-engine-installation-fixes.patch \
