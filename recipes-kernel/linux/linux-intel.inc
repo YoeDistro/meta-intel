@@ -10,8 +10,6 @@ SRC_URI = " \
            ${KERNEL_CONFIG_URI} \
 	  "
 
-SRC_URI:append:core2-32-intel-common = " file://disable_skylake_sound.cfg"
-
 LINUX_VERSION_EXTENSION ??= "-intel-pk-${LINUX_KERNEL_TYPE}"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
@@ -19,7 +17,6 @@ PV = "${LINUX_VERSION}+git${SRCPV}"
 KMETA = "kernel-meta"
 KCONF_BSP_AUDIT_LEVEL = "2"
 
-COMPATIBLE_MACHINE ?= "(intel-corei7-64|intel-core2-32)"
+COMPATIBLE_MACHINE ?= "(intel-corei7-64)"
 
 KERNEL_FEATURES:append = " ${KERNEL_EXTRA_FEATURES}"
-KERNEL_FEATURES:append = " ${@bb.utils.contains("TUNE_FEATURES", "mx32", " cfg/x32.scc", "" ,d)}"

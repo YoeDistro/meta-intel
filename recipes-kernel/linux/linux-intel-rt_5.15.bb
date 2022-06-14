@@ -23,7 +23,3 @@ SRCREV_machine ?= "9800b6da3fbf306dd172f2848423e5cc4060b604"
 SRCREV_meta ?= "ea948a0983d7b7820814e5bce4eda3079201bd95"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
-
-# Disabling CONFIG_SND_SOC_INTEL_SKYLAKE for 32-bit, does not allow to set CONFIG_SND_SOC_INTEL_SST too, which
-# causes config warning too.
-KCONF_AUDIT_LEVEL:core2-32-intel-common = "0"

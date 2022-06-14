@@ -8,7 +8,6 @@ SRC_URI = " \
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=${KMETA_BRANCH};destsuffix=${KMETA} \
            file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch \
           "
-SRC_URI:append:core2-32-intel-common = " file://disable_skylake_sound.cfg"
 
 KMETA = "kernel-meta"
 KCONF_BSP_AUDIT_LEVEL = "2"
@@ -26,9 +25,8 @@ SRCREV_meta ?= "99570241ac88d6c7e32b6fccd83afce53816b275"
 LINUX_VERSION_EXTENSION ?= "-mainline-tracking-${LINUX_KERNEL_TYPE}"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
-COMPATIBLE_MACHINE ?= "(intel-corei7-64|intel-core2-32)"
+COMPATIBLE_MACHINE ?= "(intel-corei7-64)"
 
 # Functionality flags
 KERNEL_FEATURES:append = " ${KERNEL_EXTRA_FEATURES}"
-KERNEL_FEATURES:append = " ${@bb.utils.contains("TUNE_FEATURES", "mx32", " cfg/x32.scc", "" ,d)}"
 KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc features/security/security.scc"
