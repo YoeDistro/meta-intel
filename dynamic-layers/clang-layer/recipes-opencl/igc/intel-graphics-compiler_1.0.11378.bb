@@ -14,12 +14,11 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;nam
            git://github.com/KhronosGroup/SPIRV-Headers.git;protocol=https;destsuffix=SPIRV-Headers;name=spirv-headers;branch=master \
            file://0003-Improve-Reproducibility-for-src-package.patch \
            file://0001-BiF-CMakeLists.txt-remove-opt-from-DEPENDS.patch \
-           file://991fd3d661efcb4fb6df63b76310d6e634b05c39.patch \
            "
 
 SRC_URI:append:class-native = " file://0001-fix-tblgen.patch"
 
-SRCREV_igc = "b2c14d219dc4d3e384f217ef6bd2c2db1bd6b9ce"
+SRCREV_igc = "9a6528771ee9b41aa06bbaa0da90f50b94e170af"
 SRCREV_vc = "4ce354da51f219bbdfa9c4cd5d8f640e92e38511"
 SRCREV_spirv-tools = "45dd184c790d6bfc78a5a74a10c37e888b1823fa"
 SRCREV_spirv-headers = "b42ba6d92faf6b4938e6f22ddd186dbdacc98d78"
