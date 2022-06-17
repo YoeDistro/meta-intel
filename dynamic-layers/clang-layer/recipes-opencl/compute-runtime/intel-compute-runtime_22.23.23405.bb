@@ -15,7 +15,7 @@ SRC_URI:append:class-target = "file://allow-to-find-cpp-generation-tool.patch \
                                file://external-ocloc.patch \
                               "
 
-SRCREV = "8c894fad5eb79231290725d4ed3665d101fd9d9a"
+SRCREV = "325db6a99c6a21f6610633d43bf57553ba8554ac"
 
 S = "${WORKDIR}/git"
 
