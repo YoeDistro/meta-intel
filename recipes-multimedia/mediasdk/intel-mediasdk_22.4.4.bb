@@ -17,7 +17,9 @@ COMPATIBLE_HOST:x86-x32 = "null"
 inherit features_check
 REQUIRED_DISTRO_FEATURES = "opengl"
 
-DEPENDS += "libdrm libva intel-media-driver"
+DEPENDS += "libva"
+
+RDEPENDS:${PN} += "intel-media-driver"
 
 PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "x11", "dri3", "", d)} \
                    ${@bb.utils.contains("DISTRO_FEATURES", "wayland", "wayland", "", d)} \
