@@ -16,11 +16,10 @@ COMPATIBLE_HOST:x86-x32 = "null"
 
 DEPENDS += "libdrm libva intel-media-driver onevpl pkgconfig-native"
 
-SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;branch=intel-onevpl-22.3;lfs=0 \
-           file://0001-HEVCe-lib-Fix-REXT-DDIID-issue-2566.patch \
+SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;branch=main;lfs=0 \
             "
 
-SRCREV = "0f7e5f41160bb5a48e24f7cec2ced1ef9dd9c5be"
+SRCREV = "e0d2754d0250661a63fff2ee2fa8e0e94b0fcfad"
 S = "${WORKDIR}/git"
 
 FILES:${PN} += " \
