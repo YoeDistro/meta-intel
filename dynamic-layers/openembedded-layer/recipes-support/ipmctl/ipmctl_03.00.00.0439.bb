@@ -21,9 +21,9 @@ SRC_URI = "git://github.com/intel/ipmctl.git;protocol=https;branch=development;n
         file://0001-CMakeLists-disable-Werror.patch \
 "
 
-SRCREV_ipmctl = "99188a69a82409f6759e8bfdff8fd71840e851fc"
-#tag: edk2-stable202111
-SRCREV_edk2 = "bb1bba3d776733c41dbfa2d1dc0fe234819a79f2"
+SRCREV_ipmctl = "8a73a975e2501c9baa6e4b1fb9101b40a227d084"
+#tag edk2-stable202205
+SRCREV_edk2 = "16779ede2d366bfc6b702e817356ccf43425bcc8"
 
 S = "${WORKDIR}/git"
 
