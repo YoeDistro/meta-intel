@@ -17,6 +17,7 @@ SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=r
            git://github.com/openvinotoolkit/open_model_zoo.git;protocol=https;destsuffix=git/thirdparty/open_model_zoo;name=omz;branch=releases/2022/1 \
            file://0001-inference-engine-use-system-installed-packages.patch \
            file://0002-inference-engine-installation-fixes.patch \
+           file://cython-cmake.patch \
            "
 
 SRCREV = "cdb9bec7210f8c24fde3e416c7ada820faaaa23e"
@@ -92,6 +93,11 @@ PACKAGECONFIG[python3] = "-DENABLE_PYTHON=ON -DPYTHON_LIBRARY=${PYTHON_LIBRARY} 
 PACKAGECONFIG[vpu] = "-DENABLE_INTEL_MYRIAD=ON -DVPU_FIRMWARE_USB-MA2X8X_FILE=../mvnc/usb-ma2x8x.mvcmd -DVPU_FIRMWARE_PCIE-MA2X8X_FILE=../mvnc/pcie-ma2x8x.mvcmd,-DENABLE_INTEL_MYRIAD=OFF,,${PN}-vpu-firmware"
 PACKAGECONFIG[verbose] = "-DVERBOSE_BUILD=1,-DVERBOSE_BUILD=0"
 
+do_configure:prepend() {
+    # Dont set PROJECT_ROOT_DIR
+    sed -i -e 's:\${CMAKE_CURRENT_SOURCE_DIR}::;' ${S}/src/CMakeLists.txt
+}
+
 do_install:append() {
     if ${@bb.utils.contains('PACKAGECONFIG', 'python3', 'true', 'false', d)}; then
         install -d ${D}${datadir}/openvino
@@ -108,6 +114,8 @@ do_install:append() {
 
     # Remove the samples source directory. We install the built samples.
     rm -rf ${D}/usr/samples
+
+    sed -i -e 's:^#include.*imp.hpp"$:#include "/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}/git/src/plugins/intel_cpu/src/nodes/proposal_imp.hpp":g;' ${B}/src/plugins/intel_cpu/cross-compiled/proposal_imp_disp.cpp
 }
 
 # Otherwise e.g. ros-openvino-toolkit-dynamic-vino-sample when using dldt-inference-engine uses dldt-inference-engine WORKDIR

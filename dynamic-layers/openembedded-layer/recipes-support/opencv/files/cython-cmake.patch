@@ -1,0 +1,19 @@
+Change the working directory to source to workaround cython
+embedding absolute path to the pyx file in output.
+
+Upstream-Status: Inappropriate [OE build specific]
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+
+diff --git a/src/bindings/python/src/compatibility/openvino/cmake/UseCython.cmake b/src/bindings/python/src/compatibility/openvino/cmake/UseCython.cmake
+index f14662ad50..8d199fe328 100644
+--- a/src/bindings/python/src/compatibility/openvino/cmake/UseCython.cmake
++++ b/src/bindings/python/src/compatibility/openvino/cmake/UseCython.cmake
+@@ -259,7 +259,7 @@ function( compile_pyx _name generated_file )
+   add_custom_command( OUTPUT ${_generated_file}
+     COMMAND ${CYTHON_EXECUTABLE}
+     ARGS ${cxx_arg} ${include_directory_arg} ${version_arg}
+-    ${annotate_arg} ${no_docstrings_arg} ${cython_debug_arg} ${CYTHON_FLAGS}
++    ${annotate_arg} ${no_docstrings_arg} ${cython_debug_arg} ${CYTHON_FLAGS} -w ${CMAKE_CURRENT_SOURCE_DIR}
+     --output-file  ${_generated_file} ${pyx_locations}
+     DEPENDS ${pyx_locations} ${pxd_dependencies} ${pxi_dependencies}
+     IMPLICIT_DEPENDS ${pyx_lang} ${c_header_dependencies}
