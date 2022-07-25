@@ -19,10 +19,10 @@ REQUIRED_DISTRO_FEATURES = "opengl"
 DEPENDS += "libva gmmlib"
 
 SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;nobranch=1 \
-           file://c8457540aed1ab9424661087276fb788c0e3aabb.patch \
+           file://0001-Fix-uClibc-build.patch \
           "
 
-SRCREV = "6547f46584633a7619440b39b34908e13c8c857d"
+SRCREV = "9ca43202d5ff3d1bf22f1b7ff1fe3bd2980b90dc"
 S = "${WORKDIR}/git"
 
 COMPATIBLE_HOST:x86-x32 = "null"
