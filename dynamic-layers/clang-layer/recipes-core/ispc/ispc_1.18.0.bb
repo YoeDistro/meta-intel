@@ -14,14 +14,21 @@ S = "${WORKDIR}/git"
 SRC_URI = "git://github.com/ispc/ispc.git;protocol=https;branch=main \
            file://0001-CMakeLists.txt-link-with-libclang-cpp-library-instea.patch \
            file://0002-cmake-don-t-build-for-32-bit-targets.patch \
-           file://0001-Enable-LLVM-15.0-support.patch \
+           file://0001-Fix-QA-Issues.patch \
            "
-SRCREV = "7ad8429369a4d5ced6b524fdfffe623939d8fe9a"
+SRCREV = "f7ec3aa173c816377c215d83196b5c7c3a88db1c"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
-DEPENDS += " clang-native bison-native "
+DEPENDS += " clang-native bison-native flex-native"
 RDEPENDS:${PN} += " clang-libllvm clang"
+
+YFLAGS='-d -t -v -y --file-prefix-map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}'
+
+do_configure:prepend() {
+        sed -i -e 's#\${BISON_EXECUTABLE}.*#\${BISON_EXECUTABLE} ${YFLAGS} #g' ${S}/CMakeLists.txt
+        sed -i -e 's#\${FLEX_EXECUTABLE}.*#\${FLEX_EXECUTABLE} \-L #g' ${S}/CMakeLists.txt
+}
 
 EXTRA_OECMAKE += " \
                   -DISPC_INCLUDE_TESTS=OFF  \
@@ -37,5 +44,4 @@ EXTRA_OECMAKE += " \
                   -DSYSROOT_DIR=${STAGING_DIR_NATIVE}  \
                   "
 
-TOOLCHAIN = "clang"
 BBCLASSEXTEND = "native nativesdk"
