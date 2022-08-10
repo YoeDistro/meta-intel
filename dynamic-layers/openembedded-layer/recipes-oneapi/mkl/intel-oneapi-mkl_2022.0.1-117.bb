@@ -20,20 +20,36 @@ LIC_FILES_CHKSUM = " \
                      file://opt/intel/oneapi/lib/licensing/mkl/third-party-programs.txt;md5=980965cf1f086d40998ca4981968b6a4 \
                      "
 
+MKLMAINVER = "2022.0.1"
+
 SRC_URI = " \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-runtime-mkl-${PV}_amd64.deb;subdir=${BPN};name=runtime \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-runtime-mkl-common-${PV}_all.deb;subdir=${BPN};name=common \
+            https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-mkl-common-devel-${MKLMAINVER}-${PV}_all.deb;subdir=${BPN};name=devel \
             "
 
 SRC_URI[runtime.sha256sum] = "b20e0f7400fbbc55d8489f9f3ef35a8c8df7f5af7d87903bf305703e3a2ebc3b"
 SRC_URI[common.sha256sum] = "bff8b2bfedbd09c9e6d0366cca3d4de80af521302bd5938fe6fa0128c6839041"
+SRC_URI[devel.sha256sum] = "1c84c0b72638415318229326cb143691a5914d5e88552abef39391db3d285cff"
 
 S = "${WORKDIR}/${BPN}"
 
 inherit bin_package
 
+do_install:append () {
+	install -d ${D}${libdir}
+	(cd ${D}${libdir} ; ln -s ../../opt/intel/oneapi/lib/intel64/*.so* .)
+	install -d ${D}${libdir}/pkgconfig
+	(cd ${D}${libdir}/pkgconfig ; ln -s ../../../opt/intel/oneapi/mkl/${MKLMAINVER}/lib/pkgconfig/* .)
+
+	install -d ${D}${includedir}
+	(cd ${D}${includedir} ; ln -s ../../opt/intel/oneapi/mkl/${MKLMAINVER}/include/* .)
+}
+
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT  = "1"
 
-RDEPENDS:${PN} += "tbb intel-oneapi-compiler setup-intel-oneapi-env"
+RDEPENDS:${PN} += "bash tbb intel-oneapi-compiler setup-intel-oneapi-env"
 INSANE_SKIP:${PN} = "ldflags textrel dev-so"
+
+SYSROOT_DIRS += "/opt"
