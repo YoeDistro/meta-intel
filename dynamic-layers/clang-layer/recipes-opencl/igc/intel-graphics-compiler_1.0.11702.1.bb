@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc
                     file://LICENSE.md;md5=488d74376edf2765f6e78d271543dde3 \
                     file://NOTICES.txt;md5=7f4fbc3eb2c34807465e63b1ec3c9d1a"
 
-SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=master \
+SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=releases/igc-1.0.11702 \
            git://github.com/intel/vc-intrinsics.git;protocol=https;destsuffix=git/vc-intrinsics;name=vc;branch=master \
            git://github.com/KhronosGroup/SPIRV-Tools.git;protocol=https;destsuffix=SPIRV-Tools;name=spirv-tools;branch=sdk-1.3.204 \
            git://github.com/KhronosGroup/SPIRV-Headers.git;protocol=https;destsuffix=SPIRV-Headers;name=spirv-headers;branch=master \
@@ -18,8 +18,8 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;nam
 
 SRC_URI:append:class-native = " file://0001-fix-tblgen.patch"
 
-SRCREV_igc = "9a6528771ee9b41aa06bbaa0da90f50b94e170af"
-SRCREV_vc = "4ce354da51f219bbdfa9c4cd5d8f640e92e38511"
+SRCREV_igc = "bf3552db35cabf0ca416f7d216d4697b9bfb03cb"
+SRCREV_vc = "984bb27baacce6ee5c716c2e64845f2a1928025b"
 SRCREV_spirv-tools = "45dd184c790d6bfc78a5a74a10c37e888b1823fa"
 SRCREV_spirv-headers = "b42ba6d92faf6b4938e6f22ddd186dbdacc98d78"
 
