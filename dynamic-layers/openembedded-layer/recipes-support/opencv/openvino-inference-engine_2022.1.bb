@@ -83,11 +83,7 @@ DEPENDS += "libusb1 \
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
 
-#Disable opencl temporarily. intel-compute-runtime depends on
-#intel-graphics-compiler and vc-intrinsics and these two recipes fail to
-#compile with LLVM13. Enable it after upstream has fixed it.
-#PACKAGECONFIG ?= "vpu opencl"
-PACKAGECONFIG ?= "vpu"
+PACKAGECONFIG ?= "vpu opencl"
 PACKAGECONFIG[opencl] = "-DENABLE_INTEL_GPU=TRUE -DOpenCL_INCLUDE_DIR=${STAGING_INCDIR} -DOpenCL_LIBRARY=${STAGING_LIBDIR}/libOpenCL.so, -DENABLE_INTEL_GPU=FALSE, ocl-icd opencl-headers opencl-clhpp libva,"
 PACKAGECONFIG[python3] = "-DENABLE_PYTHON=ON -DPYTHON_LIBRARY=${PYTHON_LIBRARY} -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR}, -DENABLE_PYTHON=OFF, python3-cython-native patchelf-native, python3 python3-numpy python3-opencv python3-progress python3-cython"
 PACKAGECONFIG[vpu] = "-DENABLE_INTEL_MYRIAD=ON -DVPU_FIRMWARE_USB-MA2X8X_FILE=../mvnc/usb-ma2x8x.mvcmd -DVPU_FIRMWARE_PCIE-MA2X8X_FILE=../mvnc/pcie-ma2x8x.mvcmd,-DENABLE_INTEL_MYRIAD=OFF,,${PN}-vpu-firmware"
