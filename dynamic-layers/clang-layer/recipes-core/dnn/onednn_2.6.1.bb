@@ -34,7 +34,7 @@ EXTRA_OECMAKE += " \
                    -DCMAKE_SKIP_RPATH=ON \
                    "
 
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "gpu"
 PACKAGECONFIG[gpu] = "-DDNNL_GPU_RUNTIME=OCL, , opencl-headers ocl-icd, intel-compute-runtime"
 
 do_install:append () {
