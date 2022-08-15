@@ -16,8 +16,14 @@ KMETA_BRANCH = "yocto-5.15"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "5.15.43"
-SRCREV_machine ?= "9800b6da3fbf306dd172f2848423e5cc4060b604"
-SRCREV_meta ?= "ea948a0983d7b7820814e5bce4eda3079201bd95"
+LINUX_VERSION ?= "5.15.49"
+SRCREV_machine ?= "1b50ff611e81294adb5936388c47246b9710b1a8"
+SRCREV_meta ?= "f7f709bf874f85baff9f2fb0ac0341c08399b144"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
+
+# We've 8b766b0f8eece backported from v5.19 to linux-intel v5.15 kernel
+# https://github.com/torvalds/linux/commit/8b766b0f8eece55155146f7628610ce54a065e0f
+# It drops 'CONFIG_FB_BOOT_VESA_SUPPORT' config option which would result in a warning with 5.15 y-k-c.
+# Suppress the harmless warning for now.
+KCONF_BSP_AUDIT_LEVEL = "0"
