@@ -7,9 +7,15 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "5.15.43"
-SRCREV_machine ?= "1ec5959a8f6dbfbb47057317bc935924cd8d6977"
-SRCREV_meta ?= "ea948a0983d7b7820814e5bce4eda3079201bd95"
+LINUX_VERSION ?= "5.15.49"
+SRCREV_machine ?= "8c7674099d42d20041c529f8772bd580a1a03d80"
+SRCREV_meta ?= "f7f709bf874f85baff9f2fb0ac0341c08399b144"
 
 # Functionality flags
 KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc features/security/security.scc"
+
+# We've 8b766b0f8eece backported from v5.19 to linux-intel v5.15 kernel
+# https://github.com/torvalds/linux/commit/8b766b0f8eece55155146f7628610ce54a065e0f
+# It drops 'CONFIG_FB_BOOT_VESA_SUPPORT' config option which would result in a warning with 5.15 y-k-c.
+# Suppress the harmless warning for now.
+KCONF_BSP_AUDIT_LEVEL = "0"
