@@ -11,6 +11,7 @@ SRC_URI = "git://github.com/jtkukunas/zlib.git;protocol=https;branch=master \
            file://run-ptest \
            file://CVE-2018-25032-fuzz-fixed.patch \
            file://fix-removed-last-lit.patch \
+           file://CVE-2022-37434.patch \
            "
 
 SRCREV = "a43a247bfa16ec5368747b5b64f11ea5ca033010"
