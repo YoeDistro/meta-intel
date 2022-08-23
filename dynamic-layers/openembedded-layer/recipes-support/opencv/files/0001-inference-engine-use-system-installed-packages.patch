@@ -1,30 +1,27 @@
-From b0f30ab7ecdac98afa72a31371a393a73f855b3c Mon Sep 17 00:00:00 2001
+From d997ee70a49cee8a577a81968c1d603a97bc614f Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Thu, 7 Apr 2022 21:39:26 +0800
 Subject: [PATCH] Use system installed dependencies
 
-Use the system versions of libva, tbb, OpenCV, ade and zlib.
+Use the system versions of libva, ade and zlib.
 
 Upstream-Status: Inappropriate
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
-
 ---
- cmake/dependencies.cmake                | 75 -------------------------
- cmake/extra_modules.cmake               |  4 +-
- cmake/templates/OpenVINOConfig.cmake.in |  9 ---
- src/cmake/ie_parallel.cmake             |  2 +-
- src/plugins/intel_gpu/include/va/va.h   |  6 --
- tests/fuzz/src/CMakeLists.txt           |  3 +-
- thirdparty/CMakeLists.txt               | 26 ++++-----
- thirdparty/cnpy/CMakeLists.txt          |  2 +-
- 8 files changed, 15 insertions(+), 112 deletions(-)
+ cmake/dependencies.cmake              | 20 --------------------
+ cmake/extra_modules.cmake             |  4 ++--
+ src/plugins/intel_gpu/include/va/va.h |  6 ------
+ tests/fuzz/src/CMakeLists.txt         |  3 +--
+ thirdparty/CMakeLists.txt             | 26 ++++++++++----------------
+ thirdparty/cnpy/CMakeLists.txt        |  2 +-
+ 6 files changed, 14 insertions(+), 47 deletions(-)
  delete mode 100644 src/plugins/intel_gpu/include/va/va.h
 
 diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
-index e2f941fcd..1fcc358ef 100644
+index 106af36c7d..45a3214100 100644
 --- a/cmake/dependencies.cmake
 +++ b/cmake/dependencies.cmake
-@@ -29,26 +29,6 @@ endif()
+@@ -27,26 +27,6 @@ get_linux_name(LINUX_OS_NAME)
  
  if(CMAKE_CROSSCOMPILING AND CMAKE_HOST_SYSTEM_NAME MATCHES Linux AND CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "amd64.*|x86_64.*|AMD64.*")
      set(protoc_version "3.18.2")
@@ -51,70 +48,8 @@ index e2f941fcd..1fcc358ef 100644
  endif()
  
  if(ENABLE_INTEL_MYRIAD)
-@@ -102,61 +82,6 @@ if(THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO")
-         set(IE_PATH_TO_DEPS "${THIRDPARTY_SERVER_PATH}")
-     endif()
- 
--    if(WIN32 AND X86_64)
--        # TODO: add target_path to be platform specific as well, to avoid following if
--        RESOLVE_DEPENDENCY(TBB
--                ARCHIVE_WIN "tbb2020_20200415_win.zip"
--                TARGET_PATH "${TEMP}/tbb"
--                ENVIRONMENT "TBBROOT"
--                SHA256 "f1c9b9e2861efdaa01552bd25312ccbc5feeb45551e5f91ae61e29221c5c1479")
--        if(ENABLE_TBBBIND_2_5)
--            RESOLVE_DEPENDENCY(TBBBIND_2_5
--                    ARCHIVE_WIN "tbbbind_2_5_static_win_v1.zip"
--                    TARGET_PATH "${TEMP}/tbbbind_2_5"
--                    ENVIRONMENT "TBBBIND_2_5_ROOT"
--                    SHA256 "a67afeea8cf194f97968c800dab5b5459972908295242e282045d6b8953573c1")
--        else()
--            message(WARNING "prebuilt TBBBIND_2_5 is not available.
--    Build oneTBB from sources and set TBBROOT environment var before OpenVINO cmake configure")
--        endif()
--    elseif(ANDROID)  # Should be before LINUX due LINUX is detected as well
--        RESOLVE_DEPENDENCY(TBB
--                ARCHIVE_ANDROID "tbb2020_20200404_android.tgz"
--                TARGET_PATH "${TEMP}/tbb"
--                ENVIRONMENT "TBBROOT"
--                SHA256 "f42d084224cc2d643314bd483ad180b081774608844000f132859fca3e9bf0ce")
--    elseif(LINUX AND X86_64)
--        RESOLVE_DEPENDENCY(TBB
--                ARCHIVE_LIN "tbb2020_20200415_lin_strip.tgz"
--                TARGET_PATH "${TEMP}/tbb"
--                ENVIRONMENT "TBBROOT"
--                SHA256 "95b2f3b0b70c7376a0c7de351a355c2c514b42c4966e77e3e34271a599501008")
--        if(ENABLE_TBBBIND_2_5)
--            RESOLVE_DEPENDENCY(TBBBIND_2_5
--                    ARCHIVE_LIN "tbbbind_2_5_static_lin_v2.tgz"
--                    TARGET_PATH "${TEMP}/tbbbind_2_5"
--                    ENVIRONMENT "TBBBIND_2_5_ROOT"
--                    SHA256 "865e7894c58402233caf0d1b288056e0e6ab2bf7c9d00c9dc60561c484bc90f4")
--        else()
--            message(WARNING "prebuilt TBBBIND_2_5 is not available.
--    Build oneTBB from sources and set TBBROOT environment var before OpenVINO cmake configure")
--        endif()
--    elseif(LINUX AND AARCH64)
--        RESOLVE_DEPENDENCY(TBB
--                ARCHIVE_LIN "keembay/tbb2020_38404_kmb_lic.tgz"
--                TARGET_PATH "${TEMP}/tbb_yocto"
--                ENVIRONMENT "TBBROOT"
--                SHA256 "321261ff2eda6d4568a473cb883262bce77a93dac599f7bd65d2918bdee4d75b")
--    elseif(APPLE AND X86_64)
--        RESOLVE_DEPENDENCY(TBB
--                ARCHIVE_MAC "tbb2020_20200404_mac.tgz"
--                TARGET_PATH "${TEMP}/tbb"
--                ENVIRONMENT "TBBROOT"
--                SHA256 "ad9cf52e657660058aa6c6844914bc0fc66241fec89a392d8b79a7ff69c3c7f6")
--    else()
--        message(FATAL_ERROR "TBB is not available on current platform")
--    endif()
--
-     update_deps_cache(TBBROOT "${TBB}" "Path to TBB root folder")
-     if(EXISTS "${TBBROOT}/lib/cmake/TBB/TBBConfig.cmake")
-         # oneTBB case
 diff --git a/cmake/extra_modules.cmake b/cmake/extra_modules.cmake
-index e33e4378f..f0cacdf6f 100644
+index e33e4378f1..f0cacdf6ff 100644
 --- a/cmake/extra_modules.cmake
 +++ b/cmake/extra_modules.cmake
 @@ -18,7 +18,7 @@ function(ie_generate_dev_package_config)
@@ -135,42 +70,9 @@ index e33e4378f..f0cacdf6f 100644
                                    NO_CHECK_REQUIRED_COMPONENTS_MACRO)
  
      configure_file("${OpenVINO_SOURCE_DIR}/cmake/templates/OpenVINOConfig-version.cmake.in"
-diff --git a/cmake/templates/OpenVINOConfig.cmake.in b/cmake/templates/OpenVINOConfig.cmake.in
-index 00e892f2b..7c686fa07 100644
---- a/cmake/templates/OpenVINOConfig.cmake.in
-+++ b/cmake/templates/OpenVINOConfig.cmake.in
-@@ -146,15 +146,6 @@ set(_ov_package_prefix_dir "${PACKAGE_PREFIX_DIR}")
- 
- set(THREADING "@THREADING@")
- if((THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO") AND NOT TBB_FOUND)
--    set_and_check(_tbb_dir "@PACKAGE_IE_TBB_DIR@")
--    _ov_find_dependency(TBB
--                        COMPONENTS tbb tbbmalloc
--                        CONFIG
--                        PATHS ${TBBROOT}/cmake
--                              ${_tbb_dir}
--                        NO_CMAKE_FIND_ROOT_PATH
--                        NO_DEFAULT_PATH)
--
-     set(install_tbbbind "@install_tbbbind@")
-     if(install_tbbbind)
-         set_and_check(_tbb_bind_dir "@PACKAGE_IE_TBBBIND_DIR@")
-diff --git a/src/cmake/ie_parallel.cmake b/src/cmake/ie_parallel.cmake
-index a036b019c..031f1ea48 100644
---- a/src/cmake/ie_parallel.cmake
-+++ b/src/cmake/ie_parallel.cmake
-@@ -34,7 +34,7 @@ function(set_ie_threading_interface_for TARGET_NAME)
-             endforeach()
-         endif()
-         set(TBB_FOUND ${TBB_FOUND} PARENT_SCOPE)
--        set(TBB_IMPORTED_TARGETS ${TBB_IMPORTED_TARGETS} PARENT_SCOPE)
-+        set(TBB_IMPORTED_TARGETS "tbb;tbbmalloc"  PARENT_SCOPE)
-         set(TBB_VERSION ${TBB_VERSION} PARENT_SCOPE)
-         if (NOT TBB_FOUND)
-             set(THREADING "SEQ" PARENT_SCOPE)
 diff --git a/src/plugins/intel_gpu/include/va/va.h b/src/plugins/intel_gpu/include/va/va.h
 deleted file mode 100644
-index 5c8a5c6f6..000000000
+index 5c8a5c6f6e..0000000000
 --- a/src/plugins/intel_gpu/include/va/va.h
 +++ /dev/null
 @@ -1,6 +0,0 @@
@@ -181,7 +83,7 @@ index 5c8a5c6f6..000000000
 -typedef cl_uint VASurfaceID;
 -typedef void* VADisplay;
 diff --git a/tests/fuzz/src/CMakeLists.txt b/tests/fuzz/src/CMakeLists.txt
-index 5e6b7b168..a81c51bb7 100644
+index 5e6b7b168e..a81c51bb77 100644
 --- a/tests/fuzz/src/CMakeLists.txt
 +++ b/tests/fuzz/src/CMakeLists.txt
 @@ -10,14 +10,13 @@ add_custom_target(fuzz)
@@ -201,7 +103,7 @@ index 5e6b7b168..a81c51bb7 100644
      add_dependencies(fuzz ${test_name})
  
 diff --git a/thirdparty/CMakeLists.txt b/thirdparty/CMakeLists.txt
-index 2d61c5fd7..97b372998 100644
+index 2d61c5fd7a..97b372998a 100644
 --- a/thirdparty/CMakeLists.txt
 +++ b/thirdparty/CMakeLists.txt
 @@ -12,10 +12,9 @@ endif()
@@ -279,7 +181,7 @@ index 2d61c5fd7..97b372998 100644
      endforeach()
  endif()
 diff --git a/thirdparty/cnpy/CMakeLists.txt b/thirdparty/cnpy/CMakeLists.txt
-index 041031e92..793de9845 100644
+index 041031e923..793de9845c 100644
 --- a/thirdparty/cnpy/CMakeLists.txt
 +++ b/thirdparty/cnpy/CMakeLists.txt
 @@ -13,7 +13,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "^(Apple)?Clang$")
@@ -292,5 +194,5 @@ index 041031e92..793de9845 100644
  
  set_target_properties(${TARGET_NAME} PROPERTIES FOLDER thirdparty)
 -- 
-2.35.1
+2.36.1
 
