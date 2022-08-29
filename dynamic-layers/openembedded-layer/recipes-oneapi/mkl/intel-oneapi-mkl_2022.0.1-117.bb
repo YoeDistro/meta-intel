@@ -41,6 +41,8 @@ do_install:append () {
 	(cd ${D}${libdir} ; ln -s ../../opt/intel/oneapi/lib/intel64/*.so* .)
 	install -d ${D}${libdir}/pkgconfig
 	(cd ${D}${libdir}/pkgconfig ; ln -s ../../../opt/intel/oneapi/mkl/${MKLMAINVER}/lib/pkgconfig/* .)
+	install -d ${D}${libdir}/cmake
+	(cd ${D}${libdir}/cmake ; ln -s ../../../opt/intel/oneapi/mkl/${MKLMAINVER}/lib/cmake/* .)
 
 	install -d ${D}${includedir}
 	(cd ${D}${includedir} ; ln -s ../../opt/intel/oneapi/mkl/${MKLMAINVER}/include/* .)
