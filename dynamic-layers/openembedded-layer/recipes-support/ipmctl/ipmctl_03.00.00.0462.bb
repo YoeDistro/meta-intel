@@ -19,12 +19,11 @@ SRC_URI = "git://github.com/intel/ipmctl.git;protocol=https;branch=development;n
         git://github.com/tianocore/edk2.git;protocol=https;name=edk2;destsuffix=git/edk2;branch=master \
         file://0001-Ignore-STATIC_ASSERTs-and-NULL-define-for-os-and-ut-builds.patch;patchdir=edk2 \
         file://0001-CMakeLists-disable-Werror.patch \
-        file://227d9cb35658fe104ff6fde62e4a00e6d595df0d.patch \
 "
 
-SRCREV_ipmctl = "8a73a975e2501c9baa6e4b1fb9101b40a227d084"
+SRCREV_ipmctl = "e332e3048f3884bb3719f61cf72aaf85f32d2090"
 #tag edk2-stable202205
-SRCREV_edk2 = "16779ede2d366bfc6b702e817356ccf43425bcc8"
+SRCREV_edk2 = "ba0e0e4c6a174b71b18ccd6e47319cc45878893c"
 
 S = "${WORKDIR}/git"
 
