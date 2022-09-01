@@ -13,10 +13,9 @@ SRC_URI = " \
             file://0001-CMakeLists.txt-exclude-host-system-headers.patch;striplevel=4 \
             file://0002-cmake-exclude-Yocto-build-flags.patch;striplevel=4 \
             "
-SRCREV = "46944bd18e6dbad491ef9b9a3404303ef7680c09"
+SRCREV = "3ae57715fbc7383ef527cab0b824d736b60fa06d"
 
 S = "${WORKDIR}/git/sources/ippcp/crypto_mb"
-PV = "2021.5+git${SRCPV}"
 
 DEPENDS = "openssl"
 
