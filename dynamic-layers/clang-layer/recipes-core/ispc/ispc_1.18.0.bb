@@ -15,6 +15,8 @@ SRC_URI = "git://github.com/ispc/ispc.git;protocol=https;branch=main \
            file://0001-CMakeLists.txt-link-with-libclang-cpp-library-instea.patch \
            file://0002-cmake-don-t-build-for-32-bit-targets.patch \
            file://0001-Fix-QA-Issues.patch \
+           file://6a1b2ffae0cc12467838bc671e3b089924de90a6.patch \
+           file://ec35a6f8e60ba77e59a6f2bfec27011e0ab34dda.patch \
            "
 SRCREV = "f7ec3aa173c816377c215d83196b5c7c3a88db1c"
 
