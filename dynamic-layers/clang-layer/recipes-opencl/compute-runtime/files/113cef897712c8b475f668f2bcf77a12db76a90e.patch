@@ -1,0 +1,45 @@
+From a72b1fe0c571c191d857297114e0393ce017b7ab Mon Sep 17 00:00:00 2001
+From: Mateusz Jablonski <mateusz.jablonski@intel.com>
+Date: Wed, 28 Jul 2021 09:25:56 +0000
+Subject: [PATCH] Add missing includes
+
+Signed-off-by: Florian Minnecker <florian.github@minnecker.com>
+Signed-off-by: Mateusz Jablonski <mateusz.jablonski@intel.com>
+
+Upstream-Status: Backport
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ shared/source/helpers/basic_math.h                   | 3 ++-
+ shared/source/helpers/registered_method_dispatcher.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/shared/source/helpers/basic_math.h b/shared/source/helpers/basic_math.h
+index fd62b9e6b..f339677eb 100644
+--- a/shared/source/helpers/basic_math.h
++++ b/shared/source/helpers/basic_math.h
+@@ -11,8 +11,9 @@
+ #include <algorithm>
+ #include <cmath>
+ #include <cstdint>
++#include <cstdio>
+ #include <cstdlib>
+-#include <stdio.h>
++#include <limits>
+ 
+ #define KB 1024uLL
+ #define MB (KB * KB)
+diff --git a/shared/source/helpers/registered_method_dispatcher.h b/shared/source/helpers/registered_method_dispatcher.h
+index 56f880a16..cd778fad0 100644
+--- a/shared/source/helpers/registered_method_dispatcher.h
++++ b/shared/source/helpers/registered_method_dispatcher.h
+@@ -7,6 +7,7 @@
+ 
+ #pragma once
+ 
++#include <cstddef>
+ #include <cstdint>
+ #include <functional>
+ 
+-- 
+2.37.3
+

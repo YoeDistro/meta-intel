@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=ae27f47fd6755510247c19e547e4c804 \
                     file://third_party/opencl_headers/LICENSE;md5=dcefc90f4c3c689ec0c2489064e7273b"
 
 SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https \
+           file://113cef897712c8b475f668f2bcf77a12db76a90e.patch \
            "
 
 SRCREV = "e0633548a9bd025c70bc7f3539eef094b1bc9ce1"
