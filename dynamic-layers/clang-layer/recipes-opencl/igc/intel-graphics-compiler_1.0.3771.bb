@@ -9,6 +9,8 @@ LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc
 
 SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https; \
            file://0001-skip-execution-of-ElfPackager.patch \
+           file://a58dd6de4c29595a0f93cff167b487d777e4559e.patch \
+           file://0001-IGA-Add-missing-header.patch \
           "
 
 SRCREV = "577887bf74c51a6084058836720fe58f8c35ca58"

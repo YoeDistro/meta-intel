@@ -1,0 +1,46 @@
+From a58dd6de4c29595a0f93cff167b487d777e4559e Mon Sep 17 00:00:00 2001
+From: "Szymichowski, Pawel" <pawel.szymichowski@intel.com>
+Date: Wed, 8 Apr 2020 08:24:05 -0700
+Subject: [PATCH] Changes in code.
+
+Change-Id: Ica75407e834f6b3439912bd0b47a6b30a6521fc7
+
+Upstream-Status: Backport
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ visa/iga/IGALibrary/api/igax.hpp | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
+
+diff --git a/visa/iga/IGALibrary/api/igax.hpp b/visa/iga/IGALibrary/api/igax.hpp
+index 4f1c680c6a9..6d17cd99b6a 100644
+--- a/visa/iga/IGALibrary/api/igax.hpp
++++ b/visa/iga/IGALibrary/api/igax.hpp
+@@ -492,16 +492,19 @@ inline iga::Op OpSpec::op() const
+ }
+ 
+ 
+-#define IGA_OPSPEC_STRING_GETTER(API, INITSIZE) { \
+-        char _staticBuf[INITSIZE]; \
+-        char *strPtr = &_staticBuf[0]; \
+-        size_t strCap = sizeof(_staticBuf); \
+-        IGA_CHECKED_CALL(API, m_op, strPtr, &strCap); \
+-        if (strCap > sizeof(_staticBuf)) { \
+-            strPtr = (char *)alloca(strCap); \
++#define IGA_OPSPEC_STRING_GETTER(API, INITSIZE) {         \
++        char _staticBuf[INITSIZE];                        \
++        char *strPtr = &_staticBuf[0];                    \
++        size_t strCap = sizeof(_staticBuf);               \
++        IGA_CHECKED_CALL(API, m_op, strPtr, &strCap);     \
++        if (strCap > sizeof(_staticBuf)) {                \
++            strPtr = (char *)malloc(strCap);              \
+             IGA_CHECKED_CALL(API, m_op, strPtr, &strCap); \
+-        } \
+-        return std::string(strPtr); \
++            std::string res(strPtr);                      \
++            free(strPtr);                                 \
++            return res;                                   \
++        }                                                 \
++        return std::string(strPtr);                       \
+     }
+ inline std::string OpSpec::menmonic() const
+ IGA_OPSPEC_STRING_GETTER(iga_opspec_mnemonic, 16);
