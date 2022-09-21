@@ -22,7 +22,7 @@ SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;nobranch=1 \
            file://0001-Fix-uClibc-build.patch \
           "
 
-SRCREV = "9ca43202d5ff3d1bf22f1b7ff1fe3bd2980b90dc"
+SRCREV = "a825bea1bcdd37bc2e7a773a9c92a52fc6363fae"
 S = "${WORKDIR}/git"
 
 COMPATIBLE_HOST:x86-x32 = "null"
