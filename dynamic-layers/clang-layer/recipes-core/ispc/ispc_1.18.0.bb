@@ -23,7 +23,7 @@ SRCREV = "f7ec3aa173c816377c215d83196b5c7c3a88db1c"
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
 DEPENDS += " clang-native bison-native flex-native"
-RDEPENDS:${PN} += " clang-libllvm clang"
+RDEPENDS:${PN} += " clang-libllvm clang clang-libclang-cpp"
 
 YFLAGS='-d -t -v -y --file-prefix-map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}'
 
