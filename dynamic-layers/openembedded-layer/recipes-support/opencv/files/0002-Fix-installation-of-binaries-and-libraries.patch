@@ -1,7 +1,7 @@
-From 5b6c285b5398fd29cc541ccf92e13440537bb5e8 Mon Sep 17 00:00:00 2001
+From 3d55027cd86db299faeed0a4a97ddcec1baedd61 Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Mon, 11 Apr 2022 11:11:23 +0800
-Subject: [PATCH] Fix installation of binaries and libraries
+Subject: [PATCH 2/2] Fix installation of binaries and libraries
 
 Make sure binaries are installed correctly.
 
@@ -31,10 +31,10 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  19 files changed, 37 insertions(+), 32 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index beb0214284..c9ffa7fcae 100644
+index f570d4246c..d20ac60749 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -106,7 +106,7 @@ include(cmake/extra_modules.cmake)
+@@ -111,7 +111,7 @@ include(cmake/extra_modules.cmake)
  add_subdirectory(docs)
  add_subdirectory(tools)
  add_subdirectory(scripts)
@@ -44,7 +44,7 @@ index beb0214284..c9ffa7fcae 100644
  #
  # CPack
 diff --git a/cmake/developer_package/frontends/frontends.cmake b/cmake/developer_package/frontends/frontends.cmake
-index 39b23fe655..aa638c0778 100644
+index 0779ed286d..f80cb9bb79 100644
 --- a/cmake/developer_package/frontends/frontends.cmake
 +++ b/cmake/developer_package/frontends/frontends.cmake
 @@ -2,7 +2,7 @@
@@ -57,7 +57,7 @@ index 39b23fe655..aa638c0778 100644
  set(FRONTEND_NAME_SUFFIX "_frontend")
  
 diff --git a/cmake/developer_package/packaging.cmake b/cmake/developer_package/packaging.cmake
-index cc287ff1f3..2daee6611e 100644
+index 458ddade93..626eb6548a 100644
 --- a/cmake/developer_package/packaging.cmake
 +++ b/cmake/developer_package/packaging.cmake
 @@ -20,8 +20,8 @@ function(ie_cpack_set_library_dir)
@@ -72,10 +72,10 @@ index cc287ff1f3..2daee6611e 100644
      endif()
  endfunction()
 diff --git a/cmake/developer_package/plugins/plugins.cmake b/cmake/developer_package/plugins/plugins.cmake
-index a630d6c354..779c43631a 100644
+index b748ebddef..fe670e88bc 100644
 --- a/cmake/developer_package/plugins/plugins.cmake
 +++ b/cmake/developer_package/plugins/plugins.cmake
-@@ -138,7 +138,7 @@ function(ie_add_plugin)
+@@ -139,7 +139,7 @@ function(ie_add_plugin)
  
              if(BUILD_SHARED_LIBS)
                  install(TARGETS ${IE_PLUGIN_NAME}
@@ -124,12 +124,12 @@ index 2755579a0f..4a5f5b424f 100644
 +
 +install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
 diff --git a/samples/cpp/CMakeLists.txt b/samples/cpp/CMakeLists.txt
-index 9a73582a73..70c4147f3f 100644
+index 3628c8283a..186540940f 100644
 --- a/samples/cpp/CMakeLists.txt
 +++ b/samples/cpp/CMakeLists.txt
-@@ -222,6 +222,8 @@ macro(ie_add_sample)
-         EXCLUDE_FROM_ALL
-     )
+@@ -258,6 +258,8 @@ macro(ie_add_sample)
+             COMPONENT samples_bin
+             EXCLUDE_FROM_ALL)
  
 +    install(TARGETS ${IE_SAMPLE_NAME} DESTINATION bin)
 +
@@ -137,10 +137,10 @@ index 9a73582a73..70c4147f3f 100644
      if(NOT TARGET ie_samples)
          add_custom_target(ie_samples ALL)
 diff --git a/scripts/CMakeLists.txt b/scripts/CMakeLists.txt
-index 9ad26ba952..0853e23706 100644
+index 4e9f76638f..6d8df5f0a1 100644
 --- a/scripts/CMakeLists.txt
 +++ b/scripts/CMakeLists.txt
-@@ -28,7 +28,7 @@ ie_shellcheck_process(DIRECTORY "${OpenVINO_SOURCE_DIR}"
+@@ -37,7 +37,7 @@ ie_shellcheck_process(DIRECTORY "${OpenVINO_SOURCE_DIR}"
  
  # install setupvars
  
@@ -149,7 +149,7 @@ index 9ad26ba952..0853e23706 100644
  
  if(UNIX)
      set(_setupvars_file setupvars/setupvars.sh)
-@@ -43,13 +43,13 @@ elseif(WIN32)
+@@ -54,13 +54,13 @@ elseif(WIN32)
          file(WRITE "${_setupvars_file}" "${_setupvars_content}")
      endif()
  endif()
@@ -183,10 +183,10 @@ index 9200d0bda1..b3636e0716 100644
 +        DESTINATION include/ie
          COMPONENT core_c_dev)
 diff --git a/src/cmake/openvino.cmake b/src/cmake/openvino.cmake
-index ddd016d14e..76db0f9927 100644
+index 340896e3a8..9bda84fe51 100644
 --- a/src/cmake/openvino.cmake
 +++ b/src/cmake/openvino.cmake
-@@ -59,8 +59,8 @@ install(TARGETS ${TARGET_NAME} EXPORT OpenVINOTargets
+@@ -62,8 +62,8 @@ install(TARGETS ${TARGET_NAME} EXPORT OpenVINOTargets
          RUNTIME DESTINATION ${IE_CPACK_RUNTIME_PATH} COMPONENT core
          ARCHIVE DESTINATION ${IE_CPACK_ARCHIVE_PATH} COMPONENT core
          LIBRARY DESTINATION ${IE_CPACK_LIBRARY_PATH} COMPONENT core
@@ -195,9 +195,9 @@ index ddd016d14e..76db0f9927 100644
 +        INCLUDES DESTINATION include
 +                             include/ie)
  
- # --------------- OpenVINO runtime library dev ------------------------------
- add_library(${TARGET_NAME}_dev INTERFACE)
-@@ -95,7 +95,7 @@ ie_cpack_add_component(core_dev REQUIRED DEPENDS core ${core_dev_components})
+ #
+ # Add openvin::dev target
+@@ -107,7 +107,7 @@ ie_cpack_add_component(core_dev REQUIRED DEPENDS core ${core_dev_components})
  
  if(BUILD_SHARED_LIBS)
      install(FILES $<TARGET_FILE_DIR:${TARGET_NAME}>/plugins.xml
@@ -206,7 +206,7 @@ index ddd016d14e..76db0f9927 100644
              COMPONENT core)
  
      # for InferenceEngineUnitTest
-@@ -114,7 +114,7 @@ endif()
+@@ -126,7 +126,7 @@ endif()
  install(EXPORT OpenVINOTargets
          FILE OpenVINOTargets.cmake
          NAMESPACE openvino::
@@ -214,19 +214,19 @@ index ddd016d14e..76db0f9927 100644
 +	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/OpenVINO
          COMPONENT core_dev)
  
- # Build tree
-@@ -160,10 +160,10 @@ configure_file("${OpenVINO_SOURCE_DIR}/cmake/templates/OpenVINOConfig-version.cm
+ set(PUBLIC_HEADERS_DIR "${OpenVINO_SOURCE_DIR}/src/inference/include")
+@@ -167,10 +167,10 @@ configure_file("${OpenVINO_SOURCE_DIR}/cmake/templates/OpenVINOConfig-version.cm
+ 
  install(FILES "${CMAKE_BINARY_DIR}/share/InferenceEngineConfig.cmake"
                "${CMAKE_BINARY_DIR}/InferenceEngineConfig-version.cmake"
-               "${OpenVINO_SOURCE_DIR}/src/cmake/ie_parallel.cmake"
 -        DESTINATION runtime/cmake
-+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/InferenceEngine
++	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/InferenceEngine
          COMPONENT core_dev)
  
  install(FILES "${CMAKE_BINARY_DIR}/share/OpenVINOConfig.cmake"
                "${CMAKE_BINARY_DIR}/OpenVINOConfig-version.cmake"
 -        DESTINATION runtime/cmake
-+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/OpenVINO
++	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/OpenVINO
          COMPONENT core_dev)
 diff --git a/src/common/preprocessing/CMakeLists.txt b/src/common/preprocessing/CMakeLists.txt
 index e41e286c95..11aaffca6a 100644
@@ -242,10 +242,10 @@ index e41e286c95..11aaffca6a 100644
      ov_install_static_lib(${TARGET_NAME} core)
  endif()
 diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
-index cc64b94ca3..5f0dcf20cf 100644
+index 86b195ee1c..867121ee50 100644
 --- a/src/core/CMakeLists.txt
 +++ b/src/core/CMakeLists.txt
-@@ -114,7 +114,7 @@ target_include_directories(ngraph INTERFACE $<BUILD_INTERFACE:${OV_CORE_INCLUDE_
+@@ -127,7 +127,7 @@ target_include_directories(ngraph INTERFACE $<BUILD_INTERFACE:${OV_CORE_INCLUDE_
  #-----------------------------------------------------------------------------------------------
  
  install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
@@ -254,7 +254,7 @@ index cc64b94ca3..5f0dcf20cf 100644
          COMPONENT core_dev
          FILES_MATCHING
              PATTERN "*.hpp"
-@@ -130,5 +130,5 @@ write_basic_package_version_file(${CMAKE_BINARY_DIR}/ngraphConfigVersion.cmake
+@@ -143,5 +143,5 @@ write_basic_package_version_file(${CMAKE_BINARY_DIR}/ngraphConfigVersion.cmake
  
  install(FILES ${CMAKE_BINARY_DIR}/ngraphConfig.cmake
                ${CMAKE_BINARY_DIR}/ngraphConfigVersion.cmake
@@ -262,7 +262,7 @@ index cc64b94ca3..5f0dcf20cf 100644
 +        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ngraph
          COMPONENT core_dev)
 diff --git a/src/inference/CMakeLists.txt b/src/inference/CMakeLists.txt
-index 767fbc1b81..f279a2ef7d 100644
+index 737e7e0027..259d5e141d 100644
 --- a/src/inference/CMakeLists.txt
 +++ b/src/inference/CMakeLists.txt
 @@ -209,7 +209,7 @@ set_target_properties(${TARGET_NAME}_obj
@@ -288,7 +288,7 @@ index 3993bd9731..99287bad51 100644
  
  ov_install_static_lib(${TARGET_NAME} gpu)
 diff --git a/src/plugins/intel_myriad/myriad_dependencies.cmake b/src/plugins/intel_myriad/myriad_dependencies.cmake
-index 5bba4235ff..69c1470a71 100644
+index 480acc05d1..5849f55878 100644
 --- a/src/plugins/intel_myriad/myriad_dependencies.cmake
 +++ b/src/plugins/intel_myriad/myriad_dependencies.cmake
 @@ -80,7 +80,7 @@ foreach(firmware_name IN LISTS VPU_SUPPORTED_FIRMWARES)
@@ -301,19 +301,19 @@ index 5bba4235ff..69c1470a71 100644
  
      if(ENABLE_INTEL_MYRIAD AND ENABLE_BEH_TESTS)
 diff --git a/src/plugins/intel_myriad/myriad_plugin/CMakeLists.txt b/src/plugins/intel_myriad/myriad_plugin/CMakeLists.txt
-index 12a2f15e4a..893146294c 100644
+index d8ebea0bfc..66b5a3d462 100644
 --- a/src/plugins/intel_myriad/myriad_plugin/CMakeLists.txt
 +++ b/src/plugins/intel_myriad/myriad_plugin/CMakeLists.txt
 @@ -56,6 +56,6 @@ set_target_properties(${TARGET_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION_REL
- # install
- if (LINUX)
-     install(FILES ${OpenVINO_SOURCE_DIR}/src/plugins/intel_myriad/third_party/mvnc/src/97-myriad-usbboot.rules
--        DESTINATION runtime/3rdparty
-+        DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/udev/rules.d
-         COMPONENT myriad)
+ 
+ if(LINUX)
+     install(FILES ${mvnc_SOURCE_DIR}/src/97-myriad-usbboot.rules
+-            DESTINATION install_dependencies
++	    DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/udev/rules.d
+             COMPONENT myriad)
  endif()
 diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
-index c8638f7fd3..ba30641c5a 100644
+index 2fe0fd9742..234110b7d4 100644
 --- a/tools/CMakeLists.txt
 +++ b/tools/CMakeLists.txt
 @@ -20,7 +20,7 @@ endif()
@@ -344,5 +344,5 @@ index d19eb5cc14..9fc929cbb0 100644
 +#        DESTINATION tools/compile_tool
 +#        COMPONENT core_tools)
 -- 
-2.36.1
+2.37.3
 
