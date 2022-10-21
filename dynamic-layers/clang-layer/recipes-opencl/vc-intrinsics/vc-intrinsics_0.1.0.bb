@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://Readme.md;beginline=1;endline=7;md5=3b2db19c3b0877bb3
 
 SRC_URI = "git://github.com/intel/vc-intrinsics.git;protocol=https;branch=master \
           "
-SRCREV = "99ac111c2604a47d865bd4d7996be8cfaf2af146"
+SRCREV = "b2c98d943986a27016bc735b84ed1655943ef749"
 
 S = "${WORKDIR}/git"
 
