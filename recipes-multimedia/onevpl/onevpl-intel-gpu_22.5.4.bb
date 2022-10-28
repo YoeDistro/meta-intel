@@ -16,11 +16,10 @@ COMPATIBLE_HOST:x86-x32 = "null"
 
 DEPENDS += "libdrm libva intel-media-driver onevpl pkgconfig-native"
 
-SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;branch=main;lfs=0 \
-           file://0001-Fixed-performance-dependency-on-stream-GOP-pattern-i.patch \
+SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;nobranch=1;lfs=0 \
           "
 
-SRCREV = "e0d2754d0250661a63fff2ee2fa8e0e94b0fcfad"
+SRCREV = "4a8f62f498eddc96473789a5d5e204ec84b69330"
 S = "${WORKDIR}/git"
 
 FILES:${PN} += " \
