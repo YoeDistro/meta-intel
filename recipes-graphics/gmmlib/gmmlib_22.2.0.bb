@@ -10,7 +10,7 @@ SRC_URI = " \
             git://github.com/intel/gmmlib.git;protocol=https;branch=master \
             "
 
-SRCREV = "102bb47557e57e7e58d74769105270345ed43c9a"
+SRCREV = "506c8e1bb50fa3f10c52ec01e545725df4f6af47"
 
 S = "${WORKDIR}/git"
 
