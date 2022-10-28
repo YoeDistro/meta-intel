@@ -12,7 +12,7 @@ SRC_URI = "git://github.com/oneapi-src/oneVPL.git;protocol=https;branch=master \
             file://0001-Fix-missing-UYVY-VA_FOURCC-causing-encode-failure.patch \
             file://0001-Enable-xdg_shell-for-weston10.patch \
             "
-SRCREV = "b90dbc9e673ee119f841e67184194446069c45a6"
+SRCREV = "15b79165c30fc4a7bf6efdf261a39b128b63b896"
 S = "${WORKDIR}/git"
 
 inherit cmake
