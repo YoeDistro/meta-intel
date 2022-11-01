@@ -5,7 +5,7 @@ environment, performs static model analysis, and adjusts deep \
 learning models for optimal execution on end-point target devices."
 HOMEPAGE = "https://01.org/openvinotoolkit"
 
-SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https \
+SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;lfs=0 \
            "
 SRCREV = "b2140c083a068a63591e8c2e9b5f6b240790519d"
 
