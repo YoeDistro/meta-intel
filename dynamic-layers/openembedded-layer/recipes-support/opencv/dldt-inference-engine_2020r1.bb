@@ -4,7 +4,7 @@ DESCRIPTION = "This toolkit allows developers to deploy pre-trained \
 deep learning models through a high-level C++ Inference Engine API \
 integrated with application logic."
 
-SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https \
+SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;lfs=0 \
            https://download.01.org/opencv/2020/openvinotoolkit/2020.1/inference_engine/firmware_usb-ma2450_942_R10.15.zip;name=ma2450 \
            https://download.01.org/opencv/2020/openvinotoolkit/2020.1/inference_engine/firmware_pcie-ma248x_942_R10.15.zip;name=ma248x \
            https://download.01.org/opencv/2020/openvinotoolkit/2020.1/inference_engine/firmware_usb-ma2x8x_942_R10.15.zip;name=ma2x8x \
