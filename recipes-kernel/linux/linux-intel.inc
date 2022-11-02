@@ -11,6 +11,7 @@ SRC_URI = " \
            file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch \
            file://0001-vt-conmakehash-improve-reproducibility.patch \
            file://0001-lib-build_OID_registry-fix-reproducibility-issues.patch \
+           file://fix-perf-reproducibility.patch \
 	  "
 
 LINUX_VERSION_EXTENSION ??= "-intel-pk-${LINUX_KERNEL_TYPE}"
