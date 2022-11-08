@@ -8,9 +8,8 @@ SECTION = "lib"
 inherit pkgconfig cmake
 
 S = "${WORKDIR}/git"
-SRCREV = "a495db4682b7318bc82b1cccfb17fafdf2e3a2ff"
+SRCREV = "24a1726b50aae8bb689381b9c293a617f4d7b0da"
 SRC_URI = "git://github.com/intel/metrics-discovery.git;branch=master;protocol=https \
-           file://0001-md_internal.h-Replace-string.h-with-string-C-header-.patch \
           "
 
 EXTRA_OECMAKE += "-DMD_PLATFORM=linux"
