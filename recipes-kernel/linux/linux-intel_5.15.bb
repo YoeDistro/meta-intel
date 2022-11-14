@@ -7,9 +7,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "5.15.49"
-SRCREV_machine ?= "8c7674099d42d20041c529f8772bd580a1a03d80"
-SRCREV_meta ?= "f7f709bf874f85baff9f2fb0ac0341c08399b144"
+LINUX_VERSION ?= "5.15.71"
+SRCREV_machine ?= "7f0de68338ad7f625a7137278bf1d0a5edcbab45"
+SRCREV_meta ?= "50e12441b95837206d02d3ecfd17b1c562759d76"
 
 # For Crystalforest and Romley
 KERNEL_MODULE_AUTOLOAD:append:core2-32-intel-common = " uio"
