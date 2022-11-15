@@ -11,7 +11,6 @@ python () {
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 SRC_URI:append = " file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch \
-                   file://0001-regulator-consumer-Add-missing-stubs-to-regulator-co.patch \
                    "
 
 KBRANCH = "5.10/preempt-rt"
@@ -19,9 +18,9 @@ KMETA_BRANCH = "yocto-5.10"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "5.10.115"
-SRCREV_machine ?= "5dd48c946c3d28aa2eeeb04de125bfca1c88527f"
-SRCREV_meta ?= "64fb693a6c11f21bab3ff9bb8dcb65a70abe05e3"
+LINUX_VERSION ?= "5.10.145"
+SRCREV_machine ?= "1fdb531352543a5d4e51a256419f810c3543f459"
+SRCREV_meta ?= "e8e3b361b40a4bbf452caa0dfb255dad7ca9b0ce"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
 
