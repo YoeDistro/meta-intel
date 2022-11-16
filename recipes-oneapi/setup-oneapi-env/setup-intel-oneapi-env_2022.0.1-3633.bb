@@ -17,3 +17,4 @@ if [ x"$D" = "x" ]; then
     if [ -x /sbin/ldconfig ]; then /sbin/ldconfig ; fi
 fi
 }
+BBCLASSEXTEND = "native nativesdk"
