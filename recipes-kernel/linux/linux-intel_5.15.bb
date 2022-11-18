@@ -1,11 +1,17 @@
 require linux-intel.inc
 
+SRC_URI:prepend = "git://github.com/intel/linux-intel-lts.git;protocol=https;name=machine;branch=${KBRANCH}; \
+                    "
+SRC_URI:append = " file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch"
+
 KBRANCH = "5.15/linux"
 KMETA_BRANCH = "yocto-5.15"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
+
+LINUX_VERSION_EXTENSION ??= "-intel-pk-${LINUX_KERNEL_TYPE}"
 
 LINUX_VERSION ?= "5.15.71"
 SRCREV_machine ?= "7f0de68338ad7f625a7137278bf1d0a5edcbab45"

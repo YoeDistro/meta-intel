@@ -1,5 +1,9 @@
 require linux-intel.inc
 
+SRC_URI:prepend = "git://github.com/intel/linux-intel-lts.git;protocol=https;name=machine;branch=${KBRANCH}; \
+                    "
+SRC_URI:append = " file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch"
+
 # Skip processing of this recipe if it is not explicitly specified as the
 # PREFERRED_PROVIDER for virtual/kernel. This avoids errors when trying
 # to build multiple virtual/kernel providers, e.g. as dependency of
@@ -15,6 +19,8 @@ KBRANCH = "5.15/preempt-rt"
 KMETA_BRANCH = "yocto-5.15"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
+
+LINUX_VERSION_EXTENSION ??= "-intel-pk-${LINUX_KERNEL_TYPE}"
 
 LINUX_VERSION ?= "5.15.71"
 SRCREV_machine ?= "e29405e36bfbda7ace776548de802b76f61b80d9"
