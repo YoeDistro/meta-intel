@@ -7,8 +7,8 @@
 PREFERRED_PROVIDER_virtual/kernel ?= "linux-intel"
 PREFERRED_PROVIDER_virtual/kernel:poky-tiny ?= "linux-intel"
 
-PREFERRED_VERSION_linux-intel ?= "5.15%"
-PREFERRED_VERSION_linux-intel-rt ?= "5.15%"
+PREFERRED_VERSION_linux-intel ?= "5.19%"
+PREFERRED_VERSION_linux-intel-rt ?= "5.19%"
 PREFERRED_VERSION_linux-intel:poky-altcfg ?= "5.15%"
 PREFERRED_VERSION_linux-intel-rt:poky-altcfg ?= "5.15%"
 
