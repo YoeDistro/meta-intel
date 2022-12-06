@@ -8,18 +8,21 @@ LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc
                     file://LICENSE.md;md5=488d74376edf2765f6e78d271543dde3 \
                     file://NOTICES.txt;md5=7f4fbc3eb2c34807465e63b1ec3c9d1a"
 
-SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=releases/igc-1.0.12149 \
+SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=releases/igc-1.0.12812 \
            git://github.com/intel/vc-intrinsics.git;protocol=https;destsuffix=git/vc-intrinsics;name=vc;nobranch=1 \
            git://github.com/KhronosGroup/SPIRV-Tools.git;protocol=https;destsuffix=SPIRV-Tools;name=spirv-tools;branch=sdk-1.3.204 \
            git://github.com/KhronosGroup/SPIRV-Headers.git;protocol=https;destsuffix=SPIRV-Headers;name=spirv-headers;branch=master \
            file://0003-Improve-Reproducibility-for-src-package.patch \
            file://0001-BiF-CMakeLists.txt-remove-opt-from-DEPENDS.patch \
+           file://c707d1e2244aec988bdd5d2a7473ef3a32a5bac7.patch \
+           file://d1761dfc3ca6b54bac0ee213389a65f84d2aa9b7.patch \
+           file://e09e752949e7af0231884d1b11ea907e3e8b1611.patch \
            "
 
 SRC_URI:append:class-native = " file://0001-fix-tblgen.patch"
 
-SRCREV_igc = "a3d06ca6798d1c70bb0bf274695ac74ce0532ae4"
-SRCREV_vc = "984bb27baacce6ee5c716c2e64845f2a1928025b"
+SRCREV_igc = "17eb3abbaa68a238f63d5d549e0a46cfeb71af80"
+SRCREV_vc = "dafb9926e5047a052ef5263dd4ec4fe5f178e5e0"
 SRCREV_spirv-tools = "45dd184c790d6bfc78a5a74a10c37e888b1823fa"
 SRCREV_spirv-headers = "b42ba6d92faf6b4938e6f22ddd186dbdacc98d78"
 
@@ -43,7 +46,7 @@ DEPENDS:append:class-target = " clang-cross-x86_64 intel-graphics-compiler-nativ
 RDEPENDS:${PN} += "opencl-clang"
 
 PACKAGECONFIG ??= "vc"
-PACKAGECONFIG[vc] = "-DIGC_BUILD__VC_ENABLED=ON -DIGC_OPTION__LINK_KHRONOS_SPIRV_TRANSLATOR=ON -DIGC_OPTION__USE_KHRONOS_SPIRV_TRANSLATOR_IN_VC=ON -DIGC_OPTION__SPIRV_TRANSLATOR_MODE=Prebuilds,-DIGC_BUILD__VC_ENABLED=OFF,"
+PACKAGECONFIG[vc] = "-DIGC_BUILD__VC_ENABLED=ON -DIGC_OPTION__LINK_KHRONOS_SPIRV_TRANSLATOR=ON -DIGC_OPTION__SPIRV_TRANSLATOR_MODE=Prebuilds,-DIGC_BUILD__VC_ENABLED=OFF,"
 
 EXTRA_OECMAKE = " \
                   -DIGC_OPTION__LLVM_PREFERRED_VERSION=${LLVMVERSION} \
@@ -52,6 +55,7 @@ EXTRA_OECMAKE = " \
                   -DIGC_OPTION__LLVM_MODE=Prebuilds \
                   -DLLVM_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
                   -DLLVM_LINK_EXE=${STAGING_BINDIR_NATIVE}/llvm-link \
+                  -DCLANG_EXE=${STAGING_BINDIR_NATIVE}/clang \
                   "
 
 do_install:append:class-native () {
