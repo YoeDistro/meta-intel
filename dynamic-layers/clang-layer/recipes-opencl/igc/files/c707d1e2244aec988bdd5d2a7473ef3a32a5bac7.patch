@@ -1,7 +1,7 @@
-From c707d1e2244aec988bdd5d2a7473ef3a32a5bac7 Mon Sep 17 00:00:00 2001
+From cce0d22ebba79075792e6f30c597d8d29d946e8c Mon Sep 17 00:00:00 2001
 From: Artem Gindinson <artem.gindinson@intel.com>
 Date: Thu, 17 Nov 2022 18:51:03 +0000
-Subject: [PATCH]  Disable opaque pointers in IGC stack for LLVM 15+
+Subject: [PATCH] Disable opaque pointers in IGC stack for LLVM 15+
 
 While IGC is a long way from supporting opaque pointers, LLVM 15 has them
 enabled by default. Enforce typed pointers explicitly within all LLVM
@@ -9,6 +9,7 @@ pipelines employed by our stack (unless CMake instructs otherwise).
 
 Upstream-Status: Backport
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+
 ---
  IGC/BiFModule/CMakeLists.txt              |  4 ++--
  IGC/CMakeLists.txt                        |  4 ++++
@@ -19,7 +20,7 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  6 files changed, 39 insertions(+), 4 deletions(-)
 
 diff --git a/IGC/BiFModule/CMakeLists.txt b/IGC/BiFModule/CMakeLists.txt
-index 60fc5cf8d7d..e87288ca6da 100644
+index 60fc5cf8d..e87288ca6 100644
 --- a/IGC/BiFModule/CMakeLists.txt
 +++ b/IGC/BiFModule/CMakeLists.txt
 @@ -251,7 +251,7 @@ function(igc_bif_build_bc)
@@ -41,7 +42,7 @@ index 60fc5cf8d7d..e87288ca6da 100644
          COMMENT "BiF: \"${_outBcFileName}\": Optmizing output .bc."
        )
 diff --git a/IGC/CMakeLists.txt b/IGC/CMakeLists.txt
-index 930a552121c..66ea2a3b5ca 100644
+index 930a55212..66ea2a3b5 100644
 --- a/IGC/CMakeLists.txt
 +++ b/IGC/CMakeLists.txt
 @@ -275,6 +275,10 @@ endif()
@@ -56,10 +57,10 @@ index 930a552121c..66ea2a3b5ca 100644
  
  set(IGC_OPTION__BIF_SRC_OCL_DIR "${IGC_SOURCE_DIR}/BiFModule"
 diff --git a/IGC/Compiler/CodeGenContext.cpp b/IGC/Compiler/CodeGenContext.cpp
-index 4abd6e4bf4a..0058571cd27 100644
+index fc04b5d84..fe1773b85 100644
 --- a/IGC/Compiler/CodeGenContext.cpp
 +++ b/IGC/Compiler/CodeGenContext.cpp
-@@ -231,6 +231,9 @@ namespace IGC
+@@ -232,6 +232,9 @@ namespace IGC
          {
              CreateResourceDimensionTypes(*this);
          }
@@ -70,7 +71,7 @@ index 4abd6e4bf4a..0058571cd27 100644
  
      void LLVMContextWrapper::AddRef()
 diff --git a/IGC/OCLFE/igd_fcl_mcl/source/clang_tb.cpp b/IGC/OCLFE/igd_fcl_mcl/source/clang_tb.cpp
-index ef0e5cacd96..c26bfcea74c 100644
+index 4a6fb40dd..f9b308503 100644
 --- a/IGC/OCLFE/igd_fcl_mcl/source/clang_tb.cpp
 +++ b/IGC/OCLFE/igd_fcl_mcl/source/clang_tb.cpp
 @@ -1494,6 +1494,10 @@ namespace TC
@@ -85,7 +86,7 @@ index ef0e5cacd96..c26bfcea74c 100644
  
          std::string extensions;
 diff --git a/IGC/VectorCompiler/lib/BiF/CMakeLists.txt b/IGC/VectorCompiler/lib/BiF/CMakeLists.txt
-index 3181a13403c..6235fc1d21e 100644
+index b2e56e091..77f397f79 100644
 --- a/IGC/VectorCompiler/lib/BiF/CMakeLists.txt
 +++ b/IGC/VectorCompiler/lib/BiF/CMakeLists.txt
 @@ -90,7 +90,7 @@ function(vc_build_bif RES_FILE CMCL_SRC_PATH BIF_NAME PTR_BIT_SIZE)
@@ -104,10 +105,10 @@ index 3181a13403c..6235fc1d21e 100644
 -    COMMAND ${LLVM_OPT_EXE} --O2 -o ${BIF_OPT_BC_NAME} ${BIF_CMCL_BC_NAME}
 +    COMMAND ${LLVM_OPT_EXE} ${IGC_LLVM_DEPENDENT_OPT_FLAGS} --O2 -o ${BIF_OPT_BC_NAME} ${BIF_CMCL_BC_NAME}
      COMMENT "vc_build_bif: running opt with O2: ${BIF_CMCL_BC_NAME} -> ${BIF_OPT_BC_NAME}"
-     DEPENDS opt ${BIF_CMCL_BC_PATH})
+     DEPENDS ${BIF_CMCL_BC_PATH})
    set(${RES_FILE} ${BIF_OPT_BC_NAME} PARENT_SCOPE)
 diff --git a/IGC/cmake/igc_llvm.cmake b/IGC/cmake/igc_llvm.cmake
-index c0f74dcea14..96e3b0d1117 100644
+index c0f74dcea..96e3b0d11 100644
 --- a/IGC/cmake/igc_llvm.cmake
 +++ b/IGC/cmake/igc_llvm.cmake
 @@ -69,6 +69,30 @@ list(TRANSFORM LLVM_INCLUDE_DIRS PREPEND "-I=" OUTPUT_VARIABLE LLVM_TABLEGEN_FLA
