@@ -1,4 +1,4 @@
-From 5329f00de484b470152e2bd3a5ab6dac45668b13 Mon Sep 17 00:00:00 2001
+From cfc8d6775cc213bdc0c938c20167d74f6aeb310a Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Thu, 19 May 2022 22:50:09 +0800
 Subject: [PATCH] fix tblgen
@@ -8,10 +8,10 @@ Subject: [PATCH] fix tblgen
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/IGC/cmake/igc_llvm.cmake b/IGC/cmake/igc_llvm.cmake
-index 89c03fc49..85be9ae08 100644
+index 96e3b0d11..b48c91ff4 100644
 --- a/IGC/cmake/igc_llvm.cmake
 +++ b/IGC/cmake/igc_llvm.cmake
-@@ -48,7 +48,7 @@ else()
+@@ -52,7 +52,7 @@ else()
    set(LLVM_OPT_EXE "opt" CACHE STRING "")
  
    set(LLVM_TABLEGEN_EXE "llvm-tblgen")
@@ -20,6 +20,3 @@ index 89c03fc49..85be9ae08 100644
      if(DEFINED LLVM_TABLEGEN)
        set(LLVM_TABLEGEN_EXE ${LLVM_TABLEGEN})
      else()
--- 
-2.35.3
-
