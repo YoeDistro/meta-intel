@@ -17,6 +17,7 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;nam
            file://c707d1e2244aec988bdd5d2a7473ef3a32a5bac7.patch \
            file://d1761dfc3ca6b54bac0ee213389a65f84d2aa9b7.patch \
            file://e09e752949e7af0231884d1b11ea907e3e8b1611.patch \
+           file://fix-build-with-llvm12.patch \
            "
 
 SRC_URI:append:class-native = " file://0001-fix-tblgen.patch"
