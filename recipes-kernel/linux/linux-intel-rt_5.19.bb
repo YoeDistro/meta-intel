@@ -26,3 +26,4 @@ SRCREV_machine ?= "7de7f243440a51b6b996fc462f7fd7a546c175d2"
 SRCREV_meta ?= "0cba9aa40445bf59bfa651e1bd43a31c2ca7d524"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
+UPSTREAM_CHECK_GITTAGREGEX = "^mainline-tracking-v5.19-(?P<pver>rt(\d+)-preempt-rt-(\d+)T(\d+)Z)$"

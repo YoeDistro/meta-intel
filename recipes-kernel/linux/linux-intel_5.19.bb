@@ -18,3 +18,5 @@ SRCREV_meta ?= "0cba9aa40445bf59bfa651e1bd43a31c2ca7d524"
 
 # Functionality flags
 KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc features/security/security.scc"
+
+UPSTREAM_CHECK_GITTAGREGEX = "^mainline-tracking-v5.19-linux-(?P<pver>(\d+)T(\d+)Z)$"
