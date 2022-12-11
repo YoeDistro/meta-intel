@@ -7,7 +7,7 @@ LICENSE  = "BSD-3-Clause & Apache-2.0-with-LLVM-exception"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=da5ecffdd210b3cf776b32b41c182e87 \
                     file://third-party-programs.txt;md5=3cd6f8a7c3bd9d2bb898fcb27c75221a"
 
-inherit cmake python3native
+inherit cmake python3native ptest
 
 S = "${WORKDIR}/git"
 
@@ -17,19 +17,32 @@ SRC_URI = "git://github.com/ispc/ispc.git;protocol=https;branch=main \
            file://0001-Fix-QA-Issues.patch \
            file://6a1b2ffae0cc12467838bc671e3b089924de90a6.patch \
            file://ec35a6f8e60ba77e59a6f2bfec27011e0ab34dda.patch \
+           file://0001-Add-print-function-to-print-test-run-status-in-ptest.patch \
+           file://run-ptest \
            "
+
 SRCREV = "f7ec3aa173c816377c215d83196b5c7c3a88db1c"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
 DEPENDS += " clang-native bison-native flex-native"
 RDEPENDS:${PN} += " clang-libllvm clang clang-libclang-cpp"
+RDEPENDS:${PN}-ptest += " python3-multiprocessing"
 
 YFLAGS='-d -t -v -y --file-prefix-map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}'
 
 do_configure:prepend() {
         sed -i -e 's#\${BISON_EXECUTABLE}.*#\${BISON_EXECUTABLE} ${YFLAGS} #g' ${S}/CMakeLists.txt
         sed -i -e 's#\${FLEX_EXECUTABLE}.*#\${FLEX_EXECUTABLE} \-L #g' ${S}/CMakeLists.txt
+}
+
+do_install_ptest() {
+        cp -rf ${S}/run_tests.py ${D}${PTEST_PATH}
+        cp -rf ${S}/common.py ${D}${PTEST_PATH}
+        cp -rf ${S}/tests ${D}${PTEST_PATH}
+        cp -rf ${S}/test_static.isph ${D}${PTEST_PATH}
+        cp -rf ${S}/fail_db.txt ${D}${PTEST_PATH}
+        cp -rf ${S}/test_static.cpp ${D}${PTEST_PATH}
 }
 
 EXTRA_OECMAKE += " \
