@@ -25,3 +25,5 @@ KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc features/security/sec
 # It drops 'CONFIG_FB_BOOT_VESA_SUPPORT' config option which would result in a warning with 5.15 y-k-c.
 # Suppress the harmless warning for now.
 KCONF_BSP_AUDIT_LEVEL = "0"
+
+UPSTREAM_CHECK_GITTAGREGEX = "^lts-(?P<pver>v5.15.(\d+)-linux-(\d+)T(\d+)Z)$"
