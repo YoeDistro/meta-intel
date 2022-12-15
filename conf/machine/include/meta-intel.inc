@@ -33,7 +33,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append = "${@bb.utils.contains('MACHINE_FEATURE
 
 # recommended extra packages common to all intel machines
 MACHINE_EXTRA_RRECOMMENDS:append = " kernel-modules linux-firmware"
-MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS:append = " kernel-module-i915 linux-firmware-i915"
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS:append = " kernel-module-i915 linux-firmware-i915 kernel-module-igc"
 
 # for the early boot time kernel microcode loading support,
 # merge the microcode data in the final initrd image.
