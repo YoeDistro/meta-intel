@@ -10,19 +10,21 @@ HOMEPAGE = "https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-c
 
 LICENSE="EULA"
 
+COMPILERMAINVER = "2023.0.0"
+
 LIC_FILES_CHKSUM = " \
-                     file://opt/intel/oneapi/compiler/2022.1.0/licensing/credist.txt;md5=f772f43824318f221f6363883e44201f \
+                     file://opt/intel/oneapi/compiler/${COMPILERMAINVER}/licensing/credist.txt;md5=0347b85fa78c51d1156ccc367202c66c \
                      "
 
 SRC_URI = " \
-            https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-dpcpp-cpp-2022.1.0-${PV}_amd64.deb;subdir=${BPN};name=icx-compiler \
-            https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-compiler-shared-2022.1.0-${PV}_amd64.deb;subdir=${BPN};name=compiler-linker \
-            https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-compiler-shared-common-2022.1.0-${PV}_all.deb;subdir=${BPN};name=shared-common \
+            https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-dpcpp-cpp-${COMPILERMAINVER}-${PV}_amd64.deb;subdir=${BPN};name=icx-compiler \
+            https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-compiler-shared-${COMPILERMAINVER}-${PV}_amd64.deb;subdir=${BPN};name=compiler-linker \
+            https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-compiler-shared-common-${COMPILERMAINVER}-${PV}_all.deb;subdir=${BPN};name=shared-common \
             "
 
-SRC_URI[icx-compiler.sha256sum] = "c525c416c61cac9aa4e22fec78be95b88d33bca13360d0444c22da52eb8dd318"
-SRC_URI[compiler-linker.sha256sum] = "3185dc02473b3d3a34234dd82a17c285e43701455636f93be235b52c2ac6f2c6"
-SRC_URI[shared-common.sha256sum] = "c9961b90a9c4f4636c78292b5ba3d6cf6bbd7081f1ce4a4690bb7db94596226e"
+SRC_URI[icx-compiler.sha256sum] = "2aa3f782f8c5ea1920d7fbabd7758b95b110764c53418f73d3c156164d84f44a"
+SRC_URI[compiler-linker.sha256sum] = "2fa8d9f8bdbada124da24f1d161b4b882f85f54bcc341149ea5a5d1e9dcc826d"
+SRC_URI[shared-common.sha256sum] = "a1dcc49438fc1a83474a6f3bc4543ca6cf7dcb0b5a8dcd1bdffed9ac488825fd"
 
 S = "${WORKDIR}/${BPN}"
 
