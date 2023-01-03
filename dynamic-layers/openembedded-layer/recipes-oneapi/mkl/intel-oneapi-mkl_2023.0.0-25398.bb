@@ -12,7 +12,7 @@ HOMEPAGE = "https://software.intel.com/content/www/us/en/develop/tools/oneapi/co
 LICENSE = "ISSL"
 
 LIC_FILES_CHKSUM = " \
-                     file://opt/intel/oneapi/lib/licensing/mkl/license.txt;md5=0c8b92562c3c165187e2c15ff638855e \
+                     file://opt/intel/oneapi/lib/licensing/mkl/license.txt;md5=8510d21bf355a76e378c3216c3929ccd \
                      file://opt/intel/oneapi/lib/licensing/mkl/third-party-programs-benchmarks.txt;md5=cb98e1a1f14c05ea85a979ea8982e7a4 \
                      file://opt/intel/oneapi/lib/licensing/mkl/third-party-programs-ipp.txt;md5=a4b2bf15e38f5c1267cdafed18bc0b09 \
                      file://opt/intel/oneapi/lib/licensing/mkl/third-party-programs-openmp.txt;md5=6b3c1aa2a11393060074c0346ce21e49 \
@@ -20,7 +20,7 @@ LIC_FILES_CHKSUM = " \
                      file://opt/intel/oneapi/lib/licensing/mkl/third-party-programs.txt;md5=980965cf1f086d40998ca4981968b6a4 \
                      "
 
-MKLMAINVER = "2022.0.1"
+MKLMAINVER = "2023.0.0"
 
 SRC_URI = " \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-runtime-mkl-${PV}_amd64.deb;subdir=${BPN};name=runtime \
@@ -28,9 +28,9 @@ SRC_URI = " \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-mkl-common-devel-${MKLMAINVER}-${PV}_all.deb;subdir=${BPN};name=devel \
             "
 
-SRC_URI[runtime.sha256sum] = "b20e0f7400fbbc55d8489f9f3ef35a8c8df7f5af7d87903bf305703e3a2ebc3b"
-SRC_URI[common.sha256sum] = "bff8b2bfedbd09c9e6d0366cca3d4de80af521302bd5938fe6fa0128c6839041"
-SRC_URI[devel.sha256sum] = "1c84c0b72638415318229326cb143691a5914d5e88552abef39391db3d285cff"
+SRC_URI[runtime.sha256sum] = "e681b760aa3ca669f56c535cae5bf5b990fbc768301d0d4885b4a6acffd51f3b"
+SRC_URI[common.sha256sum] = "5983af05c8f8873d3df772392b87612c09594ca0ee7c2f667857c517b0024062"
+SRC_URI[devel.sha256sum] = "114861a697500e5ee5e0e5f1e920bc0c96dbacd80145877e4974c582acb26c52"
 
 S = "${WORKDIR}/${BPN}"
 
@@ -51,7 +51,9 @@ do_install:append () {
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT  = "1"
 
-RDEPENDS:${PN} += "bash tbb intel-oneapi-compiler setup-intel-oneapi-env"
+RDEPENDS:${PN} += "bash tbb intel-oneapi-compiler setup-intel-oneapi-env ocl-icd"
 INSANE_SKIP:${PN} = "ldflags textrel dev-so"
+
+SKIP_FILEDEPS:${PN} = '1'
 
 SYSROOT_DIRS += "/opt"
