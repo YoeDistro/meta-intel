@@ -1,0 +1,33 @@
+From 776692307258f273d54b81c00701a0ad01c9f4e4 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Mon, 9 Jan 2023 11:43:05 +0800
+Subject: [PATCH] external/SPIRV-Tools: change path to tools and headers
+
+We clone the SPIRV headers and tools in a different directory to ensure
+file path substitutions take place.
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ external/SPIRV-Tools/CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/external/SPIRV-Tools/CMakeLists.txt b/external/SPIRV-Tools/CMakeLists.txt
+index 076079f7c..3b2059f88 100644
+--- a/external/SPIRV-Tools/CMakeLists.txt
++++ b/external/SPIRV-Tools/CMakeLists.txt
+@@ -42,8 +42,8 @@ else() #By default use build from sources
+  message(STATUS "[SPIRV-Tools] : Building from source")
+  message(STATUS "[SPIRV-Tools] : Current source dir: ${CMAKE_CURRENT_SOURCE_DIR}")
+ 
+- set(SPIRV-Headers_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../SPIRV-Headers") # used in subdirectory
+- set(SPIRV-Tools_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../SPIRV-Tools")
++ set(SPIRV-Headers_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../SPIRV-Headers") # used in subdirectory
++ set(SPIRV-Tools_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../SPIRV-Tools")
+ 
+  set(SPIRV-Tools_OUTPUT_DIR "${IGC_OPTION__OUTPUT_DIR}/external/SPIRV-Tools/build")
+  set(IGC_BUILD__SPIRV-Headers_DIR "${SPIRV-Headers_SOURCE_DIR}")
+-- 
+2.37.3
+
