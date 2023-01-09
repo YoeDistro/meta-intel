@@ -10,14 +10,15 @@ LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc
 
 SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=releases/igc-1.0.12812 \
            git://github.com/intel/vc-intrinsics.git;protocol=https;destsuffix=git/vc-intrinsics;name=vc;nobranch=1 \
-           git://github.com/KhronosGroup/SPIRV-Tools.git;protocol=https;destsuffix=SPIRV-Tools;name=spirv-tools;branch=sdk-1.3.204 \
-           git://github.com/KhronosGroup/SPIRV-Headers.git;protocol=https;destsuffix=SPIRV-Headers;name=spirv-headers;branch=master \
+           git://github.com/KhronosGroup/SPIRV-Tools.git;protocol=https;destsuffix=git/SPIRV-Tools;name=spirv-tools;branch=sdk-1.3.204 \
+           git://github.com/KhronosGroup/SPIRV-Headers.git;protocol=https;destsuffix=git/SPIRV-Headers;name=spirv-headers;branch=master \
            file://0003-Improve-Reproducibility-for-src-package.patch \
            file://0001-BiF-CMakeLists.txt-remove-opt-from-DEPENDS.patch \
            file://c707d1e2244aec988bdd5d2a7473ef3a32a5bac7.patch \
            file://d1761dfc3ca6b54bac0ee213389a65f84d2aa9b7.patch \
            file://e09e752949e7af0231884d1b11ea907e3e8b1611.patch \
            file://fix-build-with-llvm12.patch \
+           file://0001-external-SPIRV-Tools-change-path-to-tools-and-header.patch \
            "
 
 SRC_URI:append:class-native = " file://0001-fix-tblgen.patch"
