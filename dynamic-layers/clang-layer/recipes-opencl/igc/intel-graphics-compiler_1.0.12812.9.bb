@@ -76,3 +76,6 @@ UPSTREAM_CHECK_GITTAGREGEX = "^igc-(?P<pver>(?!19\..*)\d+(\.\d+)+)$"
 FILES:${PN} += " \
                  ${libdir}/igc/NOTICES.txt \
                  "
+
+# libigc.so contains buildpaths
+INSANE_SKIP:${PN} += "buildpaths"
