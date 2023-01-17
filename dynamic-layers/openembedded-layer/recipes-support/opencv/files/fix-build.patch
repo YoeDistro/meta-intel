@@ -10,23 +10,6 @@ Yocto specific tweaks to the build process:
 Upstream-Status: Inappropriate
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 
-diff --git a/cmake/developer_package/packaging/debian/debian.cmake b/cmake/developer_package/packaging/debian/debian.cmake
-index 735160b469..26f51229e2 100644
---- a/cmake/developer_package/packaging/debian/debian.cmake
-+++ b/cmake/developer_package/packaging/debian/debian.cmake
-@@ -31,7 +31,11 @@ macro(ov_debian_cpack_set_dirs)
-     set(OV_CPACK_NGRAPH_CMAKEDIR ${OV_CPACK_RUNTIMEDIR}/cmake/ngraph${OpenVINO_VERSION})
-     set(OV_CPACK_OPENVINO_CMAKEDIR ${OV_CPACK_RUNTIMEDIR}/cmake/openvino${OpenVINO_VERSION})
-     set(OV_CPACK_DOCDIR ${CMAKE_INSTALL_DATADIR}/doc/openvino-${OpenVINO_VERSION})
--    set(OV_CPACK_PYTHONDIR lib/python3/dist-packages)
-+
-+    ov_get_pyversion(pyversion)
-+    if(pyversion)
-+        set(OV_CPACK_PYTHONDIR lib/${pyversion}/site-packages)
-+    endif()
- 
-     # non-native stuff
-     set(OV_CPACK_SHAREDIR ${CMAKE_INSTALL_DATADIR}/openvino) # internal
 diff --git a/cmake/developer_package/target_flags.cmake b/cmake/developer_package/target_flags.cmake
 index 62831fffab..b123bbad75 100644
 --- a/cmake/developer_package/target_flags.cmake

@@ -56,7 +56,7 @@ EXTRA_OECMAKE += " \
                   -DUSE_BUILD_TYPE_SUBFOLDER=OFF \
                   -DENABLE_FUZZING=OFF \
                   -DENABLE_TBBBIND_2_5=OFF \
-                  -DCPACK_GENERATOR=DEB \
+                  -DCPACK_GENERATOR=RPM \
                   "
 
 
@@ -88,7 +88,6 @@ do_configure:prepend() {
 do_install:append() {
     rm -rf ${D}${prefix}/install_dependencies
     rm -rf ${D}${prefix}/setupvars.sh
-    rm -rf ${D}${datadir}/lintian
 
     sed -i -e 's:^#include.*imp.hpp"$:#include "/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}/git/src/plugins/intel_cpu/src/nodes/proposal_imp.hpp":g;' ${B}/src/plugins/intel_cpu/cross-compiled/proposal_imp_disp.cpp
 }
