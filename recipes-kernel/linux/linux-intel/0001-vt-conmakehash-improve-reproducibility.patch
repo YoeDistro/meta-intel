@@ -18,7 +18,7 @@ this solves the reprodicibility issue.
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 
-Upstream-Status: Inappropriate 
+Upstream-Status: Inappropriate
 
 Taken from linux-yocto, v5.15/standard/base
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>

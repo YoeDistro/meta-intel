@@ -9,6 +9,8 @@ application. It's used for testing purposes only.
 
 Images signed with refkit-db keys are allowed to boot.
 
+Upstream-Status: Inappropriate
+
 Signed-off-by: Mikko Ylinen <mikko.ylinen@linux.intel.com>
 Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
 ---
