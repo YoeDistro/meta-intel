@@ -17,6 +17,7 @@ LIC_FILES_CHKSUM = " \
                      "
 
 COMPILERDOTVER = "2023.0.0-25325"
+DEVUTILITVERSION = "2021.8.0-2021.8.0-25328"
 SRC_URI = " \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-compiler-dpcpp-cpp-runtime-${COMPILERMAINVER}-${PV}_amd64.deb;subdir=${BPN};name=dpcpp-runtime \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-compiler-dpcpp-cpp-common-${COMPILERMAINVER}-${PV}_all.deb;subdir=${BPN};name=dpcpp-common \
@@ -24,6 +25,7 @@ SRC_URI = " \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-common-vars-${COMPILERDOTVER}_all.deb;subdir=${BPN};name=common-vars \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-openmp-common-${COMPILERMAINVER}-${PV}_all.deb;subdir=${BPN};name=openmp-common \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-common-licensing-${COMPILERMAINVER}-${COMPILERDOTVER}_all.deb;subdir=${BPN};name=license \
+            https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-dev-utilities-${DEVUTILITVERSION}_amd64.deb;subdir=${BPN};name=dev-utils \
             "
 
 SRC_URI[dpcpp-runtime.sha256sum] = "63f63e8e1f02ce34baec35d4892b89a940a745a488fff8d1e04437ab079e7543"
@@ -32,6 +34,7 @@ SRC_URI[compiler-shared-runtime.sha256sum] = "39c8f307c67129ef8d466561f39bbed344
 SRC_URI[common-vars.sha256sum] = "a7779af0502470d07db51789abc2d31a7f80e9ffd6ac77ed3ffcaad79dbecd82"
 SRC_URI[openmp-common.sha256sum] = "b324474eae8bd5bd010df52de880eea55566e91dc043462879fc295ea6b3039c"
 SRC_URI[license.sha256sum] = "801db78b05c548060638dc02b819ee9b4a714b920aca22c8d57cf89ec619e130"
+SRC_URI[dev-utils.sha256sum] = "df8513238bb753f9d169ffc7967784478ea10a2ab3cb26246c66a0d51d96d33f"
 
 S = "${WORKDIR}/${BPN}"
 
