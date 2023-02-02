@@ -13,8 +13,8 @@ DEPENDS += "elfutils-native openssl-native util-linux-native"
 LINUX_VERSION_EXTENSION ??= "-mainline-tracking-${LINUX_KERNEL_TYPE}"
 
 LINUX_VERSION ?= "5.19.0"
-SRCREV_machine ?= "20024f44f7ef62c5c4bd030a858e6b44ea2541ec"
-SRCREV_meta ?= "0cba9aa40445bf59bfa651e1bd43a31c2ca7d524"
+SRCREV_machine ?= "51b9920cab3c5ee38b2c0cd5c7509ce005241b72"
+SRCREV_meta ?= "f5d4c109d6de04005def04c3a06f053ae0c397ad"
 
 # Functionality flags
 KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc features/security/security.scc"
