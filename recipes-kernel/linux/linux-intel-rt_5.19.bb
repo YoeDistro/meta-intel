@@ -22,8 +22,8 @@ DEPENDS += "elfutils-native openssl-native util-linux-native"
 LINUX_VERSION_EXTENSION ??= "-mainline-tracking-${LINUX_KERNEL_TYPE}"
 
 LINUX_VERSION ?= "5.19.0"
-SRCREV_machine ?= "7de7f243440a51b6b996fc462f7fd7a546c175d2"
-SRCREV_meta ?= "0cba9aa40445bf59bfa651e1bd43a31c2ca7d524"
+SRCREV_machine ?= "473a02e9326df5770b0bf2eae0b62b58a4321776"
+SRCREV_meta ?= "f5d4c109d6de04005def04c3a06f053ae0c397ad"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
 UPSTREAM_CHECK_GITTAGREGEX = "^mainline-tracking-v5.19-(?P<pver>rt(\d+)-preempt-rt-(\d+)T(\d+)Z)$"
