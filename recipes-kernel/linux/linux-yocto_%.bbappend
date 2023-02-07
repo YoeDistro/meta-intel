@@ -1,3 +1,5 @@
+require meta-intel-compat-kernel.inc
+
 # The kernel build is 64-bit regardless, so include both common overrides.
 # Without this, the kernel will be missing vars that make it buildable for the
 # intel-corei7-64 machine.
