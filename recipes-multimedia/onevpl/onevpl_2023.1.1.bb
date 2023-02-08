@@ -9,10 +9,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c18ea6bb4786a26bf4eee88a7424a408 \
                     file://third-party-programs.txt;md5=f43d223f2b736e89abed9660483d0386"
 
 SRC_URI = "git://github.com/oneapi-src/oneVPL.git;protocol=https;branch=master \
-            file://0001-Fix-missing-UYVY-VA_FOURCC-causing-encode-failure.patch \
-            file://0001-Enable-xdg_shell-for-weston10.patch \
             "
-SRCREV = "15b79165c30fc4a7bf6efdf261a39b128b63b896"
+SRCREV = "5d7b6af5b483e6ddc0d9746efc97edfebf508e1d"
 S = "${WORKDIR}/git"
 
 inherit cmake
