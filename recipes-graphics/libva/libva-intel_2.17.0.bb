@@ -17,8 +17,10 @@ SECTION = "x11"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2e48940f94acb0af582e5ef03537800f"
 
-SRC_URI = "https://github.com/intel/libva/releases/download/${PV}/libva-${PV}.tar.bz2"
-SRC_URI[sha256sum] = "115faca0db2c417a37da49830870e260450fa13066f5e24e252a20c36d920a1c"
+SRC_URI = "https://github.com/intel/libva/releases/download/${PV}/libva-${PV}.tar.bz2 \
+           file://0001-Add-missing-libva.def.patch \
+          "
+SRC_URI[sha256sum] = "f3e5eb27c305e05a9bb62703d1915a127301cc0c4f9f209025767432230c4eac"
 
 S = "${WORKDIR}/libva-${PV}"
 

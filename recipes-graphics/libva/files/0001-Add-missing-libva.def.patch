@@ -1,0 +1,115 @@
+From 124cea5f0ecb94320502d9f1923df53df61fa9f1 Mon Sep 17 00:00:00 2001
+From: Lim Siew Hoon <siew.hoon.lim@intel.com>
+Date: Tue, 7 Feb 2023 10:33:49 +0800
+Subject: [PATCH] Add missing libva.def
+
+The libva.def is missing from tarball, but from github
+it did contains libva.def. Without this libva.def it will
+be fail in meson configure the source code, it complain missing
+va/libva.def.
+
+This file is importing from:
+https://github.com/intel/libva/blob/2.17.0/va/libva.def
+
+upstream-status: merged.
+
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
+---
+ va/libva.def | 85 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
+ create mode 100644 va/libva.def
+
+diff --git a/va/libva.def b/va/libva.def
+new file mode 100644
+index 0000000..f57896e
+--- /dev/null
++++ b/va/libva.def
+@@ -0,0 +1,85 @@
++LIBRARY va
++EXPORTS
++    vaInitialize
++    vaErrorStr
++    vaTerminate
++    vaQueryVendorString
++    vaMaxNumProfiles
++    vaMaxNumEntrypoints
++    vaQueryConfigProfiles
++    vaQueryConfigEntrypoints
++    vaGetConfigAttributes
++    vaProfileStr
++    vaEntrypointStr
++    vaConfigAttribTypeStr
++    vaAcquireBufferHandle
++    vaAssociateSubpicture
++    vaBeginPicture
++    vaCreateBuffer
++    vaCreateConfig
++    vaCreateContext
++    vaCreateImage
++    vaCreateSubpicture
++    vaCreateSurfaces
++    vaDeassociateSubpicture
++    vaDeriveImage
++    vaDestroyBuffer
++    vaDestroyConfig
++    vaDestroyContext
++    vaDestroyImage
++    vaDestroySubpicture
++    vaDestroySurfaces
++    vaEndPicture
++    vaGetDisplayAttributes
++    vaGetImage
++    vaMapBuffer
++    vaMaxNumDisplayAttributes
++    vaMaxNumImageFormats
++    vaMaxNumSubpictureFormats
++    vaPutImage
++    vaQueryDisplayAttributes
++    vaQueryImageFormats
++    vaQuerySubpictureFormats
++    vaQuerySurfaceAttributes
++    vaQuerySurfaceStatus
++    vaQueryVideoProcFilterCaps
++    vaQueryVideoProcFilters
++    vaQueryVideoProcPipelineCaps
++    vaReleaseBufferHandle
++    vaRenderPicture
++    vaSetDisplayAttributes
++    vaSetErrorCallback
++    vaSetInfoCallback
++    vaSetSubpictureGlobalAlpha
++    vaSyncSurface
++    vaUnmapBuffer
++    vaSetDriverName
++    vaSyncBuffer
++    vaQueryConfigAttributes
++    vaBufferSetNumElements
++    vaQuerySurfaceError
++    vaSetImagePalette
++    vaSetSubpictureChromakey
++    vaBufferInfo
++    vaLockSurface
++    vaUnlockSurface
++    vaCreateMFContext
++    vaMFAddContext
++    vaMFReleaseContext
++    vaMFSubmit
++    vaCreateBuffer2
++    vaQueryProcessingRate
++    vaExportSurfaceHandle
++    va_newDisplayContext
++    va_newDriverContext
++    vaMaxNumConfigAttributes
++    vaBufferTypeStr
++    vaAttachProtectedSession
++    vaCopy
++    vaCreateProtectedSession
++    vaDestroyProtectedSession
++    vaDetachProtectedSession
++    vaProtectedSessionExecute
++    vaSetSubpictureImage
++    vaStatusStr
++    vaSyncSurface2
+-- 
+2.39.0
+
