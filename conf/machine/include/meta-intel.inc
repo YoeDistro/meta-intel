@@ -7,10 +7,10 @@
 PREFERRED_PROVIDER_virtual/kernel ?= "linux-intel"
 PREFERRED_PROVIDER_virtual/kernel:poky-tiny ?= "linux-intel"
 
-PREFERRED_VERSION_linux-intel ?= "5.19%"
+PREFERRED_VERSION_linux-intel ?= "6.1%"
 PREFERRED_VERSION_linux-intel-rt ?= "5.19%"
-PREFERRED_VERSION_linux-intel:poky-altcfg ?= "5.15%"
-PREFERRED_VERSION_linux-intel-rt:poky-altcfg ?= "5.15%"
+PREFERRED_VERSION_linux-intel:poky-altcfg ?= "5.19%"
+PREFERRED_VERSION_linux-intel-rt:poky-altcfg ?= "5.19%"
 
 # Need to point to latest version of libva needed for media components
 PREFERRED_PROVIDER_libva = "libva-intel"
