@@ -1,4 +1,4 @@
-From 1c78ff3ff1f77c78a618f7a780985cef1933bb2b Mon Sep 17 00:00:00 2001
+From 10dfcd0fb5c0f8d79981f59c9c363311143f640b Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Mon, 13 Apr 2020 15:20:28 +0800
 Subject: [PATCH] Installation and build fixes
@@ -30,13 +30,14 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  .../clDNN/CMakeCompilerLinkerOpts.txt           |  2 --
  .../thirdparty/clDNN/CMakeLists.txt             |  1 -
  .../clDNN/common/khronos_ocl_clhpp/cl2_ext.hpp  |  2 +-
+ .../thirdparty/clDNN/src/CMakeLists.txt         |  4 ++--
  .../tools/compile_tool/CMakeLists.txt           |  2 +-
  .../tools/vpu/vpu_compile/CMakeLists.txt        |  4 ++--
  .../tools/vpu/vpu_perfcheck/CMakeLists.txt      |  2 +-
- 20 files changed, 28 insertions(+), 53 deletions(-)
+ 21 files changed, 30 insertions(+), 55 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e48cee57..e9598455 100644
+index e48cee574a7..e9598455971 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -120,8 +120,6 @@ function(build_ngraph)
@@ -49,7 +50,7 @@ index e48cee57..e9598455 100644
  
  build_ngraph()
 diff --git a/cmake/developer_package.cmake b/cmake/developer_package.cmake
-index e59edb2b..35672cac 100644
+index e59edb2b9c4..35672cac7e1 100644
 --- a/cmake/developer_package.cmake
 +++ b/cmake/developer_package.cmake
 @@ -5,7 +5,9 @@
@@ -82,7 +83,7 @@ index e59edb2b..35672cac 100644
  # Enable postfixes for Debug/Release builds
  set(IE_DEBUG_POSTFIX_WIN "d")
 diff --git a/cmake/os_flags.cmake b/cmake/os_flags.cmake
-index 6f70768f..40141aca 100644
+index 6f70768f9f1..40141aca8ad 100644
 --- a/cmake/os_flags.cmake
 +++ b/cmake/os_flags.cmake
 @@ -139,7 +139,6 @@ if(WIN32)
@@ -94,7 +95,7 @@ index 6f70768f..40141aca 100644
      ie_add_compiler_flags(-fvisibility=hidden)
      ie_add_compiler_flags(-fdiagnostics-show-option)
 diff --git a/inference-engine/CMakeLists.txt b/inference-engine/CMakeLists.txt
-index d5feedb4..1ee656a1 100644
+index d5feedb498d..1ee656a18e1 100644
 --- a/inference-engine/CMakeLists.txt
 +++ b/inference-engine/CMakeLists.txt
 @@ -123,12 +123,13 @@ install(FILES samples/CMakeLists.txt
@@ -124,7 +125,7 @@ index d5feedb4..1ee656a1 100644
         APPEND FILE "${CMAKE_BINARY_DIR}/targets_developer.cmake")
  
 diff --git a/inference-engine/cmake/ie_parallel.cmake b/inference-engine/cmake/ie_parallel.cmake
-index 9ea885be..71733fd9 100644
+index 9ea885be37a..71733fd9d32 100644
 --- a/inference-engine/cmake/ie_parallel.cmake
 +++ b/inference-engine/cmake/ie_parallel.cmake
 @@ -42,14 +42,8 @@ function(set_ie_threading_interface_for TARGET_NAME)
@@ -145,7 +146,7 @@ index 9ea885be..71733fd9 100644
          if (WIN32)
              set(omp_lib_name libiomp5md)
 diff --git a/inference-engine/include/gpu/gpu_ocl_wrapper.hpp b/inference-engine/include/gpu/gpu_ocl_wrapper.hpp
-index fce7d8f1..827e5764 100644
+index fce7d8f1784..827e5764aa7 100644
 --- a/inference-engine/include/gpu/gpu_ocl_wrapper.hpp
 +++ b/inference-engine/include/gpu/gpu_ocl_wrapper.hpp
 @@ -21,4 +21,4 @@
@@ -155,7 +156,7 @@ index fce7d8f1..827e5764 100644
 -#include <CL/cl2.hpp>
 +#include <cl2.hpp>
 diff --git a/inference-engine/samples/CMakeLists.txt b/inference-engine/samples/CMakeLists.txt
-index f355e7b9..d24c7c78 100644
+index f355e7b951c..d24c7c78e6f 100644
 --- a/inference-engine/samples/CMakeLists.txt
 +++ b/inference-engine/samples/CMakeLists.txt
 @@ -24,7 +24,7 @@ endif()
@@ -188,7 +189,7 @@ index f355e7b9..d24c7c78 100644
  
  # collect all samples subdirectories
 diff --git a/inference-engine/samples/common/format_reader/CMakeLists.txt b/inference-engine/samples/common/format_reader/CMakeLists.txt
-index 6d935135..fe12eeb7 100644
+index 6d935135e9d..fe12eeb7193 100644
 --- a/inference-engine/samples/common/format_reader/CMakeLists.txt
 +++ b/inference-engine/samples/common/format_reader/CMakeLists.txt
 @@ -40,3 +40,5 @@ target_include_directories(${TARGET_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -198,7 +199,7 @@ index 6d935135..fe12eeb7 100644
 +
 +install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
 diff --git a/inference-engine/src/cldnn_engine/CMakeLists.txt b/inference-engine/src/cldnn_engine/CMakeLists.txt
-index 43344e7f..50beda23 100644
+index 43344e7ff07..50beda23415 100644
 --- a/inference-engine/src/cldnn_engine/CMakeLists.txt
 +++ b/inference-engine/src/cldnn_engine/CMakeLists.txt
 @@ -32,6 +32,7 @@ target_include_directories(${TARGET_NAME} PRIVATE
@@ -210,7 +211,7 @@ index 43344e7f..50beda23 100644
  
  # copy default global xml file describing the custom kernels and the *.cl files
 diff --git a/inference-engine/src/inference_engine/CMakeLists.txt b/inference-engine/src/inference_engine/CMakeLists.txt
-index 54e264c8..e3809654 100644
+index 54e264c824c..e3809654635 100644
 --- a/inference-engine/src/inference_engine/CMakeLists.txt
 +++ b/inference-engine/src/inference_engine/CMakeLists.txt
 @@ -292,20 +292,6 @@ if(threading_tbb)
@@ -247,7 +248,7 @@ index 54e264c8..e3809654 100644
  install(FILES $<TARGET_FILE_DIR:${TARGET_NAME}>/plugins.xml
          DESTINATION ${IE_CPACK_LIBRARY_PATH}
 diff --git a/inference-engine/src/vpu/myriad_plugin/CMakeLists.txt b/inference-engine/src/vpu/myriad_plugin/CMakeLists.txt
-index 32cb534a..858ffefc 100644
+index 32cb534a79e..858ffefcf8e 100644
 --- a/inference-engine/src/vpu/myriad_plugin/CMakeLists.txt
 +++ b/inference-engine/src/vpu/myriad_plugin/CMakeLists.txt
 @@ -41,5 +41,5 @@ target_link_libraries(${TARGET_NAME}
@@ -258,7 +259,7 @@ index 32cb534a..858ffefc 100644
 +        DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/udev/rules.d
          COMPONENT myriad)
 diff --git a/inference-engine/tests/mock_engine/CMakeLists.txt b/inference-engine/tests/mock_engine/CMakeLists.txt
-index f3fb53e1..09fb66ce 100644
+index f3fb53e1d29..09fb66cea57 100644
 --- a/inference-engine/tests/mock_engine/CMakeLists.txt
 +++ b/inference-engine/tests/mock_engine/CMakeLists.txt
 @@ -38,3 +38,5 @@ target_compile_definitions(${TARGET_NAME} PRIVATE IMPLEMENT_INFERENCE_ENGINE_PLU
@@ -268,7 +269,7 @@ index f3fb53e1..09fb66ce 100644
 +
 +install(TARGETS ${TARGET_NAME} EXPORT ${TARGET_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 diff --git a/inference-engine/tests/unit/CMakeLists.txt b/inference-engine/tests/unit/CMakeLists.txt
-index a5c945ae..eabe70d3 100644
+index a5c945ae819..eabe70d3e7b 100644
 --- a/inference-engine/tests/unit/CMakeLists.txt
 +++ b/inference-engine/tests/unit/CMakeLists.txt
 @@ -187,3 +187,5 @@ add_test(NAME ${TARGET_NAME}
@@ -278,7 +279,7 @@ index a5c945ae..eabe70d3 100644
 +
 +install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
 diff --git a/inference-engine/thirdparty/CMakeLists.txt b/inference-engine/thirdparty/CMakeLists.txt
-index ec22761d..3962d924 100644
+index ec22761d0d5..3962d924fe2 100644
 --- a/inference-engine/thirdparty/CMakeLists.txt
 +++ b/inference-engine/thirdparty/CMakeLists.txt
 @@ -35,14 +35,12 @@ function(build_with_lto)
@@ -298,7 +299,7 @@ index ec22761d..3962d924 100644
          ie_developer_export_targets(pugixml_mt)
      endif()
 diff --git a/inference-engine/thirdparty/clDNN/CMakeCompilerLinkerOpts.txt b/inference-engine/thirdparty/clDNN/CMakeCompilerLinkerOpts.txt
-index 6b799cdd..91755b35 100644
+index 6b799cdd38f..91755b351e8 100644
 --- a/inference-engine/thirdparty/clDNN/CMakeCompilerLinkerOpts.txt
 +++ b/inference-engine/thirdparty/clDNN/CMakeCompilerLinkerOpts.txt
 @@ -206,7 +206,6 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
@@ -318,7 +319,7 @@ index 6b799cdd..91755b35 100644
        ALIAS WarnLevel1                 WarnLevels REMOVE_GROUP
        ALIAS WarnLevel2                 "-Wall"
 diff --git a/inference-engine/thirdparty/clDNN/CMakeLists.txt b/inference-engine/thirdparty/clDNN/CMakeLists.txt
-index b08c2744..42ca79e6 100644
+index b08c27444a9..42ca79e677c 100644
 --- a/inference-engine/thirdparty/clDNN/CMakeLists.txt
 +++ b/inference-engine/thirdparty/clDNN/CMakeLists.txt
 @@ -767,7 +767,6 @@ foreach(__CLDNN_CompilerFlagName IN ITEMS "CMAKE_CXX_FLAGS" "CMAKE_C_FLAGS")
@@ -330,7 +331,7 @@ index b08c2744..42ca79e6 100644
          NoFastMath
          StackProtector
 diff --git a/inference-engine/thirdparty/clDNN/common/khronos_ocl_clhpp/cl2_ext.hpp b/inference-engine/thirdparty/clDNN/common/khronos_ocl_clhpp/cl2_ext.hpp
-index a9e379bd..8b822223 100644
+index a9e379bdee6..8b822223681 100644
 --- a/inference-engine/thirdparty/clDNN/common/khronos_ocl_clhpp/cl2_ext.hpp
 +++ b/inference-engine/thirdparty/clDNN/common/khronos_ocl_clhpp/cl2_ext.hpp
 @@ -30,7 +30,7 @@ typedef cl_d3d11_device_set_khr    cl_device_set_intel;
@@ -342,8 +343,23 @@ index a9e379bd..8b822223 100644
  
  namespace cl {
      typedef CL_API_ENTRY cl_int(CL_API_CALL *PFN_clEnqueueAcquireMediaSurfacesINTEL)(
+diff --git a/inference-engine/thirdparty/clDNN/src/CMakeLists.txt b/inference-engine/thirdparty/clDNN/src/CMakeLists.txt
+index 99e947eeb83..5ce0fc5086a 100644
+--- a/inference-engine/thirdparty/clDNN/src/CMakeLists.txt
++++ b/inference-engine/thirdparty/clDNN/src/CMakeLists.txt
+@@ -213,8 +213,8 @@ install(DIRECTORY "${CLDNN__API_DIR}/"
+   )
+ # Binaries.
+ install(TARGETS "${CLDNN_BUILD__PROJ}"
+-    ARCHIVE DESTINATION "lib"
+-    LIBRARY DESTINATION "lib"
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     RUNTIME DESTINATION "bin"
+     INCLUDES DESTINATION "include/clDNN"
+   )
 diff --git a/inference-engine/tools/compile_tool/CMakeLists.txt b/inference-engine/tools/compile_tool/CMakeLists.txt
-index 25168bac..1c57116f 100644
+index 25168bacf58..1c57116ff04 100644
 --- a/inference-engine/tools/compile_tool/CMakeLists.txt
 +++ b/inference-engine/tools/compile_tool/CMakeLists.txt
 @@ -48,5 +48,5 @@ add_cpplint_target(${TARGET_NAME}_cpplint FOR_TARGETS ${TARGET_NAME})
@@ -354,7 +370,7 @@ index 25168bac..1c57116f 100644
 +        RUNTIME DESTINATION bin
          COMPONENT core)
 diff --git a/inference-engine/tools/vpu/vpu_compile/CMakeLists.txt b/inference-engine/tools/vpu/vpu_compile/CMakeLists.txt
-index 4123de6f..52179fac 100644
+index 4123de6fda9..52179facafe 100644
 --- a/inference-engine/tools/vpu/vpu_compile/CMakeLists.txt
 +++ b/inference-engine/tools/vpu/vpu_compile/CMakeLists.txt
 @@ -50,5 +50,5 @@ add_cpplint_target(${TARGET_NAME}_cpplint FOR_TARGETS ${TARGET_NAME})
@@ -367,7 +383,7 @@ index 4123de6f..52179fac 100644
 +        RUNTIME DESTINATION bin
 +        COMPONENT myriad)
 diff --git a/inference-engine/tools/vpu/vpu_perfcheck/CMakeLists.txt b/inference-engine/tools/vpu/vpu_perfcheck/CMakeLists.txt
-index a7a801d4..b8f9e26f 100644
+index a7a801d4e41..b8f9e26f309 100644
 --- a/inference-engine/tools/vpu/vpu_perfcheck/CMakeLists.txt
 +++ b/inference-engine/tools/vpu/vpu_perfcheck/CMakeLists.txt
 @@ -55,6 +55,6 @@ if(ENABLE_MYRIAD)
@@ -379,5 +395,5 @@ index a7a801d4..b8f9e26f 100644
              COMPONENT myriad)
  endif()
 -- 
-2.25.2
+2.37.3
 
