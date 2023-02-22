@@ -1,17 +1,14 @@
 Yocto specific tweaks to the build process:
-
-* Install python modules to site-packages.
+  
 * Dont try to detect glibc version as that doesn't work when cross compiling.
 * Use shared protobuf and gflags libs.
-* Use system installed ocl headers.
-* We have va.h in recipe-sysroot and having a va.h here leads to failures.
 * Install sample binaries as well.
 
 Upstream-Status: Inappropriate
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 
 diff --git a/cmake/developer_package/target_flags.cmake b/cmake/developer_package/target_flags.cmake
-index 62831fffab..b123bbad75 100644
+index e6c72540288..fec9996db14 100644
 --- a/cmake/developer_package/target_flags.cmake
 +++ b/cmake/developer_package/target_flags.cmake
 @@ -123,4 +123,4 @@ function(ov_glibc_version)
@@ -21,7 +18,7 @@ index 62831fffab..b123bbad75 100644
 -ov_glibc_version()
 +#ov_glibc_version()
 diff --git a/samples/c/common/opencv_c_wrapper/CMakeLists.txt b/samples/c/common/opencv_c_wrapper/CMakeLists.txt
-index f27e934793..da51c56cf3 100644
+index 40c29d3c297..f6800592de9 100644
 --- a/samples/c/common/opencv_c_wrapper/CMakeLists.txt
 +++ b/samples/c/common/opencv_c_wrapper/CMakeLists.txt
 @@ -32,5 +32,4 @@ endif()
@@ -32,7 +29,7 @@ index f27e934793..da51c56cf3 100644
 -)
 +    LIBRARY DESTINATION ${IE_CPACK_LIBRARY_PATH} COMPONENT samples_bin)
 diff --git a/samples/cpp/CMakeLists.txt b/samples/cpp/CMakeLists.txt
-index 3a10819c47..d82262a714 100644
+index 1fe54c602e8..01c86d418d9 100644
 --- a/samples/cpp/CMakeLists.txt
 +++ b/samples/cpp/CMakeLists.txt
 @@ -230,9 +230,8 @@ macro(ie_add_sample)
@@ -48,7 +45,7 @@ index 3a10819c47..d82262a714 100644
      # create global target with all samples / demo apps
      if(NOT TARGET ie_samples)
 diff --git a/samples/cpp/common/format_reader/CMakeLists.txt b/samples/cpp/common/format_reader/CMakeLists.txt
-index 44d94e8a27..208edd8e4e 100644
+index 7c07bf07dbb..4cd566749e5 100644
 --- a/samples/cpp/common/format_reader/CMakeLists.txt
 +++ b/samples/cpp/common/format_reader/CMakeLists.txt
 @@ -44,5 +44,5 @@ endif()
@@ -58,32 +55,11 @@ index 44d94e8a27..208edd8e4e 100644
 -    LIBRARY DESTINATION samples_bin/ COMPONENT samples_bin EXCLUDE_FROM_ALL
 +    LIBRARY DESTINATION ${IE_CPACK_LIBRARY_PATH} COMPONENT samples_bin
  )
-diff --git a/src/plugins/intel_gpu/include/va/va.h b/src/plugins/intel_gpu/include/va/va.h
-deleted file mode 100644
-index 5c8a5c6f6e..0000000000
---- a/src/plugins/intel_gpu/include/va/va.h
-+++ /dev/null
-@@ -1,6 +0,0 @@
--// Copyright (C) 2018-2022 Intel Corporation
--// SPDX-License-Identifier: Apache-2.0
--//
--
--typedef cl_uint VASurfaceID;
--typedef void* VADisplay;
 diff --git a/thirdparty/CMakeLists.txt b/thirdparty/CMakeLists.txt
-index 98067991a7..bb19b592ee 100644
+index cf2863438c7..3ec5c5ed86b 100644
 --- a/thirdparty/CMakeLists.txt
 +++ b/thirdparty/CMakeLists.txt
-@@ -20,7 +20,7 @@ if(ENABLE_SAMPLES OR ENABLE_TESTS)
- endif()
- 
- if(ENABLE_INTEL_GPU)
--    add_subdirectory(ocl)
-+	#add_subdirectory(ocl)
- endif()
- 
- add_subdirectory(xbyak EXCLUDE_FROM_ALL)
-@@ -187,11 +187,11 @@ endif()
+@@ -268,11 +268,11 @@ endif()
  
  if(ENABLE_SAMPLES OR ENABLE_COMPILE_TOOL OR ENABLE_TESTS)
      if(LINUX)
@@ -100,7 +76,7 @@ index 98067991a7..bb19b592ee 100644
          find_package(gflags QUIET OPTIONAL_COMPONENTS ${gflag_component})
      endif()
  
-@@ -248,7 +248,7 @@ endif()
+@@ -329,7 +329,7 @@ endif()
  
  if(ENABLE_OV_PADDLE_FRONTEND OR ENABLE_OV_ONNX_FRONTEND OR ENABLE_OV_TF_FRONTEND)
      if(ENABLE_SYSTEM_PROTOBUF)

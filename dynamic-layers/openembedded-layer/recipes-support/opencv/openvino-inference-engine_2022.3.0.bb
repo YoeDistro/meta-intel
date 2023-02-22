@@ -5,8 +5,8 @@ deep learning models through a high-level C++ Inference Engine API \
 integrated with application logic."
 
 SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=releases/2022/3;lfs=0 \
-           https://storage.openvinotoolkit.org/dependencies/myriad/firmware_usb-ma2x8x_20221129_35.zip;name=usb_ma2x8x \
-           https://storage.openvinotoolkit.org/dependencies/myriad/firmware_pcie-ma2x8x_20221129_35.zip;name=pcie_ma2x8x \
+           https://storage.openvinotoolkit.org/dependencies/myriad/firmware_usb-ma2x8x_20230121_38.zip;name=usb_ma2x8x \
+           https://storage.openvinotoolkit.org/dependencies/myriad/firmware_pcie-ma2x8x_20230121_38.zip;name=pcie_ma2x8x \
            git://github.com/openvinotoolkit/oneDNN.git;protocol=https;destsuffix=git/src/plugins/intel_cpu/thirdparty/onednn;name=mkl;nobranch=1 \
            git://github.com/oneapi-src/oneDNN.git;protocol=https;destsuffix=git/src/plugins/intel_gpu/thirdparty/onednn_gpu;name=onednn;nobranch=1 \
            git://github.com/herumi/xbyak.git;protocol=https;destsuffix=git/thirdparty/xbyak;name=xbyak;branch=master \
@@ -16,15 +16,15 @@ SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=r
            file://cython-cmake.patch \
            "
 
-SRCREV = "9752fafe8ebf7e30dfea7edd447ff3bf0ac1d01d"
+SRCREV = "0a5ca5375265f0f12cdaee68574030408dd1c352"
 SRCREV_mkl = "44de3c3698b687c26e487fc8f0213fa487e8fe2c"
 SRCREV_onednn = "fbec3e25a559ee252022ae066817b204e106a6ba"
 SRCREV_xbyak = "f8ea5c28dfcdc98585881d0ca9e499580ca077ae"
 SRCREV_json = "bc889afb4c5bf1c0d8ee29ef35eaaf4c8bef8a5d"
 SRCREV_ade = "58b2595a1a95cc807be8bf6222f266a9a1f393a9"
 
-SRC_URI[usb_ma2x8x.sha256sum] = "1ca3566d294c8d269f3a0ad2f5699e9dbb2679a24a455b2cc343612303d867bd"
-SRC_URI[pcie_ma2x8x.sha256sum] = "5667eb028290fbec92220031590ba5f87774a7b638b13178e0dcf8447a4ee8ca"
+SRC_URI[usb_ma2x8x.sha256sum] = "f7351b2e26f25d652a0539f6ace5797d7700735d52479c3e6ef354c236abbd3a"
+SRC_URI[pcie_ma2x8x.sha256sum] = "439219aeac010f8b85f19838420e9a247f2cdf23a6d00e7727cf92d96dbdaeeb"
 
 LICENSE = "Apache-2.0 & MIT & BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
@@ -75,7 +75,7 @@ COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
 
 PACKAGECONFIG ?= "vpu opencl"
-PACKAGECONFIG[opencl] = "-DENABLE_INTEL_GPU=TRUE -DOpenCL_INCLUDE_DIR=${STAGING_INCDIR} -DOpenCL_LIBRARY=${STAGING_LIBDIR}/libOpenCL.so, -DENABLE_INTEL_GPU=FALSE, ocl-icd opencl-headers opencl-clhpp libva,"
+PACKAGECONFIG[opencl] = "-DENABLE_INTEL_GPU=TRUE, -DENABLE_INTEL_GPU=FALSE, ocl-icd opencl-headers opencl-clhpp,"
 PACKAGECONFIG[python3] = "-DENABLE_PYTHON=ON -DPYTHON_LIBRARY=${PYTHON_LIBRARY} -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR}, -DENABLE_PYTHON=OFF, python3-cython-native patchelf-native, python3 python3-numpy python3-opencv python3-progress python3-cython"
 PACKAGECONFIG[vpu] = "-DENABLE_INTEL_MYRIAD=ON -DVPU_FIRMWARE_USB-MA2X8X_FILE=../usb-ma2x8x.mvcmd -DVPU_FIRMWARE_PCIE-MA2X8X_FILE=../pcie-ma2x8x.mvcmd,-DENABLE_INTEL_MYRIAD=OFF,,${PN}-vpu-firmware"
 PACKAGECONFIG[verbose] = "-DVERBOSE_BUILD=1,-DVERBOSE_BUILD=0"
