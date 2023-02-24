@@ -10,8 +10,8 @@ LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc
 
 SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=releases/igc-1.0.12812 \
            git://github.com/intel/vc-intrinsics.git;protocol=https;destsuffix=git/vc-intrinsics;name=vc;nobranch=1 \
-           git://github.com/KhronosGroup/SPIRV-Tools.git;protocol=https;destsuffix=git/SPIRV-Tools;name=spirv-tools;branch=sdk-1.3.204 \
-           git://github.com/KhronosGroup/SPIRV-Headers.git;protocol=https;destsuffix=git/SPIRV-Headers;name=spirv-headers;branch=master \
+           git://github.com/KhronosGroup/SPIRV-Tools.git;protocol=https;destsuffix=git/SPIRV-Tools;name=spirv-tools;branch=main \
+           git://github.com/KhronosGroup/SPIRV-Headers.git;protocol=https;destsuffix=git/SPIRV-Headers;name=spirv-headers;branch=main \
            file://0003-Improve-Reproducibility-for-src-package.patch \
            file://0001-BiF-CMakeLists.txt-remove-opt-from-DEPENDS.patch \
            file://c707d1e2244aec988bdd5d2a7473ef3a32a5bac7.patch \
@@ -23,10 +23,10 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;nam
 
 SRC_URI:append:class-native = " file://0001-fix-tblgen.patch"
 
-SRCREV_igc = "17eb3abbaa68a238f63d5d549e0a46cfeb71af80"
-SRCREV_vc = "dafb9926e5047a052ef5263dd4ec4fe5f178e5e0"
-SRCREV_spirv-tools = "45dd184c790d6bfc78a5a74a10c37e888b1823fa"
-SRCREV_spirv-headers = "b42ba6d92faf6b4938e6f22ddd186dbdacc98d78"
+SRCREV_igc = "beb75447121c73c2570674de60ccb28938bb1ba4"
+SRCREV_vc = "dd72efa3b4aafdbbf599e6f3c6f8c55450e348de"
+SRCREV_spirv-tools = "eb0a36633d2acf4de82588504f951ad0f2cecacb"
+SRCREV_spirv-headers = "85a1ed200d50660786c1a88d9166e871123cce39"
 
 SRCREV_FORMAT = "igc_vc_spirv-tools_spirv-headers"
 
