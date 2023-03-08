@@ -2,8 +2,6 @@ require linux-intel.inc
 
 SRC_URI:prepend = "git://github.com/intel/mainline-tracking.git;protocol=https;name=machine;nobranch=1; \
                     "
-SRC_URI:append = " file://0001-v5.19-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch"
-
 # Skip processing of this recipe if it is not explicitly specified as the
 # PREFERRED_PROVIDER for virtual/kernel. This avoids errors when trying
 # to build multiple virtual/kernel providers, e.g. as dependency of

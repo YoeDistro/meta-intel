@@ -2,8 +2,6 @@ require linux-intel.inc
 
 SRC_URI:prepend = "git://github.com/intel/linux-intel-lts.git;protocol=https;name=machine;branch=${KBRANCH}; \
                     "
-SRC_URI:append = " file://0001-v5.19-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch"
-
 KBRANCH = "6.1/linux"
 KMETA_BRANCH = "yocto-6.1"
 
