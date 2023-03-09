@@ -48,7 +48,7 @@ ALTERNATIVE_PRIORITY[Intel_FPGA_SSG_Emulator.icd] = "328736233"
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT  = "1"
 
-RDEPENDS:${PN} += "perl elfutils ocl-icd level-zero-loader zlib tbb libelf setup-intel-oneapi-env"
+RDEPENDS:${PN} += "perl elfutils virtual/opencl-icd level-zero-loader zlib tbb libelf setup-intel-oneapi-env"
 INSANE_SKIP:${PN} += "textrel dev-so file-rdeps staticdev"
 
 # The libomptarget.rtl.x86_64.so library is not supported on Yocto 3.1+ due to using obsolete libffi.so.6
