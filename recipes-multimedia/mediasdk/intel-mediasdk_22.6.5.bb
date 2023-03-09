@@ -29,7 +29,7 @@ PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "x11", "dri3", "", d)
 
 PACKAGECONFIG[dri3] 	= "-DENABLE_X11_DRI3=ON, -DENABLE_X11_DRI3=OFF"
 PACKAGECONFIG[itt] 	= "-DENABLE_ITT=ON, -DENABLE_ITT=OFF, itt"
-PACKAGECONFIG[opencl]	= "-DENABLE_OPENCL=ON, -DENABLE_OPENCL=OFF, ocl-icd opencl-clhpp opencl-headers"
+PACKAGECONFIG[opencl]	= "-DENABLE_OPENCL=ON, -DENABLE_OPENCL=OFF, virtual/opencl-icd opencl-clhpp opencl-headers"
 PACKAGECONFIG[samples]	= "-DBUILD_SAMPLES=ON, -DBUILD_SAMPLES=OFF"
 PACKAGECONFIG[wayland]	= "-DENABLE_WAYLAND=ON, -DENABLE_WAYLAND=OFF, wayland wayland-native"
 
