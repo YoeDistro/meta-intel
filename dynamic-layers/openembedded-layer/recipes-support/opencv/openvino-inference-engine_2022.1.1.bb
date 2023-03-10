@@ -4,7 +4,7 @@ DESCRIPTION = "This toolkit allows developers to deploy pre-trained \
 deep learning models through a high-level C++ Inference Engine API \
 integrated with application logic."
 
-SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=releases/2022/1;lfs=0 \
+SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=releases/2022/1.1;lfs=0 \
            https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/usb-ma2x8x/firmware_usb-ma2x8x_1875.zip;name=usb_ma2x8x \
            https://download.01.org/opencv/master/openvinotoolkit/thirdparty/unified/VPU/pcie-ma2x8x/firmware_pcie-ma2x8x_1875.zip;name=pcie_ma2x8x \
            git://github.com/openvinotoolkit/oneDNN.git;protocol=https;destsuffix=git/src/plugins/intel_cpu/thirdparty/mkl-dnn;name=mkl;nobranch=1 \
@@ -19,7 +19,7 @@ SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=r
            file://0002-inference-engine-installation-fixes.patch \
            "
 
-SRCREV = "cdb9bec7210f8c24fde3e416c7ada820faaaa23e"
+SRCREV = "39aba80957e10b66a6c8f3f590c2d90e8238ca75"
 SRCREV_mkl = "82ca2f931c1d588b67d154d873136d4af1ffb3a8"
 SRCREV_onednn = "9e2bf22e51726ad36ddae90c7caf2898d124baa6"
 SRCREV_xbyak = "8d1e41b650890080fb77548372b6236bbd4079f9"
@@ -27,7 +27,7 @@ SRCREV_pybind11 = "d71ba0cb73616c493d35699a8a9283aa64ef0f6b"
 SRCREV_protobuf = "6c6b0778b70f35f93c2f0dee30e5d12ad2a83eea"
 SRCREV_json = "fec56a1a16c6e1c1b1f4e116a20e79398282626c"
 SRCREV_jsonschema = "b1ef8628326cf0b53612f12784fd245e5e4382f1"
-SRCREV_omz = "cf9003a95ddb742aabea341aa1573c3fa25ebbe1"
+SRCREV_omz = "0c94071faef095f544a228f8455718fbd653950e"
 
 SRC_URI[usb_ma2x8x.sha256sum] = "e65fcc1c6b0f3e9d814e53022c212ec0a2b83197a9df38badb298fb85ccf3acf"
 SRC_URI[pcie_ma2x8x.sha256sum] = "b11368fec2036d96fb703d2a40b171184fefe89f27e74a988ef1ca34260a2bc5"
@@ -53,6 +53,7 @@ EXTRA_OECMAKE += " \
                   -DOpenCV_DIR=${STAGING_LIBDIR}/cmake \
                   -DENABLE_PLUGIN_RPATH=0 \
                   -DENABLE_INTEL_GNA=OFF \
+                  -DENABLE_SYSTEM_TBB=ON \
                   -DPYTHON_EXECUTABLE=${PYTHON} \
                   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
                   -DTHREADING=TBB -DTBB_DIR="${STAGING_LIBDIR}/cmake/TBB" \
