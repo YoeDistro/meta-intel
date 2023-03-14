@@ -117,4 +117,4 @@ PACKAGES =+ "${PN}-${PYTHON_PN}"
 
 FILES:${PN}-${PYTHON_PN} = "${PYTHON_SITEPACKAGES_DIR}"
 
-UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+\.\d+\.\d+))"
