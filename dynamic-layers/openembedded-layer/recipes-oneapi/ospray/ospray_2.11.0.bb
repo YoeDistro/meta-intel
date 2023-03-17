@@ -6,7 +6,7 @@ HOMEPAGE = "https://www.ospray.org/"
 
 LICENSE  = "Apache-2.0 & BSD-3-Clause & MIT & Zlib"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=1dece7821bf3fd70fe1309eaa37d52a2 \
-                    file://third-party-programs.txt;md5=7cccb4c920e5b7de8eddf8a5d408d900 \
+                    file://third-party-programs.txt;md5=978092834060d3f38dbcb11ade918e2c \
                     "
 
 inherit pkgconfig cmake
@@ -15,12 +15,12 @@ S = "${WORKDIR}/git"
 
 SRC_URI = "git://github.com/ospray/ospray.git;protocol=https;branch=master \
             "
-SRCREV = "fdda0889f9143a8b20f26389c22d1691f1a6a527"
+SRCREV = "cdb39c88a2fb806feaae30de897acd30297f8e94"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
 
-DEPENDS = "rkcommon ispc-native openvkl embree"
+DEPENDS = "rkcommon ispc ispc-native openvkl embree"
 
 EXTRA_OECMAKE += " \
                   -DISPC_EXECUTABLE=${STAGING_BINDIR_NATIVE}/ispc \
