@@ -20,7 +20,7 @@ S = "${WORKDIR}/git"
 
 SRC_URI = "git://github.com/openvkl/openvkl.git;protocol=https;branch=master \
            "
-SRCREV = "ec551ea08cbceab187326e2358fdc1ceeffaf1d6"
+SRCREV = "fac6c96b24ae73941716b7368ffc289eb9c47532"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
