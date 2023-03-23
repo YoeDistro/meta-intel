@@ -60,7 +60,9 @@ EXTRA_OECMAKE += " \
                   "
 
 
-DEPENDS += "libusb1 \
+DEPENDS += "\
+            gflags \
+            libusb1 \
             opencv \
             protobuf \
             protobuf-native \
