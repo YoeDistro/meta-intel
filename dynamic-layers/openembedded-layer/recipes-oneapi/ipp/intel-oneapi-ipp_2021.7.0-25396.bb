@@ -9,14 +9,18 @@ LIC_FILES_CHKSUM = " \
                      file://opt/intel/oneapi/lib/licensing/ipp/license.txt;md5=d7cdc92ed6c4de1263da879599ddc3e2 \
                      file://opt/intel/oneapi/lib/licensing/ipp/third-party-programs.txt;md5=8a4cf3c62b53158d35a7bb8b85e44bf9 \
                      "
-
+MAXVER = "2021.7.0"
 SRC_URI = " \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-runtime-ipp-${PV}_amd64.deb;subdir=${BPN};name=runtime \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-runtime-ipp-common-${PV}_all.deb;subdir=${BPN};name=common \
+            https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-ipp-common-devel-${MAXVER}-${PV}_all.deb;subdir=${BPN};name=headers \
+            https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-ipp-common-${MAXVER}-${PV}_all.deb;subdir=${BPN};name=env \
             "
 
 SRC_URI[runtime.sha256sum] = "ffb637d9d34c28de157d7cff3bc39b5306b5958bc9a56ee40739b0a7d0da5169"
 SRC_URI[common.sha256sum] = "3bc7f2258e115e1e5ad6457f404b2cf3e75fc4f33acf2ceed3098052bb875bac"
+SRC_URI[headers.sha256sum] = "9c23b560ee4a035656c2f502aad171c65386d62f7180cfe099b08bb73adbf0a9"
+SRC_URI[env.sha256sum] = "c870add93cb529c23dabaf1e62bbb4d059a38ca85d930e5187989aa79a19b7c2"
 
 S = "${WORKDIR}/${BPN}"
 
