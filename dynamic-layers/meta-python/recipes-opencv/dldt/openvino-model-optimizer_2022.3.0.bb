@@ -29,4 +29,4 @@ RDEPENDS:${PN} += " \
                     bash \
                     "
 
-UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+\.\d+\.\d+))"
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+\.\d+\.\d+))$"
