@@ -15,15 +15,15 @@ LICENSE = "BSD-3-Clause | BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=72b9da60da6219d612ce30b746a0fe71  \
                     file://edk2/License.txt;md5=6123e5bf044a66db96c4ce88a36b2d08"
 
-SRC_URI = "git://github.com/intel/ipmctl.git;protocol=https;branch=development;name=ipmctl; \
+SRC_URI = "git://github.com/intel/ipmctl.git;protocol=https;branch=master;name=ipmctl; \
         git://github.com/tianocore/edk2.git;protocol=https;name=edk2;destsuffix=git/edk2;branch=master \
         file://0001-Ignore-STATIC_ASSERTs-and-NULL-define-for-os-and-ut-builds.patch;patchdir=edk2 \
         file://0001-CMakeLists-disable-Werror.patch \
 "
 
-SRCREV_ipmctl = "cd3bd60f84cb7167fa81257bd33db90fa1f5a70b"
-#tag edk2-stable202208
-SRCREV_edk2 = "ba0e0e4c6a174b71b18ccd6e47319cc45878893c"
+SRCREV_ipmctl = "eca59dc53741c7f9d0ac5320ef790a1932a9a499"
+#tag edk2-stable202302
+SRCREV_edk2 = "f80f052277c88a67c55e107b550f504eeea947d3"
 
 S = "${WORKDIR}/git"
 
