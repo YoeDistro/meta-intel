@@ -30,6 +30,12 @@ DEPENDS = "ispc-native rkcommon embree"
 EXTRA_OECMAKE += " \
                   -DISPC_EXECUTABLE=${STAGING_BINDIR_NATIVE}/ispc  \
                   "
+EXTRA_OECMAKE:intel-corei7-64 += " \
+                  -DOPENVKL_ISA_AVX=OFF  \
+                  -DOPENVKL_ISA_AVX2=OFF  \
+                  -DOPENVKL_ISA_AVX512SKX=OFF  \
+                  "
+
 PACKAGES =+ "${PN}-examples"
 FILES:${PN}-examples = "\
                      ${bindir} \
