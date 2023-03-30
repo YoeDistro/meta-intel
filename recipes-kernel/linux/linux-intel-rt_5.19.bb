@@ -20,7 +20,7 @@ DEPENDS += "elfutils-native openssl-native util-linux-native"
 LINUX_VERSION_EXTENSION ??= "-mainline-tracking-${LINUX_KERNEL_TYPE}"
 
 LINUX_VERSION ?= "5.19.0"
-SRCREV_machine ?= "473a02e9326df5770b0bf2eae0b62b58a4321776"
+SRCREV_machine ?= "50b4a94d047b4a2638b50ff0a4a6a80d5e76f41b"
 SRCREV_meta ?= "f5d4c109d6de04005def04c3a06f053ae0c397ad"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
