@@ -11,9 +11,9 @@ LIC_FILES_CHKSUM = "file://licensing/LICENSE.txt;md5=2e982d844baa4df1c80de75470e
 
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://github.com/oneapi-src/oneDPL.git;protocol=https;branch=release/2021.7 \
+SRC_URI = "git://github.com/oneapi-src/oneDPL.git;protocol=https;branch=release/2022.0 \
             "
-SRCREV = "df96969b76f075bd9ce14c303659595c747c7223"
+SRCREV = "240685db73e3169e66dbb625b4d5fa1ad06ec79b"
 
 do_compile[noexec] = "1"
 do_configure[noexec] = "1"
