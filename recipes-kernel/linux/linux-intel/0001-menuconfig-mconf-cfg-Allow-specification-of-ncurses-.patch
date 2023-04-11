@@ -40,7 +40,7 @@ index c812872d7f9d..42d20819025c 100755
 +       exit 0
 +fi
 +
- if [ -n "$(command -v pkg-config)" ]; then
+ if [ -n "$(command -v ${HOSTPKG_CONFIG})" ]; then
  	if pkg-config --exists $PKG; then
  		echo cflags=\"$(pkg-config --cflags $PKG)\"
 -- 
