@@ -19,8 +19,8 @@ index 8ac6faf4d6..031e128149 100644
        )
        add_custom_command(
                           OUTPUT ${OUTPUT_FILE_CPP}
--                         COMMAND $<TARGET_FILE:cpp_generate_tool> --file ${BINARY_OUTPUT}.bin --output ${OUTPUT_FILE_CPP} --array ${mode}_${BASENAME} --platform ${family_name_with_type} --revision_id ${REVISION_ID}
-+                         COMMAND cpp_generate_tool --file ${BINARY_OUTPUT}.bin --output ${OUTPUT_FILE_CPP} --array ${mode}_${BASENAME} --platform ${family_name_with_type} --revision_id ${REVISION_ID}
+-                         COMMAND $<TARGET_FILE:cpp_generate_tool> --file ${BINARY_OUTPUT}.bin --output ${OUTPUT_FILE_CPP} --array ${mode}_${BASENAME} --platform ${platform_it_lower} --revision_id ${REVISION_ID}
++                         COMMAND cpp_generate_tool --file ${BINARY_OUTPUT}.bin --output ${OUTPUT_FILE_CPP} --array ${mode}_${BASENAME} --platform ${platform_it_lower} --revision_id ${REVISION_ID}
                           WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 -                         DEPENDS ${OUTPUT_FILES_BINARIES} $<TARGET_FILE:cpp_generate_tool>
 +                         DEPENDS ${OUTPUT_FILES_BINARIES} cpp_generate_tool
