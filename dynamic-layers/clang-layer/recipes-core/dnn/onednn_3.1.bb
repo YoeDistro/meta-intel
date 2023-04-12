@@ -13,8 +13,8 @@ SECTION = "lib"
 inherit pkgconfig cmake ptest
 
 S = "${WORKDIR}/git"
-SRCREV = "51f9bd790743e313bdecc767d8e6c5cc729e07ab"
-SRC_URI = "git://github.com/oneapi-src/oneDNN.git;branch=rls-v3.0;protocol=https \
+SRCREV = "928065bd62372d2824900a86c5438bba407c98d1"
+SRC_URI = "git://github.com/oneapi-src/oneDNN.git;branch=rls-v3.1;protocol=https \
            file://run-ptest \
            "
 
@@ -32,6 +32,7 @@ EXTRA_OECMAKE += " \
                    -DDNNL_CPU_RUNTIME=OMP \
                    -DDNNL_ARCH_OPT_FLAGS="" \
                    -DCMAKE_SKIP_RPATH=ON \
+                   -DONEDNN_BUILD_GRAPH=OFF \
                    "
 
 PACKAGECONFIG ??= "gpu"
