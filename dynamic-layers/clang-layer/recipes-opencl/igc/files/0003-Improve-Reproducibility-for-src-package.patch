@@ -1,7 +1,7 @@
-From c2b7f30dd56568482b1b7c2f22bafdf68736fc88 Mon Sep 17 00:00:00 2001
+From 0559332abd04b6c8bc70171d201f43d2e4735336 Mon Sep 17 00:00:00 2001
 From: Lee Chee Yang <chee.yang.lee@intel.com>
 Date: Wed, 2 Sep 2020 08:28:35 +0800
-Subject: [PATCH 3/5] Improve Reproducibility for src package
+Subject: [PATCH] Improve Reproducibility for src package
 
 Improve reproducibility for intel-graphics-compiler-src package.
 needs to pass build path as environment variable to the build.
@@ -9,12 +9,13 @@ this only works on bison 3.7 onward, hence check for bison version
 before adding the flags.
 Upstream-Status: Inappropriate [applying --file-prefix-map in such way does not work for upstream]
 Signed-off-by: Lee Chee Yang <chee.yang.lee@intel.com>
+
 ---
  visa/CMakeLists.txt | 7 +++++--
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/visa/CMakeLists.txt b/visa/CMakeLists.txt
-index 65dbb4934..8cd607a69 100644
+index 6be467587..930c386a6 100644
 --- a/visa/CMakeLists.txt
 +++ b/visa/CMakeLists.txt
 @@ -123,8 +123,11 @@ endif()
@@ -31,6 +32,3 @@ index 65dbb4934..8cd607a69 100644
  ADD_FLEX_BISON_DEPENDENCY(CISAScanner CISAParser)
  set(CISAScanner_dependencies)
  
--- 
-2.20.1
-

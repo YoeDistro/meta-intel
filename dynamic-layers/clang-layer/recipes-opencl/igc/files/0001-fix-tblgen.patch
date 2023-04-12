@@ -1,4 +1,4 @@
-From cfc8d6775cc213bdc0c938c20167d74f6aeb310a Mon Sep 17 00:00:00 2001
+From 5648568e597acd0fed82aac3e6aef0f95a1b78d1 Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Thu, 19 May 2022 22:50:09 +0800
 Subject: [PATCH] fix tblgen
@@ -10,7 +10,7 @@ Upstream-Status: Inappropriate [OE specific]
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/IGC/cmake/igc_llvm.cmake b/IGC/cmake/igc_llvm.cmake
-index 96e3b0d11..b48c91ff4 100644
+index 10322533c..9020cb3c8 100644
 --- a/IGC/cmake/igc_llvm.cmake
 +++ b/IGC/cmake/igc_llvm.cmake
 @@ -52,7 +52,7 @@ else()
