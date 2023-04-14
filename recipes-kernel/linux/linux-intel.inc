@@ -8,7 +8,6 @@ KERNEL_CONFIG_URI ?= "git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;n
 SRC_URI = " \
            git://github.com/intel/linux-intel-lts.git;protocol=https;name=machine;branch=${KBRANCH}; \
            ${KERNEL_CONFIG_URI} \
-           file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch \
            file://0001-vt-conmakehash-improve-reproducibility.patch \
            file://0001-lib-build_OID_registry-fix-reproducibility-issues.patch \
 	  "

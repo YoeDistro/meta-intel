@@ -4,12 +4,14 @@ KBRANCH = "5.15/linux"
 KMETA_BRANCH = "yocto-5.15"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
+SRC_URI:append = " file://0001-v5.15-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch \
+                   "
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "5.15.85"
-SRCREV_machine ?= "c256f934aefa78ec001067313a76a4a382ac59a6"
-SRCREV_meta ?= "78c4410c172946903e35ba8cebf1cf90fad09b5a"
+LINUX_VERSION ?= "5.15.94"
+SRCREV_machine ?= "3923d78d0a7feaf6346d4e42d52f59310f0c7e3f"
+SRCREV_meta ?= "7d9ad29bc707e1eb341d95961941b2042f49e2b2"
 
 # For Crystalforest and Romley
 KERNEL_MODULE_AUTOLOAD:append:core2-32-intel-common = " uio"
