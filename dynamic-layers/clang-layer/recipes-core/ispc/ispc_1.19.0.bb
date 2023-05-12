@@ -16,6 +16,7 @@ SRC_URI = "git://github.com/ispc/ispc.git;protocol=https;branch=main \
            file://0002-cmake-don-t-build-for-32-bit-targets.patch \
            file://0001-Fix-QA-Issues.patch \
            file://0001-Add-print-function-to-print-test-run-status-in-ptest.patch \
+           file://0001-CMakeLists.txt-allow-to-pick-llvm-config-from-usr-bi.patch \
            file://run-ptest \
            "
 
@@ -24,7 +25,7 @@ SRCREV = "ee43967286215a0511c2bc090e604848b4a32bed"
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
 DEPENDS += " clang-native bison-native flex-native"
-RDEPENDS:${PN} += " clang-libllvm clang clang-libclang-cpp"
+DEPENDS:append:class-target = " clang"
 RDEPENDS:${PN}-ptest += " python3-multiprocessing"
 
 YFLAGS='-d -t -v -y --file-prefix-map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}'
@@ -54,7 +55,10 @@ EXTRA_OECMAKE += " \
                   -DISPC_WINDOWS_TARGET=OFF  \
                   -DISPC_IOS_TARGET=OFF  \
                   -DISPC_PS4_TARGET=OFF  \
-                  -DSYSROOT_DIR=${STAGING_DIR_NATIVE}  \
+                  -DSYSROOT_DIR=${STAGING_DIR} \
+                  -DCLANG_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang \
+                  -DCLANGPP_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang++ \
+                  -DLLVM_DIS_EXECUTABLE=${STAGING_BINDIR_NATIVE}/llvm-dis \
+                  -DLLVM_AS_EXECUTABLE=${STAGING_BINDIR_NATIVE}/llvm-as \
                   "
-
 BBCLASSEXTEND = "native nativesdk"
