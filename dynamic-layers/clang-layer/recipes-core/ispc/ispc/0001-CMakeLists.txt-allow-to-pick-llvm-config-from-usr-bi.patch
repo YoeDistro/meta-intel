@@ -1,0 +1,37 @@
+From 51d248d3b470f3fa1cf2ed3f5742851091acb65f Mon Sep 17 00:00:00 2001
+From: Naveen Saini <naveen.kumar.saini@intel.com>
+Date: Fri, 12 May 2023 09:10:11 +0800
+Subject: [PATCH] CMakeLists.txt: allow to pick llvm-config from
+ usr/bin/crossscripts/
+
+ispc needs to invoke native llvm-config from target sysroot to list LLVM
+lib libraries. clang already provides crossscripts/llvm-config, which does
+the job.
+
+However, using LLVM_TOOLS_BINARY_DIR leads to wrong llvm-config being
+used. So remove it from search path for llvm-config.
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ cmake/FindLLVM.cmake | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/cmake/FindLLVM.cmake b/cmake/FindLLVM.cmake
+index d0297d5d..90d9fed2 100644
+--- a/cmake/FindLLVM.cmake
++++ b/cmake/FindLLVM.cmake
+@@ -41,8 +41,7 @@ find_package(LLVM REQUIRED CONFIG)
+     set(LLVM_VERSION "LLVM_${LLVM_VERSION_MAJOR}_${LLVM_VERSION_MINOR}")
+     message(STATUS "Found LLVM ${LLVM_VERSION}")
+ 
+-find_program(LLVM_CONFIG_EXECUTABLE NAMES llvm-config
+-    PATHS ${LLVM_TOOLS_BINARY_DIR} PATH_SUFFIXES bin NO_DEFAULT_PATH)
++find_program(LLVM_CONFIG_EXECUTABLE NAMES llvm-config)
+     if (NOT LLVM_CONFIG_EXECUTABLE)
+         message(FATAL_ERROR "Failed to find llvm-config")
+     endif()
+-- 
+2.37.3
+

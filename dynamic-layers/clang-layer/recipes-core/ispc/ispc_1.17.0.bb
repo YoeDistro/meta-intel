@@ -15,13 +15,14 @@ SRC_URI = "git://github.com/ispc/ispc.git;protocol=https;branch=main \
            file://0001-CMakeLists.txt-link-with-libclang-cpp-library-instea.patch \
            file://0002-cmake-don-t-build-for-32-bit-targets.patch \
            file://0001-Enable-LLVM-15.0-support.patch \
+           file://0001-CMakeLists.txt-allow-to-pick-llvm-config-from-usr-bi.patch \
            "
 SRCREV = "7ad8429369a4d5ced6b524fdfffe623939d8fe9a"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
 DEPENDS += " clang-native bison-native "
-RDEPENDS:${PN} += " clang-libllvm clang"
+DEPENDS:append:class-target = " clang"
 
 EXTRA_OECMAKE += " \
                   -DISPC_INCLUDE_TESTS=OFF  \
@@ -34,7 +35,11 @@ EXTRA_OECMAKE += " \
                   -DISPC_WINDOWS_TARGET=OFF  \
                   -DISPC_IOS_TARGET=OFF  \
                   -DISPC_PS4_TARGET=OFF  \
-                  -DSYSROOT_DIR=${STAGING_DIR_NATIVE}  \
+                  -DSYSROOT_DIR=${STAGING_DIR} \
+                  -DCLANG_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang \
+                  -DCLANGPP_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang++ \
+                  -DLLVM_DIS_EXECUTABLE=${STAGING_BINDIR_NATIVE}/llvm-dis \
+                  -DLLVM_AS_EXECUTABLE=${STAGING_BINDIR_NATIVE}/llvm-as \
                   "
 
 TOOLCHAIN = "clang"
