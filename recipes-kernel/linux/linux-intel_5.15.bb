@@ -7,9 +7,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 DEPENDS += "elfutils-native openssl-native util-linux-native"
 
-LINUX_VERSION ?= "5.15.94"
-SRCREV_machine ?= "7ce2881abd1ef660899f85677a7303065ea9625e"
-SRCREV_meta ?= "7d9ad29bc707e1eb341d95961941b2042f49e2b2"
+LINUX_VERSION ?= "5.15.107"
+SRCREV_machine ?= "95c83b378e090dcfd0b6371f5ebf68fc063fdb17"
+SRCREV_meta ?= "9b702613899f074ea3bba478e90b2b71e31388e8"
 
 # Functionality flags
 KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc features/security/security.scc"
