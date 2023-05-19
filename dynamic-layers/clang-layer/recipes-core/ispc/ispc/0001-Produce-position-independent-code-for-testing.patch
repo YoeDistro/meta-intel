@@ -1,0 +1,42 @@
+From 14cfd056fe69dc652f824f31462033e82cd54513 Mon Sep 17 00:00:00 2001
+From: Arina Neshlyaeva <arina.neshlyaeva@intel.com>
+Date: Tue, 23 Aug 2022 15:26:21 -0700
+Subject: [PATCH] Produce position independent code for testing
+
+Upstream-Status: Backport [https://github.com/ispc/ispc/commit/522a7395d762c7f2a3b1f76c6f352b5e5977f08a]
+
+Signed-off-by: Arina Neshlyaeva <arina.neshlyaeva@intel.com>
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ run_tests.py | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/run_tests.py b/run_tests.py
+index d4a40978..3520d376 100755
+--- a/run_tests.py
++++ b/run_tests.py
+@@ -515,6 +515,11 @@ def run_test(testname, host, target):
+                 cc_cmd = "%s -O2 -I. %s test_static.cpp -DTEST_SIG=%d -DTEST_WIDTH=%d %s -o %s" % \
+                     (options.compiler_exe, gcc_arch, match, width, obj_name, exe_name)
+ 
++                # Produce position independent code for both c++ and ispc compilations.
++                # The motivation for this is that Clang 15 changed default
++                # from "-mrelocation-model static" to "-mrelocation-model pic", so
++                # we enable PIC compilation to have it consistently regardless compiler version.
++                cc_cmd += ' -fPIE'
+                 if should_fail:
+                     cc_cmd += " -DEXPECT_FAILURE"
+ 
+@@ -526,8 +531,7 @@ def run_test(testname, host, target):
+                              match, width, exe_name)
+                     exe_name = "./" + exe_name
+                     cc_cmd += " -DTEST_ZEBIN" if options.ispc_output == "ze" else " -DTEST_SPV"
+-
+-            ispc_cmd = ispc_exe_rel + " --woff %s -o %s --arch=%s --target=%s -DTEST_SIG=%d" % \
++            ispc_cmd = ispc_exe_rel + " --pic --woff %s -o %s --arch=%s --target=%s -DTEST_SIG=%d" % \
+                         (filename, obj_name, options.arch, xe_target if target.is_xe() else options.target, match)
+ 
+             if target.is_xe():
+-- 
+2.37.3
+

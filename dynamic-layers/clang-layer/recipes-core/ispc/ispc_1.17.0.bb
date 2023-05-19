@@ -16,6 +16,7 @@ SRC_URI = "git://github.com/ispc/ispc.git;protocol=https;branch=main \
            file://0002-cmake-don-t-build-for-32-bit-targets.patch \
            file://0001-Enable-LLVM-15.0-support.patch \
            file://0001-CMakeLists.txt-allow-to-pick-llvm-config-from-usr-bi.patch \
+           file://0001-Produce-position-independent-code-for-testing.patch \
            "
 SRCREV = "7ad8429369a4d5ced6b524fdfffe623939d8fe9a"
 
