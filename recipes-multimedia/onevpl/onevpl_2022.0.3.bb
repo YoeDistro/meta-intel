@@ -32,14 +32,13 @@ do_install:append() {
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
-PACKAGES += "${PN}-examples"
+PACKAGES =+ "${PN}-examples"
 
-FILES:${PN}-examples = "${datadir}/oneVPL/examples \
+FILES:${PN}-examples = "${datadir}/oneVPL \
                        "
 
 FILES_SOLIBSDEV = ""
 FILES:${PN}-dev += "${libdir}/libvpl.so"
 
-FILES:${PN} += "${datadir} \
-                ${libdir}/oneVPL/libvpl_wayland.so \
+FILES:${PN} += " ${libdir}/oneVPL/libvpl_wayland.so \
                 "
