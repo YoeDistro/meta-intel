@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c18ea6bb4786a26bf4eee88a7424a408 \
 
 SRC_URI = "git://github.com/oneapi-src/oneVPL.git;protocol=https;branch=master \
             "
-SRCREV = "5d7b6af5b483e6ddc0d9746efc97edfebf508e1d"
+SRCREV = "4cdf44ccaa605460499c52f39eff5517da2fc3c8"
 S = "${WORKDIR}/git"
 
 inherit cmake
