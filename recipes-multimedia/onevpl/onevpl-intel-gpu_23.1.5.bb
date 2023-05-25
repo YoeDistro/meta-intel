@@ -19,7 +19,7 @@ DEPENDS += "libdrm libva intel-media-driver onevpl pkgconfig-native"
 SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;nobranch=1;lfs=0 \
           "
 
-SRCREV = "e74a3ce334b52577081e14a1656f74ccb3f1ef69"
+SRCREV = "3bc35c59ab64f60c3f73eaa83ada600859999493"
 S = "${WORKDIR}/git"
 
 FILES:${PN} += " \
