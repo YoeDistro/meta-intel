@@ -35,6 +35,7 @@ PACKAGECONFIG[wayland]	= "-DENABLE_WAYLAND=ON, -DENABLE_WAYLAND=OFF, wayland way
 
 SRC_URI = "git://github.com/Intel-Media-SDK/MediaSDK.git;protocol=https;nobranch=1;lfs=0 \
            file://0001-FindITT.cmake-fix-detection-of-header-library.patch \
+           file://fix-gcc13.patch \
            "
 
 SRCREV = "e507e23470f1fc0f01395c10c97bd7b31acf0bce"
