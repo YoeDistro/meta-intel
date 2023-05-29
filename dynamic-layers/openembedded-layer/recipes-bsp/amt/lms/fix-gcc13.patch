@@ -1,0 +1,46 @@
+Upstream-Status: Pending
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+
+diff --git a/MEIClient/AMTHIClient/Include/AmtAnsiString.h b/MEIClient/AMTHIClient/Include/AmtAnsiString.h
+index 23114c9..deef61b 100644
+--- a/MEIClient/AMTHIClient/Include/AmtAnsiString.h
++++ b/MEIClient/AMTHIClient/Include/AmtAnsiString.h
+@@ -12,6 +12,7 @@
+ 
+ #include <string>
+ #include <vector>
++#include <cstdint>
+ 
+ namespace Intel
+ {
+diff --git a/MEIClient/Include/MEIparser.h b/MEIClient/Include/MEIparser.h
+index 0d47bb9..d4ffcd8 100644
+--- a/MEIClient/Include/MEIparser.h
++++ b/MEIClient/Include/MEIparser.h
+@@ -8,6 +8,7 @@
+ #include "MEIClientException.h"
+ #include <cstring>
+ #include <vector>
++#include <cstdint>
+ 
+ namespace Intel
+ {
+diff --git a/UNS/GMS_COMMON/FuncEntryExit.h b/UNS/GMS_COMMON/FuncEntryExit.h
+index 21862ab..7165906 100644
+--- a/UNS/GMS_COMMON/FuncEntryExit.h
++++ b/UNS/GMS_COMMON/FuncEntryExit.h
+@@ -5,6 +5,7 @@
+ #ifndef FUNCENTRYEXIT_H
+ #define FUNCENTRYEXIT_H
+ #include "GMSCommonDllExport.h"
++#include <cstdint>
+ 
+ GMS_COMMON_EXPORT void FlowLog(const wchar_t *name, const wchar_t *pref, const wchar_t *func);
+ GMS_COMMON_EXPORT void FuncEntry(const wchar_t *name, const wchar_t *func);
+@@ -48,4 +49,4 @@ private:
+ 	const wchar_t * name_;
+ 	const wchar_t * func_;
+ };
+-#endif // FUNCENTRYEXIT_H
+\ No newline at end of file
++#endif // FUNCENTRYEXIT_H
