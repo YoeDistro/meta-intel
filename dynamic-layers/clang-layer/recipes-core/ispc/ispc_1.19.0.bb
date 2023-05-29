@@ -17,6 +17,7 @@ SRC_URI = "git://github.com/ispc/ispc.git;protocol=https;branch=main \
            file://0001-Fix-QA-Issues.patch \
            file://0001-Add-print-function-to-print-test-run-status-in-ptest.patch \
            file://0001-CMakeLists.txt-allow-to-pick-llvm-config-from-usr-bi.patch \
+           file://ffc75e464ff2b8fce7dbf74f1846ebd0852bc6f9.patch \
            file://run-ptest \
            "
 
