@@ -9,6 +9,8 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=eca6ec6997e18db166db7109cdbe611c \
                     file://third_party/opencl_headers/LICENSE;md5=dcefc90f4c3c689ec0c2489064e7273b"
 
 SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https;branch=releases/23.13 \
+           file://disable-werror.patch \
+           file://add-missing-cstdint-header-to-fix-compile-with-gcc13.patch \
           "
 
 SRC_URI:append:class-target = "file://allow-to-find-cpp-generation-tool.patch \
