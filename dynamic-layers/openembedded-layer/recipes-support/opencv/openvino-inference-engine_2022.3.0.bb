@@ -14,6 +14,9 @@ SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=r
            git://github.com/opencv/ade.git;protocol=https;destsuffix=git/thirdparty/ade;name=ade;nobranch=1 \
            file://fix-build.patch \
            file://cython-cmake.patch \
+           file://7cecc9138b89e1946e3e515727bb69b2ab119806.patch;patchdir=thirdparty/ade \
+           file://fix-build-with-gcc13.patch \
+           file://onednn-fix-build-with-gcc13.patch;patchdir=src/plugins/intel_gpu/thirdparty/onednn_gpu \
            "
 
 SRCREV = "0a5ca5375265f0f12cdaee68574030408dd1c352"
