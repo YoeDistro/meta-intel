@@ -9,11 +9,11 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://../../../LICENSE;md5=e787af283468feca985d6b865d27d95b"
 
 SRC_URI = " \
-            git://github.com/intel/ipp-crypto;protocol=https;branch=develop \
+            git://github.com/intel/ipp-crypto;protocol=https;branch=ipp-crypto_2021_7_1 \
             file://0001-CMakeLists.txt-exclude-host-system-headers.patch;striplevel=4 \
             file://0002-cmake-exclude-Yocto-build-flags.patch;striplevel=4 \
             "
-SRCREV = "3ae57715fbc7383ef527cab0b824d736b60fa06d"
+SRCREV = "8e1f90d507bc4d73b3860745d491837c6c57a804"
 
 S = "${WORKDIR}/git/sources/ippcp/crypto_mb"
 
