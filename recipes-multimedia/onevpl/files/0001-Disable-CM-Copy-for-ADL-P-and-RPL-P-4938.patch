@@ -1,0 +1,32 @@
+From 22e4f3dfc7f5510cd1fbec3e4e9e1845d35a301a Mon Sep 17 00:00:00 2001
+From: gfxVPLsdm <gfxvplsdm@intel.com>
+Date: Tue, 4 Apr 2023 15:00:15 +0800
+Subject: [PATCH] Disable CM Copy for ADL-P and RPL-P (#4938)
+
+Co-authored-by: Teng, Jin Chung <jin.chung.teng@intel.com>
+
+Upstream-Status: Backport
+Expect it to be removed once move to intel-onevpl-23.2.0 and above.
+https://github.com/oneapi-src/oneVPL-intel-gpu/commit/2ef453cb231ad12a912669d0fc091d8365f436e4
+---
+ _studio/shared/src/libmfx_core_vaapi.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/_studio/shared/src/libmfx_core_vaapi.cpp b/_studio/shared/src/libmfx_core_vaapi.cpp
+index 7212e572..baeafb7f 100644
+--- a/_studio/shared/src/libmfx_core_vaapi.cpp
++++ b/_studio/shared/src/libmfx_core_vaapi.cpp
+@@ -830,8 +830,8 @@ bool VAAPIVideoCORE_T<Base>::IsCmSupported()
+ template <class Base>
+ bool VAAPIVideoCORE_T<Base>::IsCmCopyEnabledByDefault()
+ {
+-    // For Linux by default CM copy is ON on RKL/ADL
+-    return IsCmSupported() && GetHWType() != MFX_HW_DG1 && GetHWType() != MFX_HW_TGL_LP;
++    // For Linux by default CM copy is ON on RKL/ADL-S
++    return IsCmSupported() && GetHWType() != MFX_HW_DG1 && GetHWType() != MFX_HW_TGL_LP && GetHWType() != MFX_HW_ADL_P;
+ }
+ 
+ template <class Base>
+-- 
+2.40.1
+
