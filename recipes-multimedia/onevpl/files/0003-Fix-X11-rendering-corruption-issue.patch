@@ -1,0 +1,30 @@
+From 9e13ea07fda1516f3c680929bea880aa4d303721 Mon Sep 17 00:00:00 2001
+From: Lim Siew Hoon <siew.hoon.lim@intel.com>
+Date: Thu, 23 Mar 2023 09:46:04 +0800
+Subject: [PATCH 3/5] Fix X11 rendering corruption issue.
+
+Upstream-Status: Backport
+Expect it to be removed once move to v2023.3.0 and above.
+https://github.com/oneapi-src/oneVPL/commit/f129e3ba2ca276f08003ae314d674fba4b5290cd
+
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
+---
+ tools/legacy/sample_common/src/vaapi_device.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/legacy/sample_common/src/vaapi_device.cpp b/tools/legacy/sample_common/src/vaapi_device.cpp
+index 98c5883..b90443a 100644
+--- a/tools/legacy/sample_common/src/vaapi_device.cpp
++++ b/tools/legacy/sample_common/src/vaapi_device.cpp
+@@ -271,7 +271,7 @@ mfxStatus CVAAPIDeviceX11::RenderFrame(mfxFrameSurface1* pSurface,
+         width  = pSurface->Info.CropX + pSurface->Info.CropW;
+         height = pSurface->Info.CropY + pSurface->Info.CropH;
+ 
+-        stride = width * bpp / 8;
++        stride = memId->m_image.pitches[0];
+         size   = PAGE_ALIGN(stride * height);
+ 
+         bo = drmintellib.drm_intel_bo_gem_create_from_prime(m_bufmgr,
+-- 
+2.40.1
+

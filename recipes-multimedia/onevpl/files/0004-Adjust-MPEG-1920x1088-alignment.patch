@@ -1,0 +1,75 @@
+From e73b46657b286cd015e489e691166cbc79f5e79e Mon Sep 17 00:00:00 2001
+From: Lim Siew Hoon <siew.hoon.lim@intel.com>
+Date: Thu, 20 Apr 2023 10:16:30 +0800
+Subject: [PATCH 4/5] Adjust MPEG 1920x1088 alignment
+
+Driver alignment for Mjpeg decode is 8,
+but vpp need 16 alignment.
+
+[Internal]
+OSPR: Auto
+Commit_Type: BugFix
+Platforms: Gen11+
+OS: Windows and Linux
+Feature impact: Dec_Legacy
+Resolves: N/A
+Related-to: PR#6323
+Klocwork: N/A
+TP_Passed: N/A
+IP Scan: N/A
+Open/Embargo Dependency: N/A
+
+Signed-off-by: Teng, Jin Chung <jin.chung.teng@intel.com>
+
+Upstream-Status: Backport
+Expect it to be removed once move to v2023.3.0 and above.
+https://github.com/oneapi-src/oneVPL/commit/7fe92332a7c32e85e6bb0a2724d66ce7124006ee
+
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
+---
+ tools/legacy/sample_decode/src/pipeline_decode.cpp       | 9 +++++++++
+ .../sample_multi_transcode/src/pipeline_transcode.cpp    | 8 ++++++++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/tools/legacy/sample_decode/src/pipeline_decode.cpp b/tools/legacy/sample_decode/src/pipeline_decode.cpp
+index c0d5c46..47c17f3 100644
+--- a/tools/legacy/sample_decode/src/pipeline_decode.cpp
++++ b/tools/legacy/sample_decode/src/pipeline_decode.cpp
+@@ -800,6 +800,15 @@ mfxStatus CDecodingPipeline::InitMfxParams(sInputParams* pParams) {
+                 m_mfxVideoParams.mfx.FrameInfo.PicStruct = m_mfxBS.PicStruct;
+             }
+ 
++            // MJPEG decoder just need 8 alignment for height but VPP need 16 alignment still
++            if (m_bVppIsUsed && (m_mfxVideoParams.mfx.CodecId == MFX_CODEC_JPEG) &&
++                (pParams->bUseHWLib)) {
++                m_mfxVideoParams.mfx.FrameInfo.Height =
++                    (MFX_PICSTRUCT_PROGRESSIVE == m_mfxVideoParams.mfx.FrameInfo.PicStruct)
++                        ? MSDK_ALIGN16(m_mfxVideoParams.mfx.FrameInfo.Height)
++                        : MSDK_ALIGN32(m_mfxVideoParams.mfx.FrameInfo.Height);
++            }
++
+             switch (pParams->nRotation) {
+                 case 0:
+                     m_mfxVideoParams.mfx.Rotation = MFX_ROTATION_0;
+diff --git a/tools/legacy/sample_multi_transcode/src/pipeline_transcode.cpp b/tools/legacy/sample_multi_transcode/src/pipeline_transcode.cpp
+index 5e69a94..26b0915 100644
+--- a/tools/legacy/sample_multi_transcode/src/pipeline_transcode.cpp
++++ b/tools/legacy/sample_multi_transcode/src/pipeline_transcode.cpp
+@@ -406,6 +406,14 @@ mfxStatus CTranscodingPipeline::VPPPreInit(sInputParams* pParams) {
+         }
+ 
+         if (m_bIsVpp) {
++            // MJPEG decoder just need 8 alignment for height but VPP need 16 alignment still
++            if ((pParams->DecodeId == MFX_CODEC_JPEG) && (pParams->libType != MFX_IMPL_SOFTWARE)) {
++                m_mfxDecParams.mfx.FrameInfo.Height =
++                    (m_mfxDecParams.mfx.FrameInfo.PicStruct == MFX_PICSTRUCT_PROGRESSIVE)
++                        ? MSDK_ALIGN16(m_mfxDecParams.mfx.FrameInfo.Height)
++                        : MSDK_ALIGN32(m_mfxDecParams.mfx.FrameInfo.Height);
++            }
++
+             sts = InitVppMfxParams(m_mfxVppParams, pParams);
+             MSDK_CHECK_STATUS(sts, "InitVppMfxParams failed");
+ 
+-- 
+2.40.1
+
