@@ -5,29 +5,29 @@ HOMEPAGE = "https://github.com/ispc/ispc"
 
 LICENSE  = "BSD-3-Clause & Apache-2.0-with-LLVM-exception"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=da5ecffdd210b3cf776b32b41c182e87 \
-                    file://third-party-programs.txt;md5=3cd6f8a7c3bd9d2bb898fcb27c75221a"
+                    file://third-party-programs.txt;md5=2061218c7be521556719c8b504bf9ddd"
 
 inherit cmake python3native ptest
 
 S = "${WORKDIR}/git"
 
 SRC_URI = "git://github.com/ispc/ispc.git;protocol=https;branch=main \
-           file://0001-CMakeLists.txt-link-with-libclang-cpp-library-instea.patch \
            file://0002-cmake-don-t-build-for-32-bit-targets.patch \
            file://0001-Fix-QA-Issues.patch \
            file://0001-Add-print-function-to-print-test-run-status-in-ptest.patch \
-           file://0001-CMakeLists.txt-allow-to-pick-llvm-config-from-usr-bi.patch \
-           file://ffc75e464ff2b8fce7dbf74f1846ebd0852bc6f9.patch \
            file://run-ptest \
            "
 
-SRCREV = "ee43967286215a0511c2bc090e604848b4a32bed"
+SRCREV = "14bd04aa7e68cd33eb1d96b33058cb64d7ef76f4"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
 DEPENDS += " clang-native bison-native flex-native"
 DEPENDS:append:class-target = " clang"
 RDEPENDS:${PN}-ptest += " python3-multiprocessing"
+
+PACKAGECONFIG ??= "tbb"
+PACKAGECONFIG[tbb] = "-DISPCRT_BUILD_TASK_MODEL=TBB, -DISPCRT_BUILD_TASK_MODEL=OpenMP, tbb"
 
 YFLAGS='-d -t -v -y --file-prefix-map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}'
 
@@ -62,4 +62,13 @@ EXTRA_OECMAKE += " \
                   -DLLVM_DIS_EXECUTABLE=${STAGING_BINDIR_NATIVE}/llvm-dis \
                   -DLLVM_AS_EXECUTABLE=${STAGING_BINDIR_NATIVE}/llvm-as \
                   "
+
+FILES:${PN}-dev = "\
+                   ${libdir}/libispcrt_device_cpu${SOLIBSDEV} \
+                   ${libdir}/cmake \
+                   ${includedir} \
+                   "
+
+FILES:${PN} += "${libdir}/libispcrt.so"
+
 BBCLASSEXTEND = "native nativesdk"
