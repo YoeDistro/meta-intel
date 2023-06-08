@@ -1,4 +1,4 @@
-From aac55921864fa91fe8e394a25fc565f28ae5fc64 Mon Sep 17 00:00:00 2001
+From f8ad3f859aadc6c81ccc667eee1439cc2e6113cf Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Tue, 30 May 2023 09:31:09 +0800
 Subject: [PATCH] fix build with gcc13
@@ -29,50 +29,12 @@ https://gcc.gnu.org/gcc-13/porting_to.html
 Upstream-Status: Pending
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
- src/common/itt/include/openvino/itt.hpp                     | 1 +
- src/common/preprocessing/ie_preprocess_gapi_kernels.hpp     | 1 +
- src/common/util/include/openvino/util/file_util.hpp         | 1 +
  src/inference/include/ie/ie_precision.hpp                   | 2 +-
  src/plugins/intel_gpu/CMakeLists.txt                        | 6 +++---
+ .../include/intel_gpu/graph/serialization/helpers.hpp       | 1 +
  .../intel_gpu/include/intel_gpu/runtime/device_info.hpp     | 1 +
- 6 files changed, 8 insertions(+), 4 deletions(-)
+ 4 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/src/common/itt/include/openvino/itt.hpp b/src/common/itt/include/openvino/itt.hpp
-index c978ca1b138..f01d59a652a 100644
---- a/src/common/itt/include/openvino/itt.hpp
-+++ b/src/common/itt/include/openvino/itt.hpp
-@@ -8,6 +8,7 @@
-  */
- 
- #pragma once
-+#include <cstdint>
- #include <openvino/function_name.hpp>
- #include <openvino/util/pp.hpp>
- #include <string>
-diff --git a/src/common/preprocessing/ie_preprocess_gapi_kernels.hpp b/src/common/preprocessing/ie_preprocess_gapi_kernels.hpp
-index dfbb182b7a0..0887cc60e34 100644
---- a/src/common/preprocessing/ie_preprocess_gapi_kernels.hpp
-+++ b/src/common/preprocessing/ie_preprocess_gapi_kernels.hpp
-@@ -8,6 +8,7 @@
- # error non standalone GAPI
- # endif
- 
-+#include <cstdint>
- #include <tuple>
- 
- #include <opencv2/gapi/opencv_includes.hpp>
-diff --git a/src/common/util/include/openvino/util/file_util.hpp b/src/common/util/include/openvino/util/file_util.hpp
-index d2f2e00ff60..88e641526ab 100644
---- a/src/common/util/include/openvino/util/file_util.hpp
-+++ b/src/common/util/include/openvino/util/file_util.hpp
-@@ -4,6 +4,7 @@
- 
- #pragma once
- 
-+#include <cstdint>
- #include <fstream>
- #include <functional>
- #include <string>
 diff --git a/src/inference/include/ie/ie_precision.hpp b/src/inference/include/ie/ie_precision.hpp
 index 48bdd945b13..96c29b73159 100644
 --- a/src/inference/include/ie/ie_precision.hpp
@@ -87,10 +49,10 @@ index 48bdd945b13..96c29b73159 100644
      }
  
 diff --git a/src/plugins/intel_gpu/CMakeLists.txt b/src/plugins/intel_gpu/CMakeLists.txt
-index ab4d7618c30..4c93024eb3c 100644
+index 948aecfcfec..a1b9783068b 100644
 --- a/src/plugins/intel_gpu/CMakeLists.txt
 +++ b/src/plugins/intel_gpu/CMakeLists.txt
-@@ -34,9 +34,9 @@ set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+@@ -36,9 +36,9 @@ set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
  
  add_subdirectory(thirdparty)
  
@@ -103,8 +65,20 @@ index ab4d7618c30..4c93024eb3c 100644
  
  add_subdirectory(src/runtime)
  add_subdirectory(src/kernel_selector)
+diff --git a/src/plugins/intel_gpu/include/intel_gpu/graph/serialization/helpers.hpp b/src/plugins/intel_gpu/include/intel_gpu/graph/serialization/helpers.hpp
+index 391629baba2..40efe7011c6 100644
+--- a/src/plugins/intel_gpu/include/intel_gpu/graph/serialization/helpers.hpp
++++ b/src/plugins/intel_gpu/include/intel_gpu/graph/serialization/helpers.hpp
+@@ -5,6 +5,7 @@
+ #pragma once
+ #include <utility>
+ #include <type_traits>
++#include <cstdint>
+ 
+ namespace cldnn {
+ template <typename T>
 diff --git a/src/plugins/intel_gpu/include/intel_gpu/runtime/device_info.hpp b/src/plugins/intel_gpu/include/intel_gpu/runtime/device_info.hpp
-index 0c5a7177d30..7119417185c 100644
+index 387a319cbe1..e2a7b1fc0fa 100644
 --- a/src/plugins/intel_gpu/include/intel_gpu/runtime/device_info.hpp
 +++ b/src/plugins/intel_gpu/include/intel_gpu/runtime/device_info.hpp
 @@ -4,6 +4,7 @@
@@ -116,5 +90,5 @@ index 0c5a7177d30..7119417185c 100644
  #include <vector>
  #include <tuple>
 -- 
-2.37.3
+2.34.1
 

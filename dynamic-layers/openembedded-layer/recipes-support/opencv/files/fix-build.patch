@@ -8,31 +8,20 @@ Upstream-Status: Inappropriate
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 
 diff --git a/cmake/developer_package/target_flags.cmake b/cmake/developer_package/target_flags.cmake
-index e6c72540288..fec9996db14 100644
+index 0a37c910ae8..44444970ce1 100644
 --- a/cmake/developer_package/target_flags.cmake
 +++ b/cmake/developer_package/target_flags.cmake
-@@ -123,4 +123,4 @@ function(ov_glibc_version)
+@@ -136,4 +136,4 @@ function(ov_glibc_version)
      endif()
  endfunction()
  
 -ov_glibc_version()
 +#ov_glibc_version()
-diff --git a/samples/c/common/opencv_c_wrapper/CMakeLists.txt b/samples/c/common/opencv_c_wrapper/CMakeLists.txt
-index 40c29d3c297..f6800592de9 100644
---- a/samples/c/common/opencv_c_wrapper/CMakeLists.txt
-+++ b/samples/c/common/opencv_c_wrapper/CMakeLists.txt
-@@ -32,5 +32,4 @@ endif()
- install(
-     TARGETS ${TARGET_NAME}
-     RUNTIME DESTINATION samples_bin/ COMPONENT samples_bin EXCLUDE_FROM_ALL
--    LIBRARY DESTINATION samples_bin/ COMPONENT samples_bin EXCLUDE_FROM_ALL
--)
-+    LIBRARY DESTINATION ${IE_CPACK_LIBRARY_PATH} COMPONENT samples_bin)
 diff --git a/samples/cpp/CMakeLists.txt b/samples/cpp/CMakeLists.txt
-index 1fe54c602e8..01c86d418d9 100644
+index d2a65618071..80133c4aeb6 100644
 --- a/samples/cpp/CMakeLists.txt
 +++ b/samples/cpp/CMakeLists.txt
-@@ -230,9 +230,8 @@ macro(ie_add_sample)
+@@ -221,9 +221,9 @@ macro(ie_add_sample)
      target_link_libraries(${IE_SAMPLE_NAME} PRIVATE ${ov_link_libraries} Threads::Threads ${IE_SAMPLE_DEPENDENCIES})
  
      install(TARGETS ${IE_SAMPLE_NAME}
@@ -41,42 +30,31 @@ index 1fe54c602e8..01c86d418d9 100644
 -            EXCLUDE_FROM_ALL)
 +            DESTINATION ${CMAKE_INSTALL_BINDIR}
 +            COMPONENT samples_bin)
++
  
      # create global target with all samples / demo apps
      if(NOT TARGET ie_samples)
-diff --git a/samples/cpp/common/format_reader/CMakeLists.txt b/samples/cpp/common/format_reader/CMakeLists.txt
-index 7c07bf07dbb..4cd566749e5 100644
---- a/samples/cpp/common/format_reader/CMakeLists.txt
-+++ b/samples/cpp/common/format_reader/CMakeLists.txt
-@@ -44,5 +44,5 @@ endif()
- install(
-     TARGETS ${TARGET_NAME}
-     RUNTIME DESTINATION samples_bin/ COMPONENT samples_bin EXCLUDE_FROM_ALL
--    LIBRARY DESTINATION samples_bin/ COMPONENT samples_bin EXCLUDE_FROM_ALL
-+    LIBRARY DESTINATION ${IE_CPACK_LIBRARY_PATH} COMPONENT samples_bin
- )
 diff --git a/thirdparty/CMakeLists.txt b/thirdparty/CMakeLists.txt
-index cf2863438c7..3ec5c5ed86b 100644
+index edbcb824f4b..9d24dcec560 100644
 --- a/thirdparty/CMakeLists.txt
 +++ b/thirdparty/CMakeLists.txt
-@@ -268,11 +268,11 @@ endif()
- 
+@@ -291,11 +291,11 @@ endif()
  if(ENABLE_SAMPLES OR ENABLE_COMPILE_TOOL OR ENABLE_TESTS)
-     if(LINUX)
+     # on Windows and macOS we don't use gflags, because will be dynamically linked
+     if(CMAKE_HOST_LINUX AND LINUX)
 -        if(OV_OS_RHEL)
--            set(gflag_component nothreads_shared)
++	    #if(OV_OS_RHEL)
+             set(gflag_component nothreads_shared)
 -        elseif(OV_OS_DEBIAN)
 -            set(gflag_component nothreads_static)
 -        endif()
-+	    #if(OV_OS_RHEL)
-+        set(gflag_component nothreads_shared)
 +	    #elseif(OV_OS_DEBIAN)
 +	    #set(gflag_component nothreads_static)
 +	    #endif()
          find_package(gflags QUIET OPTIONAL_COMPONENTS ${gflag_component})
      endif()
  
-@@ -329,7 +329,7 @@ endif()
+@@ -352,7 +352,7 @@ endif()
  
  if(ENABLE_OV_PADDLE_FRONTEND OR ENABLE_OV_ONNX_FRONTEND OR ENABLE_OV_TF_FRONTEND)
      if(ENABLE_SYSTEM_PROTOBUF)
