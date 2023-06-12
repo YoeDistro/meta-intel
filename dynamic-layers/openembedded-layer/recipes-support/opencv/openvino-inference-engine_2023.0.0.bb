@@ -10,11 +10,13 @@ SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=r
            git://github.com/herumi/xbyak.git;protocol=https;destsuffix=git/thirdparty/xbyak;name=xbyak;branch=master \
            git://github.com/nlohmann/json.git;protocol=https;destsuffix=git/thirdparty/json/nlohmann_json;name=json;branch=develop \
            git://github.com/opencv/ade.git;protocol=https;destsuffix=git/thirdparty/ade;name=ade;nobranch=1 \
+           git://github.com/protocolbuffers/protobuf.git;protocol=https;destsuffix=git/thirdparty/protobuf/protobuf;name=protobuf;branch=3.20.x \
            file://fix-build.patch \
            file://cython-cmake.patch \
            file://7cecc9138b89e1946e3e515727bb69b2ab119806.patch;patchdir=thirdparty/ade \
            file://fix-build-with-gcc13.patch \
            file://onednn-fix-build-with-gcc13.patch;patchdir=src/plugins/intel_gpu/thirdparty/onednn_gpu \
+           file://0001-protobuf-allow-target-protoc-to-be-built.patch \
            "
 
 SRCREV = "b4452d5630442e91cf84db5acd3d991f3d1f34c2"
@@ -23,6 +25,7 @@ SRCREV_onednn = "f27dedbfc093f51032a4580198bb80579440dc15"
 SRCREV_xbyak = "740dff2e866f3ae1a70dd42d6e8836847ed95cc2"
 SRCREV_json = "bc889afb4c5bf1c0d8ee29ef35eaaf4c8bef8a5d"
 SRCREV_ade = "58b2595a1a95cc807be8bf6222f266a9a1f393a9"
+SRCREV_protobuf = "fe271ab76f2ad2b2b28c10443865d2af21e27e0e"
 
 LICENSE = "Apache-2.0 & MIT & BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
@@ -34,10 +37,11 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
                     file://src/plugins/intel_gpu/thirdparty/onednn_gpu/LICENSE;md5=b48e3de3bfd47c27882a0d85b20823f5 \
 "
 
-inherit cmake python3native pkgconfig
+inherit cmake python3native pkgconfig qemu
 
 S = "${WORKDIR}/git"
 EXTRA_OECMAKE += " \
+                  -DCMAKE_CROSSCOMPILING_EMULATOR=${WORKDIR}/qemuwrapper \
                   -DENABLE_OPENCV=OFF \
                   -DENABLE_INTEL_GNA=OFF \
                   -DENABLE_SYSTEM_TBB=ON \
@@ -47,7 +51,6 @@ EXTRA_OECMAKE += " \
                   -DTREAT_WARNING_AS_ERROR=FALSE \
                   -DENABLE_DATA=FALSE \
                   -DENABLE_SYSTEM_PUGIXML=TRUE \
-                  -DENABLE_SYSTEM_PROTOBUF=TRUE \
                   -DENABLE_OV_ONNX_FRONTEND=FALSE \
                   -DUSE_BUILD_TYPE_SUBFOLDER=OFF \
                   -DENABLE_FUZZING=OFF \
@@ -57,15 +60,12 @@ EXTRA_OECMAKE += " \
                   -DENABLE_SYSTEM_SNAPPY=ON \
                   "
 
-
 DEPENDS += "\
             flatbuffers-native \
             gflags \
-            protobuf \
-            protobuf-native \
-            protobuf-c \
             pugixml \
             python3-pybind11 \
+            qemu-native \
             snappy \
             tbb \
             zlib \
@@ -83,6 +83,14 @@ PACKAGECONFIG[verbose] = "-DVERBOSE_BUILD=1,-DVERBOSE_BUILD=0"
 do_configure:prepend() {
     # Dont set PROJECT_ROOT_DIR
     sed -i -e 's:\${OpenVINO_SOURCE_DIR}::;' ${S}/src/CMakeLists.txt
+
+    # qemu wrapper that can be used by cmake to run target binaries.
+    qemu_binary="${@qemu_wrapper_cmdline(d, d.getVar('STAGING_DIR_HOST'), [d.expand('${STAGING_DIR_HOST}${libdir}'),d.expand('${STAGING_DIR_HOST}${base_libdir}')])}"
+    cat > ${WORKDIR}/qemuwrapper << EOF
+#!/bin/sh
+$qemu_binary "\$@"
+EOF
+    chmod +x ${WORKDIR}/qemuwrapper
 }
 
 do_install:append() {
