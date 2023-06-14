@@ -1,0 +1,42 @@
+From 3b7b4eca54aa8d851e37f60c74e4a027fa7b21f2 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Wed, 14 Jun 2023 13:18:45 +0800
+Subject: [PATCH] crypto-mb: Make sure libs are installed correctly
+
+Dont assume that "lib" is always the correct destination. This fixes
+multilib builds when libdir != /usr/lib.
+
+Upstream-Status: Pending
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ sources/ippcp/crypto_mb/src/CMakeLists.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/sources/ippcp/crypto_mb/src/CMakeLists.txt b/sources/ippcp/crypto_mb/src/CMakeLists.txt
+index c9cad06..31f52bd 100644
+--- a/sources/ippcp/crypto_mb/src/CMakeLists.txt
++++ b/sources/ippcp/crypto_mb/src/CMakeLists.txt
+@@ -123,8 +123,8 @@ endif(DYNAMIC_LIB OR MB_STANDALONE)
+ # Installation of the shared library
+ if (MB_STANDALONE) # standalone crypto_mb's cmake run
+     install(TARGETS ${MB_DYN_LIB_TARGET}
+-            LIBRARY DESTINATION "lib"
+-            RUNTIME DESTINATION "lib"
++            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             PUBLIC_HEADER DESTINATION "include/crypto_mb")
+ elseif (DYNAMIC_LIB) # build from ippcp's cmake
+     install(TARGETS ${MB_DYN_LIB_TARGET}
+@@ -154,7 +154,7 @@ endif()
+ # Static lib installation
+ if(MB_STANDALONE)
+     install(TARGETS ${MB_STATIC_LIB_TARGET}
+-            ARCHIVE DESTINATION "lib"
++            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             PUBLIC_HEADER DESTINATION "include/crypto_mb")
+ else()
+     install(TARGETS ${MB_STATIC_LIB_TARGET}
+-- 
+2.37.3
+
