@@ -1,0 +1,35 @@
+From e8bb025cd56c269adf3ffdc3dda404505974f676 Mon Sep 17 00:00:00 2001
+From: bai-isaac <isaac.bai@intel.com>
+Date: Mon, 12 Jun 2023 12:44:29 +0800
+Subject: [PATCH] [Encode] fix fwdRefs array out of bound issue
+
+fix fwdRefs array out of bound issue.
+
+Upstream-Status: Backport [https://github.com/intel/media-driver/commit/d795297127488b328f1cc260cf5da66debf95b99]
+Expect it to be removed once move to intel-media-23.2.4 or above
+
+Signed-off-by: Ch'ng, Seng Guan <seng.guan.chng@intel.com>
+---
+ media_softlet/agnostic/common/hw/vdbox/mhw_vdbox_vdenc_impl.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/media_softlet/agnostic/common/hw/vdbox/mhw_vdbox_vdenc_impl.h b/media_softlet/agnostic/common/hw/vdbox/mhw_vdbox_vdenc_impl.h
+index 3b79f4886..85a5a4127 100644
+--- a/media_softlet/agnostic/common/hw/vdbox/mhw_vdbox_vdenc_impl.h
++++ b/media_softlet/agnostic/common/hw/vdbox/mhw_vdbox_vdenc_impl.h
+@@ -649,10 +649,11 @@ protected:
+                 &resourceParams));
+         }
+ 
++        // SCC will use BwdRef0 as extra slot to store IBC if max fwd ref num is 3.
+         typename cmd_t::VDENC_Reference_Picture_CMD *fwdRefs[] =
+             {&cmd.FwdRef0, &cmd.FwdRef1, &cmd.FwdRef2, &cmd.BwdRef0};
+         uint32_t fwdRefsDwLoaction[] =
+-            {_MHW_CMD_DW_LOCATION(FwdRef0), _MHW_CMD_DW_LOCATION(FwdRef1), _MHW_CMD_DW_LOCATION(FwdRef2)};
++            {_MHW_CMD_DW_LOCATION(FwdRef0), _MHW_CMD_DW_LOCATION(FwdRef1), _MHW_CMD_DW_LOCATION(FwdRef2), _MHW_CMD_DW_LOCATION(BwdRef0)};
+ 
+         typename cmd_t::VDENC_Down_Scaled_Reference_Picture_CMD *fwdRefsDsStage1[] =
+             {&cmd.DsFwdRef0, &cmd.DsFwdRef1};
+-- 
+2.40.1
+
