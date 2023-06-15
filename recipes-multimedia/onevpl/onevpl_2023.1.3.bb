@@ -14,6 +14,7 @@ SRC_URI = "git://github.com/oneapi-src/oneVPL.git;protocol=https;branch=master \
            file://0003-Fix-X11-rendering-corruption-issue.patch \
            file://0004-Adjust-MPEG-1920x1088-alignment.patch \
            file://0005-Fix-sample_multi_transcode-intermittent-segfault.patch \
+           file://0006-vpl.pc.in-dont-pass-pcfiledir.patch \
             "
 SRCREV = "4cdf44ccaa605460499c52f39eff5517da2fc3c8"
 S = "${WORKDIR}/git"
