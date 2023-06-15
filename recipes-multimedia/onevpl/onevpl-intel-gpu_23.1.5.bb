@@ -15,6 +15,7 @@ COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:x86-x32 = "null"
 
 DEPENDS += "libdrm libva intel-media-driver onevpl pkgconfig-native"
+RDEPENDS:${PN} += "intel-media-driver"
 
 SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;nobranch=1;lfs=0 \
            file://0001-Disable-CM-Copy-for-ADL-P-and-RPL-P-4938.patch \
