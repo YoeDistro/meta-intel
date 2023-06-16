@@ -1,0 +1,33 @@
+From 1ac6329ffd740786bcd917ef0ddb1056524a8e4b Mon Sep 17 00:00:00 2001
+From: Naveen Saini <naveen.kumar.saini@intel.com>
+Date: Fri, 16 Jun 2023 11:35:42 +0800
+Subject: [PATCH] UNS/CMakeLists.txt: migrate udev rules to /usr
+
+With the upcoming v254 release of systemd mandating usrmerge[1] this
+will become mandatory for anyone using systemd.
+
+[1] https://lists.freedesktop.org/archives/systemd-devel/2023-June/049173.html
+
+Upstream-Status: Pending
+
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ UNS/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/UNS/CMakeLists.txt b/UNS/CMakeLists.txt
+index 09000eb..b512a17 100644
+--- a/UNS/CMakeLists.txt
++++ b/UNS/CMakeLists.txt
+@@ -139,7 +139,7 @@ if (UNIX)
+   install (FILES
+     ${CMAKE_CURRENT_SOURCE_DIR}/linux_scripts/70-persistent-mei.rules
+     ${CMAKE_CURRENT_SOURCE_DIR}/linux_scripts/70-mei-wdt.rules
+-    DESTINATION /lib/udev/rules.d/
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/udev/rules.d/
+   )
+ 
+   install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/linux_scripts/20-lms.conf
+-- 
+2.34.1
+

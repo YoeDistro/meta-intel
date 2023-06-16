@@ -31,6 +31,7 @@ SYSTEMD_SERVICE:${PN} = "lms.service"
 
 SRC_URI = "git://github.com/intel/lms.git;branch=master;protocol=https \
            file://fix-gcc13.patch \
+           file://0001-UNS-CMakeLists.txt-migrate-udev-rules-to-usr.patch \
            "
 SRCREV = "4db4ceb3f70cd1b907747646dda6785db7b247d7"
 
