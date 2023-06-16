@@ -17,13 +17,13 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPLv3;md5=9eef91148a9b14ec7f9df333daebc746 \
                     file://lib/ccan.git/ccan/time/LICENSE;md5=838c366f69b72c5df05c96dff79b35f2 \
 "
 
+SRCREV = "9cfca9fe7aa7a8e29b92fe33ce8433e212c9a8ba"
 # The original upstream is git://kernel.ubuntu.com/jk/sbsigntool but it has
 # not been maintained and many patches have been backported in this repo.
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/jejb/sbsigntools.git;protocol=https;name=sbsigntools;branch=master \
            git://github.com/rustyrussell/ccan.git;protocol=https;destsuffix=git/lib/ccan.git;name=ccan;branch=master \
            file://0001-configure-Fixup-build-dependencies-for-cross-compili.patch \
-           file://0002-fix-openssl-3-0.patch \
-          "
+           "
 
 SRCREV_sbsigntools  ?= "f12484869c9590682ac3253d583bf59b890bb826"
 SRCREV_ccan         ?= "b1f28e17227f2320d07fe052a8a48942fe17caa5"
@@ -31,7 +31,7 @@ SRCREV_FORMAT       =  "sbsigntools_ccan"
 
 DEPENDS = "binutils-native gnu-efi-native help2man-native openssl-native util-linux-native"
 
-PV = "0.9.4-git${SRCPV}"
+PV = "0.9.5"
 
 S = "${WORKDIR}/git"
 
