@@ -16,7 +16,7 @@ SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=r
            file://cython-cmake.patch \
            "
 
-SRCREV = "0a5ca5375265f0f12cdaee68574030408dd1c352"
+SRCREV = "cf2c7da568934870c29acc961a4498ff9cbd8d9c"
 SRCREV_mkl = "44de3c3698b687c26e487fc8f0213fa487e8fe2c"
 SRCREV_onednn = "fbec3e25a559ee252022ae066817b204e106a6ba"
 SRCREV_xbyak = "f8ea5c28dfcdc98585881d0ca9e499580ca077ae"
