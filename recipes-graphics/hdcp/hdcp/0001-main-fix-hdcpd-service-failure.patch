@@ -9,7 +9,7 @@ exits, which causing hdcpd service failure.
 Added wait function to block parent process
 until child process exits.
 
-Upstream-Status: Submitted[https://github.com/intel/hdcp/pull/17]
+Upstream-Status: Submitted [https://github.com/intel/hdcp/pull/17]
 
 Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
 ---
