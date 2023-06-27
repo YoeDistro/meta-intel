@@ -11,7 +11,7 @@ va/libva.def.
 This file is importing from:
 https://github.com/intel/libva/blob/2.17.0/va/libva.def
 
-upstream-status: merged.
+Upstream-Status: Backport
 
 Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
 ---
