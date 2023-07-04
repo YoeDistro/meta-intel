@@ -7,7 +7,7 @@ HOMEPAGE = "https://01.org/openvinotoolkit"
 
 SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=releases/2023/0;lfs=0 \
            "
-SRCREV = "b4452d5630442e91cf84db5acd3d991f3d1f34c2"
+SRCREV = "fa1c41994f3f84329491de93ce572f1401bc75ae"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
