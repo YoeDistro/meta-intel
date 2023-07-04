@@ -28,12 +28,11 @@ https://gcc.gnu.org/gcc-13/porting_to.html
 
 Upstream-Status: Pending
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+
 ---
- src/inference/include/ie/ie_precision.hpp                   | 2 +-
- src/plugins/intel_gpu/CMakeLists.txt                        | 6 +++---
- .../include/intel_gpu/graph/serialization/helpers.hpp       | 1 +
- .../intel_gpu/include/intel_gpu/runtime/device_info.hpp     | 1 +
- 4 files changed, 6 insertions(+), 4 deletions(-)
+ src/inference/include/ie/ie_precision.hpp | 2 +-
+ src/plugins/intel_gpu/CMakeLists.txt      | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/src/inference/include/ie/ie_precision.hpp b/src/inference/include/ie/ie_precision.hpp
 index 48bdd945b13..96c29b73159 100644
@@ -65,30 +64,6 @@ index 948aecfcfec..a1b9783068b 100644
  
  add_subdirectory(src/runtime)
  add_subdirectory(src/kernel_selector)
-diff --git a/src/plugins/intel_gpu/include/intel_gpu/graph/serialization/helpers.hpp b/src/plugins/intel_gpu/include/intel_gpu/graph/serialization/helpers.hpp
-index 391629baba2..40efe7011c6 100644
---- a/src/plugins/intel_gpu/include/intel_gpu/graph/serialization/helpers.hpp
-+++ b/src/plugins/intel_gpu/include/intel_gpu/graph/serialization/helpers.hpp
-@@ -5,6 +5,7 @@
- #pragma once
- #include <utility>
- #include <type_traits>
-+#include <cstdint>
- 
- namespace cldnn {
- template <typename T>
-diff --git a/src/plugins/intel_gpu/include/intel_gpu/runtime/device_info.hpp b/src/plugins/intel_gpu/include/intel_gpu/runtime/device_info.hpp
-index 387a319cbe1..e2a7b1fc0fa 100644
---- a/src/plugins/intel_gpu/include/intel_gpu/runtime/device_info.hpp
-+++ b/src/plugins/intel_gpu/include/intel_gpu/runtime/device_info.hpp
-@@ -4,6 +4,7 @@
- 
- #pragma once
- 
-+#include <cstdint>
- #include <string>
- #include <vector>
- #include <tuple>
 -- 
 2.34.1
 

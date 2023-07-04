@@ -1,27 +1,32 @@
 Yocto specific tweaks to the build process:
-  
+
 * Dont try to detect glibc version as that doesn't work when cross compiling.
 * Use shared protobuf and gflags libs.
 * Install sample binaries as well.
 
 Upstream-Status: Inappropriate
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ cmake/developer_package/target_flags.cmake | 2 +-
+ samples/cpp/CMakeLists.txt                 | 6 +++---
+ thirdparty/CMakeLists.txt                  | 8 ++++----
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/cmake/developer_package/target_flags.cmake b/cmake/developer_package/target_flags.cmake
-index 0a37c910ae8..44444970ce1 100644
+index ced8d519da3..505c1fa5b14 100644
 --- a/cmake/developer_package/target_flags.cmake
 +++ b/cmake/developer_package/target_flags.cmake
-@@ -136,4 +136,4 @@ function(ov_glibc_version)
+@@ -145,4 +145,4 @@ function(ov_glibc_version)
      endif()
  endfunction()
  
 -ov_glibc_version()
 +#ov_glibc_version()
 diff --git a/samples/cpp/CMakeLists.txt b/samples/cpp/CMakeLists.txt
-index d2a65618071..80133c4aeb6 100644
+index 37eb0250112..35ec6a3368a 100644
 --- a/samples/cpp/CMakeLists.txt
 +++ b/samples/cpp/CMakeLists.txt
-@@ -221,9 +221,9 @@ macro(ie_add_sample)
+@@ -219,9 +219,9 @@ macro(ie_add_sample)
      target_link_libraries(${IE_SAMPLE_NAME} PRIVATE ${ov_link_libraries} Threads::Threads ${IE_SAMPLE_DEPENDENCIES})
  
      install(TARGETS ${IE_SAMPLE_NAME}
@@ -35,10 +40,10 @@ index d2a65618071..80133c4aeb6 100644
      # create global target with all samples / demo apps
      if(NOT TARGET ie_samples)
 diff --git a/thirdparty/CMakeLists.txt b/thirdparty/CMakeLists.txt
-index edbcb824f4b..9d24dcec560 100644
+index 95d80a6fbd4..963c9a5d60a 100644
 --- a/thirdparty/CMakeLists.txt
 +++ b/thirdparty/CMakeLists.txt
-@@ -291,11 +291,11 @@ endif()
+@@ -353,11 +353,11 @@ endif()
  if(ENABLE_SAMPLES OR ENABLE_COMPILE_TOOL OR ENABLE_TESTS)
      # on Windows and macOS we don't use gflags, because will be dynamically linked
      if(CMAKE_HOST_LINUX AND LINUX)
@@ -52,14 +57,8 @@ index edbcb824f4b..9d24dcec560 100644
 +	    #set(gflag_component nothreads_static)
 +	    #endif()
          find_package(gflags QUIET OPTIONAL_COMPONENTS ${gflag_component})
-     endif()
- 
-@@ -352,7 +352,7 @@ endif()
- 
- if(ENABLE_OV_PADDLE_FRONTEND OR ENABLE_OV_ONNX_FRONTEND OR ENABLE_OV_TF_FRONTEND)
-     if(ENABLE_SYSTEM_PROTOBUF)
--        set(Protobuf_USE_STATIC_LIBS ON)
-+	    #set(Protobuf_USE_STATIC_LIBS ON)
-         if(CMAKE_VERBOSE_MAKEFILE)
-             set(Protobuf_DEBUG ON)
-         endif()
+     else()
+         # conan case
+-- 
+2.34.1
+
