@@ -31,15 +31,14 @@ export B
 
 S = "${WORKDIR}/git"
 
-inherit cmake pkgconfig
+inherit cmake pkgconfig qemu
 
 CXXFLAGS:append = " -Wno-error=nonnull"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
 
-DEPENDS += " flex-native bison-native clang opencl-clang"
-DEPENDS:append:class-target = " clang-cross-x86_64 intel-graphics-compiler-native"
+DEPENDS += " flex-native bison-native clang clang-cross-x86_64 opencl-clang qemu-native"
 
 RDEPENDS:${PN} += "opencl-clang"
 
@@ -54,18 +53,18 @@ EXTRA_OECMAKE = " \
                   -DLLVM_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
                   -DLLVM_LINK_EXE=${STAGING_BINDIR_NATIVE}/llvm-link \
                   -DCLANG_EXE=${STAGING_BINDIR_NATIVE}/clang \
+                  -DCMAKE_CROSSCOMPILING_EMULATOR=${WORKDIR}/qemuwrapper \
                   "
 
-do_install:append:class-native () {
-    install -d ${D}${bindir}
-    install ${B}/IGC/Release/elf_packager ${D}${bindir}/
-    if ${@bb.utils.contains('PACKAGECONFIG', 'vc', 'true', 'false', d)}; then
-        install ${B}/IGC/Release/CMCLTranslatorTool ${D}${bindir}/
-        install ${B}/IGC/Release/vcb ${D}${bindir}/
-    fi
+do_configure:prepend:class-target () {
+    # Write out a qemu wrapper that will be used by cmake.
+    qemu_binary="${@qemu_wrapper_cmdline(d, d.getVar('STAGING_DIR_HOST'), [d.expand('${STAGING_DIR_HOST}${libdir}'),d.expand('${STAGING_DIR_HOST}${base_libdir}')])}"
+    cat > ${WORKDIR}/qemuwrapper << EOF
+#!/bin/sh
+$qemu_binary "\$@"
+EOF
+    chmod +x ${WORKDIR}/qemuwrapper
 }
-
-BBCLASSEXTEND = "native nativesdk"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^igc-(?P<pver>(?!19\..*)\d+(\.\d+)+)$"
 
