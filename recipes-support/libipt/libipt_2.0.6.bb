@@ -5,7 +5,7 @@ library or it can be partially or fully integrated into your tool."
 HOMEPAGE = "https://github.com/intel/libipt"
 
 LICENSE  = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=bc005f06a45e41cdefcb8f5aceb1f5c9"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=46f05b778d7870144ac731c0234007af"
 
 inherit pkgconfig cmake
 
@@ -13,7 +13,7 @@ S = "${WORKDIR}/git"
 
 SRC_URI = "git://github.com/intel/libipt.git;protocol=https;branch=stable/v2.0"
 
-SRCREV = "e315d53984ebe0e40dbb71b213bcf2cba42496f4"
+SRCREV = "ba98732fc7c3269e06b8587bce27ac87c847c0ff"
 
 EXTRA_OECMAKE += " \
                   -DPTDUMP=ON  \
