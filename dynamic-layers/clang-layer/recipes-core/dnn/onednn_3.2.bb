@@ -3,7 +3,7 @@ SUMMARY  = "Deep Neural Network Library"
 DESCRIPTION = "This software is a user mode library that accelerates\
 deep-learning applications and frameworks on Intel architecture."
 LICENSE  = "Apache-2.0 & BSD-3-Clause & BSL-1.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=b48e3de3bfd47c27882a0d85b20823f5 \
+LIC_FILES_CHKSUM = "file://LICENSE;md5=3b64000f6e7d52516017622a37a94ce9 \
                     file://tests/gtests/gtest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
                     file://src/cpu/x64/xbyak/COPYRIGHT;md5=3b9bf048d063d54cdb28964db558bcc7 \
                     file://src/common/ittnotify/LICENSE.BSD;md5=e671ff178b24a95a382ba670503c66fb \
@@ -13,8 +13,8 @@ SECTION = "lib"
 inherit pkgconfig cmake ptest
 
 S = "${WORKDIR}/git"
-SRCREV = "928065bd62372d2824900a86c5438bba407c98d1"
-SRC_URI = "git://github.com/oneapi-src/oneDNN.git;branch=rls-v3.1;protocol=https \
+SRCREV = "04b180b9a58a78cf1a1cd2329671a5060c2be8de"
+SRC_URI = "git://github.com/oneapi-src/oneDNN.git;branch=rls-v3.2;protocol=https \
            file://run-ptest \
            "
 
