@@ -10,14 +10,13 @@ HOMEPAGE = "https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-c
 
 LICENSE="EULA"
 
-COMPILERMAINVER = "2023.0.0"
+COMPILERMAINVER = "2023.1.0"
 
 LIC_FILES_CHKSUM = " \
                      file://opt/intel/oneapi/licensing/${COMPILERMAINVER}/license.htm;md5=f721d37d5ef65590e052bc47e15feec3 \
                      "
-
-COMPILERDOTVER = "2023.0.0-25325"
-DEVUTILITVERSION = "2021.8.0-2021.8.0-25328"
+COMPILERDOTVER = "2023.1.0-43473"
+DEVUTILITVERSION = "2021.9.0-2021.9.0-44447"
 SRC_URI = " \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-compiler-dpcpp-cpp-runtime-${COMPILERMAINVER}-${PV}_amd64.deb;subdir=${BPN};name=dpcpp-runtime \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-compiler-dpcpp-cpp-common-${COMPILERMAINVER}-${PV}_all.deb;subdir=${BPN};name=dpcpp-common \
@@ -28,13 +27,13 @@ SRC_URI = " \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-dev-utilities-${DEVUTILITVERSION}_amd64.deb;subdir=${BPN};name=dev-utils \
             "
 
-SRC_URI[dpcpp-runtime.sha256sum] = "63f63e8e1f02ce34baec35d4892b89a940a745a488fff8d1e04437ab079e7543"
-SRC_URI[dpcpp-common.sha256sum] = "ef2791532a7f5afee609e2e81ddadebf1306a248a84b711959a1be3112d8a509"
-SRC_URI[compiler-shared-runtime.sha256sum] = "39c8f307c67129ef8d466561f39bbed3445548fc9bba48aabe58314cbcf0ae91"
-SRC_URI[common-vars.sha256sum] = "a7779af0502470d07db51789abc2d31a7f80e9ffd6ac77ed3ffcaad79dbecd82"
-SRC_URI[openmp-common.sha256sum] = "b324474eae8bd5bd010df52de880eea55566e91dc043462879fc295ea6b3039c"
-SRC_URI[license.sha256sum] = "801db78b05c548060638dc02b819ee9b4a714b920aca22c8d57cf89ec619e130"
-SRC_URI[dev-utils.sha256sum] = "df8513238bb753f9d169ffc7967784478ea10a2ab3cb26246c66a0d51d96d33f"
+SRC_URI[dpcpp-runtime.sha256sum] = "d0eec67fe7e3b36c8c5b1d07a17779f739fd2fd1881f6b1848169faffcb855c6"
+SRC_URI[dpcpp-common.sha256sum] = "9c117b25ddee699d1a8162ab101b9c23beeea5e9a3f2409414ee6bbc78d6593b"
+SRC_URI[compiler-shared-runtime.sha256sum] = "fa3f4c23f527f1ced767fef56c022e252daedd08fab752ec653985f178d509b6"
+SRC_URI[common-vars.sha256sum] = "5eced1aad7100cdeff317798046589e4b08b5095602e23e9a87adc0fb3e42e52"
+SRC_URI[openmp-common.sha256sum] = "d4cb4adfbfc1ba289996f4b55e85fef73348ee193314552b08a3c59c2af2c8e0"
+SRC_URI[license.sha256sum] = "5a00affd150f0f8475b999f2a7719f6aaffaf67eaf07dd70072295299451fb9a"
+SRC_URI[dev-utils.sha256sum] = "2d34f9d4f746b2b6468ed033628ffbe7838bf1d0bafcc3650d13d5740b10157f"
 
 S = "${WORKDIR}/${BPN}"
 
