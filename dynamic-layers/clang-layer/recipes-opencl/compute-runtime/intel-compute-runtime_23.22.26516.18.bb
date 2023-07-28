@@ -8,14 +8,14 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=eca6ec6997e18db166db7109cdbe611c \
                     file://third_party/opencl_headers/LICENSE;md5=dcefc90f4c3c689ec0c2489064e7273b"
 
-SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https;branch=releases/23.17 \
+SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https;branch=releases/23.22 \
            file://disable-werror.patch \
            file://add-missing-cstdint-header-to-fix-compile-with-gcc13.patch \
            file://allow-to-find-cpp-generation-tool.patch \
            file://external-ocloc.patch \
            "
 
-SRCREV = "0bb5b3408e6cb61b477e7cad296fd278b11e73be"
+SRCREV = "f6bf19f1dde6b852676c319a7c67a0a4c3f25d02"
 
 S = "${WORKDIR}/git"
 

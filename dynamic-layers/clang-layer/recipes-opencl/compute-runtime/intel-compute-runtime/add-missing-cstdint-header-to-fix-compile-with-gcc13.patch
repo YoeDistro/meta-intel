@@ -1,4 +1,4 @@
-From 078af5b7ac3086d336f76183b798771263491c34 Mon Sep 17 00:00:00 2001
+From 41d9b88b2edfcb9fee82ccfc68bd6030a282292c Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Tue, 30 May 2023 11:07:10 +0800
 Subject: [PATCH] add missing cstdint header to fix compile with gcc13
@@ -28,7 +28,7 @@ index 08dc38d406..e04f916e71 100644
  namespace NEO {
  std::vector<std::string> getBuiltInFileNames(bool imagesSupport);
 diff --git a/shared/test/common/os_interface/linux/sys_calls_linux_ult.h b/shared/test/common/os_interface/linux/sys_calls_linux_ult.h
-index 9f1fd4dacb..e64dd40254 100644
+index f30d425abe..1bc78d3335 100644
 --- a/shared/test/common/os_interface/linux/sys_calls_linux_ult.h
 +++ b/shared/test/common/os_interface/linux/sys_calls_linux_ult.h
 @@ -7,6 +7,7 @@
@@ -36,11 +36,11 @@ index 9f1fd4dacb..e64dd40254 100644
  #pragma once
  
 +#include <cstdint>
+ #include <dirent.h>
  #include <iostream>
  #include <poll.h>
- #include <sys/stat.h>
 diff --git a/third_party/aot_config_headers/platforms.h b/third_party/aot_config_headers/platforms.h
-index 056d615503..d2024d1b54 100644
+index 919e2714f2..ee82cb7ff2 100644
 --- a/third_party/aot_config_headers/platforms.h
 +++ b/third_party/aot_config_headers/platforms.h
 @@ -7,6 +7,7 @@
@@ -52,5 +52,5 @@ index 056d615503..d2024d1b54 100644
  #pragma once
  
 -- 
-2.37.3
+2.34.1
 
