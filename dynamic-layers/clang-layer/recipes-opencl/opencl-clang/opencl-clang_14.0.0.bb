@@ -1,8 +1,6 @@
 require opencl-clang.inc
 
-SRC_URI:append = " file://0001-don-t-redefine-LLVM_TABLEGEN_EXE.patch \
-           "
-SRCREV = "06c7c0d7f5cbd13810d79489a533fa6c5b6c7d9f"
+SRCREV = "cf95b338d14685e4f3402ab1828bef31d48f1fd6"
 
 BRANCH = "ocl-open-140"
 
@@ -16,5 +14,5 @@ EXTRA_OECMAKE += "\
 
 do_install:append:class-native() {
         install -d ${D}${bindir}
-        install -m 0755 ${B}/linux_linker/linux_resource_linker ${D}${bindir}/
+        install -m 0755 ${B}/bin/linux_resource_linker ${D}${bindir}/
 }
