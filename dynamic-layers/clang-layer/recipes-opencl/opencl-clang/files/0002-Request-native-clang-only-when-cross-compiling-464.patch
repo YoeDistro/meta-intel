@@ -1,0 +1,60 @@
+From 43c806ef321b1f677a49d28c89fb7ffecf539c2d Mon Sep 17 00:00:00 2001
+From: Tim Creech <timothy.m.creech@intel.com>
+Date: Wed, 28 Jun 2023 03:45:51 -0400
+Subject: [PATCH 2/2] Request native clang only when cross-compiling (#464)
+
+* Request native clang only when cross-compiling
+
+LLVM_USE_HOST_TOOLS may be set if LLVM is configured with
+LLVM_OPTIMIZED_TABLEGEN, which does not necessarily indicate
+cross-compilation or that clang will only execute on the target.
+
+By checking that CMAKE_CROSSCOMPILING is set, we ensure that we only
+build/use clang again if necessary for host execution.
+
+* fixup: CMAKE_CROSSCOMPILING implies LLVM_USE_HOST_TOOLS
+
+Co-authored-by: Wenju He <wenju.he@intel.com>
+
+* fixup: also use CMAKE_CROSSCOMPILING in top-level CMakeLists.txt
+
+---------
+
+Co-authored-by: Wenju He <wenju.he@intel.com>
+
+Upstream-Status: Backport [https://github.com/intel/opencl-clang/commit/53843eee13cfb2357919ee02714a43bef1af0f86]
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ CMakeLists.txt            | 2 +-
+ cl_headers/CMakeLists.txt | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e772de9..5864009 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -35,7 +35,7 @@ set(CMAKE_MODULE_PATH
+ 
+ include(CMakeFunctions)
+ 
+-if(LLVM_USE_HOST_TOOLS AND OPENCL_CLANG_BUILD_EXTERNAL)
++if(CMAKE_CROSSCOMPILING AND OPENCL_CLANG_BUILD_EXTERNAL)
+   include(CrossCompile)
+   llvm_create_cross_target(${PROJECT_NAME} NATIVE "" Release)
+ endif()
+diff --git a/cl_headers/CMakeLists.txt b/cl_headers/CMakeLists.txt
+index 18296c2..16cabb7 100644
+--- a/cl_headers/CMakeLists.txt
++++ b/cl_headers/CMakeLists.txt
+@@ -4,7 +4,7 @@ if(USE_PREBUILT_LLVM)
+ else()
+     set(CLANG_COMMAND $<TARGET_FILE:clang>)
+ endif()
+-if(LLVM_USE_HOST_TOOLS AND NOT OPENCL_CLANG_BUILD_EXTERNAL)
++if(CMAKE_CROSSCOMPILING AND NOT OPENCL_CLANG_BUILD_EXTERNAL)
+   build_native_tool(clang CLANG_COMMAND)
+ endif()
+ 
+-- 
+2.37.3
+
