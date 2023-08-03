@@ -19,4 +19,17 @@ DEPENDS:append:class-target = " opencl-clang-native"
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
 
+DEPENDS += " spirv-llvm-translator"
+
+EXTRA_OECMAKE += "\
+                  -DLLVM_TABLEGEN_EXE=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
+                  -DCMAKE_SKIP_RPATH=TRUE \
+                  -DPREFERRED_LLVM_VERSION=${LLVMVERSION} \
+                  "
+
+do_install:append:class-native() {
+        install -d ${D}${bindir}
+        install -m 0755 ${B}/bin/linux_resource_linker ${D}${bindir}/
+}
+
 BBCLASSEXTEND = "native nativesdk"
