@@ -1,0 +1,49 @@
+From 5aea653e611b59c70e529a1bd71885a509831557 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Tue, 1 Aug 2023 11:15:31 +0800
+Subject: [PATCH] cl_headers/CMakeLists.txt: use clang from native sysroot
+
+Allow clang to be found in target sysroot for target builds and dont try
+to compile cross binaries, we do that ourselves.
+
+Upstream-Status: Inappropriate [oe-specific]
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ CMakeLists.txt            | 8 ++++----
+ cl_headers/CMakeLists.txt | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5864009..60ba39e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -35,10 +35,10 @@ set(CMAKE_MODULE_PATH
+ 
+ include(CMakeFunctions)
+ 
+-if(CMAKE_CROSSCOMPILING AND OPENCL_CLANG_BUILD_EXTERNAL)
+-  include(CrossCompile)
+-  llvm_create_cross_target(${PROJECT_NAME} NATIVE "" Release)
+-endif()
++#if(CMAKE_CROSSCOMPILING AND OPENCL_CLANG_BUILD_EXTERNAL)
++#  include(CrossCompile)
++#  llvm_create_cross_target(${PROJECT_NAME} NATIVE "" Release)
++#endif()
+ 
+ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+     set(USE_PREBUILT_LLVM ON)
+diff --git a/cl_headers/CMakeLists.txt b/cl_headers/CMakeLists.txt
+index 16cabb7..4423536 100644
+--- a/cl_headers/CMakeLists.txt
++++ b/cl_headers/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ set(CL_HEADERS_LIB cl_headers)
+ if(USE_PREBUILT_LLVM)
+-    find_program(CLANG_COMMAND clang PATHS ${LLVM_TOOLS_BINARY_DIR} NO_DEFAULT_PATH)
++    find_program(CLANG_COMMAND clang PATHS ${LLVM_TOOLS_BINARY_DIR})
+ else()
+     set(CLANG_COMMAND $<TARGET_FILE:clang>)
+ endif()
+-- 
+2.37.3
+
