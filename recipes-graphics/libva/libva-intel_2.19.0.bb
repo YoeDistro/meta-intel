@@ -19,7 +19,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=2e48940f94acb0af582e5ef03537800f"
 
 SRC_URI = "https://github.com/intel/libva/releases/download/${PV}/libva-${PV}.tar.bz2 \
           "
-SRC_URI[sha256sum] = "a3577eeba0c23924686c7e2f2030073736c8282a80f27b5473e33ea94ccd4982"
+SRC_URI[sha256sum] = "963be798d559df7feebda6fa81aa0dae6f9409c633a37909c44c6aa8af1e2174"
 
 S = "${WORKDIR}/libva-${PV}"
 
