@@ -18,10 +18,9 @@ DEPENDS += "libdrm libva intel-media-driver onevpl pkgconfig-native"
 RDEPENDS:${PN} += "intel-media-driver"
 
 SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;nobranch=1;lfs=0 \
-           file://0001-Disable-CM-Copy-for-ADL-P-and-RPL-P-4938.patch \
           "
 
-SRCREV = "3bc35c59ab64f60c3f73eaa83ada600859999493"
+SRCREV = "b2af8d128452c4b4c94399f051c3214f11c1dfa9"
 S = "${WORKDIR}/git"
 
 FILES:${PN} += " \
