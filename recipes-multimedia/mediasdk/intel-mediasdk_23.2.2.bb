@@ -38,7 +38,7 @@ SRC_URI = "git://github.com/Intel-Media-SDK/MediaSDK.git;protocol=https;nobranch
            file://fix-gcc13.patch \
            "
 
-SRCREV = "e507e23470f1fc0f01395c10c97bd7b31acf0bce"
+SRCREV = "869b60a6c3d7b5e9f7c3b3b914986322dca4bbae"
 S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^intel-mediasdk-(?P<pver>(\d+(\.\d+)+))$"
