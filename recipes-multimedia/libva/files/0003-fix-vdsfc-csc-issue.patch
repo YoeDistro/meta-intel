@@ -1,0 +1,88 @@
+From e4f88d8a7fbde1df022a648e2cd06c1b8abbd4e4 Mon Sep 17 00:00:00 2001
+From: shawnli2 <shawn.li@intel.com>
+Date: Sun, 25 Jun 2023 15:25:11 +0800
+Subject: [PATCH 3/5] fix vdsfc csc issue
+
+to support ARGB8 output, need to enable csc from YUV to RGB
+
+upstream-status: backport
+Backport from upstream media-driver:
+https://github.com/intel/media-driver/commit/9806aede1724d5eea3a8ddb262d1f2cbcca63456
+---
+ .../Xe_XPM_base/vp/hal/packet/vp_render_sfc_xe_xpm_base.cpp  | 5 +++--
+ .../common/vp/hal/packet/vp_render_sfc_base_legacy.cpp       | 4 ++--
+ .../vp/hal/packet/vp_render_sfc_xe_lpm_plus_base.cpp         | 5 +++--
+ .../agnostic/common/vp/hal/packet/vp_render_sfc_base.cpp     | 4 ++--
+ 4 files changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/media_driver/media_softlet/agnostic/Xe_M/Xe_XPM_base/vp/hal/packet/vp_render_sfc_xe_xpm_base.cpp b/media_driver/media_softlet/agnostic/Xe_M/Xe_XPM_base/vp/hal/packet/vp_render_sfc_xe_xpm_base.cpp
+index 24bade3fd..daccd21f0 100644
+--- a/media_driver/media_softlet/agnostic/Xe_M/Xe_XPM_base/vp/hal/packet/vp_render_sfc_xe_xpm_base.cpp
++++ b/media_driver/media_softlet/agnostic/Xe_M/Xe_XPM_base/vp/hal/packet/vp_render_sfc_xe_xpm_base.cpp
+@@ -298,9 +298,10 @@ bool SfcRenderXe_Xpm_Base::IsOutputChannelSwapNeeded(MOS_FORMAT outputFormat)
+ bool SfcRenderXe_Xpm_Base::IsCscNeeded(SFC_CSC_PARAMS &cscParams)
+ {
+     VP_FUNC_CALL();
+-    if (m_bVdboxToSfc && m_videoConfig.codecStandard == CODECHAL_JPEG)
++
++    if (m_bVdboxToSfc && cscParams.inputFormat != cscParams.outputFormat)
+     {
+-        if (cscParams.inputFormat != cscParams.outputFormat)
++        if (m_videoConfig.codecStandard == CODECHAL_JPEG || cscParams.outputFormat == Format_A8R8G8B8)
+         {
+             return true;
+         }
+diff --git a/media_driver/media_softlet/agnostic/common/vp/hal/packet/vp_render_sfc_base_legacy.cpp b/media_driver/media_softlet/agnostic/common/vp/hal/packet/vp_render_sfc_base_legacy.cpp
+index 16cef55b3..19c99364b 100644
+--- a/media_driver/media_softlet/agnostic/common/vp/hal/packet/vp_render_sfc_base_legacy.cpp
++++ b/media_driver/media_softlet/agnostic/common/vp/hal/packet/vp_render_sfc_base_legacy.cpp
+@@ -197,10 +197,10 @@ MOS_STATUS SfcRenderBaseLegacy::SetIefStateCscParams(
+     {
+         psfcStateParams->bCSCEnable = true;
+         pIEFStateParams->bCSCEnable = true;
+-        if (m_bVdboxToSfc && m_videoConfig.codecStandard == CODECHAL_JPEG)
++        if (m_bVdboxToSfc)
+         {
+             m_cscInputSwapNeeded = false;
+-            if (m_videoConfig.jpeg.jpegChromaType == jpegRGB)
++            if (m_videoConfig.jpeg.jpegChromaType == jpegRGB && m_videoConfig.codecStandard == CODECHAL_JPEG)
+             {
+                 m_cscCoeff[0] = 1.000000000f;
+                 m_cscCoeff[1] = 0.000000000f;
+diff --git a/media_softlet/agnostic/Xe_M_plus/Xe_LPM_plus_base/vp/hal/packet/vp_render_sfc_xe_lpm_plus_base.cpp b/media_softlet/agnostic/Xe_M_plus/Xe_LPM_plus_base/vp/hal/packet/vp_render_sfc_xe_lpm_plus_base.cpp
+index 304fd2ffc..e9737c3c5 100644
+--- a/media_softlet/agnostic/Xe_M_plus/Xe_LPM_plus_base/vp/hal/packet/vp_render_sfc_xe_lpm_plus_base.cpp
++++ b/media_softlet/agnostic/Xe_M_plus/Xe_LPM_plus_base/vp/hal/packet/vp_render_sfc_xe_lpm_plus_base.cpp
+@@ -636,9 +636,10 @@ bool SfcRenderXe_Lpm_Plus_Base::IsOutputChannelSwapNeeded(MOS_FORMAT outputForma
+ bool SfcRenderXe_Lpm_Plus_Base::IsCscNeeded(SFC_CSC_PARAMS &cscParams)
+ {
+     VP_FUNC_CALL();
+-    if (m_bVdboxToSfc && m_videoConfig.codecStandard == CODECHAL_JPEG)
++
++    if (m_bVdboxToSfc && cscParams.inputFormat != cscParams.outputFormat)
+     {
+-        if (cscParams.inputFormat != cscParams.outputFormat)
++        if (m_videoConfig.codecStandard == CODECHAL_JPEG || cscParams.outputFormat == Format_A8R8G8B8)
+         {
+             return true;
+         }
+diff --git a/media_softlet/agnostic/common/vp/hal/packet/vp_render_sfc_base.cpp b/media_softlet/agnostic/common/vp/hal/packet/vp_render_sfc_base.cpp
+index 573a0a12d..2b7c5231a 100644
+--- a/media_softlet/agnostic/common/vp/hal/packet/vp_render_sfc_base.cpp
++++ b/media_softlet/agnostic/common/vp/hal/packet/vp_render_sfc_base.cpp
+@@ -238,10 +238,10 @@ MOS_STATUS SfcRenderBase::SetIefStateCscParams(
+     {
+         psfcStateParams->bCSCEnable = true;
+         pIEFStateParams->bCSCEnable = true;
+-        if (m_bVdboxToSfc && m_videoConfig.codecStandard == CODECHAL_JPEG)
++        if (m_bVdboxToSfc)
+         {
+             m_cscInputSwapNeeded = false;
+-            if (m_videoConfig.jpeg.jpegChromaType == jpegRGB)
++            if (m_videoConfig.jpeg.jpegChromaType == jpegRGB && m_videoConfig.codecStandard == CODECHAL_JPEG)
+             {
+                 m_cscCoeff[0] = 1.000000000f;
+                 m_cscCoeff[1] = 0.000000000f;
+-- 
+2.40.1
+

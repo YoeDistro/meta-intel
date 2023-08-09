@@ -19,11 +19,13 @@ REQUIRED_DISTRO_FEATURES = "opengl"
 DEPENDS += "libva gmmlib"
 
 SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;nobranch=1 \
-           file://fd67cc3fbd3a362297afc7cc8d75560df62708de.patch \
-           file://0001-Encode-fix-fwdRefs-array-out-of-bound-issue.patch \
+           file://0001-ARGB-force-to-tile4.patch \
+           file://0002-Add-mocs-index-in-patch-list.patch \
+           file://0003-fix-vdsfc-csc-issue.patch \
+           file://0004-XRGB-force-to-tile4.patch \
           "
 
-SRCREV = "8589406d4e7f97c6de55862af775d67d5dd7cd28"
+SRCREV = "cf942344b9e439d19873f1d47c0c890d7c63b6ad"
 S = "${WORKDIR}/git"
 
 COMPATIBLE_HOST:x86-x32 = "null"

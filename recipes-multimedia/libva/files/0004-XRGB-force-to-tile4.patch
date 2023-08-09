@@ -1,0 +1,35 @@
+From bd96cac9a35a8ca98c7e2b8f622afb75f31ed221 Mon Sep 17 00:00:00 2001
+From: JayYang <jay.yang@intel.com>
+Date: Thu, 27 Jul 2023 21:05:50 +0800
+Subject: [PATCH 4/5] XRGB force to tile4
+
+Force BGRX surfaces to tile4 because glimagesink plugins backend support by 3D mesa
+driver is reporting back the XR24 (BGRx) for dmabuf modifier case is 0x0100000000000009
+
+upstream-status: backport
+
+Backport from upstream media-driver:
+https://github.com/intel/media-driver/commit/b6d038491372f39330b33620ed8bdb8255b57a66
+---
+ media_softlet/linux/common/ddi/media_libva_util_next.cpp | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/media_softlet/linux/common/ddi/media_libva_util_next.cpp b/media_softlet/linux/common/ddi/media_libva_util_next.cpp
+index 1852e59d2..b31607945 100644
+--- a/media_softlet/linux/common/ddi/media_libva_util_next.cpp
++++ b/media_softlet/linux/common/ddi/media_libva_util_next.cpp
+@@ -649,7 +649,10 @@ VAStatus MediaLibvaUtilNext::GenerateGmmParamsForInternalSurface(
+             }
+             // For ARGB surface, always allocate it as tile4.
+             // This is a WA for ExportSurfaceHandle because modifer for tile64 isn't defined.
+-            if ((params.format == Media_Format_A8R8G8B8 || params.format == Media_Format_B10G10R10A2 || params.format == Media_Format_A8B8G8R8) && !MEDIA_IS_SKU(&mediaDrvCtx->SkuTable, FtrTileY))
++            if ((params.format == Media_Format_A8R8G8B8 || 
++                params.format == Media_Format_B10G10R10A2 || 
++                params.format == Media_Format_A8B8G8R8 ||
++                params.format == Media_Format_X8R8G8B8) && !MEDIA_IS_SKU(&mediaDrvCtx->SkuTable, FtrTileY))
+             {
+                 gmmParams.Flags.Info.Tile4 = true;
+             }
+-- 
+2.40.1
+

@@ -1,0 +1,31 @@
+From 80c5c6e6e671d61eae16a53fd36442993813609f Mon Sep 17 00:00:00 2001
+From: LeyuYao <leyu.yao@intel.com>
+Date: Mon, 3 Jul 2023 00:58:09 +0800
+Subject: [PATCH 2/5] Add mocs index in patch list
+
+For linux usage
+
+upstream-status: backport
+
+Backport from upstream media-driver:
+https://github.com/intel/media-driver/commit/26d5f57cad88df823164944ad496507d22a50fb1
+---
+ media_softlet/agnostic/common/hw/mhw_utilities_next.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/media_softlet/agnostic/common/hw/mhw_utilities_next.cpp b/media_softlet/agnostic/common/hw/mhw_utilities_next.cpp
+index a9db7bf95..4db4e1f66 100644
+--- a/media_softlet/agnostic/common/hw/mhw_utilities_next.cpp
++++ b/media_softlet/agnostic/common/hw/mhw_utilities_next.cpp
+@@ -290,6 +290,8 @@ MOS_STATUS Mhw_AddResourceToCmd_PatchList(
+     // Offset and command LSB parameters
+     dwOffset = pParams->dwOffset | ((*pParams->pdwCmd) & ((1 << dwLsbNum) - 1));
+ 
++    Mhw_SetMocsTableIndex(pOsInterface, pParams->presResource, pParams->mocsParams);
++    
+     if (pParams->dwOffsetInSSH > 0)
+     {
+         // Calculate the patch offset to command buffer
+-- 
+2.40.1
+

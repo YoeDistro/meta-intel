@@ -1,0 +1,35 @@
+From f172dc91c054bb6377b733db12d9210e5f73e7b2 Mon Sep 17 00:00:00 2001
+From: JayYang <jay.yang@intel.com>
+Date: Fri, 7 Jul 2023 13:40:14 +0800
+Subject: [PATCH 1/5] ARGB force to tile4
+
+Gmm may create tile64 ARGB surfaces, whereas no tile64 modifier is defined to export such surfaces.
+Force ARGB, ABGR, A2RGB10 surfaces to tile4 as WA.
+
+upstream-status: backport
+Backport from upstream intel-media-driver:
+https://github.com/intel/media-driver/commit/bd5bde0d8a0c0a6672c3586ee6727eff3ca9bc21
+---
+ media_softlet/linux/common/ddi/media_libva_util_next.cpp | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/media_softlet/linux/common/ddi/media_libva_util_next.cpp b/media_softlet/linux/common/ddi/media_libva_util_next.cpp
+index e3c49eef8..1852e59d2 100644
+--- a/media_softlet/linux/common/ddi/media_libva_util_next.cpp
++++ b/media_softlet/linux/common/ddi/media_libva_util_next.cpp
+@@ -647,6 +647,12 @@ VAStatus MediaLibvaUtilNext::GenerateGmmParamsForInternalSurface(
+                     }
+                 }
+             }
++            // For ARGB surface, always allocate it as tile4.
++            // This is a WA for ExportSurfaceHandle because modifer for tile64 isn't defined.
++            if ((params.format == Media_Format_A8R8G8B8 || params.format == Media_Format_B10G10R10A2 || params.format == Media_Format_A8B8G8R8) && !MEDIA_IS_SKU(&mediaDrvCtx->SkuTable, FtrTileY))
++            {
++                gmmParams.Flags.Info.Tile4 = true;
++            }
+             break;
+         case I915_TILING_X:
+             gmmParams.Flags.Info.TiledX    = true;
+-- 
+2.40.1
+
