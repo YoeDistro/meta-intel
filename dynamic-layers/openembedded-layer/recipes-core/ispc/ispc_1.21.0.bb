@@ -18,7 +18,7 @@ SRC_URI = "git://github.com/ispc/ispc.git;protocol=https;branch=main \
            file://run-ptest \
            "
 
-SRCREV = "14bd04aa7e68cd33eb1d96b33058cb64d7ef76f4"
+SRCREV = "f925f2563441a36eff1cb7a617934253dc9c100c"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
@@ -48,27 +48,18 @@ do_install_ptest() {
 EXTRA_OECMAKE += " \
                   -DISPC_INCLUDE_TESTS=OFF  \
                   -DISPC_INCLUDE_EXAMPLES=OFF  \
-                  -DISPC_NO_DUMPS=ON  \
                   -DARM_ENABLED=OFF  \
                   -DISPC_CROSS=ON  \
                   -DISPC_ANDROID_TARGET=OFF  \
                   -DISPC_FREEBSD_TARGET=OFF  \
                   -DISPC_WINDOWS_TARGET=OFF  \
                   -DISPC_IOS_TARGET=OFF  \
-                  -DISPC_PS4_TARGET=OFF  \
+                  -DISPC_PS_TARGET=OFF  \
                   -DSYSROOT_DIR=${STAGING_DIR} \
                   -DCLANG_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang \
                   -DCLANGPP_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang++ \
                   -DLLVM_DIS_EXECUTABLE=${STAGING_BINDIR_NATIVE}/llvm-dis \
                   -DLLVM_AS_EXECUTABLE=${STAGING_BINDIR_NATIVE}/llvm-as \
                   "
-
-FILES:${PN}-dev = "\
-                   ${libdir}/libispcrt_device_cpu${SOLIBSDEV} \
-                   ${libdir}/cmake \
-                   ${includedir} \
-                   "
-
-FILES:${PN} += "${libdir}/libispcrt.so"
 
 BBCLASSEXTEND = "native nativesdk"
