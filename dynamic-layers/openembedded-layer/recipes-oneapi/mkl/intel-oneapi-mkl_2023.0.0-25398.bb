@@ -62,6 +62,7 @@ do_install:append () {
 	done
 }
 
+AUTO_LIBNAME_PKGS = ""
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT  = "1"
 
