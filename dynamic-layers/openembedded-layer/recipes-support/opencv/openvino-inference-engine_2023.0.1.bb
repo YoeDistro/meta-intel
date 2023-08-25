@@ -4,7 +4,7 @@ DESCRIPTION = "This toolkit allows developers to deploy pre-trained \
 deep learning models through a high-level C++ Inference Engine API \
 integrated with application logic."
 
-SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=releases/2023/0;lfs=0 \
+SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;name=openvino;branch=releases/2023/0;lfs=0 \
            git://github.com/openvinotoolkit/oneDNN.git;protocol=https;destsuffix=git/src/plugins/intel_cpu/thirdparty/onednn;name=mkl;nobranch=1 \
            git://github.com/oneapi-src/oneDNN.git;protocol=https;destsuffix=git/src/plugins/intel_gpu/thirdparty/onednn_gpu;name=onednn;nobranch=1 \
            git://github.com/herumi/xbyak.git;protocol=https;destsuffix=git/thirdparty/xbyak;name=xbyak;branch=master \
@@ -19,13 +19,14 @@ SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=r
            file://0001-protobuf-allow-target-protoc-to-be-built.patch \
            "
 
-SRCREV = "fa1c41994f3f84329491de93ce572f1401bc75ae"
+SRCREV_openvino = "fa1c41994f3f84329491de93ce572f1401bc75ae"
 SRCREV_mkl = "1c7bfabf1b26e6fb95fea1613e1d3d2bef1f6b54"
 SRCREV_onednn = "f27dedbfc093f51032a4580198bb80579440dc15"
 SRCREV_xbyak = "740dff2e866f3ae1a70dd42d6e8836847ed95cc2"
 SRCREV_json = "bc889afb4c5bf1c0d8ee29ef35eaaf4c8bef8a5d"
 SRCREV_ade = "58b2595a1a95cc807be8bf6222f266a9a1f393a9"
 SRCREV_protobuf = "fe271ab76f2ad2b2b28c10443865d2af21e27e0e"
+SRCREV_FORMAT = "openvino_mkl_onednn_xbyak_json_ade_protobuf"
 
 LICENSE = "Apache-2.0 & MIT & BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
