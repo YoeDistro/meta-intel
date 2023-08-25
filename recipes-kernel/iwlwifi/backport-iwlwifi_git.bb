@@ -5,9 +5,9 @@ LICENSE = "GPL-2.0-only"
 
 REQUIRED_DISTRO_FEATURES = "wifi"
 
-LIC_FILES_CHKSUM = "file://${S}/COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
+LIC_FILES_CHKSUM = "file://${S}/COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
-inherit module
+inherit module features_check
 
 # For some iwfwifi LinuxCore supported wireless chips, the best/latest
 # firmware blobs are found in the iwlwifi's linux-firmware.git fork.
@@ -17,8 +17,8 @@ inherit module
 # When updating this recipe, ensure that the proper firmware is included from
 # either the linux-firmware or iwlwifi-firmware repos.
 
-PV = "45"
-SRCREV = "a75c1de6b3fa87885556c67619429cfa87cc048f"
+PV = "79"
+SRCREV = "574631d89d736fd2c76b0e2ea489270c50903e52"
 
 SRC_URI = " \
            git://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/backport-iwlwifi;branch=release/core${PV} \
@@ -43,6 +43,8 @@ do_install:append() {
 }
 
 RDEPENDS:${PN} = "linux-firmware-iwlwifi"
+
+FILES:${PN} += "${sysconfdir}/modprobe.d/iwlwifi.conf"
 
 KERNEL_MODULE_AUTOLOAD:append:core2-32-intel-common = " iwlwifi"
 KERNEL_MODULE_AUTOLOAD:append:corei7-64-intel-common = " iwlwifi"
