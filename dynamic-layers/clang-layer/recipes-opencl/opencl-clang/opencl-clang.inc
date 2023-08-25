@@ -16,9 +16,4 @@ DEPENDS:append:class-target = " opencl-clang-native"
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
 
-do_install:append:class-native() {
-        install -d ${D}${bindir}
-        install -m 0755 ${B}/linux_linker/linux_resource_linker ${D}${bindir}/
-}
-
 BBCLASSEXTEND = "native nativesdk"

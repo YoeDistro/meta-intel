@@ -10,3 +10,8 @@ EXTRA_OECMAKE += "\
                   -DCMAKE_SKIP_RPATH=TRUE \
                   -DPREFERRED_LLVM_VERSION="12.0.0" \
                   "
+
+do_install:append:class-native() {
+        install -d ${D}${bindir}
+        install -m 0755 ${B}/linux_linker/linux_resource_linker ${D}${bindir}/
+}
