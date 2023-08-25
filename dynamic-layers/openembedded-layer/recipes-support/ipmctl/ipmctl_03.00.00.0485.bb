@@ -24,6 +24,7 @@ SRC_URI = "git://github.com/intel/ipmctl.git;protocol=https;branch=master;name=i
 SRCREV_ipmctl = "c75bd840ea7820c8f93a5488fcff75d08beedd51"
 #tag edk2-stable202302
 SRCREV_edk2 = "f80f052277c88a67c55e107b550f504eeea947d3"
+SRCREV_FORMAT = "ipmctl_edk2"
 
 S = "${WORKDIR}/git"
 
