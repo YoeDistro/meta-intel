@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/${BP}/COPYING;md5=a216b4192dc6b777b6f0db56
 SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/${PV}/${BP}.tar.gz \
            "
 
-SRC_URI[sha256sum] = "59813a6f92e699b4cb6983b70b91137eece4609a113fa7bb60db0be9889d2b46"
+SRC_URI[sha256sum] = "90f6cd614008839b6fc748ae0f4ad3503435f8b788318d4f40cfc83c7029025e"
 
 UPSTREAM_CHECK_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/"
 UPSTREAM_CHECK_REGEX = "ixgbevf%20stable/(?P<pver>\d+(\.\d+)+)/"
@@ -22,7 +22,7 @@ CVE_PRODUCT = "linux:linux_kernel_ixgbe"
 
 S = "${WORKDIR}/${BP}/src"
 
-EXTRA_OEMAKE='KSRC="${STAGING_KERNEL_BUILDDIR}" KVER="${KERNEL_VERSION}" INSTALL_MOD_PATH="${D}"'
+EXTRA_OEMAKE='KSRC="${STAGING_KERNEL_DIR}" KOBJ="${STAGING_KERNEL_BUILDDIR}" KVER="${KERNEL_VERSION}" INSTALL_MOD_PATH="${D}"'
 
 KERNEL_MODULE_AUTOLOAD:append:intel-core2-32 = " ixgbevf"
 KERNEL_MODULE_AUTOLOAD:append:intel-corei7-64 = " ixgbevf"
