@@ -15,7 +15,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=ea8831610e926e2e469075b52bf08848"
 SRC_URI = "git://github.com/intel/thermal_daemon/;branch=master;protocol=https \
            "
 
-SRCREV = "b92e67bf3e5d6403cd59f64a1a0f0832ce4ea2c7"
+SRCREV = "63b290f20da115f62f5bbd39a28fa5afe0f6efc2"
 S = "${WORKDIR}/git"
 
 inherit pkgconfig autotools systemd gtk-doc
@@ -30,7 +30,7 @@ EXTRA_OECONF = " \
                  --with-systemdsystemunitdir=${systemd_system_unitdir} \
                  "
 
-FILES:${PN} += "${datadir}/dbus-1/system-services/*.service"
+FILES:${PN} += "${datadir}/dbus-1"
 
 SYSTEMD_SERVICE:${PN} = "thermald.service"
 
