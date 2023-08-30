@@ -30,6 +30,7 @@ inherit bin_package
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT  = "1"
+INHIBIT_DEFAULT_DEPS = ""
 
 RDEPENDS:${PN} += "tbb setup-intel-oneapi-env"
 INSANE_SKIP:${PN} += "ldflags dev-so"
