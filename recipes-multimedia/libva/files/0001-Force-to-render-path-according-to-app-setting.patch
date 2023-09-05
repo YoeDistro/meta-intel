@@ -1,0 +1,54 @@
+From bfc77f3476a406600e05e3bfa5e289a94bf58aef Mon Sep 17 00:00:00 2001
+From: JayYang <jay.yang@intel.com>
+Date: Fri, 4 Aug 2023 12:03:51 +0800
+Subject: [PATCH 1/4] Force to render path according to app setting
+
+If apps set VA flag VA_PROC_PIPELINE_FAST, force workload to render.
+
+Upstream-Status: Backport [https://github.com/intel/media-driver/commit/00d560ba561f57b8be85c41a791e6db05e1743e9]
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
+---
+ .../linux/common/vp/ddi/ddi_vp_functions.cpp  | 22 +++++++++----------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
+
+diff --git a/media_softlet/linux/common/vp/ddi/ddi_vp_functions.cpp b/media_softlet/linux/common/vp/ddi/ddi_vp_functions.cpp
+index 89da5239f..fa02bf147 100644
+--- a/media_softlet/linux/common/vp/ddi/ddi_vp_functions.cpp
++++ b/media_softlet/linux/common/vp/ddi/ddi_vp_functions.cpp
+@@ -3991,23 +3991,21 @@ VAStatus DdiVpFunctions::DdiSetProcPipelineParams(
+     }
+ #endif  //(_DEBUG || _RELEASE_INTERNAL)
+ 
+-    // Set stream type using pipeline_flags VA_PROC_PIPELINE_FAST flag
+     // Currently we only support 1 primary surface in VP
+-    if (pipelineParam->pipeline_flags & VA_PROC_PIPELINE_FAST)
++    if (vpCtx->iPriSurfs < VP_MAX_PRIMARY_SURFS)
+     {
+-        vpHalSrcSurf->SurfType = SURF_IN_SUBSTREAM;
++        vpHalSrcSurf->SurfType = SURF_IN_PRIMARY;
++        vpCtx->iPriSurfs++;
+     }
+     else
+     {
+-        if (vpCtx->iPriSurfs < VP_MAX_PRIMARY_SURFS)
+-        {
+-            vpHalSrcSurf->SurfType = SURF_IN_PRIMARY;
+-            vpCtx->iPriSurfs++;
+-        }
+-        else
+-        {
+-            vpHalSrcSurf->SurfType = SURF_IN_SUBSTREAM;
+-        }
++        vpHalSrcSurf->SurfType = SURF_IN_SUBSTREAM;
++    }
++
++    // Set workload path using pipeline_flags VA_PROC_PIPELINE_FAST flag
++    if (pipelineParam->pipeline_flags & VA_PROC_PIPELINE_FAST)
++    {
++        vpHalRenderParams->bForceToRender = true;
+     }
+ 
+     // Set src rect
+-- 
+2.40.1
+

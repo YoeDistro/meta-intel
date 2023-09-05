@@ -1,0 +1,27 @@
+From ea2ae0cd656a17eee9897aa1bf4e61b0d05ec347 Mon Sep 17 00:00:00 2001
+From: Lim Siew Hoon <siew.hoon.lim@intel.com>
+Date: Tue, 5 Sep 2023 16:13:42 +0800
+Subject: [PATCH 4/4] Disable vp9 padding on mtl.
+
+Upstream-Status: Submitted [https://github.com/intel/media-driver/pull/1720]
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
+---
+ media_softlet/linux/Xe_M_plus/ddi/media_sku_wa_mtl.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/media_softlet/linux/Xe_M_plus/ddi/media_sku_wa_mtl.cpp b/media_softlet/linux/Xe_M_plus/ddi/media_sku_wa_mtl.cpp
+index 679ca45f6..0e6837034 100644
+--- a/media_softlet/linux/Xe_M_plus/ddi/media_sku_wa_mtl.cpp
++++ b/media_softlet/linux/Xe_M_plus/ddi/media_sku_wa_mtl.cpp
+@@ -284,7 +284,7 @@ static bool InitMtlMediaWaExt(struct GfxDeviceInfo *devInfo,
+ 
+     MEDIA_WR_WA(waTable, WaDisableSetObjectCapture, 1);
+ 
+-    MEDIA_WR_WA(waTable, Wa_Vp9UnalignedHeight, 1);
++    MEDIA_WR_WA(waTable, Wa_Vp9UnalignedHeight, 0);
+ 
+     return true;
+ }
+-- 
+2.40.1
+
