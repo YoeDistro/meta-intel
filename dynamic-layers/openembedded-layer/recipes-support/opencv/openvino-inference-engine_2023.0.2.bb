@@ -19,7 +19,7 @@ SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;name=ope
            file://0001-protobuf-allow-target-protoc-to-be-built.patch \
            "
 
-SRCREV_openvino = "fa1c41994f3f84329491de93ce572f1401bc75ae"
+SRCREV_openvino = "e662b1a330126daed2d8de724b9e14690bec8bfd"
 SRCREV_mkl = "1c7bfabf1b26e6fb95fea1613e1d3d2bef1f6b54"
 SRCREV_onednn = "f27dedbfc093f51032a4580198bb80579440dc15"
 SRCREV_xbyak = "740dff2e866f3ae1a70dd42d6e8836847ed95cc2"
