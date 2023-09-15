@@ -1,0 +1,79 @@
+From 8da35f42a54ad63cbbe0362fc9dff37552d94c08 Mon Sep 17 00:00:00 2001
+From: Gu_Peiyi <peiyi.gu@intel.com>
+Date: Wed, 6 Sep 2023 14:42:57 +0800
+Subject: [PATCH] Fix FC Corruption When Blending without Colorfill
+
+Fix fc will show corruption when alignedRect is bigger than DestYBottomRightLayer0/DestXBottomRightLayer0 and not set color fill
+
+Upstream-Status: Backport [https://github.com/intel/media-driver/commit/5cdd94ba90bcd8174f53af2a4e9a2f4bbca2533a]
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
+---
+ .../common/vp/hal/features/vp_fc_filter.cpp   | 35 +++++++++++++++++++
+ .../common/vp/hal/features/vp_fc_filter.h     |  2 ++
+ 2 files changed, 37 insertions(+)
+
+diff --git a/media_softlet/agnostic/common/vp/hal/features/vp_fc_filter.cpp b/media_softlet/agnostic/common/vp/hal/features/vp_fc_filter.cpp
+index 66e1ad8fb..5d741e80c 100644
+--- a/media_softlet/agnostic/common/vp/hal/features/vp_fc_filter.cpp
++++ b/media_softlet/agnostic/common/vp/hal/features/vp_fc_filter.cpp
+@@ -213,9 +213,44 @@ MOS_STATUS VpFcFilter::InitCompParams(VP_COMPOSITE_PARAMS &compParams, SwFilterP
+     return MOS_STATUS_SUCCESS;
+ }
+ 
++MOS_STATUS VpFcFilter::AdjustParamsBasedOnFcLimit(VP_COMPOSITE_PARAMS &compParams)
++{
++    //The kernel is using the rectangle data to calculate mask. If the rectangle configuration does not comply to kernel requirement, the mask calculation will be incorrect and will see corruption.
++    if (compParams.pColorFillParams == nullptr &&
++        compParams.sourceCount == 1 &&
++        compParams.targetCount == 1 &&
++        compParams.target[0].surf != nullptr &&
++        compParams.source[0].surf != nullptr)
++    {
++        if (compParams.target[0].surf->rcDst.top <= compParams.source[0].surf->rcDst.top &&
++            compParams.target[0].surf->rcDst.left <= compParams.source[0].surf->rcDst.left &&
++            compParams.target[0].surf->rcDst.right >= compParams.source[0].surf->rcDst.right &&
++            compParams.target[0].surf->rcDst.bottom >= compParams.source[0].surf->rcDst.bottom)
++        {
++            VP_RENDER_NORMALMESSAGE("Render Path : 1 Surface to 1 Surface FC Composition. ColorFill is Disabled. Output Dst is bigger than Input Dst. Will make Output Dst become Input Dst to Avoid FC Corruption. (%d %d %d %d) -> (%d %d %d %d)",
++                compParams.target[0].surf->rcDst.left,
++                compParams.target[0].surf->rcDst.top,
++                compParams.target[0].surf->rcDst.right,
++                compParams.target[0].surf->rcDst.bottom,
++                compParams.source[0].surf->rcDst.left,
++                compParams.source[0].surf->rcDst.top,
++                compParams.source[0].surf->rcDst.right,
++                compParams.source[0].surf->rcDst.bottom);
++            compParams.target[0].surf->rcSrc = compParams.source[0].surf->rcDst;
++            compParams.target[0].surf->rcDst = compParams.source[0].surf->rcDst;
++        }
++    }
++
++    return MOS_STATUS_SUCCESS;
++}
++
++
+ MOS_STATUS VpFcFilter::CalculateCompParams(VP_COMPOSITE_PARAMS &compParams)
+ {
+     int layerCount = 0;
++
++    VP_RENDER_CHK_STATUS_RETURN(AdjustParamsBasedOnFcLimit(compParams));
++
+     for (uint32_t i = 0; i < compParams.sourceCount; ++i)
+     {
+         VP_FC_LAYER *layer = &compParams.source[i];
+diff --git a/media_softlet/agnostic/common/vp/hal/features/vp_fc_filter.h b/media_softlet/agnostic/common/vp/hal/features/vp_fc_filter.h
+index d64c22806..94c6a1dbc 100644
+--- a/media_softlet/agnostic/common/vp/hal/features/vp_fc_filter.h
++++ b/media_softlet/agnostic/common/vp/hal/features/vp_fc_filter.h
+@@ -71,6 +71,8 @@ protected:
+         float &fStepX, float &fStepY);
+     MHW_SAMPLER_FILTER_MODE Get3DSamperFilterMode(VPHAL_SCALING_MODE scalingMode);
+ 
++    MOS_STATUS AdjustParamsBasedOnFcLimit(VP_COMPOSITE_PARAMS &compParams);
++
+     SwFilterPipe            *m_executedPipe = nullptr;
+     PRENDER_FC_PARAMS       m_renderFcParams = nullptr;
+ 
+-- 
+2.40.1
+

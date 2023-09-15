@@ -27,6 +27,8 @@ SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;nobranch=1 \
            file://0002-Add-DRM-format-mappings-for-JPEG-decoder-output.patch \
            file://0003-Add-DRM-format-mappings-for-JPEG-output-to-softlet.patch \
            file://0004-Disable-vp9-padding-on-mtl.patch \
+           file://0001-Fix-FC-Corruption-When-Blending-without-Colorfill.patch \
+           file://0001-Fix-FC-Corruption-When-Blending-without-Colorfill-in.patch \
           "
 
 SRCREV = "cf942344b9e439d19873f1d47c0c890d7c63b6ad"
