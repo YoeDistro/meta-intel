@@ -1,19 +1,40 @@
-Yocto specific tweaks to the build process:
+From 7deabff3d51df783c3e24bcc190c3ddebca7d9a8 Mon Sep 17 00:00:00 2001
+From: Anuj Mittal <anuj.mittal@intel.com>
+Date: Thu, 21 Sep 2023 14:07:28 +0800
+Subject: [PATCH] cmake: yocto specific tweaks to the build process
 
 * Dont try to detect glibc version as that doesn't work when cross compiling.
-* Use shared protobuf and gflags libs.
+* Use shared gflags libs.
 * Install sample binaries as well.
+* Dont strip binaries.
+* Dont try to write triggers for CPack. We package ourselves.
 
 Upstream-Status: Inappropriate
+
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
- cmake/developer_package/target_flags.cmake | 2 +-
- samples/cpp/CMakeLists.txt                 | 6 +++---
- thirdparty/CMakeLists.txt                  | 8 ++++----
- 3 files changed, 8 insertions(+), 8 deletions(-)
+ cmake/developer_package/packaging/rpm/rpm.cmake |  2 +-
+ cmake/developer_package/target_flags.cmake      |  2 +-
+ samples/cpp/CMakeLists.txt                      |  6 +++---
+ src/bindings/python/wheel/setup.py              |  1 -
+ thirdparty/dependencies.cmake                   | 10 +++++-----
+ 5 files changed, 10 insertions(+), 11 deletions(-)
 
+diff --git a/cmake/developer_package/packaging/rpm/rpm.cmake b/cmake/developer_package/packaging/rpm/rpm.cmake
+index 0609750054f..0f5c7765197 100644
+--- a/cmake/developer_package/packaging/rpm/rpm.cmake
++++ b/cmake/developer_package/packaging/rpm/rpm.cmake
+@@ -161,7 +161,7 @@ ov_rpm_specific_settings()
+ # needed to add triggers for packages with libraries
+ set(def_triggers "${OpenVINO_BINARY_DIR}/_CPack_Packages/triggers")
+ set(triggers_content "# /bin/sh -p\n/sbin/ldconfig\n")
+-file(WRITE "${def_triggers}" "${triggers_content}")
++#file(WRITE "${def_triggers}" "${triggers_content}")
+ 
+ #
+ # Functions helpful for packaging your modules with RPM cpack
 diff --git a/cmake/developer_package/target_flags.cmake b/cmake/developer_package/target_flags.cmake
-index ced8d519da3..505c1fa5b14 100644
+index 29f23e713e1..942dd445b19 100644
 --- a/cmake/developer_package/target_flags.cmake
 +++ b/cmake/developer_package/target_flags.cmake
 @@ -145,4 +145,4 @@ function(ov_glibc_version)
@@ -23,10 +44,10 @@ index ced8d519da3..505c1fa5b14 100644
 -ov_glibc_version()
 +#ov_glibc_version()
 diff --git a/samples/cpp/CMakeLists.txt b/samples/cpp/CMakeLists.txt
-index 37eb0250112..35ec6a3368a 100644
+index 8849aaf47d1..450b57c18d6 100644
 --- a/samples/cpp/CMakeLists.txt
 +++ b/samples/cpp/CMakeLists.txt
-@@ -219,9 +219,9 @@ macro(ie_add_sample)
+@@ -223,9 +223,9 @@ macro(ie_add_sample)
      target_link_libraries(${IE_SAMPLE_NAME} PRIVATE ${ov_link_libraries} Threads::Threads ${IE_SAMPLE_DEPENDENCIES})
  
      install(TARGETS ${IE_SAMPLE_NAME}
@@ -39,26 +60,39 @@ index 37eb0250112..35ec6a3368a 100644
  
      # create global target with all samples / demo apps
      if(NOT TARGET ie_samples)
-diff --git a/thirdparty/CMakeLists.txt b/thirdparty/CMakeLists.txt
-index 95d80a6fbd4..963c9a5d60a 100644
---- a/thirdparty/CMakeLists.txt
-+++ b/thirdparty/CMakeLists.txt
-@@ -353,11 +353,11 @@ endif()
- if(ENABLE_SAMPLES OR ENABLE_COMPILE_TOOL OR ENABLE_TESTS)
-     # on Windows and macOS we don't use gflags, because will be dynamically linked
-     if(CMAKE_HOST_LINUX AND LINUX)
+diff --git a/src/bindings/python/wheel/setup.py b/src/bindings/python/wheel/setup.py
+index 04323a8ba49..0498dcdc126 100644
+--- a/src/bindings/python/wheel/setup.py
++++ b/src/bindings/python/wheel/setup.py
+@@ -270,7 +270,6 @@ class CustomBuild(build):
+                 self.spawn(["cmake", "--install", binary_dir,
+                                      "--prefix", prefix,
+                                      "--config", "Release",
+-                                     "--strip",
+                                      "--component", cpack_comp_name])
+ 
+     def run(self):
+diff --git a/thirdparty/dependencies.cmake b/thirdparty/dependencies.cmake
+index 43e0ed671a9..b39479fdd6b 100644
+--- a/thirdparty/dependencies.cmake
++++ b/thirdparty/dependencies.cmake
+@@ -338,11 +338,11 @@ if(ENABLE_SAMPLES OR ENABLE_TESTS)
+     elseif(APPLE OR WIN32)
+         # on Windows and macOS we don't use gflags, because will be dynamically linked
+     elseif(CMAKE_HOST_LINUX AND LINUX)
 -        if(OV_OS_RHEL)
-+	    #if(OV_OS_RHEL)
-             set(gflag_component nothreads_shared)
+-            set(gflag_component nothreads_shared)
 -        elseif(OV_OS_DEBIAN)
 -            set(gflag_component nothreads_static)
 -        endif()
-+	    #elseif(OV_OS_DEBIAN)
-+	    #set(gflag_component nothreads_static)
-+	    #endif()
++	#if(OV_OS_RHEL)
++        set(gflag_component nothreads_shared)
++	#elseif(OV_OS_DEBIAN)
++	#    set(gflag_component nothreads_static)
++	#endif()
          find_package(gflags QUIET OPTIONAL_COMPONENTS ${gflag_component})
-     else()
-         # conan case
+     endif()
+ 
 -- 
-2.34.1
+2.37.3
 

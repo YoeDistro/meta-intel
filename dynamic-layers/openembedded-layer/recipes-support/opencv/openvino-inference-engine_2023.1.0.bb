@@ -4,7 +4,7 @@ DESCRIPTION = "This toolkit allows developers to deploy pre-trained \
 deep learning models through a high-level C++ Inference Engine API \
 integrated with application logic."
 
-SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;name=openvino;branch=releases/2023/0;lfs=0 \
+SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;name=openvino;branch=releases/2023/1;lfs=0 \
            git://github.com/openvinotoolkit/oneDNN.git;protocol=https;destsuffix=git/src/plugins/intel_cpu/thirdparty/onednn;name=mkl;nobranch=1 \
            git://github.com/oneapi-src/oneDNN.git;protocol=https;destsuffix=git/src/plugins/intel_gpu/thirdparty/onednn_gpu;name=onednn;nobranch=1 \
            git://github.com/herumi/xbyak.git;protocol=https;destsuffix=git/thirdparty/xbyak;name=xbyak;branch=master \
@@ -19,9 +19,9 @@ SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;name=ope
            file://0001-protobuf-allow-target-protoc-to-be-built.patch \
            "
 
-SRCREV_openvino = "e662b1a330126daed2d8de724b9e14690bec8bfd"
-SRCREV_mkl = "1c7bfabf1b26e6fb95fea1613e1d3d2bef1f6b54"
-SRCREV_onednn = "f27dedbfc093f51032a4580198bb80579440dc15"
+SRCREV_openvino = "47b736f63edda256d66e2bbb572f42a9d6549f6e"
+SRCREV_mkl = "ae825539bd850d1ad5c83d4bb0d56c65d46d5842"
+SRCREV_onednn = "4b82a66ed38ecaa993352e5cc6ed7753656b8a26"
 SRCREV_xbyak = "740dff2e866f3ae1a70dd42d6e8836847ed95cc2"
 SRCREV_json = "bc889afb4c5bf1c0d8ee29ef35eaaf4c8bef8a5d"
 SRCREV_ade = "58b2595a1a95cc807be8bf6222f266a9a1f393a9"
@@ -34,8 +34,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
                     file://thirdparty/cnpy/LICENSE;md5=689f10b06d1ca2d4b1057e67b16cd580 \
                     file://thirdparty/json/nlohmann_json/LICENSE.MIT;md5=f969127d7b7ed0a8a63c2bbeae002588 \
                     file://thirdparty/ade/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57 \
-                    file://src/plugins/intel_cpu/thirdparty/onednn/LICENSE;md5=b48e3de3bfd47c27882a0d85b20823f5 \
-                    file://src/plugins/intel_gpu/thirdparty/onednn_gpu/LICENSE;md5=b48e3de3bfd47c27882a0d85b20823f5 \
+                    file://src/plugins/intel_cpu/thirdparty/onednn/LICENSE;md5=3b64000f6e7d52516017622a37a94ce9 \
+                    file://src/plugins/intel_gpu/thirdparty/onednn_gpu/LICENSE;md5=3b64000f6e7d52516017622a37a94ce9 \
 "
 
 inherit cmake python3native pkgconfig qemu
@@ -59,6 +59,7 @@ EXTRA_OECMAKE += " \
                   -DCPACK_GENERATOR=RPM \
                   -DENABLE_SYSTEM_FLATBUFFERS=ON \
                   -DENABLE_SYSTEM_SNAPPY=ON \
+                  -DENABLE_MLAS_FOR_CPU=OFF \
                   "
 
 DEPENDS += "\
@@ -66,6 +67,7 @@ DEPENDS += "\
             gflags \
             pugixml \
             python3-pybind11 \
+            python3-pybind11-native \
             qemu-native \
             snappy \
             tbb \
@@ -77,7 +79,7 @@ COMPATIBLE_HOST:libc-musl = "null"
 
 PACKAGECONFIG ?= "opencl samples"
 PACKAGECONFIG[opencl] = "-DENABLE_INTEL_GPU=TRUE, -DENABLE_INTEL_GPU=FALSE, virtual/opencl-icd opencl-headers opencl-clhpp,"
-PACKAGECONFIG[python3] = "-DENABLE_PYTHON=ON -DPYTHON_LIBRARY=${PYTHON_LIBRARY} -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR}, -DENABLE_PYTHON=OFF, python3-cython-native patchelf-native, python3 python3-numpy python3-progress python3-cython"
+PACKAGECONFIG[python3] = "-DENABLE_PYTHON=ON -DPYTHON_LIBRARY=${PYTHON_LIBRARY} -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR} -DENABLE_PYTHON_PACKAGING=ON, -DENABLE_PYTHON=OFF, python3-cython-native patchelf-native, python3 python3-numpy python3-progress python3-cython"
 PACKAGECONFIG[samples] = "-DENABLE_SAMPLES=ON -DENABLE_COMPILE_TOOL=ON, -DENABLE_SAMPLES=OFF -DENABLE_COMPILE_TOOL=OFF, opencv"
 PACKAGECONFIG[verbose] = "-DVERBOSE_BUILD=1,-DVERBOSE_BUILD=0"
 
@@ -119,6 +121,7 @@ FILES:${PN}-samples = "${datadir}/openvino \
                        ${libdir}/libformat_reader.a \
                        ${libdir}/libopencv_c_wrapper.a \
                        "
+RDEPENDS:${PN}-samples += "python3-core"
 
 # Package for inference engine python API
 PACKAGES =+ "${PN}-${PYTHON_PN}"
