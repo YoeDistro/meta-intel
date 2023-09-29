@@ -5,9 +5,9 @@ environment, performs static model analysis, and adjusts deep \
 learning models for optimal execution on end-point target devices."
 HOMEPAGE = "https://01.org/openvinotoolkit"
 
-SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=releases/2023/0;lfs=0 \
+SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;branch=releases/2023/1;lfs=0 \
            "
-SRCREV = "fa1c41994f3f84329491de93ce572f1401bc75ae"
+SRCREV = "47b736f63edda256d66e2bbb572f42a9d6549f6e"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
@@ -20,10 +20,11 @@ inherit setuptools3
 SETUPTOOLS_SETUP_PATH = "${WORKDIR}/git/tools/mo"
 
 RDEPENDS:${PN} += " \
+                    python3-defusedxml \
+                    python3-fastjsonschema \
+                    python3-networkx \
                     python3-numpy \
                     python3-protobuf \
-                    python3-defusedxml \
-                    python3-networkx \
                     python3-requests \
                     python3-urllib3 \
                     bash \
