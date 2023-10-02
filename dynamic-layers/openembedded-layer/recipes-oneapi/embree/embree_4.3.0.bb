@@ -14,7 +14,7 @@ inherit pkgconfig cmake
 S = "${WORKDIR}/git"
 
 SRC_URI = "git://github.com/embree/embree.git;protocol=https;branch=master"
-SRCREV = "341ef8c45d1ae072ead1ab65cd76e88b03d9302c"
+SRCREV = "be0accfd0b246e2b03355b8ee7710a22c1b49240"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
