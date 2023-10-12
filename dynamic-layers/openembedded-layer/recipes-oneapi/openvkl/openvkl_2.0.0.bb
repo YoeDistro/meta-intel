@@ -20,12 +20,12 @@ S = "${WORKDIR}/git"
 
 SRC_URI = "git://github.com/openvkl/openvkl.git;protocol=https;branch=master \
            "
-SRCREV = "fac6c96b24ae73941716b7368ffc289eb9c47532"
+SRCREV = "712bdb8035487606096d7af90a4c9bde5503515d"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
 
-DEPENDS = "ispc-native rkcommon embree"
+DEPENDS = "ispc ispc-native rkcommon embree"
 
 EXTRA_OECMAKE += " \
                   -DISPC_EXECUTABLE=${STAGING_BINDIR_NATIVE}/ispc  \
