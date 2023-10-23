@@ -6,7 +6,7 @@ HOMEPAGE = "https://www.ospray.org/"
 
 LICENSE  = "Apache-2.0 & BSD-3-Clause & MIT & Zlib"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=1dece7821bf3fd70fe1309eaa37d52a2 \
-                    file://third-party-programs.txt;md5=978092834060d3f38dbcb11ade918e2c \
+                    file://third-party-programs.txt;md5=e37b77e3bd997abccc359c710fb1f1db \
                     "
 
 inherit pkgconfig cmake
@@ -15,7 +15,7 @@ S = "${WORKDIR}/git"
 
 SRC_URI = "git://github.com/ospray/ospray.git;protocol=https;branch=master \
             "
-SRCREV = "08111292f4671ed8822e7e0374080d75c15538a2"
+SRCREV = "66fa8108485a8a92ff31ad2e06081bbaf391bc26"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
