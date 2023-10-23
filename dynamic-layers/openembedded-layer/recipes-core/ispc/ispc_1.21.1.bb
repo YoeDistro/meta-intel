@@ -11,14 +11,14 @@ inherit cmake python3native ptest
 
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://github.com/ispc/ispc.git;protocol=https;branch=main \
+SRC_URI = "git://github.com/ispc/ispc.git;protocol=https;branch=releases/1.21.x \
            file://0002-cmake-don-t-build-for-32-bit-targets.patch \
            file://0001-Fix-QA-Issues.patch \
            file://0001-Add-print-function-to-print-test-run-status-in-ptest.patch \
            file://run-ptest \
            "
 
-SRCREV = "f925f2563441a36eff1cb7a617934253dc9c100c"
+SRCREV = "a0e8e48169f35a129941475c7023920e968dbc31"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
