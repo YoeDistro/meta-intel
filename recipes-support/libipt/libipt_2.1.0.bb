@@ -11,13 +11,14 @@ inherit pkgconfig cmake
 
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://github.com/intel/libipt.git;protocol=https;branch=stable/v2.0"
+SRC_URI = "git://github.com/intel/libipt.git;protocol=https;branch=stable/v2.1"
 
-SRCREV = "ba98732fc7c3269e06b8587bce27ac87c847c0ff"
+SRCREV = "45d74c4fc01097419a88609f110d0a3ca63e326a"
 
 EXTRA_OECMAKE += " \
                   -DPTDUMP=ON  \
                   -DPTTC=ON \
+                  -DPTSEG=ON \
                   -DCMAKE_SKIP_RPATH=ON \
                   "
 
