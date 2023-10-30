@@ -7,13 +7,13 @@ HOMEPAGE = "https://github.com/oneapi-src/oneDPL"
 
 LICENSE  = "Apache-2.0-with-LLVM-exception"
 LIC_FILES_CHKSUM = "file://licensing/LICENSE.txt;md5=2e982d844baa4df1c80de75470e0c5cb \
-                    file://licensing/third-party-programs.txt;md5=74cbe473c3521af32a92f662c44aa6bd"
+                    file://licensing/third-party-programs.txt;md5=cfb8d6b1f04a8fcc7d0dddd817619634"
 
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://github.com/oneapi-src/oneDPL.git;protocol=https;branch=release/2022.0 \
+SRC_URI = "git://github.com/oneapi-src/oneDPL.git;protocol=https;branch=release/2022.2 \
             "
-SRCREV = "240685db73e3169e66dbb625b4d5fa1ad06ec79b"
+SRCREV = "c697fac0b51ce2a36f3824bb9063dfaf6aee88ac"
 
 do_compile[noexec] = "1"
 do_configure[noexec] = "1"
