@@ -1,0 +1,29 @@
+From a98ff2597628d7225c1871719db2411a1e4b7c0a Mon Sep 17 00:00:00 2001
+From: cheeyanglee <chee.yang.lee@intel.com>
+Date: Wed, 1 Nov 2023 09:59:32 +0800
+Subject: [PATCH] metee_linux.c: Include poll.h instead of sys/poll.h
+
+fix compilation error with musl C library:
+
+ error: #warning redirecting incorrect #include <sys/poll.h> to <poll.h>
+
+Upstream-Status: Submitted [ https://github.com/intel/metee/pull/6 ]
+
+Signed-off-by: Lee Chee Yang <chee.yang.lee@intel.com>
+---
+ src/linux/metee_linux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/linux/metee_linux.c b/src/linux/metee_linux.c
+index 463fe6c..8507ea4 100644
+--- a/src/linux/metee_linux.c
++++ b/src/linux/metee_linux.c
+@@ -12,7 +12,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <sys/ioctl.h>
+-#include <sys/poll.h>
++#include <poll.h>
+ #include <unistd.h>
+ 
+ #include "metee.h"
