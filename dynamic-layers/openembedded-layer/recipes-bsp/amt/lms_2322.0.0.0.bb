@@ -36,6 +36,7 @@ SRC_URI = "git://github.com/intel/lms.git;branch=master;protocol=https \
 SRCREV = "cbc1e1019cf5dc2d03a3b722ee07fbfb9a90f2d1"
 
 do_install:append() {
+    install -d ${D}${sysconfdir}/lms
     install -d ${D}${systemd_system_unitdir}
     install -m 0644 ${B}/UNS/lms.service ${D}${systemd_system_unitdir}
     install -d ${D}${sysconfdir}/udev/rules.d
