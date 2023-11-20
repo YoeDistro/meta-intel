@@ -11,9 +11,9 @@ DEPENDS += "elfutils-native openssl-native util-linux-native"
 
 LINUX_VERSION_EXTENSION ??= "-intel-pk-${LINUX_KERNEL_TYPE}"
 
-LINUX_VERSION ?= "6.1.46"
-SRCREV_machine ?= "e13503e423ba533c6c4304fd242e8f001005706d"
-SRCREV_meta ?= "8f554fa5dd4db2bd42d8a1b7c1c10d529c763d08"
+LINUX_VERSION ?= "6.1.59"
+SRCREV_machine ?= "a2989f3ed0223b36cd3f3837ee5dab5162753e57"
+SRCREV_meta ?= "d26f4f3307216e06ee0b74fa9b57b17fba72a988"
 
 # Functionality flags
 KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc features/security/security.scc"
