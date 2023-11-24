@@ -1,0 +1,70 @@
+From 3830e393b6e2807f842d3cacda575fa715827e62 Mon Sep 17 00:00:00 2001
+From: gfxVPLsdm <gfxvplsdm@intel.com>
+Date: Thu, 19 Oct 2023 13:03:53 +0800
+Subject: [PATCH] [Encode] Bugfix for HEVC VDENC 422 RPL caps issue. (#5886)
+
+Fixed HEVC VDENC 422 RPL caps issue.
+
+Co-authored-by: Wenjuan Zhang <wenjuan.zhang@intel.com>
+
+Upstream-Status: Backport [https://github.com/oneapi-src/oneVPL-intel-gpu/commit/3830e393b6e2807f842d3cacda575fa715827e62]
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
+---
+ .../hevc/agnostic/base/hevcehw_base_recon422.h        |  4 +++-
+ .../hevc/agnostic/base/hevcehw_base_recon422_ext.h    | 11 +++++++++++
+ .../hevc/linux/base/hevcehw_base_va_packer_lin.cpp    |  2 +-
+ 3 files changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/_studio/mfx_lib/encode_hw/hevc/agnostic/base/hevcehw_base_recon422.h b/_studio/mfx_lib/encode_hw/hevc/agnostic/base/hevcehw_base_recon422.h
+index 24bf5cf2..d150ca1c 100644
+--- a/_studio/mfx_lib/encode_hw/hevc/agnostic/base/hevcehw_base_recon422.h
++++ b/_studio/mfx_lib/encode_hw/hevc/agnostic/base/hevcehw_base_recon422.h
+@@ -36,7 +36,9 @@ class Recon422
+ public:
+ #define DECL_BLOCK_LIST\
+         DECL_BLOCK(SetCallChain)\
+-        DECL_BLOCK(SetRecon422Caps)
++        DECL_BLOCK(SetRecon422Caps)\
++        DECL_BLOCK(HardcodeCaps)\
++        DECL_BLOCK(HardcodeCapsExt)
+ #define DECL_FEATURE_NAME "Base_RECON422"
+ #include "hevcehw_decl_blocks.h"
+ 
+diff --git a/_studio/mfx_lib/encode_hw/hevc/agnostic/base/hevcehw_base_recon422_ext.h b/_studio/mfx_lib/encode_hw/hevc/agnostic/base/hevcehw_base_recon422_ext.h
+index 165c96b1..63b3c301 100644
+--- a/_studio/mfx_lib/encode_hw/hevc/agnostic/base/hevcehw_base_recon422_ext.h
++++ b/_studio/mfx_lib/encode_hw/hevc/agnostic/base/hevcehw_base_recon422_ext.h
+@@ -40,6 +40,17 @@ public:
+     {}
+ 
+ protected:
++    virtual void Query1WithCaps(const FeatureBlocks& /*blocks*/, TPushQ1 Push) override
++    {
++        Push(BLK_HardcodeCaps
++            , [this](const mfxVideoParam&, mfxVideoParam&, StorageRW& strg) -> mfxStatus
++        {
++            auto& caps = HEVCEHW::Base::Glob::EncodeCaps::Get(strg);
++            caps.YUV422ReconSupport = !caps.Color420Only;
++            return MFX_ERR_NONE;
++        });
++    }
++
+     virtual void Query1NoCaps(const FeatureBlocks& blocks, TPushQ1 Push) override
+     {
+         using Base::Glob;
+diff --git a/_studio/mfx_lib/encode_hw/hevc/linux/base/hevcehw_base_va_packer_lin.cpp b/_studio/mfx_lib/encode_hw/hevc/linux/base/hevcehw_base_va_packer_lin.cpp
+index 1ffc9388..46a1f69c 100644
+--- a/_studio/mfx_lib/encode_hw/hevc/linux/base/hevcehw_base_va_packer_lin.cpp
++++ b/_studio/mfx_lib/encode_hw/hevc/linux/base/hevcehw_base_va_packer_lin.cpp
+@@ -60,7 +60,7 @@ void VAPacker::Query1WithCaps(const FeatureBlocks& /*blocks*/, TPushQ1 Push)
+ 
+         caps.MaxEncodedBitDepth |= (!caps.BitDepth8Only);
+         caps.YUV444ReconSupport |= (!caps.Color420Only && IsOn(par.mfx.LowPower));
+-        caps.YUV422ReconSupport &= (!caps.Color420Only);
++        caps.YUV422ReconSupport &= (!caps.Color420Only && !IsOn(par.mfx.LowPower));
+ 
+         return MFX_ERR_NONE;
+     });
+-- 
+2.40.1
+

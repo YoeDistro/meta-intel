@@ -1,0 +1,36 @@
+From a694f724e9969575a9c993ff1769850de5673fee Mon Sep 17 00:00:00 2001
+From: gfxVPLsdm <gfxvplsdm@intel.com>
+Date: Mon, 23 Oct 2023 16:57:50 +0800
+Subject: [PATCH] [RT Common] Fix MediaAdapterType issue (#5898)
+
+Co-authored-by: Liu, Rachel <rachel.liu@intel.com>
+
+Upstream-Status: Backport [https://github.com/oneapi-src/oneVPL-intel-gpu/commit/a694f724e9969575a9c993ff1769850de5673fee]
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
+---
+ _studio/mfx_lib/shared/src/libmfxsw.cpp | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/_studio/mfx_lib/shared/src/libmfxsw.cpp b/_studio/mfx_lib/shared/src/libmfxsw.cpp
+index 94982359..f85f2d75 100644
+--- a/_studio/mfx_lib/shared/src/libmfxsw.cpp
++++ b/_studio/mfx_lib/shared/src/libmfxsw.cpp
+@@ -831,6 +831,15 @@ mfxHDL* MFX_CDECL MFXQueryImplsDescription(mfxImplCapsDeliveryFormat format, mfx
+                 ah.PushBack(impl.PoolPolicies.Policy) = MFX_ALLOCATION_UNLIMITED;
+                 ah.PushBack(impl.PoolPolicies.Policy) = MFX_ALLOCATION_LIMITED;
+ 
++                impl.Dev.Version.Version = MFX_STRUCT_VERSION(1, 1);
++                impl.Dev.MediaAdapterType = MFX_MEDIA_UNKNOWN;
++
++                if (auto pCore1_19 = QueryCoreInterface<IVideoCore_API_1_19>(&core, MFXICORE_API_1_19_GUID))
++                {
++                    mfxPlatform platform = {};
++                    if (MFX_ERR_NONE == pCore1_19->QueryPlatform(&platform))
++                        impl.Dev.MediaAdapterType = platform.MediaAdapterType;
++                }
+ 
+                 snprintf(impl.Dev.DeviceID, sizeof(impl.Dev.DeviceID), "%x/%d", deviceId, adapterNum);
+                 snprintf(impl.ImplName, sizeof(impl.ImplName), "mfx-gen");
+-- 
+2.40.1
+
