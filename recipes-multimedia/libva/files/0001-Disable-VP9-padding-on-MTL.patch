@@ -1,16 +1,18 @@
-From ea2ae0cd656a17eee9897aa1bf4e61b0d05ec347 Mon Sep 17 00:00:00 2001
-From: Lim Siew Hoon <siew.hoon.lim@intel.com>
-Date: Tue, 5 Sep 2023 16:13:42 +0800
-Subject: [PATCH 4/4] Disable vp9 padding on mtl.
+From d9ea15202df23be0ead2157392ca347c42d28ce0 Mon Sep 17 00:00:00 2001
+From: LeyuYao <leyu.yao@intel.com>
+Date: Thu, 7 Sep 2023 16:50:46 +0800
+Subject: [PATCH 1/7] Disable VP9 padding on MTL
 
-Upstream-Status: Submitted [https://github.com/intel/media-driver/pull/1720]
+This is impact performance on large solution with not 8-aligned height
+
+Upstream-Status: Backport [https://github.com/intel/media-driver/commit/f34b7d0cd]
 Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
 ---
  media_softlet/linux/Xe_M_plus/ddi/media_sku_wa_mtl.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/media_softlet/linux/Xe_M_plus/ddi/media_sku_wa_mtl.cpp b/media_softlet/linux/Xe_M_plus/ddi/media_sku_wa_mtl.cpp
-index 679ca45f6..0e6837034 100644
+index 91b2ed5ed..0f4d47931 100644
 --- a/media_softlet/linux/Xe_M_plus/ddi/media_sku_wa_mtl.cpp
 +++ b/media_softlet/linux/Xe_M_plus/ddi/media_sku_wa_mtl.cpp
 @@ -284,7 +284,7 @@ static bool InitMtlMediaWaExt(struct GfxDeviceInfo *devInfo,
@@ -20,8 +22,8 @@ index 679ca45f6..0e6837034 100644
 -    MEDIA_WR_WA(waTable, Wa_Vp9UnalignedHeight, 1);
 +    MEDIA_WR_WA(waTable, Wa_Vp9UnalignedHeight, 0);
  
-     return true;
- }
+     MEDIA_WR_WA(waTable, Wa_15013355402, 1);
+ 
 -- 
 2.40.1
 

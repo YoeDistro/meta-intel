@@ -1,0 +1,33 @@
+From 3f3b888445b7288aee231c906b655230301b6434 Mon Sep 17 00:00:00 2001
+From: "Soon, Thean Siew" <thean.siew.soon@intel.com>
+Date: Tue, 10 Oct 2023 12:55:37 +0000
+Subject: [PATCH 2/7] Add VASurfaceAttribMemoryType for ACM
+
+Upstream-Status: Backport [https://github.com/intel/media-driver/commit/15e137e706]
+
+Signed-off-by: Soon, Thean Siew <thean.siew.soon@intel.com>
+---
+ media_driver/linux/Xe_M/ddi/media_libva_caps_dg2.cpp | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/media_driver/linux/Xe_M/ddi/media_libva_caps_dg2.cpp b/media_driver/linux/Xe_M/ddi/media_libva_caps_dg2.cpp
+index d70523962..496068178 100644
+--- a/media_driver/linux/Xe_M/ddi/media_libva_caps_dg2.cpp
++++ b/media_driver/linux/Xe_M/ddi/media_libva_caps_dg2.cpp
+@@ -1045,6 +1045,13 @@ VAStatus MediaLibvaCapsDG2::AddEncSurfaceAttributes(
+         attribList[numAttribs].flags = VA_SURFACE_ATTRIB_GETTABLE;
+         attribList[numAttribs].value.value.i = m_encMinHeight;
+         numAttribs++;
++
++        attribList[numAttribs].type = VASurfaceAttribMemoryType;
++        attribList[numAttribs].value.type = VAGenericValueTypeInteger;
++        attribList[numAttribs].flags = VA_SURFACE_ATTRIB_GETTABLE | VA_SURFACE_ATTRIB_SETTABLE;
++        attribList[numAttribs].value.value.i = VA_SURFACE_ATTRIB_MEM_TYPE_VA |
++            VA_SURFACE_ATTRIB_MEM_TYPE_DRM_PRIME_2;
++        numAttribs++;
+     }
+     else
+     {
+-- 
+2.40.1
+

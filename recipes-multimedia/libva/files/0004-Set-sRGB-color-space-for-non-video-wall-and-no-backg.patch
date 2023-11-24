@@ -1,7 +1,7 @@
-From b2c514337d2bc6015292aac5b57a603f8ad4fed5 Mon Sep 17 00:00:00 2001
+From 9b74d435324cc61e1d63709e13e1ad755fa4ce63 Mon Sep 17 00:00:00 2001
 From: Lu-Anxiao <anxiao.lu@intel.com>
 Date: Mon, 9 Oct 2023 20:47:44 +0800
-Subject: [PATCH] Set sRGB color space for non-video wall and no background
+Subject: [PATCH 4/7] Set sRGB color space for non-video wall and no background
  colorfill cases.
 
 * [VP] Set sRGB color space for non-video wall and no background colorfill cases.
@@ -10,14 +10,15 @@ This solves the regression caused by
 https://github.com/intel/media-driver/commit/a9c2df7b01c2f33775c676f5490ea274410e9db2.
 
 Upstream-Status: Backport [https://github.com/intel/media-driver/commit/509ab5f6c6d447575c61e32d323aa4e7aa212fbd]
-Signed-off-by: Chan, Xu Pian <xu.pian.chan@intel.com>
+
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
 ---
  .../linux/common/vp/ddi/media_libva_vp.c      | 18 +++++++++++++-----
  .../linux/common/vp/ddi/ddi_vp_functions.cpp  | 19 ++++++++++++++-----
  2 files changed, 27 insertions(+), 10 deletions(-)
 
 diff --git a/media_driver/linux/common/vp/ddi/media_libva_vp.c b/media_driver/linux/common/vp/ddi/media_libva_vp.c
-index 2ef610d35..4e10905ff 100644
+index 3c7407249..dcff2555a 100644
 --- a/media_driver/linux/common/vp/ddi/media_libva_vp.c
 +++ b/media_driver/linux/common/vp/ddi/media_libva_vp.c
 @@ -1148,7 +1148,7 @@ DdiVp_SetProcPipelineParams(
@@ -53,10 +54,10 @@ index 2ef610d35..4e10905ff 100644
      {
          MOS_FreeMemAndSetNull(pVpHalRenderParams->pColorFillParams);
 diff --git a/media_softlet/linux/common/vp/ddi/ddi_vp_functions.cpp b/media_softlet/linux/common/vp/ddi/ddi_vp_functions.cpp
-index fa02bf147..fe64bb8ae 100644
+index 7ebad0b59..7c2e4a0e5 100644
 --- a/media_softlet/linux/common/vp/ddi/ddi_vp_functions.cpp
 +++ b/media_softlet/linux/common/vp/ddi/ddi_vp_functions.cpp
-@@ -2085,8 +2085,9 @@ VAStatus DdiVpFunctions::SetBackgroundColorfill(
+@@ -2111,8 +2111,9 @@ VAStatus DdiVpFunctions::SetBackgroundColorfill(
  {
      DDI_VP_FUNC_ENTER;
      DDI_VP_CHK_NULL(vpHalRenderParams, "nullptr vpHalRenderParams.", VA_STATUS_ERROR_INVALID_PARAMETER);
@@ -67,7 +68,7 @@ index fa02bf147..fe64bb8ae 100644
      {
          if (vpHalRenderParams->pColorFillParams == nullptr)
          {
-@@ -2095,10 +2096,18 @@ VAStatus DdiVpFunctions::SetBackgroundColorfill(
+@@ -2121,10 +2122,18 @@ VAStatus DdiVpFunctions::SetBackgroundColorfill(
  
          DDI_VP_CHK_NULL(vpHalRenderParams->pColorFillParams, "nullptr pColorFillParams.", VA_STATUS_ERROR_UNKNOWN);
  
@@ -91,5 +92,5 @@ index fa02bf147..fe64bb8ae 100644
      else
      {
 -- 
-2.25.1
+2.40.1
 

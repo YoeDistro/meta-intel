@@ -1,0 +1,39 @@
+From 741d8692cee1a73a45a6cd819a52ed9716012d20 Mon Sep 17 00:00:00 2001
+From: JayYang <jay.yang@intel.com>
+Date: Mon, 30 Oct 2023 13:37:49 +0800
+Subject: [PATCH 6/7] Add DG2 DIDs
+
+Add some device IDs for DG2.
+
+Upstream-Status: Backport [https://github.com/intel/media-driver/commit/e7ba5c82f59764ac6700f6ebeb0e6f459d85e27c]
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
+---
+ media_driver/linux/Xe_M/ddi/media_sysinfo_xe.cpp | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/media_driver/linux/Xe_M/ddi/media_sysinfo_xe.cpp b/media_driver/linux/Xe_M/ddi/media_sysinfo_xe.cpp
+index fe15b419c..7ff3527f7 100644
+--- a/media_driver/linux/Xe_M/ddi/media_sysinfo_xe.cpp
++++ b/media_driver/linux/Xe_M/ddi/media_sysinfo_xe.cpp
+@@ -459,6 +459,18 @@ static bool dg2Gt4Device56B0 = DeviceInfoFactory<GfxDeviceInfo>::
+ static bool dg2Gt4Device56B1 = DeviceInfoFactory<GfxDeviceInfo>::
+     RegisterDevice(0x56B1, &dg2Gt4Info);
+ 
++static bool dg2Gt4Device56BA = DeviceInfoFactory<GfxDeviceInfo>::
++    RegisterDevice(0x56BA, &dg2Gt4Info);
++
++static bool dg2Gt4Device56BB = DeviceInfoFactory<GfxDeviceInfo>::
++    RegisterDevice(0x56BB, &dg2Gt4Info);
++
++static bool dg2Gt4Device56BC = DeviceInfoFactory<GfxDeviceInfo>::
++    RegisterDevice(0x56BC, &dg2Gt4Info);
++
++static bool dg2Gt4Device56BD = DeviceInfoFactory<GfxDeviceInfo>::
++    RegisterDevice(0x56BD, &dg2Gt4Info);
++
+ static bool dg2Gt4Device56B2 = DeviceInfoFactory<GfxDeviceInfo>::
+     RegisterDevice(0x56B2, &dg2Gt4Info);
+ 
+-- 
+2.40.1
+
