@@ -10,30 +10,32 @@ HOMEPAGE = "https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-c
 
 LICENSE="EULA"
 
-COMPILERMAINVER = "2023.1.0"
+COMPILERMAINVER = "2024.0"
 
 LIC_FILES_CHKSUM = " \
-                     file://opt/intel/oneapi/licensing/${COMPILERMAINVER}/license.htm;md5=f721d37d5ef65590e052bc47e15feec3 \
+                     file://opt/intel/oneapi/licensing/${COMPILERMAINVER}/licensing/${COMPILERMAINVER}/license.htm;md5=5ff64c6ff3ef98089ed69360e7a84c39 \
                      "
-COMPILERDOTVER = "2023.1.0-43473"
-DEVUTILITVERSION = "2021.9.0-2021.9.0-44447"
+COMPILERDOTVER = "2024.0.0-49406"
+DEVUTILITVERSION = "2024.0-2024.0.0-49320"
 SRC_URI = " \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-compiler-dpcpp-cpp-runtime-${COMPILERMAINVER}-${PV}_amd64.deb;subdir=${BPN};name=dpcpp-runtime \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-compiler-dpcpp-cpp-common-${COMPILERMAINVER}-${PV}_all.deb;subdir=${BPN};name=dpcpp-common \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-compiler-shared-runtime-${COMPILERMAINVER}-${PV}_amd64.deb;subdir=${BPN};name=compiler-shared-runtime \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-common-vars-${COMPILERDOTVER}_all.deb;subdir=${BPN};name=common-vars \
+            https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-openmp-${COMPILERMAINVER}-${PV}_amd64.deb;subdir=${BPN};name=openmp \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-openmp-common-${COMPILERMAINVER}-${PV}_all.deb;subdir=${BPN};name=openmp-common \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-common-licensing-${COMPILERMAINVER}-${COMPILERDOTVER}_all.deb;subdir=${BPN};name=license \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-dev-utilities-${DEVUTILITVERSION}_amd64.deb;subdir=${BPN};name=dev-utils \
             "
 
-SRC_URI[dpcpp-runtime.sha256sum] = "d0eec67fe7e3b36c8c5b1d07a17779f739fd2fd1881f6b1848169faffcb855c6"
-SRC_URI[dpcpp-common.sha256sum] = "9c117b25ddee699d1a8162ab101b9c23beeea5e9a3f2409414ee6bbc78d6593b"
-SRC_URI[compiler-shared-runtime.sha256sum] = "fa3f4c23f527f1ced767fef56c022e252daedd08fab752ec653985f178d509b6"
-SRC_URI[common-vars.sha256sum] = "5eced1aad7100cdeff317798046589e4b08b5095602e23e9a87adc0fb3e42e52"
-SRC_URI[openmp-common.sha256sum] = "d4cb4adfbfc1ba289996f4b55e85fef73348ee193314552b08a3c59c2af2c8e0"
-SRC_URI[license.sha256sum] = "5a00affd150f0f8475b999f2a7719f6aaffaf67eaf07dd70072295299451fb9a"
-SRC_URI[dev-utils.sha256sum] = "2d34f9d4f746b2b6468ed033628ffbe7838bf1d0bafcc3650d13d5740b10157f"
+SRC_URI[dpcpp-runtime.sha256sum] = "e24f0ba69daf3f66ceaf23d5e632f183cdb90bac69f65407fdb4407fc9034f33"
+SRC_URI[dpcpp-common.sha256sum] = "f5a3db6a725598224edf1099260955aee3e36beadcaed2af5b8b453e873a82fa"
+SRC_URI[compiler-shared-runtime.sha256sum] = "bce010cbe076259ddd3feb8e69792869e22fccd5b4e2c9af9e815826f2c1a394"
+SRC_URI[common-vars.sha256sum] = "368553c99db1b52060b8225355336778be0b00e5991d0f769c42f891c6328750"
+SRC_URI[openmp.sha256sum] = "154ff1e81adfdc872ba1d47bd860de70d62188417c7128422435dfd0ceca62fe"
+SRC_URI[openmp-common.sha256sum] = "8217001d78311cbef97dd139e684c6767932b532309c3843ba57d7894d15c07d"
+SRC_URI[license.sha256sum] = "9f9c8a12fc0bc82ab5b71e118e66745eff23f42224eba304068225b366cd74b6"
+SRC_URI[dev-utils.sha256sum] = "c675d960a5abca361cead9217d6e74adee499ee0a095c4e44092bd710b304d50"
 
 S = "${WORKDIR}/${BPN}"
 
