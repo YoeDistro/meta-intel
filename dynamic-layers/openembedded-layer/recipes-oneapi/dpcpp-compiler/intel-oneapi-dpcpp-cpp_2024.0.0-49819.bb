@@ -10,10 +10,10 @@ HOMEPAGE = "https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-c
 
 LICENSE="EULA"
 
-COMPILERMAINVER = "2023.1.0"
+COMPILERMAINVER = "2024.0"
 
 LIC_FILES_CHKSUM = " \
-                     file://opt/intel/oneapi/compiler/${COMPILERMAINVER}/licensing/credist.txt;md5=319d5cc98a28a36b7ea38526a34a66b9 \
+                     file://opt/intel/oneapi/compiler/${COMPILERMAINVER}/share/doc/compiler/credist.txt;md5=b41f55af9f479b9570fc35b955d5ba1a \
                      "
 
 SRC_URI = " \
@@ -22,9 +22,9 @@ SRC_URI = " \
             https://apt.repos.intel.com/oneapi/pool/main/intel-oneapi-compiler-shared-common-${COMPILERMAINVER}-${PV}_all.deb;subdir=${BPN};name=shared-common \
             "
 
-SRC_URI[icx-compiler.sha256sum] = "5acd0dc9fc540355bc19317be5d79686f2acb90ac28486dd0717c423e4c94326"
-SRC_URI[compiler-linker.sha256sum] = "014104b9721d7fca7bb2529ed810f27e9a73410698e9cc643ded7f909a7f17cf"
-SRC_URI[shared-common.sha256sum] = "894eaf13bfe840d2f5df49685e9f5bb9ca8212bc2c8ddf848adcabb3806db8bd"
+SRC_URI[icx-compiler.sha256sum] = "0dcbac766d5a1519d4cf393f5a85e71d19024fef65f77638f3f849796b62cd82"
+SRC_URI[compiler-linker.sha256sum] = "e00faea6d797934d62143e4aa70b727ce30f80fdf30769d22122b3051140c236"
+SRC_URI[shared-common.sha256sum] = "cf490a4a790f349da79e618359598d3b32312ca3b2639e5d4c84e1cfa2745558"
 
 S = "${WORKDIR}/${BPN}"
 
