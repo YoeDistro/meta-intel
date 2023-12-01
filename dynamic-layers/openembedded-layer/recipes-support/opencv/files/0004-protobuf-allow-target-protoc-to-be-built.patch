@@ -1,7 +1,7 @@
-From 450a1ba74eb5a6cf3946d8ae84b7de5bc97ccb35 Mon Sep 17 00:00:00 2001
+From 3e288ed876c6bcb6aa3174e52446b479255ddf22 Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
-Date: Tue, 13 Jun 2023 12:34:08 +0800
-Subject: [PATCH] protobuf: allow target protoc to be built
+Date: Wed, 29 Nov 2023 12:55:19 +0530
+Subject: [PATCH 4/4] protobuf: allow target protoc to be built
 
 We can run target binaries using a qemu wrapper so allow these to be
 built and run.
@@ -15,23 +15,23 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/cmake/developer_package/frontends/frontends.cmake b/cmake/developer_package/frontends/frontends.cmake
-index 897e6f8e3a6..32b136fcea9 100644
+index 49c5b881030..2a1ea8562bc 100644
 --- a/cmake/developer_package/frontends/frontends.cmake
 +++ b/cmake/developer_package/frontends/frontends.cmake
-@@ -146,7 +146,7 @@ macro(ov_add_frontend)
-         set(GENERATED_PROTO ${INFILE})
+@@ -143,7 +143,7 @@ macro(ov_add_frontend)
+         set(OUTPUT_PB_HEADER ${CMAKE_CURRENT_BINARY_DIR}/${relative_path}/${FILE_WE}.pb.h)
          add_custom_command(
                  OUTPUT "${OUTPUT_PB_SRC}" "${OUTPUT_PB_HEADER}"
--                COMMAND ${PROTOC_EXECUTABLE} ARGS --cpp_out ${CMAKE_CURRENT_BINARY_DIR} -I ${FILE_DIR} ${FILE_WE}.proto
-+                COMMAND protoc ARGS --cpp_out ${CMAKE_CURRENT_BINARY_DIR} -I ${FILE_DIR} ${FILE_WE}.proto
-                 DEPENDS ${PROTOC_DEPENDENCY} ${GENERATED_PROTO}
-                 COMMENT "Running C++ protocol buffer compiler (${PROTOC_EXECUTABLE}) on ${GENERATED_PROTO}"
+-                COMMAND ${PROTOC_EXECUTABLE} ARGS --cpp_out ${CMAKE_CURRENT_BINARY_DIR} -I ${protofiles_root_dir} ${proto_file}
++                COMMAND protoc ARGS --cpp_out ${CMAKE_CURRENT_BINARY_DIR} -I ${protofiles_root_dir} ${proto_file}
+                 DEPENDS ${PROTOC_DEPENDENCY} ${proto_file}
+                 COMMENT "Running C++ protocol buffer compiler (${PROTOC_EXECUTABLE}) on ${proto_file_relative}"
                  VERBATIM
 diff --git a/thirdparty/protobuf/CMakeLists.txt b/thirdparty/protobuf/CMakeLists.txt
-index 79e69a47b09..087f9e838c2 100644
+index 4b6d6da87f3..409e492a5b3 100644
 --- a/thirdparty/protobuf/CMakeLists.txt
 +++ b/thirdparty/protobuf/CMakeLists.txt
-@@ -27,7 +27,7 @@ set(protobuf_WITH_ZLIB OFF CACHE BOOL "Build with zlib support" FORCE)
+@@ -28,7 +28,7 @@ set(ABSL_PROPAGATE_CXX_STD ON CACHE BOOL "Abseil protogate CXX standard to depen
  if(CMAKE_CROSSCOMPILING OR
      (APPLE AND (HOST_X86_64 AND AARCH64)) OR
      (MSVC AND (HOST_X86_64 AND (AARCH64 OR ARM))))
@@ -41,5 +41,5 @@ index 79e69a47b09..087f9e838c2 100644
      set(protobuf_BUILD_PROTOC_BINARIES ON CACHE BOOL "Build protoc binaries" FORCE)
  endif()
 -- 
-2.37.3
+2.34.1
 
