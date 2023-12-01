@@ -1,10 +1,9 @@
-From a704afcc9e238dceafb3b1bc91b0b8abed3593eb Mon Sep 17 00:00:00 2001
+From bfcf5ae581ca4e7266cf7dc65b1c71754cd78cc0 Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
-Date: Thu, 21 Sep 2023 14:07:28 +0800
-Subject: [PATCH] cmake: yocto specific tweaks to the build process
+Date: Wed, 29 Nov 2023 12:42:57 +0530
+Subject: [PATCH 1/4] cmake: yocto specific tweaks to the build process
 
 * Dont try to detect glibc version as that doesn't work when cross compiling.
-* Use shared gflags libs.
 * Install sample binaries as well.
 * Dont strip binaries.
 * Dont try to write triggers for CPack. We package ourselves.
@@ -14,19 +13,18 @@ Upstream-Status: Inappropriate
 
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
- cmake/developer_package/packaging/rpm/rpm.cmake |  2 +-
- cmake/developer_package/target_flags.cmake      |  2 +-
- samples/cpp/CMakeLists.txt                      |  6 +++---
- src/bindings/python/CMakeLists.txt              |  2 +-
- src/bindings/python/wheel/setup.py              |  1 -
- thirdparty/dependencies.cmake                   | 10 +++++-----
- 6 files changed, 11 insertions(+), 12 deletions(-)
+ cmake/developer_package/packaging/rpm/rpm.cmake | 2 +-
+ cmake/developer_package/target_flags.cmake      | 2 +-
+ samples/cpp/CMakeLists.txt                      | 6 +++---
+ src/bindings/python/CMakeLists.txt              | 2 +-
+ src/bindings/python/wheel/setup.py              | 1 -
+ 5 files changed, 6 insertions(+), 7 deletions(-)
 
 diff --git a/cmake/developer_package/packaging/rpm/rpm.cmake b/cmake/developer_package/packaging/rpm/rpm.cmake
-index 0609750054f..0f5c7765197 100644
+index a7c0ec2cf61..40448e8a962 100644
 --- a/cmake/developer_package/packaging/rpm/rpm.cmake
 +++ b/cmake/developer_package/packaging/rpm/rpm.cmake
-@@ -161,7 +161,7 @@ ov_rpm_specific_settings()
+@@ -154,7 +154,7 @@ ov_rpm_specific_settings()
  # needed to add triggers for packages with libraries
  set(def_triggers "${OpenVINO_BINARY_DIR}/_CPack_Packages/triggers")
  set(triggers_content "# /bin/sh -p\n/sbin/ldconfig\n")
@@ -46,13 +44,13 @@ index 29f23e713e1..942dd445b19 100644
 -ov_glibc_version()
 +#ov_glibc_version()
 diff --git a/samples/cpp/CMakeLists.txt b/samples/cpp/CMakeLists.txt
-index 8849aaf47d1..450b57c18d6 100644
+index c814cc37e2c..431e7bd2ed3 100644
 --- a/samples/cpp/CMakeLists.txt
 +++ b/samples/cpp/CMakeLists.txt
-@@ -223,9 +223,9 @@ macro(ie_add_sample)
-     target_link_libraries(${IE_SAMPLE_NAME} PRIVATE ${ov_link_libraries} Threads::Threads ${IE_SAMPLE_DEPENDENCIES})
+@@ -206,9 +206,9 @@ macro(ov_add_sample)
+     target_link_libraries(${SAMPLE_NAME} PRIVATE ${ov_link_libraries} Threads::Threads ${SAMPLE_DEPENDENCIES})
  
-     install(TARGETS ${IE_SAMPLE_NAME}
+     install(TARGETS ${SAMPLE_NAME}
 -            RUNTIME DESTINATION samples_bin/
 -            COMPONENT samples_bin
 -            EXCLUDE_FROM_ALL)
@@ -61,12 +59,12 @@ index 8849aaf47d1..450b57c18d6 100644
 +
  
      # create global target with all samples / demo apps
-     if(NOT TARGET ie_samples)
+     if(NOT TARGET ov_samples)
 diff --git a/src/bindings/python/CMakeLists.txt b/src/bindings/python/CMakeLists.txt
-index f337f403189..21012162093 100644
+index 58ff9b74302..4763994ba56 100644
 --- a/src/bindings/python/CMakeLists.txt
 +++ b/src/bindings/python/CMakeLists.txt
-@@ -314,7 +314,7 @@ if(ENABLE_PYTHON_PACKAGING)
+@@ -356,7 +356,7 @@ if(ENABLE_PYTHON_PACKAGING)
      endif()
  
      set(python_package_prefix "${CMAKE_CURRENT_BINARY_DIR}/install_${pyversion}")
@@ -76,38 +74,17 @@ index f337f403189..21012162093 100644
      set(meta_info_file "${install_lib}/${meta_info_subdir}/PKG-INFO")
  
 diff --git a/src/bindings/python/wheel/setup.py b/src/bindings/python/wheel/setup.py
-index 04323a8ba49..0498dcdc126 100644
+index 4b056912212..5f05d891310 100644
 --- a/src/bindings/python/wheel/setup.py
 +++ b/src/bindings/python/wheel/setup.py
 @@ -270,7 +270,6 @@ class CustomBuild(build):
                  self.spawn(["cmake", "--install", binary_dir,
                                       "--prefix", prefix,
-                                      "--config", "Release",
+                                      "--config", CONFIG,
 -                                     "--strip",
                                       "--component", cpack_comp_name])
  
      def run(self):
-diff --git a/thirdparty/dependencies.cmake b/thirdparty/dependencies.cmake
-index 43e0ed671a9..b39479fdd6b 100644
---- a/thirdparty/dependencies.cmake
-+++ b/thirdparty/dependencies.cmake
-@@ -338,11 +338,11 @@ if(ENABLE_SAMPLES OR ENABLE_TESTS)
-     elseif(APPLE OR WIN32)
-         # on Windows and macOS we don't use gflags, because will be dynamically linked
-     elseif(CMAKE_HOST_LINUX AND LINUX)
--        if(OV_OS_RHEL)
--            set(gflag_component nothreads_shared)
--        elseif(OV_OS_DEBIAN)
--            set(gflag_component nothreads_static)
--        endif()
-+	#if(OV_OS_RHEL)
-+        set(gflag_component nothreads_shared)
-+	#elseif(OV_OS_DEBIAN)
-+	#    set(gflag_component nothreads_static)
-+	#endif()
-         find_package(gflags QUIET OPTIONAL_COMPONENTS ${gflag_component})
-     endif()
- 
 -- 
-2.37.3
+2.34.1
 
