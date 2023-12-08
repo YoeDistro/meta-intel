@@ -394,16 +394,20 @@ Note that both 64-bit and 32-bit firmware is available for the MinnowBoard
 Turbot, so it is tested against both intel-corei7-64 and intel-core2-32.
 
 intel-corei7-64:
-    Tiger Lake (NUC11TNHi5)
+    Alder Lake-P
     Alder Lake-S
-    Kaby Lake: NUC7i7BNH
     Elkhart Lake
+    Kaby Lake
+    Raptor Lake-P
+    Tiger Lake
 
 intel-skylake-64:
-    Tiger Lake (NUC11TNHi5)
+    Alder Lake-P
     Alder Lake-S
-    Kaby Lake: NUC7i7BNH
     Elkhart Lake
+    Kaby Lake
+    Raptor Lake-P
+    Tiger Lake
 
 intel-core2-32:
     MinnowBoard Turbot
