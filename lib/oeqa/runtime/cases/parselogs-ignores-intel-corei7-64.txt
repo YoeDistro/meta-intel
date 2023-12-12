@@ -1,0 +1,14 @@
+# These should be reviewed to see if they are still needed
+can't set Max Payload Size to 256
+intel_punit_ipc: can't request region for resource
+[drm] parse error at position 4 in video mode 'efifb'
+ACPI Error: Could not enable RealTimeClock event
+ACPI Warning: Could not enable fixed event - RealTimeClock
+hci_intel INT33E1:00: Unable to retrieve gpio
+hci_intel: probe of INT33E1:00 failed
+can't derive routing for PCI INT A
+failed to read out thermal zone
+Bluetooth: hci0: Setting Intel event mask failed
+ttyS2 - failed to request DMA
+Bluetooth: hci0: Failed to send firmware data (-38)
+atkbd serio0: Failed to enable keyboard on isa0060/serio0
