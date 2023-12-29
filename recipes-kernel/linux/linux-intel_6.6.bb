@@ -2,8 +2,8 @@ require linux-intel.inc
 
 SRC_URI:prepend = "git://github.com/intel/linux-intel-lts.git;protocol=https;name=machine;branch=${KBRANCH}; \
                     "
-KBRANCH = "6.1/linux"
-KMETA_BRANCH = "yocto-6.1"
+KBRANCH = "6.6/linux"
+KMETA_BRANCH = "yocto-6.6"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
@@ -11,11 +11,11 @@ DEPENDS += "elfutils-native openssl-native util-linux-native"
 
 LINUX_VERSION_EXTENSION ??= "-intel-pk-${LINUX_KERNEL_TYPE}"
 
-LINUX_VERSION ?= "6.1.59"
-SRCREV_machine ?= "a2989f3ed0223b36cd3f3837ee5dab5162753e57"
-SRCREV_meta ?= "d26f4f3307216e06ee0b74fa9b57b17fba72a988"
+LINUX_VERSION ?= "6.6.5"
+SRCREV_machine ?= "e981381225c78085b8d1fa91e8eb6610f30e4aaa"
+SRCREV_meta ?= "525b3f188e0bfb1cdcca241db89ef265842205cd"
 
 # Functionality flags
 KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc features/security/security.scc"
 
-UPSTREAM_CHECK_GITTAGREGEX = "^lts-(?P<pver>v6.1.(\d+)-linux-(\d+)T(\d+)Z)$"
+UPSTREAM_CHECK_GITTAGREGEX = "^lts-(?P<pver>v6.6.(\d+)-linux-(\d+)T(\d+)Z)$"
