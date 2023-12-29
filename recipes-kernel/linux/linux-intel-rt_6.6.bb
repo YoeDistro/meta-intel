@@ -12,8 +12,8 @@ python () {
         raise bb.parse.SkipPackage("Set PREFERRED_PROVIDER_virtual/kernel to linux-intel-rt to enable it")
 }
 
-KBRANCH = "6.1/preempt-rt"
-KMETA_BRANCH = "yocto-6.1"
+KBRANCH = "6.6/preempt-rt"
+KMETA_BRANCH = "yocto-6.6"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
@@ -21,13 +21,13 @@ DEPENDS += "elfutils-native openssl-native util-linux-native"
 
 LINUX_VERSION_EXTENSION ??= "-intel-pk-${LINUX_KERNEL_TYPE}"
 
-LINUX_VERSION ?= "6.1.59"
-SRCREV_machine ?= "55194dbcd3afe61b601a95dd721c8ffeb98aa771"
-SRCREV_meta ?= "d26f4f3307216e06ee0b74fa9b57b17fba72a988"
+LINUX_VERSION ?= "6.6.5"
+SRCREV_machine ?= "37d07f8ec6f148be12e3755dc742f2bef0b82bc2"
+SRCREV_meta ?= "525b3f188e0bfb1cdcca241db89ef265842205cd"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
 
 # Functionality flags
 KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc features/security/security.scc"
 
-UPSTREAM_CHECK_GITTAGREGEX = "^lts-(?P<pver>v6.1.(\d+)-rt(\d)-preempt-rt-(\d+)T(\d+)Z)$"
+UPSTREAM_CHECK_GITTAGREGEX = "^lts-(?P<pver>v6.6.(\d+)-rt(\d)-preempt-rt-(\d+)T(\d+)Z)$"
