@@ -1,0 +1,40 @@
+From 1b53d82a8152843afcddd7f16b0c43b6b4f22895 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Mon, 17 Jul 2023 17:17:55 -0400
+Subject: [PATCH 2/2] mconf: fix output of cflags and libraries
+
+commit 3122c84409d578a5df8bcb1 [kconfig: refactor Makefile to reduce
+process forks] changes the way that flags are detected. They are
+no longer just echo'd and captured, they are written to a file and
+later read.
+
+We adjust our CROSS ncurses patch accordingly.
+
+We'll eventually be able to drop this patch, but not quite yet.
+
+Upstream-Status: Inappropriate  [OE-Specific]
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ scripts/kconfig/mconf-cfg.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/kconfig/mconf-cfg.sh b/scripts/kconfig/mconf-cfg.sh
+index 38cf8304bb31..a5ae56e08b07 100755
+--- a/scripts/kconfig/mconf-cfg.sh
++++ b/scripts/kconfig/mconf-cfg.sh
+@@ -8,9 +8,9 @@ PKG="ncursesw"
+ PKG2="ncurses"
+ 
+ if [ "$CROSS_CURSES_LIB" != "" ]; then
+-    echo libs=\'$CROSS_CURSES_LIB\'
++    echo $CROSS_CURSES_LIB > ${libs}
+     if [ x"$CROSS_CURSES_INC" != x ]; then
+-	echo cflags=\'$CROSS_CURSES_INC\'
++	echo $CROSS_CURSES_INC > ${cflags}
+     fi
+     exit 0
+ fi
+-- 
+2.34.1
+

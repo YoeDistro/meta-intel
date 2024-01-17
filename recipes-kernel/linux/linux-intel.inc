@@ -11,6 +11,7 @@ SRC_URI = " \
            file://0001-lib-build_OID_registry-fix-reproducibility-issues.patch \
            file://fix-perf-reproducibility.patch \
            file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch \
+           file://0002-mconf-fix-output-of-cflags-and-libraries.patch \
 	  "
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
