@@ -41,7 +41,7 @@ S = "${WORKDIR}/${BPN}"
 
 inherit bin_package
 
-RDEPENDS:${PN} += "virtual/opencl-icd zlib tbb level-zero-loader bash tcsh"
+RDEPENDS:${PN} += "virtual-opencl-icd zlib tbb level-zero-loader bash tcsh"
 SKIP_FILEDEPS:${PN} = '1'
 
 INHIBIT_PACKAGE_STRIP = "1"

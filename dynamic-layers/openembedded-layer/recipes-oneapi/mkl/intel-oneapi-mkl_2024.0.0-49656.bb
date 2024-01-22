@@ -64,7 +64,7 @@ AUTO_LIBNAME_PKGS = ""
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT  = "1"
 
-RDEPENDS:${PN} += "bash tbb intel-oneapi-dpcpp-cpp-runtime setup-intel-oneapi-env virtual/opencl-icd"
+RDEPENDS:${PN} += "bash tbb intel-oneapi-dpcpp-cpp-runtime setup-intel-oneapi-env virtual-opencl-icd"
 INSANE_SKIP:${PN} = "ldflags textrel dev-so staticdev arch already-stripped"
 
 FILES:${PN}-staticdev += "/opt/intel/oneapi/mkl/${MKLMAINVER}/lib/*.a*"
