@@ -23,7 +23,7 @@ LINUX_VERSION_EXTENSION ??= "-intel-pk-${LINUX_KERNEL_TYPE}"
 
 LINUX_VERSION ?= "6.6.5"
 SRCREV_machine ?= "37d07f8ec6f148be12e3755dc742f2bef0b82bc2"
-SRCREV_meta ?= "525b3f188e0bfb1cdcca241db89ef265842205cd"
+SRCREV_meta ?= "c32ab927d38291b1d2003ff491aa2ad4b60e1241"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
 

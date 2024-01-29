@@ -12,7 +12,7 @@ LINUX_VERSION_EXTENSION ??= "-mainline-tracking-${LINUX_KERNEL_TYPE}"
 
 LINUX_VERSION ?= "6.7-rc3"
 SRCREV_machine ?= "0111e14b36a9f12753cfb40afaa1dbb04ffdebbb"
-SRCREV_meta ?= "00bbff3018f3d13781b2e9da6b3adddb4f1dc6fb"
+SRCREV_meta ?= "c1ac809153ed9aea5c14ce6fc38c167396fc267e"
 
 # Functionality flags
 KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc features/security/security.scc"
