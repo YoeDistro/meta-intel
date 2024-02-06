@@ -4,7 +4,7 @@ DESCRIPTION = "This toolkit allows developers to deploy pre-trained \
 deep learning models through a high-level C++ Inference Engine API \
 integrated with application logic."
 
-SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;name=openvino;branch=releases/2023/2;lfs=0 \
+SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;name=openvino;branch=releases/2023/3;lfs=0 \
            git://github.com/openvinotoolkit/oneDNN.git;protocol=https;destsuffix=git/src/plugins/intel_cpu/thirdparty/onednn;name=mkl;nobranch=1 \
            git://github.com/oneapi-src/oneDNN.git;protocol=https;destsuffix=git/src/plugins/intel_gpu/thirdparty/onednn_gpu;name=onednn;nobranch=1 \
            git://github.com/herumi/xbyak.git;protocol=https;destsuffix=git/thirdparty/xbyak;name=xbyak;branch=master \
@@ -13,22 +13,26 @@ SRC_URI = "git://github.com/openvinotoolkit/openvino.git;protocol=https;name=ope
            git://github.com/protocolbuffers/protobuf.git;protocol=https;destsuffix=git/thirdparty/protobuf/protobuf;name=protobuf;branch=3.20.x \
            git://github.com/gflags/gflags.git;protocol=https;destsuffix=git/thirdparty/gflags/gflags;name=gflags;nobranch=1 \
            git://github.com/madler/zlib.git;protocol=https;destsuffix=git/thirdparty/zlib/zlib;name=zlib;nobranch=1 \
+           git://github.com/nodejs/node-api-headers.git;protocol=https;destsuffix=git/node-api-headers-src;name=node-api-headers;nobranch=1 \
+           git://github.com/nodejs/node-addon-api.git;protocol=https;destsuffix=git/node-addon-api-src;name=node-addon-api;nobranch=1 \
            file://0001-cmake-yocto-specific-tweaks-to-the-build-process.patch \
            file://0002-Change-the-working-directory-to-source-to-workaround.patch \
            file://0003-cmake-Fix-overloaded-virtual-error.patch \
            file://0004-protobuf-allow-target-protoc-to-be-built.patch \
            "
 
-SRCREV_openvino = "7e18bd074a2487a7a98adcd313abd09c58d88072"
-SRCREV_mkl = "2ead5d4fe5993a797d9a7a4b8b5557b96f6ec90e"
-SRCREV_onednn = "284ad4574939fa784e4ddaa1f4aa577b8eb7a017"
+SRCREV_openvino = "ceeafaf64f346c6f14a67c612e131da5c27ef620"
+SRCREV_mkl = "cb3060bbf4694e46a1359a3d4dfe70500818f72d"
+SRCREV_onednn = "cb77937ffcf5e83b5d1cf2940c94e8b508d8f7b4"
 SRCREV_xbyak = "740dff2e866f3ae1a70dd42d6e8836847ed95cc2"
-SRCREV_json = "bc889afb4c5bf1c0d8ee29ef35eaaf4c8bef8a5d"
+SRCREV_json = "9cca280a4d0ccf0c08f47a99aa71d1b0e52f8d03"
 SRCREV_ade = "0e8a2ccdd34f29dba55894f5f3c5179809888b9e"
 SRCREV_protobuf = "fe271ab76f2ad2b2b28c10443865d2af21e27e0e"
 SRCREV_gflags = "e171aa2d15ed9eb17054558e0b3a6a413bb01067"
 SRCREV_zlib = "04f42ceca40f73e2978b50e93806c2a18c1281fc"
-SRCREV_FORMAT = "openvino_mkl_onednn_xbyak_json_ade_protobuf_gflags_zlib"
+SRCREV_node-api-headers = "186e04b5e40e54d7fd1655bc67081cc483f12488"
+SRCREV_node-addon-api = "39a25bf27788ff7a7ea5c64978c4dcd1e7b9d80d"
+SRCREV_FORMAT = "openvino_mkl_onednn_xbyak_json_ade_protobuf_gflags_zlib_node-api-headers_node-addon-api"
 
 LICENSE = "Apache-2.0 & MIT & BSD-3-Clause & Zlib"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
@@ -40,6 +44,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
                     file://thirdparty/zlib/zlib/LICENSE;md5=b51a40671bc46e961c0498897742c0b8 \
                     file://src/plugins/intel_cpu/thirdparty/onednn/LICENSE;md5=3b64000f6e7d52516017622a37a94ce9 \
                     file://src/plugins/intel_gpu/thirdparty/onednn_gpu/LICENSE;md5=3b64000f6e7d52516017622a37a94ce9 \
+                    file://node-api-headers-src/LICENSE;md5=6adb2909701d4605b4b2ae1a9b25d8bd \
+                    file://node-addon-api-src/LICENSE.md;md5=0492ef29a9d558a3e9660e7accc9ca6a \
 "
 
 inherit cmake python3native pkgconfig qemu
@@ -64,6 +70,7 @@ EXTRA_OECMAKE += " \
                   -DENABLE_SYSTEM_FLATBUFFERS=ON \
                   -DENABLE_SYSTEM_SNAPPY=ON \
                   -DENABLE_MLAS_FOR_CPU=OFF \
+                  -DFETCHCONTENT_BASE_DIR="${S}" \
                   "
 
 DEPENDS += "\
