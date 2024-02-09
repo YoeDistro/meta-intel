@@ -17,7 +17,7 @@ SRC_URI = " \
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
 KMETA = "kernel-meta"
-KCONF_BSP_AUDIT_LEVEL = "2"
+KCONF_BSP_AUDIT_LEVEL = "0"
 
 COMPATIBLE_MACHINE ?= "(intel-corei7-64)"
 
