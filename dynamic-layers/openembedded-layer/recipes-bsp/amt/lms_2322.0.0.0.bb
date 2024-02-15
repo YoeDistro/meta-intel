@@ -45,5 +45,4 @@ do_install:append() {
 
 RDEPENDS:${PN} += "ace"
 
-# This CVE is for Lan Management System software and not this lms.
-CVE_CHECK_IGNORE += "CVE-2018-1000535"
+CVE_STATUS[CVE-2018-1000535] = "cpe-incorrect: This CVE is for a different LMS - Lan Management System."
