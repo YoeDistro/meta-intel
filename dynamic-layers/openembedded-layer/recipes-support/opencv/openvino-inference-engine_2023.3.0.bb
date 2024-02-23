@@ -133,8 +133,8 @@ FILES:${PN}-samples = "${datadir}/openvino \
 RDEPENDS:${PN}-samples += "python3-core"
 
 # Package for inference engine python API
-PACKAGES =+ "${PN}-${PYTHON_PN}"
+PACKAGES =+ "${PN}-python3"
 
-FILES:${PN}-${PYTHON_PN} = "${PYTHON_SITEPACKAGES_DIR}"
+FILES:${PN}-python3 = "${PYTHON_SITEPACKAGES_DIR}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+\.\d+\.\d+))$"
