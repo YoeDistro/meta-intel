@@ -18,11 +18,10 @@ DEPENDS += "libdrm libva intel-media-driver onevpl pkgconfig-native"
 RDEPENDS:${PN} += "intel-media-driver"
 
 SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;nobranch=1;lfs=0 \
-           file://0001-Encode-Bugfix-for-HEVC-VDENC-422-RPL-caps-issue.-588.patch \
-           file://0001-RT-Common-Fix-MediaAdapterType-issue-5898.patch \
+           file://0001-ARLH-DID-open-source-6286.patch \
           "
 
-SRCREV = "30963ed30d428ccaf3c80360c8657d9c831cb38c"
+SRCREV = "852fa9f705ef44c004d014548601f3804a6de705"
 S = "${WORKDIR}/git"
 
 FILES:${PN} += " \
