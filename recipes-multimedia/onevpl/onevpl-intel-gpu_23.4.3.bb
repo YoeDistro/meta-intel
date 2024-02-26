@@ -19,6 +19,8 @@ RDEPENDS:${PN} += "intel-media-driver"
 
 SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;nobranch=1;lfs=0 \
            file://0001-ARLH-DID-open-source-6286.patch \
+           file://0001-JPEGe-Enable-BGR4-JPEG-Enc-support-6470.patch \
+           file://0001-Fix-SetBuffersYV12-V-U-plane-offsets-calculation-647.patch \
           "
 
 SRCREV = "852fa9f705ef44c004d014548601f3804a6de705"
