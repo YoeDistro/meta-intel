@@ -1,0 +1,33 @@
+From f8b4d982232d4c1330e1e5f5dcd7cd8ca94decba Mon Sep 17 00:00:00 2001
+From: WenshengZhang <wensheng.zhang@intel.com>
+Date: Thu, 25 Jan 2024 16:35:10 +0800
+Subject: [PATCH 11/12] Disable 422H format output
+
+Disable 422H format output.
+
+Upstream-Status: Backport [https://github.com/intel/media-driver/commit/eab411768e61a46e096793291f5f992eecf76cd8]
+Signed-off-by: Lim, Siew Hoon <siew.hoon.lim@intel.com>
+---
+ .../agnostic/common/vp/hal/feature_manager/policy.cpp       | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/media_softlet/agnostic/common/vp/hal/feature_manager/policy.cpp b/media_softlet/agnostic/common/vp/hal/feature_manager/policy.cpp
+index 317cec25a..12f1124fa 100644
+--- a/media_softlet/agnostic/common/vp/hal/feature_manager/policy.cpp
++++ b/media_softlet/agnostic/common/vp/hal/feature_manager/policy.cpp
+@@ -1140,6 +1140,12 @@ MOS_STATUS Policy::GetScalingExecutionCaps(SwFilter *feature, bool isHdrEnabled)
+     bool isAlphaSettingSupportedByVebox =
+         IsAlphaSettingSupportedByVebox(scalingParams->formatInput, scalingParams->formatOutput, scalingParams->pCompAlpha);
+ 
++    if (scalingParams->formatOutput == Format_422H)
++    {
++        VP_PUBLIC_ASSERTMESSAGE("Scaling not support 422H format output.");
++        return MOS_STATUS_UNIMPLEMENTED;
++    }
++
+     // Clean usedForNextPass flag.
+     if (scalingEngine->usedForNextPass)
+     {
+-- 
+2.40.1
+

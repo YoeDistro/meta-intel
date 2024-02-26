@@ -1,7 +1,7 @@
-From a0149ae2dc69143406843302eb7e9e5338c54475 Mon Sep 17 00:00:00 2001
+From 1580f01ec5ad5afdad58c39dded999494275be10 Mon Sep 17 00:00:00 2001
 From: Lim Siew Hoon <siew.hoon.lim@intel.com>
 Date: Wed, 11 Oct 2023 15:36:21 +0800
-Subject: [PATCH 3/7] Force ARGB surface to tile4 for ACM
+Subject: [PATCH 02/12] Force ARGB surface to tile4 for ACM
 
 Upstream-Status: Submitted [https://github.com/intel/media-driver/pull/1728]
 
@@ -12,7 +12,7 @@ Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
  1 file changed, 10 insertions(+)
 
 diff --git a/media_driver/linux/common/ddi/media_libva_util.cpp b/media_driver/linux/common/ddi/media_libva_util.cpp
-index 59c02f145..f91f974cc 100755
+index 63c173419..73be76366 100755
 --- a/media_driver/linux/common/ddi/media_libva_util.cpp
 +++ b/media_driver/linux/common/ddi/media_libva_util.cpp
 @@ -504,6 +504,7 @@ VAStatus DdiMediaUtil_AllocateSurface(

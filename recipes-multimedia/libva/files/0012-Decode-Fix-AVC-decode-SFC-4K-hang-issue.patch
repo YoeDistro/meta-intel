@@ -1,0 +1,32 @@
+From b93904533d3ee66c7919fa8e23d26b852a37a917 Mon Sep 17 00:00:00 2001
+From: Lim Siew Hoon <siew.hoon.lim@intel.com>
+Date: Tue, 30 Jan 2024 13:27:52 +0800
+Subject: [PATCH 12/12] [Decode] Fix AVC decode SFC 4K hang issue
+
+Updated VDSFC input width and height for AVC decode
+
+Upstream-Status: Submitted [https://github.com/intel-innersource/drivers.gpu.unified/pull/151401]
+
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
+---
+ .../hal/dec/avc/packet/decode_avc_downsampling_packet.cpp     | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/media_softlet/agnostic/common/codec/hal/dec/avc/packet/decode_avc_downsampling_packet.cpp b/media_softlet/agnostic/common/codec/hal/dec/avc/packet/decode_avc_downsampling_packet.cpp
+index e75fd8137..9cc236bd7 100644
+--- a/media_softlet/agnostic/common/codec/hal/dec/avc/packet/decode_avc_downsampling_packet.cpp
++++ b/media_softlet/agnostic/common/codec/hal/dec/avc/packet/decode_avc_downsampling_packet.cpp
+@@ -59,6 +59,10 @@ MOS_STATUS AvcDownSamplingPkt::InitSfcParams(VDBOX_SFC_PARAMS &sfcParams)
+ 
+     AvcBasicFeature *avcBasicFeature = dynamic_cast<AvcBasicFeature*>(m_basicFeature);
+     DECODE_CHK_NULL(avcBasicFeature);
++
++    sfcParams.input.width  = avcBasicFeature->m_width;
++    sfcParams.input.height = avcBasicFeature->m_height;
++
+     CODEC_PICTURE curPic = avcBasicFeature->m_avcPicParams->CurrPic;
+ 
+     if (avcBasicFeature->m_avcPicParams->seq_fields.mb_adaptive_frame_field_flag == true)
+-- 
+2.40.1
+
