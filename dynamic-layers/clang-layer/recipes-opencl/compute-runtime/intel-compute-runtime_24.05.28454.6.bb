@@ -4,18 +4,17 @@ is an open source project to converge Intel's development efforts \
 on OpenCL(TM) compute stacks supporting the GEN graphics hardware \
 architecture."
 
-LICENSE = "MIT"
+LICENSE = "MIT & Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=eca6ec6997e18db166db7109cdbe611c \
-                    file://third_party/opencl_headers/LICENSE;md5=dcefc90f4c3c689ec0c2489064e7273b"
+                    file://third_party/opencl_headers/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https;branch=releases/23.22 \
+SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https;branch=releases/24.05 \
            file://disable-werror.patch \
-           file://add-missing-cstdint-header-to-fix-compile-with-gcc13.patch \
            file://allow-to-find-cpp-generation-tool.patch \
            file://external-ocloc.patch \
            "
 
-SRCREV = "f6bf19f1dde6b852676c319a7c67a0a4c3f25d02"
+SRCREV = "23a9725e62c8181193c90e5e5207507a1f136587"
 
 S = "${WORKDIR}/git"
 

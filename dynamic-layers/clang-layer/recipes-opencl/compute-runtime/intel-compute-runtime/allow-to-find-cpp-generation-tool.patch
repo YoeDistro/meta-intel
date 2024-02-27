@@ -1,4 +1,4 @@
-From 0521d87f3f2cc1ceab89e72e1015d195cb9d17f0 Mon Sep 17 00:00:00 2001
+From a6361d635e5f3046853883f3ac06fb175116933c Mon Sep 17 00:00:00 2001
 From: Dongwon Kim <dongwon.kim@intel.com>
 Date: Sat, 21 Aug 2021 16:09:39 -0700
 Subject: [PATCH] Build not able to locate cpp_generation_tool.
@@ -8,26 +8,26 @@ Upstream-Status: Inappropriate [oe specific]
 Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
 Signed-off-by: Dongwon Kim <dongwon.kim@intel.com>
 ---
- shared/source/built_ins/kernels/CMakeLists.txt | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ shared/source/built_ins/kernels/CMakeLists.txt | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/shared/source/built_ins/kernels/CMakeLists.txt b/shared/source/built_ins/kernels/CMakeLists.txt
-index 8ac6faf4d6..031e128149 100644
+index ed85a37c52..f7c9e79137 100644
 --- a/shared/source/built_ins/kernels/CMakeLists.txt
 +++ b/shared/source/built_ins/kernels/CMakeLists.txt
-@@ -81,9 +81,9 @@ function(compile_builtin core_type platform_type builtin bits builtin_options mo
+@@ -107,9 +107,9 @@ function(compile_builtin core_type platform_it builtin bits builtin_options mode
        )
        add_custom_command(
                           OUTPUT ${OUTPUT_FILE_CPP}
--                         COMMAND $<TARGET_FILE:cpp_generate_tool> --file ${BINARY_OUTPUT}.bin --output ${OUTPUT_FILE_CPP} --array ${mode}_${BASENAME} --platform ${platform_it_lower} --revision_id ${REVISION_ID}
-+                         COMMAND cpp_generate_tool --file ${BINARY_OUTPUT}.bin --output ${OUTPUT_FILE_CPP} --array ${mode}_${BASENAME} --platform ${platform_it_lower} --revision_id ${REVISION_ID}
+-                         COMMAND $<TARGET_FILE:cpp_generate_tool> --file ${BINARY_OUTPUT}.bin --output ${OUTPUT_FILE_CPP} --array ${mode}_${BASENAME} --device ${RELEASE_FILENAME}
++                         COMMAND cpp_generate_tool --file ${BINARY_OUTPUT}.bin --output ${OUTPUT_FILE_CPP} --array ${mode}_${BASENAME} --device ${RELEASE_FILENAME}
                           WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 -                         DEPENDS ${OUTPUT_FILES_BINARIES} $<TARGET_FILE:cpp_generate_tool>
 +                         DEPENDS ${OUTPUT_FILES_BINARIES} cpp_generate_tool
        )
        list(APPEND BUILTINS_COMMANDS "${OUTPUT_FILE_CPP}")
      else()
-@@ -134,9 +134,9 @@ function(generate_cpp_spirv builtin)
+@@ -159,9 +159,9 @@ function(generate_cpp_spirv builtin)
      )
      add_custom_command(
                         OUTPUT ${OUTPUT_FILE_CPP}
@@ -39,6 +39,13 @@ index 8ac6faf4d6..031e128149 100644
      )
      set(OUTPUT_LIST_CPP_FILES ${OUTPUT_LIST_CPP_FILES} ${OUTPUT_FILE_CPP} PARENT_SCOPE)
    else()
+@@ -277,4 +277,4 @@ if(NOT "${OUTPUT_LIST_CPP_FILES}" STREQUAL "")
+   )
+ endif()
+ 
+-apply_macro_for_each_core_type("SUPPORTED")
+\ No newline at end of file
++apply_macro_for_each_core_type("SUPPORTED")
 -- 
-2.37.3
+2.43.2
 
