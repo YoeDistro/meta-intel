@@ -1,4 +1,4 @@
-From 9abd198b13d4764ee2e34b385ac20fc11a56d8f3 Mon Sep 17 00:00:00 2001
+From 3d71670f8ad5b54d434c2f5f71713bb1d5433ae4 Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Tue, 12 Oct 2021 23:46:42 +0800
 Subject: [PATCH] BiF/CMakeLists.txt: remove opt from DEPENDS
@@ -13,21 +13,23 @@ using prebuilt binaries.
 Upstream-Status: Inappropriate
 
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
-
 ---
- IGC/VectorCompiler/lib/BiF/CMakeLists.txt | 2 +-
+ IGC/VectorCompiler/lib/BiF/cmake/Functions.cmake | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/IGC/VectorCompiler/lib/BiF/CMakeLists.txt b/IGC/VectorCompiler/lib/BiF/CMakeLists.txt
-index c439f334a..756cc84c3 100644
---- a/IGC/VectorCompiler/lib/BiF/CMakeLists.txt
-+++ b/IGC/VectorCompiler/lib/BiF/CMakeLists.txt
-@@ -112,7 +112,7 @@ function(vc_build_bif RES_FILE CMCL_SRC_PATH BIF_NAME PTR_BIT_SIZE)
-   add_custom_command(OUTPUT ${BIF_OPT_BC_PATH}
+diff --git a/IGC/VectorCompiler/lib/BiF/cmake/Functions.cmake b/IGC/VectorCompiler/lib/BiF/cmake/Functions.cmake
+index d20d7f887..882e09fea 100644
+--- a/IGC/VectorCompiler/lib/BiF/cmake/Functions.cmake
++++ b/IGC/VectorCompiler/lib/BiF/cmake/Functions.cmake
+@@ -109,7 +109,7 @@ function(vc_build_bif TARGET RES_FILE CMCL_SRC_PATH BIF_NAME PTR_BIT_SIZE)
+     COMMENT "vc_build_bif: Translating CMCL builtins:  ${BIF_CLANG_BC_NAME_FINAL} -> ${BIF_OPT_BC_NAME}"
+     COMMAND CMCLTranslatorTool -o ${BIF_CMCL_BC_NAME} ${BIF_CLANG_BC_NAME_FINAL}
      COMMAND ${LLVM_OPT_EXE} ${IGC_LLVM_DEPENDENT_OPT_FLAGS} --O2 -o ${BIF_OPT_BC_NAME} ${BIF_CMCL_BC_NAME}
-     COMMENT "vc_build_bif: running opt with O2: ${BIF_CMCL_BC_NAME} -> ${BIF_OPT_BC_NAME}"
--    DEPENDS opt ${BIF_CMCL_BC_PATH})
-+    DEPENDS ${BIF_CMCL_BC_PATH})
+-    DEPENDS CMCLTranslatorTool ${LLVM_OPT_EXE} ${BIF_CLANG_BC_PATH_FINAL}
++    DEPENDS CMCLTranslatorTool ${BIF_CLANG_BC_PATH_FINAL}
+     BYPRODUCTS ${BIF_OPT_BC_PATH}
+     SOURCES ${CMCL_SRC_PATH})
    set(${RES_FILE} ${BIF_OPT_BC_NAME} PARENT_SCOPE)
- endfunction()
- 
+-- 
+2.43.2
+

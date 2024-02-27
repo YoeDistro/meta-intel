@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc
                     file://LICENSE.md;md5=488d74376edf2765f6e78d271543dde3 \
                     file://NOTICES.txt;md5=7f4fbc3eb2c34807465e63b1ec3c9d1a"
 
-SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=releases/igc-1.0.14062 \
+SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=releases/igc-1.0.15985 \
            git://github.com/intel/vc-intrinsics.git;protocol=https;destsuffix=git/vc-intrinsics;name=vc;nobranch=1 \
            git://github.com/KhronosGroup/SPIRV-Tools.git;protocol=https;destsuffix=git/SPIRV-Tools;name=spirv-tools;branch=main \
            git://github.com/KhronosGroup/SPIRV-Headers.git;protocol=https;destsuffix=git/SPIRV-Headers;name=spirv-headers;branch=main \
@@ -19,10 +19,10 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;nam
 
 SRC_URI:append:class-native = " file://0001-fix-tblgen.patch"
 
-SRCREV_igc = "1993c4f49299fb015c3b3b080cf70dd8e6d5eef1"
-SRCREV_vc = "cd3aecca329ecd41deab45e8a715fa555fc61bac"
-SRCREV_spirv-tools = "63de608daeb7e91fbea6d7477a50debe7cac57ce"
-SRCREV_spirv-headers = "d13b52222c39a7e9a401b44646f0ca3a640fbd47"
+SRCREV_igc = "6cc111d262e1c3abcf4bc6b6d8a589ebf821a5c0"
+SRCREV_vc = "da892e1982b6c25b9a133f85b4ac97142d8a3def"
+SRCREV_spirv-tools = "f0cc85efdbbe3a46eae90e0f915dc1509836d0fc"
+SRCREV_spirv-headers = "cca08c63cefa129d082abca0302adcb81610b465"
 
 SRCREV_FORMAT = "igc_vc_spirv-tools_spirv-headers"
 
@@ -31,14 +31,14 @@ export B
 
 S = "${WORKDIR}/git"
 
-inherit cmake pkgconfig qemu
+inherit cmake pkgconfig qemu python3native
 
 CXXFLAGS:append = " -Wno-error=nonnull"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
 
-DEPENDS += " flex-native bison-native clang clang-cross-x86_64 opencl-clang qemu-native"
+DEPENDS += " flex-native bison-native clang clang-cross-x86_64 opencl-clang qemu-native python3-mako-native"
 
 RDEPENDS:${PN} += "opencl-clang"
 
@@ -47,7 +47,6 @@ PACKAGECONFIG[vc] = "-DIGC_BUILD__VC_ENABLED=ON -DIGC_OPTION__LINK_KHRONOS_SPIRV
 
 EXTRA_OECMAKE = " \
                   -DIGC_OPTION__LLVM_PREFERRED_VERSION=${LLVMVERSION} \
-                  -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 \
                   -DVC_INTRINSICS_SRC="${S}/vc-intrinsics" \
                   -DIGC_OPTION__LLVM_MODE=Prebuilds \
                   -DLLVM_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
