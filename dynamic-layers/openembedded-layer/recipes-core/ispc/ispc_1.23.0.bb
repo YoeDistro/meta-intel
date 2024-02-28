@@ -15,11 +15,10 @@ SRC_URI = "git://github.com/ispc/ispc.git;protocol=https;branch=main \
            file://0002-cmake-don-t-build-for-32-bit-targets.patch \
            file://0001-Fix-QA-Issues.patch \
            file://0001-Add-print-function-to-print-test-run-status-in-ptest.patch \
-           file://0001-Fix-return-type-of-lParseOperator.patch \
            file://run-ptest \
            "
 
-SRCREV = "bd2c42d42e0cc3da1baf92160b82d4dc820a02ee"
+SRCREV = "bcb2cf896c00f9a802a11cbf291ef6e44b205416"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
@@ -59,7 +58,6 @@ EXTRA_OECMAKE += " \
                   -DSYSROOT_DIR=${STAGING_DIR} \
                   -DCLANG_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang \
                   -DCLANGPP_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang++ \
-                  -DLLVM_DIS_EXECUTABLE=${STAGING_BINDIR_NATIVE}/llvm-dis \
                   -DLLVM_AS_EXECUTABLE=${STAGING_BINDIR_NATIVE}/llvm-as \
                   "
 

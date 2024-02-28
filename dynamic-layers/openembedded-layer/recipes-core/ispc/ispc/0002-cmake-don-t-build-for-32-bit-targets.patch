@@ -1,4 +1,4 @@
-From cad70deae39566fa11814e27f06d5fe8ddcb1cbc Mon Sep 17 00:00:00 2001
+From 16a2c22339287122d2c25d8bb33a5a51b4e6ee51 Mon Sep 17 00:00:00 2001
 From: Naveen Saini <naveen.kumar.saini@intel.com>
 Date: Thu, 24 Feb 2022 20:01:11 +0530
 Subject: [PATCH] cmake: don't build for 32-bit targets
@@ -20,7 +20,7 @@ Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/cmake/GenerateBuiltins.cmake b/cmake/GenerateBuiltins.cmake
-index 936590a7..b8f731de 100644
+index f84494ed..d90cb1ec 100644
 --- a/cmake/GenerateBuiltins.cmake
 +++ b/cmake/GenerateBuiltins.cmake
 @@ -253,7 +253,7 @@ function(builtin_to_cpp bit os_name arch supported_archs supported_oses resultFi
@@ -32,7 +32,7 @@ index 936590a7..b8f731de 100644
          endif()
      endif()
  
-@@ -340,7 +340,7 @@ function (generate_target_builtins resultList)
+@@ -339,7 +339,7 @@ function (generate_target_builtins resultList)
      set(regular_targets ${ARGN})
      list(FILTER regular_targets EXCLUDE REGEX wasm)
      foreach (ispc_target ${regular_targets})
@@ -41,7 +41,7 @@ index 936590a7..b8f731de 100644
              foreach (os_name ${TARGET_OS_LIST_FOR_LL})
                  target_ll_to_cpp(target-${ispc_target} ${bit} ${os_name} output${os_name}${bit})
                  list(APPEND tmpList ${output${os_name}${bit}})
-@@ -406,7 +406,7 @@ function (generate_common_builtins resultList)
+@@ -405,7 +405,7 @@ function (generate_common_builtins resultList)
      endif()
  
      message (STATUS "ISPC will be built with support of ${supported_oses} for ${supported_archs}")
@@ -50,6 +50,3 @@ index 936590a7..b8f731de 100644
          foreach (os_name "windows" "linux" "freebsd" "macos" "android" "ios" "ps4" "web")
              foreach (arch "x86" "arm" "wasm")
                  builtin_to_cpp(${bit} ${os_name} ${arch} "${supported_archs}" "${supported_oses}" res${bit}${os_name}${arch})
--- 
-2.41.0
-

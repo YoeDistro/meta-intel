@@ -1,4 +1,4 @@
-From 6ba81efe971fb6038af6e950e853d35ee6dd9cc3 Mon Sep 17 00:00:00 2001
+From deccc0c69c2c8759c52885be8bdda54d3cee481c Mon Sep 17 00:00:00 2001
 From: Yogesh Tyagi <yogesh.tyagi@intel.com>
 Date: Sun, 11 Dec 2022 22:34:15 +0800
 Subject: [PATCH] Add print function to print test run status in ptest format
@@ -11,10 +11,10 @@ Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
  1 file changed, 16 insertions(+)
 
 diff --git a/run_tests.py b/run_tests.py
-index 87305a06..4f2f0f59 100755
+index 1cd796dd..e3ffd1ab 100755
 --- a/run_tests.py
 +++ b/run_tests.py
-@@ -385,6 +385,9 @@ def run_test(testname, host, target):
+@@ -327,6 +327,9 @@ def run_test(testname, host, target):
      else:
          ispc_exe_rel = add_prefix(host.ispc_cmd, host, target)
  
@@ -24,7 +24,7 @@ index 87305a06..4f2f0f59 100755
      # is this a test to make sure an error is issued?
      want_error = (filename.find("tests_errors") != -1)
      if want_error == True:
-@@ -844,6 +847,17 @@ def check_compiler_exists(compiler_exe):
+@@ -795,6 +798,17 @@ def check_compiler_exists(compiler_exe):
              return
      error("missing the required compiler: %s \n" % compiler_exe, 1)
  
@@ -42,7 +42,7 @@ index 87305a06..4f2f0f59 100755
  def print_result(status, results, s, run_tests_log, csv):
      title = StatusStr[status]
      file_list = [fname for fname, fstatus in results if status == fstatus]
-@@ -987,6 +1001,8 @@ def run_tests(options1, args, print_version):
+@@ -938,6 +952,8 @@ def run_tests(options1, args, print_version):
          pass_rate = -1
      print_debug("PASSRATE (%d/%d) = %d%% \n\n" % (len(run_succeed_files), total_tests_executed, pass_rate), s, run_tests_log)
  
@@ -51,6 +51,3 @@ index 87305a06..4f2f0f59 100755
      for status in Status:
          print_result(status, results, s, run_tests_log, options.csv)
      fails = [status != Status.Compfail and status != Status.Runfail for _, status in results]
--- 
-2.37.3
-
