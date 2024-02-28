@@ -15,7 +15,7 @@ S = "${WORKDIR}/git"
 
 SRC_URI = "git://github.com/ospray/ospray.git;protocol=https;branch=master \
             "
-SRCREV = "66fa8108485a8a92ff31ad2e06081bbaf391bc26"
+SRCREV = "f2a61c2eb58ccd666e34abfdb0fd7049ea073194"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
@@ -26,6 +26,7 @@ EXTRA_OECMAKE += " \
                   -DISPC_EXECUTABLE=${STAGING_BINDIR_NATIVE}/ispc \
                   -DOSPRAY_ENABLE_APPS_BENCHMARK=OFF \
                   -DOSPRAY_ENABLE_APPS_TESTING=OFF \
+                  -DOSPRAY_ENABLE_APPS_EXAMPLES=OFF \
                   "
 
 PACKAGES =+ "${PN}-apps"
