@@ -13,9 +13,10 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ea8831610e926e2e469075b52bf08848"
 
 SRC_URI = "git://github.com/intel/thermal_daemon/;branch=master;protocol=https \
+           file://0001-Makefile-Fix-build-Issue.patch \
            "
 
-SRCREV = "63b290f20da115f62f5bbd39a28fa5afe0f6efc2"
+SRCREV = "3990ce2391e5c07293758c056e09e4f2453691b4"
 S = "${WORKDIR}/git"
 
 inherit pkgconfig autotools systemd gtk-doc
