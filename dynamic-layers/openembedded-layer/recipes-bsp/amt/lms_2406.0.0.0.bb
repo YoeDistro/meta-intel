@@ -30,10 +30,8 @@ S = "${WORKDIR}/git"
 SYSTEMD_SERVICE:${PN} = "lms.service"
 
 SRC_URI = "git://github.com/intel/lms.git;branch=master;protocol=https \
-           file://fix-gcc13.patch \
-           file://0001-UNS-CMakeLists.txt-migrate-udev-rules-to-usr.patch \
            "
-SRCREV = "cbc1e1019cf5dc2d03a3b722ee07fbfb9a90f2d1"
+SRCREV = "388f115b2aeb3ea11499971c65f828daefd32c47"
 
 do_install:append() {
     install -d ${D}${sysconfdir}/lms
