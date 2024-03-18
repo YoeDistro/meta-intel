@@ -1,0 +1,32 @@
+From b5dfcf8bc1245e804c847745c237068eb6f19931 Mon Sep 17 00:00:00 2001
+From: Yogesh Tyagi <yogesh.tyagi@intel.com>
+Date: Fri, 15 Mar 2024 16:28:41 +0800
+Subject: [PATCH] cmake: fix build when using sysroot
+
+When cross-compiling against a sysroot, system headers will not be at a place
+that starts with /usr. Update conditional check to exclude directories
+which have "/usr/include" in them to not add <sysroot>/usr/include as well.
+
+Upstream-Status: Submitted [https://github.com/openvinotoolkit/openvino/pull/23486]
+
+Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
+---
+ src/cmake/ov_parallel.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/cmake/ov_parallel.cmake b/src/cmake/ov_parallel.cmake
+index 3793db98e30..819d3410531 100644
+--- a/src/cmake/ov_parallel.cmake
++++ b/src/cmake/ov_parallel.cmake
+@@ -296,7 +296,7 @@ function(ov_set_threading_interface_for TARGET_NAME)
+                 if(include_directories)
+                     foreach(include_directory IN LISTS include_directories)
+                         # cannot include /usr/include headers as SYSTEM
+-                        if(NOT "${include_directory}" MATCHES "^/usr.*$")
++                        if(NOT "${include_directory}" MATCHES ".*/usr/include.*$")
+                             target_include_directories(${TARGET_NAME} SYSTEM
+                                 ${LINK_TYPE} $<BUILD_INTERFACE:${include_directory}>)
+                         else()
+-- 
+2.34.1
+
