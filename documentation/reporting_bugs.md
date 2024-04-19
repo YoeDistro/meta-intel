@@ -1,7 +1,7 @@
 ## Reporting bugs
 
 If you have problems with or questions about a particular BSP, please
-contact the maintainer listed in the [Maintainer](MAINTAINERS) file directly (cc:ing
+contact the maintainer listed in the [Maintainers](MAINTAINERS.md) file directly (cc:ing
 the Yocto mailing list puts it in the archive and helps other people
 who might have the same questions in the future), but please try to do
 the following first:

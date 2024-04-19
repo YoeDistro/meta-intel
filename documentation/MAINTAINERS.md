@@ -1,15 +1,13 @@
-This file contains a list of BSP maintainers for the BSPs contained in
-the meta-intel repository.
-
 The purpose of this file is to provide contact information for
-specific BSPs and other code contained within meta-intel.  You should
+specific BSPs and other code contained within meta-intel. You should
 address questions and patches for a particular BSP or other code to
 the appropriate maintainer listed in this file, cc'ing the meta-intel
-mailing list.  This ensures that your question or patch will be
+mailing list. This ensures that your question or patch will be
 addressed by the appropriate person, and that it will be seen by other
 users who may be facing similar problems or questions.
 
-Please see the top-level README file for guidelines relating to the
+Please see the [Guidelines for submitting patches](submitting_patches.md)
+and [Reporting bugs](reporting_bugs.md) guidelines relating to the
 details of submitting patches, reporting problems, or asking questions
 about any of the BSPs or other recipes contained within meta-intel.
 
@@ -26,7 +24,5 @@ Please keep this list in alphabetical order.
 
 Maintainers List (try to look for most precise areas first)
 
-		-----------------------------------
-
-M:	Anuj Mittal <anuj.mittal@intel.com>
-F:	*
+M: Anuj Mittal <anuj.mittal@intel.com>
+F: *
