@@ -28,5 +28,8 @@ Dynamic additional dependencies:
 - [Guidelines for submitting patches](documentation/submitting_patches.md)
 - [Reporting bugs](documentation/reporting_bugs.md)
 - [Reporting security bugs](SECURITY.md)
-- [Maintainers](documentation/MAINTAINERS.md)
+
+## Maintainers
+
+- Anuj Mittal <anuj.mittal@intel.com>
 

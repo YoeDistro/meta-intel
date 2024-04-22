@@ -22,5 +22,5 @@ a patch or patch sets within 24 hours of the time it was posted.  For
 larger and/or more involved patches and patch sets, the review process
 may take longer.
 
-Please see the [MAINTAINERS](MAINTAINERS.md)  for the list of maintainers. It's also
+Please see the [maintainers](../README.md#maintainers) section for the list of maintainers. It's also
 a good idea to cc: the maintainer, if applicable.
