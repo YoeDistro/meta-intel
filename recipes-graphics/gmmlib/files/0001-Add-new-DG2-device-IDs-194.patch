@@ -3,8 +3,7 @@ From: John Machado <john.machado@intel.com>
 Date: Mon, 25 Mar 2024 11:13:27 +0530
 Subject: [PATCH] Add new DG2 device IDs (#194)
 
-Upstream-status: Backport
-https://github.com/intel/gmmlib/commit/dcc4b85ea3728c848b62fbb164c00f43b519b6fb
+Upstream-Status: Backport [https://github.com/intel/gmmlib/commit/dcc4b85ea3728c848b62fbb164c00f43b519b6fb]
 
 Signed-off-by: Hoe, Sheng Yang <sheng.yang.hoe@intel.com>
 ---
