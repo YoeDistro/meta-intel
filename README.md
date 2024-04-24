@@ -24,6 +24,7 @@ Dynamic additional dependencies:
 
 - [Building and booting meta-intel BSP layers](documentation/building_and_booting.md)
 - [Intel oneAPI DPC++/C++ Compiler](documentation/dpcpp-compiler.md)
+- [Build Image with OpenVINO™ toolkit](documentation/openvino.md)
 - [Tested Hardware](documentation/tested_hardware.md)
 - [Guidelines for submitting patches](documentation/submitting_patches.md)
 - [Reporting bugs](documentation/reporting_bugs.md)
