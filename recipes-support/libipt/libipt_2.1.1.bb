@@ -27,7 +27,7 @@ do_install:append() {
     install -d ${D}${bindir}/libipt/tests
 
     cp -r ${B}/bin/* ${D}${bindir}/libipt/
-    cp -r ${WORKDIR}/git/test/src/* ${D}${bindir}/libipt/tests
+    cp -r ${S}/test/src/* ${D}${bindir}/libipt/tests
 }
 
 FILES:${PN}-test = "${bindir}"

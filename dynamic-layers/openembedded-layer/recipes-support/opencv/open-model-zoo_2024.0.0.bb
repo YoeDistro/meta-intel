@@ -44,11 +44,11 @@ do_install(){
         install -d ${D}${bindir}
         install -d ${D}${datadir}/openvino/open-model-zoo/tools
         install -d ${D}${datadir}/openvino/open-model-zoo/demos
-        cp -rf ${WORKDIR}/build/intel64/Release/*.a ${D}${libdir}
-        cp -rf ${WORKDIR}/build/intel64/Release/*_demo* ${D}${bindir}
-        cp -rf ${WORKDIR}/git/models ${D}${datadir}/openvino/open-model-zoo
-        cp -rf ${WORKDIR}/git/demos ${D}${datadir}/openvino/open-model-zoo
-        cp -rf ${WORKDIR}/git/tools/model_tools ${D}${datadir}/openvino/open-model-zoo/tools
+        cp -rf ${B}/intel64/Release/*.a ${D}${libdir}
+        cp -rf ${B}/intel64/Release/*_demo* ${D}${bindir}
+        cp -rf ${S}/models ${D}${datadir}/openvino/open-model-zoo
+        cp -rf ${S}/demos ${D}${datadir}/openvino/open-model-zoo
+        cp -rf ${S}/tools/model_tools ${D}${datadir}/openvino/open-model-zoo/tools
 }
 
 FILES:${PN} += "${datadir}/openvino"

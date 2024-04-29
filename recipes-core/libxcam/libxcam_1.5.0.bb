@@ -30,7 +30,7 @@ PACKAGECONFIG[dnn]    = "--enable-dnn, --disable-dnn,"
 
 do_install:append () {
     install -d ${D}${bindir}/libxcam
-    cp -r ${WORKDIR}/build/tests/.libs/* ${D}${bindir}/libxcam/
+    cp -r ${B}/tests/.libs/* ${D}${bindir}/libxcam/
 }
 
 FILES:${PN} += "${libdir}/gstreamer-*/*.so"
