@@ -1,11 +1,11 @@
-From bfcf5ae581ca4e7266cf7dc65b1c71754cd78cc0 Mon Sep 17 00:00:00 2001
+From e4edbdae9a2dbfec6fd0706bdfff8abdfe3363fc Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Wed, 29 Nov 2023 12:42:57 +0530
-Subject: [PATCH 1/4] cmake: yocto specific tweaks to the build process
+Subject: [PATCH] cmake: yocto specific tweaks to the build process
 
 * Dont try to detect glibc version as that doesn't work when cross compiling.
+* Dont try to detect CXX11_ABI
 * Install sample binaries as well.
-* Dont strip binaries.
 * Dont try to write triggers for CPack. We package ourselves.
 * Fix the installation path for Python modules when baselib = lib64.
 
@@ -14,17 +14,16 @@ Upstream-Status: Inappropriate
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
  cmake/developer_package/packaging/rpm/rpm.cmake | 2 +-
- cmake/developer_package/target_flags.cmake      | 2 +-
+ cmake/developer_package/target_flags.cmake      | 4 ++--
  samples/cpp/CMakeLists.txt                      | 6 +++---
  src/bindings/python/CMakeLists.txt              | 2 +-
- src/bindings/python/wheel/setup.py              | 1 -
- 5 files changed, 6 insertions(+), 7 deletions(-)
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/cmake/developer_package/packaging/rpm/rpm.cmake b/cmake/developer_package/packaging/rpm/rpm.cmake
-index a7c0ec2cf61..40448e8a962 100644
+index 99f11730983..1a1f61fcd3d 100644
 --- a/cmake/developer_package/packaging/rpm/rpm.cmake
 +++ b/cmake/developer_package/packaging/rpm/rpm.cmake
-@@ -154,7 +154,7 @@ ov_rpm_specific_settings()
+@@ -156,7 +156,7 @@ ov_rpm_specific_settings()
  # needed to add triggers for packages with libraries
  set(def_triggers "${OpenVINO_BINARY_DIR}/_CPack_Packages/triggers")
  set(triggers_content "# /bin/sh -p\n/sbin/ldconfig\n")
@@ -34,17 +33,26 @@ index a7c0ec2cf61..40448e8a962 100644
  #
  # Functions helpful for packaging your modules with RPM cpack
 diff --git a/cmake/developer_package/target_flags.cmake b/cmake/developer_package/target_flags.cmake
-index 29f23e713e1..942dd445b19 100644
+index d047a1aebd9..4e8ca68c60f 100644
 --- a/cmake/developer_package/target_flags.cmake
 +++ b/cmake/developer_package/target_flags.cmake
-@@ -145,4 +145,4 @@ function(ov_glibc_version)
+@@ -149,7 +149,7 @@ function(ov_glibc_version)
      endif()
  endfunction()
  
 -ov_glibc_version()
 +#ov_glibc_version()
+ 
+ #
+ # Detects default value for _GLIBCXX_USE_CXX11_ABI for current compiler
+@@ -160,4 +160,4 @@ macro(ov_get_glibcxx_use_cxx11_abi)
+     endif()
+ endmacro()
+ 
+-ov_get_glibcxx_use_cxx11_abi()
++#ov_get_glibcxx_use_cxx11_abi()
 diff --git a/samples/cpp/CMakeLists.txt b/samples/cpp/CMakeLists.txt
-index c814cc37e2c..431e7bd2ed3 100644
+index 4d33bff944e..3e7f1458578 100644
 --- a/samples/cpp/CMakeLists.txt
 +++ b/samples/cpp/CMakeLists.txt
 @@ -206,9 +206,9 @@ macro(ov_add_sample)
@@ -61,30 +69,18 @@ index c814cc37e2c..431e7bd2ed3 100644
      # create global target with all samples / demo apps
      if(NOT TARGET ov_samples)
 diff --git a/src/bindings/python/CMakeLists.txt b/src/bindings/python/CMakeLists.txt
-index 58ff9b74302..4763994ba56 100644
+index 6cf43ec3fed..d539b9d003f 100644
 --- a/src/bindings/python/CMakeLists.txt
 +++ b/src/bindings/python/CMakeLists.txt
-@@ -356,7 +356,7 @@ if(ENABLE_PYTHON_PACKAGING)
-     endif()
+@@ -320,7 +320,7 @@ if(ENABLE_PYTHON_PACKAGING)
+     # install OpenVINO Python API
  
      set(python_package_prefix "${CMAKE_CURRENT_BINARY_DIR}/install_${pyversion}")
 -    set(install_lib "${python_package_prefix}/lib/${python_versioned_folder}/${ov_site_packages}")
 +    set(install_lib "${python_package_prefix}/${CMAKE_INSTALL_LIBDIR}/${python_versioned_folder}/${ov_site_packages}")
-     set(meta_info_subdir "openvino-${OpenVINO_VERSION}-py${python_xy}.egg-info")
-     set(meta_info_file "${install_lib}/${meta_info_subdir}/PKG-INFO")
+     set(openvino_meta_info_subdir "openvino-${OpenVINO_VERSION}-py${python_xy}.egg-info")
+     set(openvino_meta_info_file "${install_lib}/${openvino_meta_info_subdir}/PKG-INFO")
  
-diff --git a/src/bindings/python/wheel/setup.py b/src/bindings/python/wheel/setup.py
-index 4b056912212..5f05d891310 100644
---- a/src/bindings/python/wheel/setup.py
-+++ b/src/bindings/python/wheel/setup.py
-@@ -270,7 +270,6 @@ class CustomBuild(build):
-                 self.spawn(["cmake", "--install", binary_dir,
-                                      "--prefix", prefix,
-                                      "--config", CONFIG,
--                                     "--strip",
-                                      "--component", cpack_comp_name])
- 
-     def run(self):
 -- 
 2.34.1
 
