@@ -8,7 +8,7 @@ SRC_URI = "git://github.com/opencv/open_model_zoo.git;protocol=https;branch=mast
            file://0001-use-oe-gflags.patch \
            "
 
-SRCREV = "37f60eb7fe1dcdedc552b2fb184d646723ed5e80"
+SRCREV = "cf5141dad2a4f24e1c5d5b9d43219ed804c48bbf"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
