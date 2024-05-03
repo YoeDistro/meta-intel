@@ -16,7 +16,7 @@ SRC_URI = "git://github.com/intel/thermal_daemon/;branch=master;protocol=https \
            file://0001-Makefile-Fix-build-Issue.patch \
            "
 
-SRCREV = "3990ce2391e5c07293758c056e09e4f2453691b4"
+SRCREV = "ea8b773f76641a7a49d6584669e17371c22ad03e"
 S = "${WORKDIR}/git"
 
 inherit pkgconfig autotools systemd gtk-doc
