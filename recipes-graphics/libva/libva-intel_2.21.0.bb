@@ -17,11 +17,12 @@ SECTION = "x11"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2e48940f94acb0af582e5ef03537800f"
 
-SRC_URI = "https://github.com/intel/libva/releases/download/${PV}/libva-${PV}.tar.bz2 \
+SRC_URI = "git://github.com/intel/libva.git;protocol=https;branch=v2.21-branch \
           "
-SRC_URI[sha256sum] = "f72bdb4f48dfe71ad01f1cbefe069672a2c949a6abd51cf3c4d4784210badc49"
 
-S = "${WORKDIR}/libva-${PV}"
+SRCREV = "0b01aed44ef1a6ad660261284ff266fa812829ef"
+
+S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_URI = "https://github.com/intel/libva/releases"
 
