@@ -21,18 +21,10 @@ DEPENDS += "libva gmmlib"
 SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;nobranch=1 \
            file://0001-Disable-vp9-padding-on-mtl.patch \
            file://0002-Force-ARGB-surface-to-tile4-for-ACM.patch \
-           file://0004-Add-device-ID-for-ARL.patch \
-           file://0005-Add-XR24-support-to-DMABuf.patch \
-           file://0006-add-INTEL-MEDIA-ALLOC-refineE-to-specify-the-memory-.patch \
-           file://0007-Skip-report-keys.patch \
-           file://0008-Limit-INTEL-MEDIA-ALLOC-MODE-to-MTL-and-ARL-only.patch \
-           file://0009-Skip-cache-bucket-realloc-for-default-mode-0.patch \
-           file://0010-Fix-failed-4k-video-wall-test-case-and-color-corrupt.patch \
-           file://0011-Disable-422H-format-output.patch \
-           file://0012-Decode-Fix-AVC-decode-SFC-4K-hang-issue.patch \
+           file://8aa866dc650e6b0e0b7425bafc7b1039232c377a.patch \
           "
 
-SRCREV = "a9f272496fc0f3e823cc4a814666ea27b443d902"
+SRCREV = "8068c2e119ba16c017e5a5f443fac5a55edbee65"
 S = "${WORKDIR}/git"
 
 COMPATIBLE_HOST:x86-x32 = "null"
