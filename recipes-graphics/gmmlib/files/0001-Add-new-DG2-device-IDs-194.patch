@@ -1,4 +1,4 @@
-From 8729d66800995a9b7e693bd78249932bd12383e1 Mon Sep 17 00:00:00 2001
+From 683f3552e7d5089601bb37952641b1c7691cf475 Mon Sep 17 00:00:00 2001
 From: John Machado <john.machado@intel.com>
 Date: Mon, 25 Mar 2024 11:13:27 +0530
 Subject: [PATCH] Add new DG2 device IDs (#194)
@@ -11,10 +11,10 @@ Signed-off-by: Hoe, Sheng Yang <sheng.yang.hoe@intel.com>
  1 file changed, 4 insertions(+)
 
 diff --git a/Source/inc/common/igfxfmid.h b/Source/inc/common/igfxfmid.h
-index 7969779..8e2c955 100644
+index 1264087..e944e1e 100644
 --- a/Source/inc/common/igfxfmid.h
 +++ b/Source/inc/common/igfxfmid.h
-@@ -1932,6 +1932,8 @@ typedef enum __NATIVEGTTYPE
+@@ -1934,6 +1934,8 @@ typedef enum __NATIVEGTTYPE
  #define DEV_ID_56BB                             0x56BB
  #define DEV_ID_56BC                             0x56BC
  #define DEV_ID_56BD                             0x56BD
@@ -22,16 +22,13 @@ index 7969779..8e2c955 100644
 +#define DEV_ID_56BF                             0x56BF
  #define DEV_ID_56C0                             0x56C0
  #define DEV_ID_56C1                             0x56C1
- 
-@@ -1992,6 +1994,8 @@ typedef enum __NATIVEGTTYPE
+ #define DEV_ID_56C2                             0x56C2
+@@ -2001,6 +2003,8 @@ typedef enum __NATIVEGTTYPE
                                        ( d == DEV_ID_5690 )                              ||   \
                                        ( d == DEV_ID_5691 )                              ||   \
                                        ( d == DEV_ID_5692 )                              ||   \
 +                                      ( d == DEV_ID_56BE )                              ||   \
 +                                      ( d == DEV_ID_56BF )                              ||   \
                                        ( d == DEV_ID_56C0 )                              ||   \
+ 	                              ( d == DEV_ID_56C2 )                              ||   \
                                        ( d == DEV_ID_4F80 )                              ||   \
-                                       ( d == DEV_ID_4F81 )                              ||   \
--- 
-2.34.1
-
