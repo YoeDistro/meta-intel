@@ -1,4 +1,4 @@
-From 630c32194f53c70f4f654fb3d198790df253ba1f Mon Sep 17 00:00:00 2001
+From ff715f4c543ddabc5c90160d0ae5c5598e8e1289 Mon Sep 17 00:00:00 2001
 From: Markus Volk <f_l_k@t-online.de>
 Date: Thu, 15 Jun 2023 13:43:32 +0200
 Subject: [PATCH] vpl.pc.in: dont pass pcfiledir to cflags
@@ -11,18 +11,15 @@ Upstream-Status: Inappropriate [oe specific]
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/libvpl/pkgconfig/vpl.pc.in b/libvpl/pkgconfig/vpl.pc.in
-index ab468a9..05c020e 100644
+index aa9b158..b4e85ff 100644
 --- a/libvpl/pkgconfig/vpl.pc.in
 +++ b/libvpl/pkgconfig/vpl.pc.in
-@@ -8,6 +8,6 @@ Description: oneAPI Video Processing Library
+@@ -7,6 +7,6 @@ Description: Accelerated video decode, encode, and frame processing capabilities
  Version: @API_VERSION_MAJOR@.@API_VERSION_MINOR@
- URL: https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onevpl.html
+ URL: https://github.com/intel/libvpl
  
 -Libs: -L${libdir} -l@OUTPUT_NAME@ @VPL_PKGCONFIG_DEPENDENT_LIBS@
 +Libs: -L@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_LIBDIR@ -l@OUTPUT_NAME@ @VPL_PKGCONFIG_DEPENDENT_LIBS@
  Libs.private: @VPL_PKGCONFIG_PRIVATE_LIBS@
 -Cflags: -I${includedir} -I${includedir}/vpl
 +Cflags: -I@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_INCLUDEDIR@ -I@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_INCLUDEDIR@/vpl
--- 
-2.40.1
-
