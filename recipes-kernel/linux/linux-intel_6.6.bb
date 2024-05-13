@@ -16,6 +16,8 @@ SRCREV_machine ?= "lts-v6.6.25-linux-240415T215440Z"
 SRCREV_meta ?= "c3d1322fb6ff68cdcf4d7a3c1140d81bfdc1320a"
 
 # Functionality flags
-KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc features/security/security.scc"
+KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc \
+                            features/security/security.scc \
+                            features/iommu/iommu.scc"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^lts-(?P<pver>v6.6.(\d+)-linux-(\d+)T(\d+)Z)$"
