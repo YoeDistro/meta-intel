@@ -3,12 +3,12 @@ DESCRIPTION = "The oneAPI Video Processing Library (oneVPL) provides \
 a single video processing API for encode, decode, and video processing \
 that works across a wide range of accelerators."
 
-HOMEPAGE = "https://github.com/oneapi-src/oneVPL"
+HOMEPAGE = "https://github.com/intel/libvpl"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=c18ea6bb4786a26bf4eee88a7424a408 \
                     file://third-party-programs.txt;md5=43ed11c52f754dafaa62e2cfdd2bac13"
 
-SRC_URI = "git://github.com/oneapi-src/oneVPL.git;protocol=https;branch=master \
+SRC_URI = "git://github.com/intel/libvpl.git;protocol=https;branch=main \
             file://0001-Fix-basename-build-issue-with-musl_libc.patch \
             file://0001-samples-Addin-wayland-scanner-auto-generate-on-cmake.patch \
             file://0002-sample_misc-Addin-basic-wayland-dmabuf-support.patch \
