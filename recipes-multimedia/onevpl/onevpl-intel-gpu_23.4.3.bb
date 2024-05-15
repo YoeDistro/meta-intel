@@ -2,8 +2,8 @@ SUMMARY = "Intel(R) oneVPL runtime for Intel GPU accelerated media processing"
 DESCRIPTION = "Intel(R) oneVPL runtime provides an runtime to access hardware-accelerated \
 video decode, encode and filtering on Intel® graphics."
 
-HOMEPAGE = "https://github.com/oneapi-src/oneVPL-intel-gpu"
-BUGTRACKER = "https://github.com/oneapi-src/oneVPL-intel-gpu/issues"
+HOMEPAGE = "https://github.com/intel/vpl-gpu-rt"
+BUGTRACKER = "https://github.com/intel/vpl-gpu-rt/issues"
 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=eb8cb45b9b57dbaa9fcc9adc4230202b"
@@ -17,7 +17,7 @@ COMPATIBLE_HOST:x86-x32 = "null"
 DEPENDS += "libdrm libva intel-media-driver onevpl pkgconfig-native"
 RDEPENDS:${PN} += "intel-media-driver"
 
-SRC_URI = "git://github.com/oneapi-src/oneVPL-intel-gpu.git;protocol=https;nobranch=1;lfs=0 \
+SRC_URI = "git://github.com/intel/vpl-gpu-rt.git;protocol=https;nobranch=1;lfs=0 \
            file://0001-ARLH-DID-open-source-6286.patch \
            file://0001-JPEGe-Enable-BGR4-JPEG-Enc-support-6470.patch \
            file://0001-Fix-SetBuffersYV12-V-U-plane-offsets-calculation-647.patch \
