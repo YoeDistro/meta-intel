@@ -12,6 +12,7 @@ SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https;branch=rele
            file://disable-werror.patch \
            file://allow-to-find-cpp-generation-tool.patch \
            file://external-ocloc.patch \
+           file://f10439aea214984a060566831f63d3aa198ef1b8.patch \
            "
 
 SRCREV = "7131387cdbb02d480a225c70daef913a6c024a6e"

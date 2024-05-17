@@ -1,0 +1,54 @@
+From f10439aea214984a060566831f63d3aa198ef1b8 Mon Sep 17 00:00:00 2001
+From: Pawel Cieslak <pawel.cieslak@intel.com>
+Date: Tue, 14 May 2024 14:20:24 +0000
+Subject: [PATCH] fix: include <algorithm> where std::find is used
+
+Related-To: NEO-11375
+Signed-off-by: Pawel Cieslak <pawel.cieslak@intel.com>
+
+Upstream-Status: Backport [https://github.com/intel/compute-runtime/commit/f10439aea214984a060566831f63d3aa198ef1b8]
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ .../sources/linux/nl_api/test_sysman_iaf_nl_api_prelim.cpp    | 3 ++-
+ shared/test/unit_test/gmm_helper/gmm_resource_info_tests.cpp  | 4 +++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/level_zero/sysman/test/unit_tests/sources/linux/nl_api/test_sysman_iaf_nl_api_prelim.cpp b/level_zero/sysman/test/unit_tests/sources/linux/nl_api/test_sysman_iaf_nl_api_prelim.cpp
+index 6ab1b751d866..8a224752c8fc 100644
+--- a/level_zero/sysman/test/unit_tests/sources/linux/nl_api/test_sysman_iaf_nl_api_prelim.cpp
++++ b/level_zero/sysman/test/unit_tests/sources/linux/nl_api/test_sysman_iaf_nl_api_prelim.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2021-2023 Intel Corporation
++ * Copyright (C) 2021-2024 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -13,6 +13,7 @@
+ 
+ #include "gtest/gtest.h"
+ 
++#include <algorithm>
+ #include <limits>
+ #include <netlink/handlers.h>
+ 
+diff --git a/shared/test/unit_test/gmm_helper/gmm_resource_info_tests.cpp b/shared/test/unit_test/gmm_helper/gmm_resource_info_tests.cpp
+index 206c272c5bb2..e961248e73a3 100644
+--- a/shared/test/unit_test/gmm_helper/gmm_resource_info_tests.cpp
++++ b/shared/test/unit_test/gmm_helper/gmm_resource_info_tests.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2021-2023 Intel Corporation
++ * Copyright (C) 2021-2024 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -17,6 +17,8 @@
+ 
+ #include "gtest/gtest.h"
+ 
++#include <algorithm>
++
+ using namespace NEO;
+ 
+ struct MockGmmHandleAllocator : NEO::GmmHandleAllocator {
