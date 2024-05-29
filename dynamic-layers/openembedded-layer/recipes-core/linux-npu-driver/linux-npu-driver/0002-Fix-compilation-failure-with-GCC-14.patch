@@ -1,0 +1,110 @@
+From a9f51fd88effb7d324609e692ca7da576d6dad2e Mon Sep 17 00:00:00 2001
+From: Naveen Saini <naveen.kumar.saini@intel.com>
+Date: Tue, 28 May 2024 10:23:42 +0800
+Subject: [PATCH 2/2] Fix compilation failure with GCC-14
+
+umd/level_zero_driver/core/source/event/event.cpp:65:31: error: 'remove_if' is not a member of 'std'; did you mean 'remove_cv'?
+|    65 |     associatedJobs.erase(std::remove_if(associatedJobs.begin(),
+|       |                               ^~~~~~~~~
+|       |                               remove_cv
+
+| umd/vpu_driver/source/command/vpu_command.cpp: In member function 'void VPU::VPUCommand::appendAssociateBufferObject(VPU::VPUBufferObject*)':
+| umd/vpu_driver/source/command/vpu_command.cpp:126:20: error: 'find' is not a member of 'std'; did you mean 'bind'?
+|   126 |     auto it = std::find(bufferObjects.begin(), bufferObjects.end(), bo);
+|       |                    ^~~~
+|       |                    bind
+
+| umd/vpu_driver/source/command/vpu_command_buffer.cpp: In member function 'bool VPU::VPUCommandBuffer::addCommand(VPU::VPUCommand*, uint64_t&, uint64_t&)':
+| umd/vpu_driver/source/command/vpu_command_buffer.cpp:185:24: error: 'find' is not a member of 'std'; did you mean 'bind'?
+|   185 |         auto it = std::find(bufferHandles.begin(), bufferHandles.end(), bo->getHandle());
+|       |                        ^~~~
+|       |                        bind
+
+| umd/level_zero_driver/ext/source/graph/elf_parser.cpp:301:32: error: 'max_element' is not a member of 'std'; did you mean 'tuple_element'?
+|   301 |                           std::max_element(stride_begin + TENSOR_5D_STRIDE_C, stride_end));
+|       |                                ^~~~~~~~~~~
+|       |                                tuple_element
+| umd/level_zero_driver/ext/source/graph/elf_parser.cpp:315:37: error: 'max_element' is not a member of 'std'; did you mean 'tuple_element'?
+|   315 |         auto max_stride_val = *std::max_element(stride_begin + TENSOR_4D_STRIDE_C, stride_end);
+|       |                                     ^~~~~~~~~~~
+
+| umd/level_zero_driver/tools/source/metrics/metric.cpp: In member function 'void L0::MetricContext::deactivateMetricGroups(int)':
+| umd/level_zero_driver/tools/source/metrics/metric.cpp:275:38: error: 'remove_if' is not a member of 'std'; did you mean 'remove_cv'?
+|   275 |     activatedMetricGroups.erase(std::remove_if(activatedMetricGroups.begin(),
+|       |                                      ^~~~~~~~~
+|       |                                      remove_cv
+
+Upstream-Status: Submitted [https://github.com/intel/linux-npu-driver/pull/30]
+
+Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
+---
+ umd/level_zero_driver/core/source/event/event.cpp     | 1 +
+ umd/level_zero_driver/ext/source/graph/elf_parser.cpp | 1 +
+ umd/level_zero_driver/tools/source/metrics/metric.cpp | 1 +
+ umd/vpu_driver/source/command/vpu_command.cpp         | 1 +
+ umd/vpu_driver/source/command/vpu_command_buffer.cpp  | 1 +
+ 5 files changed, 5 insertions(+)
+
+diff --git a/umd/level_zero_driver/core/source/event/event.cpp b/umd/level_zero_driver/core/source/event/event.cpp
+index a92248f..196d176 100644
+--- a/umd/level_zero_driver/core/source/event/event.cpp
++++ b/umd/level_zero_driver/core/source/event/event.cpp
+@@ -14,6 +14,7 @@
+ 
+ #include <level_zero/ze_api.h>
+ #include <thread>
++#include <algorithm>
+ 
+ namespace L0 {
+ 
+diff --git a/umd/level_zero_driver/ext/source/graph/elf_parser.cpp b/umd/level_zero_driver/ext/source/graph/elf_parser.cpp
+index a1c8e14..dfbd61d 100644
+--- a/umd/level_zero_driver/ext/source/graph/elf_parser.cpp
++++ b/umd/level_zero_driver/ext/source/graph/elf_parser.cpp
+@@ -21,6 +21,7 @@
+ #include <vpux_headers/metadata.hpp>
+ #include <vpux_elf/types/vpu_extensions.hpp>
+ #include <vpux_elf/utils/error.hpp>
++#include <algorithm>
+ 
+ namespace L0 {
+ 
+diff --git a/umd/level_zero_driver/tools/source/metrics/metric.cpp b/umd/level_zero_driver/tools/source/metrics/metric.cpp
+index b67750f..9497311 100644
+--- a/umd/level_zero_driver/tools/source/metrics/metric.cpp
++++ b/umd/level_zero_driver/tools/source/metrics/metric.cpp
+@@ -7,6 +7,7 @@
+ 
+ #include "level_zero_driver/tools/source/metrics/metric.hpp"
+ #include "vpu_driver/source/utilities/log.hpp"
++#include <algorithm>
+ 
+ namespace L0 {
+ 
+diff --git a/umd/vpu_driver/source/command/vpu_command.cpp b/umd/vpu_driver/source/command/vpu_command.cpp
+index f4ca23f..75331d9 100644
+--- a/umd/vpu_driver/source/command/vpu_command.cpp
++++ b/umd/vpu_driver/source/command/vpu_command.cpp
+@@ -14,6 +14,7 @@
+ #include <cstdint>
+ #include <vector>
+ #include <map>
++#include <algorithm>
+ 
+ namespace VPU {
+ 
+diff --git a/umd/vpu_driver/source/command/vpu_command_buffer.cpp b/umd/vpu_driver/source/command/vpu_command_buffer.cpp
+index c4ad052..bbb80ec 100644
+--- a/umd/vpu_driver/source/command/vpu_command_buffer.cpp
++++ b/umd/vpu_driver/source/command/vpu_command_buffer.cpp
+@@ -11,6 +11,7 @@
+ #include "vpu_driver/source/command/vpu_command_buffer.hpp"
+ #include "vpu_driver/source/command/vpu_copy_command.hpp"
+ #include "vpu_driver/source/utilities/log.hpp"
++#include <algorithm>
+ 
+ namespace VPU {
+ 
+-- 
+2.43.0
+
