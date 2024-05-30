@@ -17,6 +17,7 @@ SRCREV_meta ?= "66bebb6789d02e775d4c93d7ca4bf79c2ead4b28"
 
 # Functionality flags
 KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc \
-                            features/security/security.scc"
+                            features/security/security.scc \
+                            features/intel-npu/intel-npu.scc"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^lts-(?P<pver>v6.6.(\d+)-linux-(\d+)T(\d+)Z)$"
