@@ -11,12 +11,11 @@ DEPENDS += "elfutils-native openssl-native util-linux-native"
 LINUX_VERSION_EXTENSION ??= "-mainline-tracking-${LINUX_KERNEL_TYPE}"
 
 LINUX_VERSION ?= "6.8"
-SRCREV_machine ?= "efbae83db36abbbbdb946d4f7bbdfda174107cd2"
-SRCREV_meta ?= "27907f391a4fc508da21358b13419c6e86926c34"
+SRCREV_machine ?= "4b78f19d1c451c3738b10d489e67977e97036a7f"
+SRCREV_meta ?= "d6379f226f25136d9292f09cd7c11921f0bbcd9b"
 
 # Functionality flags
 KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc \
-                            features/security/security.scc \
-                            features/iommu/iommu.scc"
+                            features/security/security.scc"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^mainline-tracking-v6.7-rc3-linux-(?P<pver>(\d+)T(\d+)Z)$"
