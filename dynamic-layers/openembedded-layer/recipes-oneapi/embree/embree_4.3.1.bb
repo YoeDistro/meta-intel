@@ -28,3 +28,5 @@ EXTRA_OECMAKE += " \
                   -DEMBREE_ISPC_SUPPORT=ON  \
                   -DEMBREE_ZIP_MODE=OFF  \
                   "
+
+UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>(\d+(\.\d+)+))$"
