@@ -18,7 +18,7 @@ SRC_URI = "git://github.com/ispc/ispc.git;protocol=https;branch=main \
            file://run-ptest \
            "
 
-SRCREV = "bcb2cf896c00f9a802a11cbf291ef6e44b205416"
+SRCREV = "d394222aef59e4759b06e39ec160e4aba6ee5f40"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 
