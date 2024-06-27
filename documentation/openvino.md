@@ -11,6 +11,7 @@ Follow the [Yocto Project official documentation](https://docs.yoctoproject.org/
       git clone https://git.yoctoproject.org/git/poky
       git clone https://github.com/openembedded/meta-openembedded
       git clone https://git.yoctoproject.org/git/meta-intel
+      git clone https://github.com/intel/meta-openvino
 ```
 
 
@@ -30,6 +31,7 @@ Follow the [Yocto Project official documentation](https://docs.yoctoproject.org/
       bitbake-layers add-layer ../meta-openembedded/meta-oe
       bitbake-layers add-layer ../meta-openembedded/meta-python
       bitbake-layers add-layer ../meta-intel
+      bitbake-layers add-layer ../meta-openvino
 
 ```
 
@@ -53,9 +55,6 @@ Follow the [Yocto Project official documentation](https://docs.yoctoproject.org/
 
       # Include OpenVINO Python API package in the target image.
       CORE_IMAGE_EXTRA_INSTALL:append = " openvino-inference-engine-python3"
-
-      # Include model conversion API in the target image.
-      CORE_IMAGE_EXTRA_INSTALL:append = " openvino-model-optimizer"
 
 ```
 
@@ -88,8 +87,6 @@ If the image build is successful, it will return the list of packages as below:
    openvino-inference-engine-python3
    openvino-inference-engine-samples
    openvino-inference-engine-src
-   openvino-model-optimizer
-   openvino-model-optimizer-dbg
-   openvino-model-optimizer-dev
+   openvino-inference-engine-doc
 
 ```
