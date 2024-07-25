@@ -8,7 +8,7 @@ SECTION = "lib"
 inherit pkgconfig cmake
 
 S = "${WORKDIR}/git"
-SRCREV = "24c4dfd45df1600ca83dfb03217675edc4633ffd"
+SRCREV = "cb7afbf88134a563eff856652c574f7def414924"
 SRC_URI = "git://github.com/intel/metrics-discovery.git;branch=master;protocol=https \
           "
 
