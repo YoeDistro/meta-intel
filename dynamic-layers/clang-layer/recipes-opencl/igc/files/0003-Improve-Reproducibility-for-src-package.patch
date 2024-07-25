@@ -1,4 +1,4 @@
-From 0559332abd04b6c8bc70171d201f43d2e4735336 Mon Sep 17 00:00:00 2001
+From ca136c04d4ac60e3febc8ea2b9c4d4736365a424 Mon Sep 17 00:00:00 2001
 From: Lee Chee Yang <chee.yang.lee@intel.com>
 Date: Wed, 2 Sep 2020 08:28:35 +0800
 Subject: [PATCH] Improve Reproducibility for src package
@@ -9,16 +9,15 @@ this only works on bison 3.7 onward, hence check for bison version
 before adding the flags.
 Upstream-Status: Inappropriate [applying --file-prefix-map in such way does not work for upstream]
 Signed-off-by: Lee Chee Yang <chee.yang.lee@intel.com>
-
 ---
  visa/CMakeLists.txt | 7 +++++--
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/visa/CMakeLists.txt b/visa/CMakeLists.txt
-index 6be467587..930c386a6 100644
+index 1b01b3389..8d608163d 100644
 --- a/visa/CMakeLists.txt
 +++ b/visa/CMakeLists.txt
-@@ -123,8 +123,11 @@ endif()
+@@ -133,8 +133,11 @@ endif()
  set(bison_output_file ${CMAKE_CURRENT_BINARY_DIR}/CISA.tab.cpp)
  set(flex_output_file ${CMAKE_CURRENT_BINARY_DIR}/lex.CISA.cpp)
  

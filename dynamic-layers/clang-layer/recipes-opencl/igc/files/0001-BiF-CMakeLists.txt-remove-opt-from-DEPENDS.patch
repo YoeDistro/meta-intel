@@ -1,4 +1,4 @@
-From 3d71670f8ad5b54d434c2f5f71713bb1d5433ae4 Mon Sep 17 00:00:00 2001
+From 1b98a931c3bf8daccc48cd618335ff35e3d382da Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Tue, 12 Oct 2021 23:46:42 +0800
 Subject: [PATCH] BiF/CMakeLists.txt: remove opt from DEPENDS
@@ -30,6 +30,3 @@ index d20d7f887..882e09fea 100644
      BYPRODUCTS ${BIF_OPT_BC_PATH}
      SOURCES ${CMCL_SRC_PATH})
    set(${RES_FILE} ${BIF_OPT_BC_NAME} PARENT_SCOPE)
--- 
-2.43.2
-

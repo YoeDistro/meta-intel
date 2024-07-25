@@ -1,4 +1,4 @@
-From e69a3181482e5f442756a61c7b683914072884f1 Mon Sep 17 00:00:00 2001
+From 251e2854dd206ebf66e5908d3277e4585fe2a63b Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Mon, 9 Jan 2023 11:43:05 +0800
 Subject: [PATCH] external/SPIRV-Tools: change path to tools and headers
@@ -9,16 +9,15 @@ file path substitutions take place.
 Upstream-Status: Inappropriate
 
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
-
 ---
  external/SPIRV-Tools/CMakeLists.txt | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/external/SPIRV-Tools/CMakeLists.txt b/external/SPIRV-Tools/CMakeLists.txt
-index 9afa5746c..7ca24d5dc 100644
+index 31108b96b..007c24bf0 100644
 --- a/external/SPIRV-Tools/CMakeLists.txt
 +++ b/external/SPIRV-Tools/CMakeLists.txt
-@@ -43,8 +43,8 @@ else() #By default use build from sources
+@@ -45,8 +45,8 @@ else() #By default use build from sources
   message(STATUS "[SPIRV-Tools] : Building from source")
   message(STATUS "[SPIRV-Tools] : Current source dir: ${CMAKE_CURRENT_SOURCE_DIR}")
  
