@@ -7,7 +7,7 @@ LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4b63c65942e1c16fd897f8cd20abebf8"
 
 SRC_URI = "git://github.com/intel/intel-cmt-cat;protocol=https;branch=master"
-SRCREV = "b26b31b0ae6980c5939a421cefe0316cae884626"
+SRCREV = "cc0e6a6184dbd2849c62b9bf9f60012332335e03"
 
 S = "${WORKDIR}/git"
 
