@@ -8,14 +8,13 @@ LICENSE = "MIT & Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=eca6ec6997e18db166db7109cdbe611c \
                     file://third_party/opencl_headers/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https;branch=releases/24.13 \
-           file://disable-werror.patch \
-           file://allow-to-find-cpp-generation-tool.patch \
-           file://external-ocloc.patch \
-           file://f10439aea214984a060566831f63d3aa198ef1b8.patch \
+SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https;branch=releases/24.22 \
+           file://0001-intel-compute-runtime-fix-build-with-gcc13.patch \
+           file://0002-Build-not-able-to-locate-cpp_generation_tool.patch \
+           file://0003-external-ocloc.patch \
            "
 
-SRCREV = "7131387cdbb02d480a225c70daef913a6c024a6e"
+SRCREV = "6aa72243a0916e05a6c1dbe8a0a46711a96fda98"
 
 S = "${WORKDIR}/git"
 

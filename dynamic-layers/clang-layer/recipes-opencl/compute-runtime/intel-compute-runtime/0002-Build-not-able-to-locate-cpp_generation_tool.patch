@@ -1,7 +1,7 @@
-From a6361d635e5f3046853883f3ac06fb175116933c Mon Sep 17 00:00:00 2001
+From 8c330d0cb5167612296801f0202b0de35e9ca88d Mon Sep 17 00:00:00 2001
 From: Dongwon Kim <dongwon.kim@intel.com>
 Date: Sat, 21 Aug 2021 16:09:39 -0700
-Subject: [PATCH] Build not able to locate cpp_generation_tool.
+Subject: [PATCH 2/5] Build not able to locate cpp_generation_tool.
 
 Upstream-Status: Inappropriate [oe specific]
 
@@ -47,5 +47,5 @@ index ed85a37c52..f7c9e79137 100644
 \ No newline at end of file
 +apply_macro_for_each_core_type("SUPPORTED")
 -- 
-2.43.2
+2.34.1
 

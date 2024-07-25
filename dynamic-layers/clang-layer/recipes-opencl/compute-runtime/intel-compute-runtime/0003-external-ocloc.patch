@@ -1,7 +1,7 @@
-From 1f58c22992ddea4167b01b44448528de427f50d5 Mon Sep 17 00:00:00 2001
+From 0006db5f55a9f08bd3452558a53704cd3bbb790f Mon Sep 17 00:00:00 2001
 From: Dongwon Kim <dongwon.kim@intel.com>
 Date: Wed, 2 Mar 2022 15:52:45 -0800
-Subject: [PATCH] external ocloc
+Subject: [PATCH 3/5] external ocloc
 
 Upstream-Status: Inappropriate
 
@@ -11,7 +11,7 @@ Signed-off-by: Dongwon Kim <dongwon.kim@intel.com>
  1 file changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/cmake/ocloc_cmd_prefix.cmake b/cmake/ocloc_cmd_prefix.cmake
-index 2b44330831..03067c9df0 100644
+index 3fcadb682d..6d8022db2e 100644
 --- a/cmake/ocloc_cmd_prefix.cmake
 +++ b/cmake/ocloc_cmd_prefix.cmake
 @@ -4,12 +4,14 @@
@@ -36,5 +36,5 @@ index 2b44330831..03067c9df0 100644
    endif()
  endif()
 -- 
-2.37.3
+2.34.1
 
