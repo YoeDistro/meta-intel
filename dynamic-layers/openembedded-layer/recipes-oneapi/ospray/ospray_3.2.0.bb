@@ -14,8 +14,8 @@ inherit pkgconfig cmake
 S = "${WORKDIR}/git"
 
 SRC_URI = "git://github.com/ospray/ospray.git;protocol=https;branch=master \
-            "
-SRCREV = "f2a61c2eb58ccd666e34abfdb0fd7049ea073194"
+          "
+SRCREV = "85af2929937d516997451cbd52d352cf93125ed2"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
