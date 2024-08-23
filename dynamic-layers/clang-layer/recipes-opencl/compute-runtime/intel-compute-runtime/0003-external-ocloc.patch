@@ -10,11 +10,11 @@ Signed-off-by: Dongwon Kim <dongwon.kim@intel.com>
  cmake/ocloc_cmd_prefix.cmake | 14 ++++++++------
  1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/cmake/ocloc_cmd_prefix.cmake b/cmake/ocloc_cmd_prefix.cmake
-index 3fcadb682d..6d8022db2e 100644
---- a/cmake/ocloc_cmd_prefix.cmake
-+++ b/cmake/ocloc_cmd_prefix.cmake
-@@ -4,12 +4,14 @@
+Index: git/cmake/ocloc_cmd_prefix.cmake
+===================================================================
+--- git.orig/cmake/ocloc_cmd_prefix.cmake
++++ git/cmake/ocloc_cmd_prefix.cmake
+@@ -4,13 +4,15 @@
  # SPDX-License-Identifier: MIT
  #
  
@@ -35,6 +35,4 @@ index 3fcadb682d..6d8022db2e 100644
 +    endif()
    endif()
  endif()
--- 
-2.34.1
-
+ 
