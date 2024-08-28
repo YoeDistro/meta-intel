@@ -2,6 +2,9 @@ require linux-intel.inc
 
 SRC_URI:prepend = "git://github.com/intel/linux-intel-lts.git;protocol=https;name=machine;branch=${KBRANCH}; \
                     "
+SRC_URI:append = "file://0001-6.6-vt-conmakehash-improve-reproducibility.patch \
+                  file://0001-6.6-lib-build_OID_registry-fix-reproducibility-issues.patch \
+                  "
 
 # Skip processing of this recipe if it is not explicitly specified as the
 # PREFERRED_PROVIDER for virtual/kernel. This avoids errors when trying
@@ -21,9 +24,9 @@ DEPENDS += "elfutils-native openssl-native util-linux-native"
 
 LINUX_VERSION_EXTENSION ??= "-intel-pk-${LINUX_KERNEL_TYPE}"
 
-LINUX_VERSION ?= "6.6.30"
-SRCREV_machine ?= "ffb1894c2ca4fcb0f5a6b59ddb4e25a1124158cc"
-SRCREV_meta ?= "66bebb6789d02e775d4c93d7ca4bf79c2ead4b28"
+LINUX_VERSION ?= "6.6.44"
+SRCREV_machine ?= "0d19fd8880411e2a96b85945e4abde1b62338090"
+SRCREV_meta ?= "9901a21dd1f99c833d8e1a58b3fc057e57bda598"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
 
