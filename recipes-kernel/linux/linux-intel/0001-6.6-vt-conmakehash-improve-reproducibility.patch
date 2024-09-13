@@ -1,4 +1,4 @@
-From 0f586f4ee8adacac79b64d1f3d47799a5eb7fbea Mon Sep 17 00:00:00 2001
+From 2f662283528bc003d0be988bf6590a271ebe7755 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Sun, 10 Jul 2022 21:37:07 -0400
 Subject: [PATCH] vt/conmakehash: improve reproducibility
@@ -28,7 +28,7 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/tty/vt/Makefile b/drivers/tty/vt/Makefile
-index fe30ce512819..cb51c21b58f9 100644
+index b3dfe9d5717e..6ee3736776c8 100644
 --- a/drivers/tty/vt/Makefile
 +++ b/drivers/tty/vt/Makefile
 @@ -15,7 +15,7 @@ clean-files := consolemap_deftbl.c defkeymap.c
@@ -54,5 +54,5 @@ index cddd789fe46e..d62510b280e9 100644
    for ( i = 0 ; i < fontlen ; i++ )
      {
 -- 
-2.36.1
+2.34.1
 
