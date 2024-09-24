@@ -14,6 +14,7 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;nam
            git://github.com/KhronosGroup/SPIRV-Headers.git;protocol=https;destsuffix=SPIRV-Headers;name=spirv-headers;branch=master \
            file://0003-Improve-Reproducibility-for-src-package.patch \
            file://0001-BiF-CMakeLists.txt-remove-opt-from-DEPENDS.patch \
+           file://0001-SPIRVutil-Include-cstdint-to-fix-GCC-13-build.patch \
            "
 
 SRC_URI:append:class-native = " file://0001-fix-tblgen.patch"

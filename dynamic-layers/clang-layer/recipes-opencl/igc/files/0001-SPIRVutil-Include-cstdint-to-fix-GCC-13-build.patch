@@ -1,0 +1,29 @@
+From 5ea17d8bcf3daa03ef95d0fed796f68cec7dc32d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Franti=C5=A1ek=20Zatloukal?= <fzatlouk@redhat.com>
+Date: Wed, 18 Jan 2023 22:22:23 +0000
+Subject: [PATCH]  SPIRVutil: Include cstdint to fix GCC 13 build
+
+SPIRVutil: Include cstdint to fix GCC 13 build
+
+Upstream-Status: Backport [https://github.com/intel-innersource/drivers.gpu.compiler.staging/commit/5ea17d8bcf3daa03ef95d0fed796f68cec7dc32d]
+
+Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
+---
+ IGC/AdaptorOCL/SPIRV/libSPIRV/SPIRVUtil.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/IGC/AdaptorOCL/SPIRV/libSPIRV/SPIRVUtil.h b/IGC/AdaptorOCL/SPIRV/libSPIRV/SPIRVUtil.h
+index 1076d5d42..9685e477f 100644
+--- a/IGC/AdaptorOCL/SPIRV/libSPIRV/SPIRVUtil.h
++++ b/IGC/AdaptorOCL/SPIRV/libSPIRV/SPIRVUtil.h
+@@ -49,6 +49,7 @@ THE SOFTWARE.
+ #define SPIRVUTIL_H_
+ 
+ #include <algorithm>
++#include <cstdint>
+ #include <functional>
+ #include <limits>
+ #include <map>
+-- 
+2.34.1
+
