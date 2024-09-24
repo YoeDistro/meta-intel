@@ -1,0 +1,25 @@
+From 894bab05efb447d249c9f0afdbf0ca62c82395c6 Mon Sep 17 00:00:00 2001
+From: Mateusz Jablonski <mateusz.jablonski@intel.com>
+Date: Tue, 22 Aug 2023 10:55:50 +0000
+Subject: [PATCH] fix: add missing zero-initialization in StackVec class
+
+Upstream-Status: Backport [https://github.com/intel/compute-runtime/commit/894bab05efb447d249c9f0afdbf0ca62c82395c6]
+
+Signed-off-by: Mateusz Jablonski <mateusz.jablonski@intel.com>
+---
+ shared/source/utilities/stackvec.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: git/shared/source/utilities/stackvec.h
+===================================================================
+--- git.orig/shared/source/utilities/stackvec.h
++++ git/shared/source/utilities/stackvec.h
+@@ -431,7 +431,7 @@ class StackVec { // NOLINT(clang-analyze
+         DataType *onStackMem;
+     };
+ 
+-    alignas(alignof(DataType)) char onStackMemRawBytes[sizeof(DataType[onStackCaps])];
++    alignas(alignof(DataType)) char onStackMemRawBytes[sizeof(DataType[onStackCaps])]{};
+     SizeT onStackSize = 0U;
+ };
+ 

@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=9280143b568466d8fbe385f838078b93 \
                     file://third_party/opencl_headers/LICENSE;md5=dcefc90f4c3c689ec0c2489064e7273b"
 
 SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https;branch=master \
+           file://0001-fix-add-missing-zero-initialization-in-StackVec-clas.patch \
           "
 
 SRC_URI:append:class-target = "file://allow-to-find-cpp-generation-tool.patch \
