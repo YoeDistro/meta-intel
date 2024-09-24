@@ -1,0 +1,157 @@
+From 1517c8689cdaab9aaa1fa25e8db3b84f93e1f1ca Mon Sep 17 00:00:00 2001
+From: Mateusz Jablonski <mateusz.jablonski@intel.com>
+Date: Tue, 22 Aug 2023 12:37:37 +0200
+Subject: [PATCH] fix: add missing includes
+
+Upstream-Status: Pending
+Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
+---
+ level_zero/tools/source/sysman/linux/pmt/pmt_xml_offsets.h | 1 +
+ opencl/test/unit_test/built_ins/built_ins_file_names.h     | 3 ++-
+ shared/source/compiler_interface/external_functions.h      | 1 +
+ shared/source/os_interface/linux/drm_debug.h               | 1 +
+ shared/source/os_interface/linux/pci_path.h                | 3 ++-
+ shared/source/os_interface/linux/pmt_util.h                | 1 +
+ shared/source/os_interface/print.h                         | 1 +
+ shared/source/tbx/tbx_sockets.h                            | 1 +
+ shared/source/tbx/tbx_sockets_imp.h                        | 1 +
+ third_party/aot_config_headers/platforms.h                 | 1 +
+ 10 files changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/level_zero/tools/source/sysman/linux/pmt/pmt_xml_offsets.h b/level_zero/tools/source/sysman/linux/pmt/pmt_xml_offsets.h
+index 2bcfa0e6aa..2a30b0c6be 100644
+--- a/level_zero/tools/source/sysman/linux/pmt/pmt_xml_offsets.h
++++ b/level_zero/tools/source/sysman/linux/pmt/pmt_xml_offsets.h
+@@ -7,6 +7,7 @@
+ 
+ #pragma once
+ 
++#include <cstdint>
+ #include <map>
+ #include <string>
+ 
+diff --git a/opencl/test/unit_test/built_ins/built_ins_file_names.h b/opencl/test/unit_test/built_ins/built_ins_file_names.h
+index 08dc38d406..ca43ba0f26 100644
+--- a/opencl/test/unit_test/built_ins/built_ins_file_names.h
++++ b/opencl/test/unit_test/built_ins/built_ins_file_names.h
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2020-2022 Intel Corporation
++ * Copyright (C) 2020-2023 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -7,6 +7,7 @@
+ 
+ #pragma once
+ 
++#include <cstdint>
+ #include <string>
+ #include <vector>
+ 
+diff --git a/shared/source/compiler_interface/external_functions.h b/shared/source/compiler_interface/external_functions.h
+index f4cd790489..d377bf3937 100644
+--- a/shared/source/compiler_interface/external_functions.h
++++ b/shared/source/compiler_interface/external_functions.h
+@@ -9,6 +9,7 @@
+ 
+ #include "shared/source/utilities/arrayref.h"
+ 
++#include <cstdint>
+ #include <string>
+ #include <unordered_map>
+ #include <vector>
+diff --git a/shared/source/os_interface/linux/drm_debug.h b/shared/source/os_interface/linux/drm_debug.h
+index a1a46fcd8e..bc56e407d9 100644
+--- a/shared/source/os_interface/linux/drm_debug.h
++++ b/shared/source/os_interface/linux/drm_debug.h
+@@ -7,6 +7,7 @@
+ 
+ #pragma once
+ 
++#include <cstdint>
+ #include <array>
+ #include <string>
+ #include <utility>
+diff --git a/shared/source/os_interface/linux/pci_path.h b/shared/source/os_interface/linux/pci_path.h
+index c72c1d65d0..4f95e5ba61 100644
+--- a/shared/source/os_interface/linux/pci_path.h
++++ b/shared/source/os_interface/linux/pci_path.h
+@@ -7,6 +7,7 @@
+ 
+ #pragma once
+ 
++#include <cstdint>
+ #include <optional>
+ #include <string>
+ 
+@@ -16,4 +17,4 @@ std::optional<std::string> getPciPath(int deviceFd);
+ std::optional<std::string> getPciLinkPath(int deviceFd);
+ std::optional<std::string> getPciRootPath(int deviceFd);
+ 
+-} // namespace NEO
+\ No newline at end of file
++} // namespace NEO
+diff --git a/shared/source/os_interface/linux/pmt_util.h b/shared/source/os_interface/linux/pmt_util.h
+index 28ecad3f05..d85bf298ae 100644
+--- a/shared/source/os_interface/linux/pmt_util.h
++++ b/shared/source/os_interface/linux/pmt_util.h
+@@ -7,6 +7,7 @@
+ 
+ #pragma once
+ 
++#include <cstdint>
+ #include <map>
+ #include <poll.h>
+ #include <string>
+diff --git a/shared/source/os_interface/print.h b/shared/source/os_interface/print.h
+index 7cc214e6ec..ac967be44b 100644
+--- a/shared/source/os_interface/print.h
++++ b/shared/source/os_interface/print.h
+@@ -7,6 +7,7 @@
+ 
+ #pragma once
+ 
++#include <cstdint>
+ #include <cstddef>
+ 
+ void printToSTDOUT(const char *str);
+diff --git a/shared/source/tbx/tbx_sockets.h b/shared/source/tbx/tbx_sockets.h
+index 9b7f7863f0..2d4cf2ffbe 100644
+--- a/shared/source/tbx/tbx_sockets.h
++++ b/shared/source/tbx/tbx_sockets.h
+@@ -6,6 +6,7 @@
+  */
+ 
+ #pragma once
++#include <cstdint>
+ #include <string>
+ 
+ namespace NEO {
+diff --git a/shared/source/tbx/tbx_sockets_imp.h b/shared/source/tbx/tbx_sockets_imp.h
+index 738f26175b..4a567a8f64 100644
+--- a/shared/source/tbx/tbx_sockets_imp.h
++++ b/shared/source/tbx/tbx_sockets_imp.h
+@@ -10,6 +10,7 @@
+ 
+ #include "os_socket.h"
+ 
++#include <cstdint>
+ #include <iostream>
+ 
+ namespace NEO {
+diff --git a/third_party/aot_config_headers/platforms.h b/third_party/aot_config_headers/platforms.h
+index 05f75a40b3..35fb490a55 100644
+--- a/third_party/aot_config_headers/platforms.h
++++ b/third_party/aot_config_headers/platforms.h
+@@ -7,6 +7,7 @@
+ 
+ #include <map>
+ #include <string>
++#include <cstdint>
+ 
+ #pragma once
+ 
+-- 
+2.43.0
+
