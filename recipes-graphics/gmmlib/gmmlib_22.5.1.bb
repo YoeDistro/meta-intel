@@ -8,10 +8,9 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=465fe90caea3edd6a2cecb3f0c28a654"
 
 SRC_URI = " \
             git://github.com/intel/gmmlib.git;protocol=https;branch=master \
-            file://0001-Add-new-DG2-device-IDs-194.patch \
             "
 
-SRCREV = "ac964bdffdda7730e8234511f61016071e63783b"
+SRCREV = "06c05158f5d9d55906271feda50b161d743aee9b"
 
 S = "${WORKDIR}/git"
 
