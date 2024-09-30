@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c18ea6bb4786a26bf4eee88a7424a408 \
 SRC_URI = "git://github.com/intel/libvpl.git;protocol=https;branch=main \
            file://0001-vpl.pc.in-dont-pass-pcfiledir-to-cflags.patch \
             "
-SRCREV = "383b5caac6df614e76ade5a07c4f53be702e9176"
+SRCREV = "0c13c410095764799afea0cf645bd896378579b8"
 S = "${WORKDIR}/git"
 
 inherit cmake
@@ -20,9 +20,11 @@ DEPENDS += "libva pkgconfig-native"
 PACKAGECONFIG ??= "tools"
 PACKAGECONFIG[tools] = "-DBUILD_TOOLS=ON, -DBUILD_TOOLS=OFF, wayland wayland-native wayland-protocols"
 
+EXTRA_OECMAKE = "-DBUILD_EXAMPLES=ON"
+
 do_install:append() {
         mkdir -p ${D}${datadir}/VPL/samples
-        mv ${D}${bindir}/sample_* ${D}${datadir}/VPL/samples
+        mv ${D}${bindir}/hello-* ${D}${datadir}/VPL/samples
 }
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
@@ -39,5 +41,4 @@ FILES_SOLIBSDEV = ""
 FILES:${PN}-dev += "${libdir}/libvpl.so"
 
 FILES:${PN} += " ${datadir}/VPL/samples  \
-                ${libdir}/vpl/libvpl_wayland.so \
                 "
