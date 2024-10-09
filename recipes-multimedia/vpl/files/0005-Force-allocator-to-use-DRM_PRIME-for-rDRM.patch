@@ -1,0 +1,44 @@
+From 286804cc4a9646e23b833fa2b308a8e69a3e56f9 Mon Sep 17 00:00:00 2001
+From: Vincent Cheah Beng Keat <vincent.beng.keat.cheah@intel.com>
+Date: Wed, 19 Jun 2024 21:08:41 +0800
+Subject: [PATCH 5/9] Force allocator to use DRM_PRIME for rDRM
+
+Upstream-Status: Backport [https://github.com/intel/libvpl-tools/commit/3c81381edb5a591f45c92fac60a23eba081b21b1]
+
+XE deprecated DRM GEM Flink API. Use DRM_PRIME method instead for
+rDRM case.
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
+---
+ tools/legacy/sample_decode/src/pipeline_decode.cpp              | 2 +-
+ .../sample_multi_transcode/src/sample_multi_transcode.cpp       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/legacy/sample_decode/src/pipeline_decode.cpp b/tools/legacy/sample_decode/src/pipeline_decode.cpp
+index 83fb895..51b7d69 100644
+--- a/tools/legacy/sample_decode/src/pipeline_decode.cpp
++++ b/tools/legacy/sample_decode/src/pipeline_decode.cpp
+@@ -1437,7 +1437,7 @@ mfxStatus CDecodingPipeline::CreateAllocator() {
+             if (m_libvaBackend == MFX_LIBVA_DRM_MODESET) {
+     #if defined(LIBVA_DRM_SUPPORT)
+                 CVAAPIDeviceDRM* drmdev           = dynamic_cast<CVAAPIDeviceDRM*>(m_hwdev);
+-                p_vaapiAllocParams->m_export_mode = vaapiAllocatorParams::CUSTOM_FLINK;
++                p_vaapiAllocParams->m_export_mode = vaapiAllocatorParams::PRIME;
+                 p_vaapiAllocParams->m_exporter =
+                     dynamic_cast<vaapiAllocatorParams::Exporter*>(drmdev->getRenderer());
+     #endif
+diff --git a/tools/legacy/sample_multi_transcode/src/sample_multi_transcode.cpp b/tools/legacy/sample_multi_transcode/src/sample_multi_transcode.cpp
+index ce972c8..6b2c919 100644
+--- a/tools/legacy/sample_multi_transcode/src/sample_multi_transcode.cpp
++++ b/tools/legacy/sample_multi_transcode/src/sample_multi_transcode.cpp
+@@ -374,7 +374,7 @@ mfxStatus Launcher::Init(int argc, char* argv[]) {
+     #if defined(LIBVA_DRM_SUPPORT)
+                     if (params.libvaBackend == MFX_LIBVA_DRM_MODESET) {
+                         CVAAPIDeviceDRM* drmdev     = dynamic_cast<CVAAPIDeviceDRM*>(hwdev.get());
+-                        pVAAPIParams->m_export_mode = vaapiAllocatorParams::CUSTOM_FLINK;
++                        pVAAPIParams->m_export_mode = vaapiAllocatorParams::PRIME;
+                         pVAAPIParams->m_exporter =
+                             dynamic_cast<vaapiAllocatorParams::Exporter*>(drmdev->getRenderer());
+                     }
+-- 
+2.43.2
+

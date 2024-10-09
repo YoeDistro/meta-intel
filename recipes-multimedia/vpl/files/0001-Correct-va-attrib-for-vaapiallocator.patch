@@ -1,0 +1,44 @@
+From 7c3332337d030ec98b4ffeeeac50028b0875262f Mon Sep 17 00:00:00 2001
+From: Vincent Cheah Beng Keat <vincent.beng.keat.cheah@intel.com>
+Date: Mon, 13 May 2024 17:07:20 +0800
+Subject: [PATCH 1/9] Correct va-attrib for vaapiallocator
+
+Upstream-Status: Backport [https://github.com/intel/libvpl-tools/commit/54d7d459a918cd26deaa91a37d34b13c37779597]
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
+---
+ tools/legacy/sample_common/src/vaapi_allocator.cpp | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/tools/legacy/sample_common/src/vaapi_allocator.cpp b/tools/legacy/sample_common/src/vaapi_allocator.cpp
+index e5a8823..db18e23 100644
+--- a/tools/legacy/sample_common/src/vaapi_allocator.cpp
++++ b/tools/legacy/sample_common/src/vaapi_allocator.cpp
+@@ -245,11 +245,11 @@ mfxStatus vaapiFrameAllocator::AllocImpl(mfxFrameAllocRequest* request,
+         if (VA_FOURCC_P208 != va_fourcc) {
+             unsigned int format;
+ 
+-            attrib[attrCnt].type          = VASurfaceAttribPixelFormat;
+-            attrib[attrCnt].flags         = VA_SURFACE_ATTRIB_SETTABLE;
+-            attrib[attrCnt].value.type    = VAGenericValueTypeInteger;
+-            attrib[attrCnt].value.value.i = va_fourcc;
+-            format                        = va_fourcc;
++            attrib[attrCnt].type            = VASurfaceAttribPixelFormat;
++            attrib[attrCnt].flags           = VA_SURFACE_ATTRIB_SETTABLE;
++            attrib[attrCnt].value.type      = VAGenericValueTypeInteger;
++            attrib[attrCnt++].value.value.i = va_fourcc;
++            format                          = va_fourcc;
+ 
+             if ((fourcc == MFX_FOURCC_VP8_NV12) ||
+                 ((MFX_MEMTYPE_FROM_ENCODE & request->Type) && (fourcc == MFX_FOURCC_BGR4))) {
+@@ -257,6 +257,8 @@ mfxStatus vaapiFrameAllocator::AllocImpl(mfxFrameAllocRequest* request,
+                  * RGB32 for JPEG is required
+ 		 */
+                 attrib[attrCnt].type            = (VASurfaceAttribType)VASurfaceAttribUsageHint;
++                attrib[attrCnt].flags           = VA_SURFACE_ATTRIB_SETTABLE;
++                attrib[attrCnt].value.type      = VAGenericValueTypeInteger;
+                 attrib[attrCnt++].value.value.i = VA_SURFACE_ATTRIB_USAGE_HINT_ENCODER;
+             }
+             else if (fourcc == MFX_FOURCC_VP8_MBDATA) {
+-- 
+2.43.2
+

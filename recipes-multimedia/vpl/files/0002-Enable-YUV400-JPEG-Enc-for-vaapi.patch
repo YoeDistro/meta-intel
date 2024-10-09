@@ -1,0 +1,154 @@
+From 1a064a36c164080a21f8d89409564c1812dea6af Mon Sep 17 00:00:00 2001
+From: Vincent Cheah Beng Keat <vincent.beng.keat.cheah@intel.com>
+Date: Wed, 15 May 2024 09:51:53 +0800
+Subject: [PATCH 2/9] Enable YUV400 JPEG Enc for vaapi
+
+Upstream-Status: Backport [https://github.com/intel/libvpl-tools/commit/747b66ce97c6ac5d17a8b8629eb22d790d802da3]
+Signed-off-by: Lim Siew Hoon <siew.hoon.lim@intel.com>
+---
+ .../legacy/sample_common/src/sample_utils.cpp |  2 +-
+ .../sample_common/src/vaapi_allocator.cpp     | 13 +++++++++++-
+ .../sample_encode/src/pipeline_encode.cpp     | 20 +++++++++----------
+ .../sample_encode/src/sample_encode.cpp       |  4 ----
+ 4 files changed, 22 insertions(+), 17 deletions(-)
+
+diff --git a/tools/legacy/sample_common/src/sample_utils.cpp b/tools/legacy/sample_common/src/sample_utils.cpp
+index ddd783f..b2b67bf 100644
+--- a/tools/legacy/sample_common/src/sample_utils.cpp
++++ b/tools/legacy/sample_common/src/sample_utils.cpp
+@@ -284,7 +284,7 @@ mfxStatus CSmplYUVReader::LoadNextFrame(mfxFrameSurface1* pSurface) {
+              MFX_FOURCC_P010 == pInfo.FourCC || MFX_FOURCC_P210 == pInfo.FourCC ||
+              MFX_FOURCC_P016 == pInfo.FourCC || MFX_FOURCC_I010 == pInfo.FourCC ||
+              MFX_FOURCC_P016 == pInfo.FourCC || MFX_FOURCC_I010 == pInfo.FourCC ||
+-             MFX_FOURCC_I420 == pInfo.FourCC) {
++             MFX_FOURCC_I420 == pInfo.FourCC || MFX_FOURCC_YUV400 == pInfo.FourCC) {
+         pitch = pData.Pitch;
+         ptr   = pData.Y + pInfo.CropX + pInfo.CropY * pData.Pitch;
+ 
+diff --git a/tools/legacy/sample_common/src/vaapi_allocator.cpp b/tools/legacy/sample_common/src/vaapi_allocator.cpp
+index db18e23..8ee2408 100644
+--- a/tools/legacy/sample_common/src/vaapi_allocator.cpp
++++ b/tools/legacy/sample_common/src/vaapi_allocator.cpp
+@@ -54,6 +54,8 @@ unsigned int ConvertMfxFourccToVAFormat(mfxU32 fourcc) {
+             return VA_FOURCC_Y216;
+         case MFX_FOURCC_Y416:
+             return VA_FOURCC_Y416;
++        case MFX_FOURCC_YUV400:
++            return VA_FOURCC_Y800;
+ 
+         default:
+             assert(!"unsupported fourcc");
+@@ -133,7 +135,8 @@ static mfxStatus GetVAFourcc(mfxU32 fourcc, unsigned int& va_fourcc) {
+                        (VA_FOURCC_Y210 != va_fourcc) && (VA_FOURCC_Y410 != va_fourcc) &&
+                        (VA_FOURCC_RGB565 != va_fourcc) && (VA_FOURCC_RGBP != va_fourcc) &&
+                        (VA_FOURCC_P016 != va_fourcc) && (VA_FOURCC_Y216 != va_fourcc) &&
+-                       (VA_FOURCC_Y416 != va_fourcc) && (VA_FOURCC_AYUV != va_fourcc))) {
++                       (VA_FOURCC_Y416 != va_fourcc) && (VA_FOURCC_AYUV != va_fourcc) &&
++                       (VA_FOURCC_Y800 != va_fourcc))) {
+         return MFX_ERR_MEMORY_ALLOC;
+     }
+ 
+@@ -281,6 +284,9 @@ mfxStatus vaapiFrameAllocator::AllocImpl(mfxFrameAllocRequest* request,
+             else if (fourcc == MFX_FOURCC_RGBP) {
+                 format = VA_RT_FORMAT_RGBP;
+             }
++            else if (fourcc == MFX_FOURCC_YUV400) {
++                format = VA_RT_FORMAT_YUV400;
++            }
+ 
+             va_res = m_libva->vaCreateSurfaces(m_dpy,
+                                                format,
+@@ -486,6 +492,11 @@ mfxStatus vaapiFrameAllocator::LockFrame(mfxMemId mid, mfxFrameData* ptr) {
+         }
+         if (MFX_ERR_NONE == mfx_res) {
+             switch (vaapi_mid->m_image.format.fourcc) {
++                case MFX_FOURCC_YUV400:
++                    if (mfx_fourcc != vaapi_mid->m_image.format.fourcc)
++                        return MFX_ERR_LOCK_MEMORY;
++                    { ptr->Y = pBuffer + vaapi_mid->m_image.offsets[0]; }
++                    break;
+                 case VA_FOURCC_NV12:
+                     if (mfx_fourcc != vaapi_mid->m_image.format.fourcc)
+                         return MFX_ERR_LOCK_MEMORY;
+diff --git a/tools/legacy/sample_encode/src/pipeline_encode.cpp b/tools/legacy/sample_encode/src/pipeline_encode.cpp
+index 4476c49..cda607b 100644
+--- a/tools/legacy/sample_encode/src/pipeline_encode.cpp
++++ b/tools/legacy/sample_encode/src/pipeline_encode.cpp
+@@ -50,6 +50,7 @@ msdk_tick time_get_frequency(void) {
+ 
+ mfxU16 FourCcBitDepth(mfxU32 fourCC) {
+     switch (fourCC) {
++        case MFX_FOURCC_YUV400:
+         case MFX_FOURCC_NV12:
+         case MFX_FOURCC_NV16:
+         case MFX_FOURCC_YUY2:
+@@ -845,8 +846,8 @@ mfxStatus CEncodingPipeline::CheckHyperEncodeParams(mfxHyperMode hyperMode) {
+ #endif
+ 
+ mfxU32 CEncodingPipeline::FileFourCC2EncFourCC(mfxU32 fcc) {
+-    // File reader automatically converts I420, YV12, and YUV400 to NV12
+-    if (fcc == MFX_FOURCC_I420 || fcc == MFX_FOURCC_YV12 || fcc == MFX_FOURCC_YUV400)
++    // File reader automatically converts I420 and YV12 to NV12
++    if (fcc == MFX_FOURCC_I420 || fcc == MFX_FOURCC_YV12)
+         return MFX_FOURCC_NV12;
+     else
+         return fcc;
+@@ -1054,6 +1055,7 @@ mfxStatus CEncodingPipeline::AllocFrames() {
+ 
+     // prepare allocation requests
+     EncRequest.NumFrameSuggested = EncRequest.NumFrameMin = nEncSurfNum;
++
+     MSDK_MEMCPY_VAR(EncRequest.Info, &(m_mfxEncParams.mfx.FrameInfo), sizeof(mfxFrameInfo));
+     if (m_pmfxVPP) {
+         EncRequest.Type |=
+@@ -1650,15 +1652,11 @@ mfxStatus CEncodingPipeline::Init(sInputParams* pParams) {
+ 
+     // FileReader can convert yv12->nv12 without vpp, when hw impl
+     if (pParams->bUseHWLib) {
+-        m_InputFourCC = ((pParams->FileInputFourCC == MFX_FOURCC_I420) ||
+-                         (pParams->FileInputFourCC == MFX_FOURCC_YUV400))
+-                            ? MFX_FOURCC_NV12
+-                            : pParams->FileInputFourCC;
+-
+-        pParams->EncodeFourCC = ((pParams->EncodeFourCC == MFX_FOURCC_I420) ||
+-                                 (pParams->EncodeFourCC == MFX_FOURCC_YUV400))
+-                                    ? MFX_FOURCC_NV12
+-                                    : pParams->EncodeFourCC;
++        m_InputFourCC = (pParams->FileInputFourCC == MFX_FOURCC_I420) ? MFX_FOURCC_NV12
++                                                                      : pParams->FileInputFourCC;
++
++        pParams->EncodeFourCC =
++            (pParams->EncodeFourCC == MFX_FOURCC_I420) ? MFX_FOURCC_NV12 : pParams->EncodeFourCC;
+     }
+     else {
+         m_InputFourCC = pParams->FileInputFourCC;
+diff --git a/tools/legacy/sample_encode/src/sample_encode.cpp b/tools/legacy/sample_encode/src/sample_encode.cpp
+index 0a65016..7c722ea 100644
+--- a/tools/legacy/sample_encode/src/sample_encode.cpp
++++ b/tools/legacy/sample_encode/src/sample_encode.cpp
+@@ -94,10 +94,8 @@ void PrintHelp(char* strAppName, const char* strErrorMessage, ...) {
+ #endif
+     printf(
+         "   [-nv12|nv16|yuy2|uyvy|ayuv|rgb4|bgr4|p010|y210|y410|a2rgb10|p016|p210|y216|i010|i420] - input color format (by default YUV420 is expected).\n");
+-#if (defined(_WIN64) || defined(_WIN32))
+     printf(
+         "   [-yuv400] -  input color format is YUV400 (grayscale) and will be converted to NV12 for encoding (JPEG only).\n");
+-#endif
+     printf(
+         "   [-msb10] - 10-bit color format is expected to have data in Most Significant Bits of words.\n                 (LSB data placement is expected by default).\n                 This option also disables data shifting during file reading.\n");
+     printf(
+@@ -924,11 +922,9 @@ mfxStatus ParseInputString(char* strInput[], mfxU32 nArgNum, sInputParams* pPara
+         else if (msdk_match(strInput[i], "-y410")) {
+             pParams->FileInputFourCC = MFX_FOURCC_Y410;
+         }
+-#if (defined(_WIN64) || defined(_WIN32))
+         else if (msdk_match(strInput[i], "-yuv400")) {
+             pParams->FileInputFourCC = MFX_FOURCC_YUV400;
+         }
+-#endif
+         else if (msdk_match(strInput[i], "-ec::p010")) {
+             pParams->EncodeFourCC = MFX_FOURCC_P010;
+         }
+-- 
+2.43.2
+
