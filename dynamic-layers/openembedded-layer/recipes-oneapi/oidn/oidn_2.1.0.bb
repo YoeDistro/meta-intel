@@ -20,4 +20,8 @@ inherit cmake
 
 DEPENDS += "tbb ispc-native"
 
+do_install:append() {
+        chrpath -d ${D}${bindir}/* ${D}${libdir}/*${SOLIBS}
+}
+
 UPSTREAM_CHECK_URI = "https://github.com/OpenImageDenoise/oidn/releases"
