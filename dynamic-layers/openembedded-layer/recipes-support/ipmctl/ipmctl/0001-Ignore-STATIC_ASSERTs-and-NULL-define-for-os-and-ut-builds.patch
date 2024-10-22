@@ -6,10 +6,10 @@ Signed-off-by: Teoh Suh Haw <suh.haw.teoh@intel.com>
  MdePkg/Include/Base.h | 12 ++++++++++++
  1 file changed, 12 insertions(+)
 
-diff --git a/MdePkg/Include/Base.h b/MdePkg/Include/Base.h
-index d209e6de28..6e61b8f3d3 100644
---- a/MdePkg/Include/Base.h
-+++ b/MdePkg/Include/Base.h
+Index: edk2/MdePkg/Include/Base.h
+===================================================================
+--- edk2.orig/MdePkg/Include/Base.h
++++ edk2/MdePkg/Include/Base.h
 @@ -316,8 +316,12 @@ struct _LIST_ENTRY {
  #define NULL  __null
    #endif
@@ -20,40 +20,43 @@ index d209e6de28..6e61b8f3d3 100644
  #endif
 +#endif
 +#endif
-
+ 
  //
  // Null character
-@@ -779,6 +783,8 @@ typedef UINTN *BASE_LIST;
+@@ -813,6 +817,8 @@ typedef UINTN *BASE_LIST;
  // Section 2.3.1 of the UEFI 2.3 Specification.
  //
-
+ 
 +#ifndef OS_BUILD
 +#ifndef UNIT_TEST_UEFI_BUILD
  STATIC_ASSERT (sizeof (BOOLEAN) == 1, "sizeof (BOOLEAN) does not meet UEFI Specification Data Type requirements");
  STATIC_ASSERT (sizeof (INT8)    == 1, "sizeof (INT8) does not meet UEFI Specification Data Type requirements");
  STATIC_ASSERT (sizeof (UINT8)   == 1, "sizeof (UINT8) does not meet UEFI Specification Data Type requirements");
-@@ -792,6 +798,8 @@ STATIC_ASSERT (sizeof (CHAR8)   == 1, "sizeof (CHAR8) does not meet UEFI Specifi
- STATIC_ASSERT (sizeof (CHAR16)  == 2, "sizeof (CHAR16) does not meet UEFI Specification Data Type requirements");
- STATIC_ASSERT (sizeof (L'A')    == 2, "sizeof (L'A') does not meet UEFI Specification Data Type requirements");
- STATIC_ASSERT (sizeof (L"A")    == 4, "sizeof (L\"A\") does not meet UEFI Specification Data Type requirements");
+@@ -841,7 +847,8 @@ STATIC_ASSERT (ALIGNOF (CHAR16)  == size
+ STATIC_ASSERT (ALIGNOF (INTN)    == sizeof (INTN), "Alignment of INTN does not meet UEFI Specification Data Type requirements");
+ STATIC_ASSERT (ALIGNOF (UINTN)   == sizeof (UINTN), "Alignment of UINTN does not meet UEFI Specification Data Type requirements");
+ STATIC_ASSERT (ALIGNOF (VOID *)  == sizeof (VOID *), "Alignment of VOID * does not meet UEFI Specification Data Type requirements");
+-
 +#endif
 +#endif
-
  //
  // The following three enum types are used to verify that the compiler
-@@ -812,9 +820,13 @@ typedef enum {
-   __VerifyUint32EnumValue = 0xffffffff
- } __VERIFY_UINT32_ENUM_SIZE;
-
+ // configuration for enum types is compliant with Section 2.3.1 of the
+@@ -861,6 +868,8 @@ typedef enum {
+   __VerifyInt32EnumValue = 0x7fffffff
+ } __VERIFY_INT32_ENUM_SIZE;
+ 
 +#ifndef OS_BUILD
 +#ifndef UNIT_TEST_UEFI_BUILD
  STATIC_ASSERT (sizeof (__VERIFY_UINT8_ENUM_SIZE) == 4, "Size of enum does not meet UEFI Specification Data Type requirements");
  STATIC_ASSERT (sizeof (__VERIFY_UINT16_ENUM_SIZE) == 4, "Size of enum does not meet UEFI Specification Data Type requirements");
- STATIC_ASSERT (sizeof (__VERIFY_UINT32_ENUM_SIZE) == 4, "Size of enum does not meet UEFI Specification Data Type requirements");
+ STATIC_ASSERT (sizeof (__VERIFY_INT32_ENUM_SIZE) == 4, "Size of enum does not meet UEFI Specification Data Type requirements");
+@@ -868,6 +877,8 @@ STATIC_ASSERT (sizeof (__VERIFY_INT32_EN
+ STATIC_ASSERT (ALIGNOF (__VERIFY_UINT8_ENUM_SIZE)  == sizeof (__VERIFY_UINT8_ENUM_SIZE), "Alignment of enum does not meet UEFI Specification Data Type requirements");
+ STATIC_ASSERT (ALIGNOF (__VERIFY_UINT16_ENUM_SIZE) == sizeof (__VERIFY_UINT16_ENUM_SIZE), "Alignment of enum does not meet UEFI Specification Data Type requirements");
+ STATIC_ASSERT (ALIGNOF (__VERIFY_INT32_ENUM_SIZE) == sizeof (__VERIFY_INT32_ENUM_SIZE), "Alignment of enum does not meet UEFI Specification Data Type requirements");
 +#endif
 +#endif
-
+ 
  /**
    Macro that returns a pointer to the data structure that contains a specified field of
---
-2.37.3
