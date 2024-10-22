@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSES/BSD-3-Clause.txt;md5=c551872bcf41ce707df54c7
                     "
 
 SRC_URI = "git://github.com/intel/ittapi.git;protocol=https;branch=master"
-SRCREV = "8e526a82cc805665ef4513399aaea8a5dccfd66f"
+SRCREV = "08193a56f7717397af6c9f60ee0f3e874cee1870"
 S = "${WORKDIR}/git"
 PE = "1"
 
