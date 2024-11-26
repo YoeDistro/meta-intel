@@ -21,9 +21,12 @@ DEPENDS += "libva gmmlib"
 SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;nobranch=1 \
            file://0001-Force-ARGB-surface-to-tile4-for-ACM.patch \
            file://0001-Fix-failed-4k-videowalll-test-case-and-color-corrupt.patch \
+           file://0001-Change-RGB-mask-and-order.patch \
+           file://0001-Add-Y210-caps-for-BMG-HEVC-encode.patch \
+           file://0001-Change-RGB-mask-and-order-for-BMG.patch \
           "
 
-SRCREV = "f40b45dd7355f5f739c75bfd793fa2f1ead30f02"
+SRCREV = "105a308ea3d86596f9b90853f9d4fc83671e8a5e"
 S = "${WORKDIR}/git"
 
 COMPATIBLE_HOST:x86-x32 = "null"
