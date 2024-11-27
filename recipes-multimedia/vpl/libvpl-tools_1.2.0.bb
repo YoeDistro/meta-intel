@@ -9,17 +9,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c18ea6bb4786a26bf4eee88a7424a408 \
                     file://third-party-programs.txt;md5=ddf05049184e74942f45b0ca4cc69b8a"
 
 SRC_URI = "git://github.com/intel/libvpl-tools.git;protocol=https;branch=main \
-           file://0001-Correct-va-attrib-for-vaapiallocator.patch \
-           file://0002-Enable-YUV400-JPEG-Enc-for-vaapi.patch \
-           file://0003-Enable-YUV400-JPEG-Enc-for-linux-vaapi-only.patch \
-           file://0004-Fix-rDRM-DMA-methods.patch \
-           file://0005-Force-allocator-to-use-DRM_PRIME-for-rDRM.patch \
-           file://0006-Enable-VVC-in-sample_decode.patch \
-           file://0007-Fix-X11-rendering-for-xe.patch \
-           file://0008-Fix-code-formatting.patch \
           "
 
-SRCREV = "452ab253da13b57067222e8311ef143d0203d766"
+SRCREV = "1903d1b33f0317282ce95b193a764e502fa38532"
 S = "${WORKDIR}/git"
 
 inherit cmake
@@ -40,8 +32,11 @@ FILES_SOLIBSDEV = ""
 
 FILES:${PN} += " ${datadir}/VPL/samples  \
                  ${libdir}/libcttmetrics.so \
-                 ${libdir}/vpl-tools/libvpl_wayland.so \
+                 ${libdir}/vpl-tools/libvpl_wayland.* \
                 "
+
+FILES:${PN}-dev += "${libdir}/vpl-tools/libvpl_wayland.so \
+                   "
 
 FILES:${PN}-doc += " ${datadir}/vpl-tools \
                    "
