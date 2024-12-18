@@ -2,7 +2,7 @@ require linux-intel.inc
 
 SRC_URI:prepend = "git://github.com/intel/mainline-tracking.git;protocol=https;name=machine;nobranch=1; \
                   "
-SRC_URI:append = " file://0001-6.11-lib-build_OID_registry-fix-reproducibility-issues.patch \
+SRC_URI:append = " file://0001-6.11-6.12-lib-build_OID_registry-fix-reproducibility-issues.patch \
                   "
 KMETA_BRANCH = "master"
 
