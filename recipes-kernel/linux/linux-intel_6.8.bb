@@ -23,4 +23,4 @@ KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc \
                             features/security/security.scc \
                             features/intel-npu/intel-npu.scc"
 
-UPSTREAM_CHECK_GITTAGREGEX = "^mainline-tracking-v6.7-rc3-linux-(?P<pver>(\d+)T(\d+)Z)$"
+UPSTREAM_CHECK_GITTAGREGEX = "^mainline-tracking-v6.8-linux-(?P<pver>(\d+)T(\d+)Z)$"
