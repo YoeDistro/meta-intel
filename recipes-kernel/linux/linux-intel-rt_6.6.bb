@@ -24,8 +24,8 @@ DEPENDS += "elfutils-native openssl-native util-linux-native"
 
 LINUX_VERSION_EXTENSION ??= "-intel-pk-${LINUX_KERNEL_TYPE}"
 
-LINUX_VERSION ?= "6.6.44"
-SRCREV_machine ?= "0d19fd8880411e2a96b85945e4abde1b62338090"
+LINUX_VERSION ?= "6.6.65"
+SRCREV_machine ?= "7f064b9d8937d880fb64d1df8d1e8b8115a1c128"
 SRCREV_meta ?= "9901a21dd1f99c833d8e1a58b3fc057e57bda598"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
