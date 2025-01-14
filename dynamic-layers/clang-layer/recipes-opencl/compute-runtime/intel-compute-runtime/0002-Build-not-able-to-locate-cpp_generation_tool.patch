@@ -11,12 +11,12 @@ Signed-off-by: Dongwon Kim <dongwon.kim@intel.com>
  shared/source/built_ins/kernels/CMakeLists.txt | 10 +++++-----
  1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/shared/source/built_ins/kernels/CMakeLists.txt b/shared/source/built_ins/kernels/CMakeLists.txt
-index ed85a37c52..f7c9e79137 100644
---- a/shared/source/built_ins/kernels/CMakeLists.txt
-+++ b/shared/source/built_ins/kernels/CMakeLists.txt
-@@ -107,9 +107,9 @@ function(compile_builtin core_type platform_it builtin bits builtin_options mode
-       )
+Index: git/shared/source/built_ins/kernels/CMakeLists.txt
+===================================================================
+--- git.orig/shared/source/built_ins/kernels/CMakeLists.txt
++++ git/shared/source/built_ins/kernels/CMakeLists.txt
+@@ -122,9 +122,9 @@ function(compile_builtin core_type platf
+       endif()
        add_custom_command(
                           OUTPUT ${OUTPUT_FILE_CPP}
 -                         COMMAND $<TARGET_FILE:cpp_generate_tool> --file ${BINARY_OUTPUT}.bin --output ${OUTPUT_FILE_CPP} --array ${mode}_${BASENAME} --device ${RELEASE_FILENAME}
@@ -27,8 +27,8 @@ index ed85a37c52..f7c9e79137 100644
        )
        list(APPEND BUILTINS_COMMANDS "${OUTPUT_FILE_CPP}")
      else()
-@@ -159,9 +159,9 @@ function(generate_cpp_spirv builtin)
-     )
+@@ -176,9 +176,9 @@ function(generate_cpp_spirv builtin)
+     endif()
      add_custom_command(
                         OUTPUT ${OUTPUT_FILE_CPP}
 -                       COMMAND $<TARGET_FILE:cpp_generate_tool> --file ${GENERATED_SPV_INPUT} --output ${OUTPUT_FILE_CPP} --array ${BASENAME}
@@ -39,13 +39,3 @@ index ed85a37c52..f7c9e79137 100644
      )
      set(OUTPUT_LIST_CPP_FILES ${OUTPUT_LIST_CPP_FILES} ${OUTPUT_FILE_CPP} PARENT_SCOPE)
    else()
-@@ -277,4 +277,4 @@ if(NOT "${OUTPUT_LIST_CPP_FILES}" STREQUAL "")
-   )
- endif()
- 
--apply_macro_for_each_core_type("SUPPORTED")
-\ No newline at end of file
-+apply_macro_for_each_core_type("SUPPORTED")
--- 
-2.34.1
-
