@@ -17,14 +17,14 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  IGC/VectorCompiler/lib/BiF/cmake/Functions.cmake | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/IGC/VectorCompiler/lib/BiF/cmake/Functions.cmake b/IGC/VectorCompiler/lib/BiF/cmake/Functions.cmake
-index d20d7f887..882e09fea 100644
---- a/IGC/VectorCompiler/lib/BiF/cmake/Functions.cmake
-+++ b/IGC/VectorCompiler/lib/BiF/cmake/Functions.cmake
-@@ -109,7 +109,7 @@ function(vc_build_bif TARGET RES_FILE CMCL_SRC_PATH BIF_NAME PTR_BIT_SIZE)
+Index: git/IGC/VectorCompiler/lib/BiF/cmake/Functions.cmake
+===================================================================
+--- git.orig/IGC/VectorCompiler/lib/BiF/cmake/Functions.cmake
++++ git/IGC/VectorCompiler/lib/BiF/cmake/Functions.cmake
+@@ -109,7 +109,7 @@ function(vc_build_bif TARGET RES_FILE CM
      COMMENT "vc_build_bif: Translating CMCL builtins:  ${BIF_CLANG_BC_NAME_FINAL} -> ${BIF_OPT_BC_NAME}"
      COMMAND CMCLTranslatorTool -o ${BIF_CMCL_BC_NAME} ${BIF_CLANG_BC_NAME_FINAL}
-     COMMAND ${LLVM_OPT_EXE} ${IGC_LLVM_DEPENDENT_OPT_FLAGS} --O2 -o ${BIF_OPT_BC_NAME} ${BIF_CMCL_BC_NAME}
+     COMMAND ${LLVM_OPT_EXE} ${IGC_BUILD__OPAQUE_POINTERS_DEFAULT_ARG_OPT} --O2 -o ${BIF_OPT_BC_NAME} ${BIF_CMCL_BC_NAME}
 -    DEPENDS CMCLTranslatorTool ${LLVM_OPT_EXE} ${BIF_CLANG_BC_PATH_FINAL}
 +    DEPENDS CMCLTranslatorTool ${BIF_CLANG_BC_PATH_FINAL}
      BYPRODUCTS ${BIF_OPT_BC_PATH}

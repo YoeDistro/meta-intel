@@ -8,19 +8,20 @@ LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc
                     file://LICENSE.md;md5=488d74376edf2765f6e78d271543dde3 \
                     file://NOTICES.txt;md5=b81a52411c84df3419f20bad4d755880"
 
-SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=releases/igc-1.0.17193 \
+SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=releases/igc-1.0.17791 \
            git://github.com/intel/vc-intrinsics.git;protocol=https;destsuffix=git/vc-intrinsics;name=vc;nobranch=1 \
            git://github.com/KhronosGroup/SPIRV-Tools.git;protocol=https;destsuffix=git/SPIRV-Tools;name=spirv-tools;branch=main \
            git://github.com/KhronosGroup/SPIRV-Headers.git;protocol=https;destsuffix=git/SPIRV-Headers;name=spirv-headers;branch=main \
            file://0003-Improve-Reproducibility-for-src-package.patch \
            file://0001-BiF-CMakeLists.txt-remove-opt-from-DEPENDS.patch \
            file://0001-external-SPIRV-Tools-change-path-to-tools-and-header.patch \
+           file://0001-Build-not-able-to-locate-BiFManager-bin.patch \
            "
 
 SRC_URI:append:class-native = " file://0001-fix-tblgen.patch"
 
-SRCREV_igc = "ffa6fb4fc18ae047b8a8e91dbab83f8b3da5ce52"
-SRCREV_vc = "f9c34404d0ea9abad83875a10bd48d88cea90ebd"
+SRCREV_igc = "e03ee5bdd7cd1cb9a715e424a53ae3011e5c5e44"
+SRCREV_vc = "8d2e809368443305155370573f3c6db8279ed87d"
 SRCREV_spirv-tools = "f0cc85efdbbe3a46eae90e0f915dc1509836d0fc"
 SRCREV_spirv-headers = "1c6bb2743599e6eb6f37b2969acc0aef812e32e3"
 
@@ -38,7 +39,9 @@ CXXFLAGS:append = " -Wno-error=nonnull"
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
 
-DEPENDS += " flex-native bison-native clang clang-cross-x86_64 opencl-clang qemu-native python3-mako-native"
+DEPENDS += " flex-native bison-native clang clang-cross-x86_64 opencl-clang qemu-native python3-mako-native \
+             python3-pyyaml-native \
+           "
 
 RDEPENDS:${PN} += "opencl-clang"
 
