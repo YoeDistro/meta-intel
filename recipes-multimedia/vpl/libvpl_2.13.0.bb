@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c18ea6bb4786a26bf4eee88a7424a408 \
 SRC_URI = "git://github.com/intel/libvpl.git;protocol=https;branch=main \
            file://0001-vpl.pc.in-dont-pass-pcfiledir-to-cflags.patch \
             "
-SRCREV = "0c13c410095764799afea0cf645bd896378579b8"
+SRCREV = "5f6bd8a1e753c8f63a3fd8b36894d6968b808a6d"
 S = "${WORKDIR}/git"
 
 inherit cmake
