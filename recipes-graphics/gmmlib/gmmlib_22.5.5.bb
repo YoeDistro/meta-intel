@@ -8,10 +8,9 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=465fe90caea3edd6a2cecb3f0c28a654"
 
 SRC_URI = " \
             git://github.com/intel/gmmlib.git;protocol=https;branch=master \
-            file://0001-Extend-helper-Macros-219.patch \
             "
 
-SRCREV = "567dc09fd3859de3d9c09456ee7b366c0d327eb6"
+SRCREV = "6ea2f1d66b7904ce004d940a5ed157e485066a52"
 
 S = "${WORKDIR}/git"
 
