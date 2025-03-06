@@ -3,7 +3,7 @@ require recipes-kernel/linux/meta-intel-compat-kernel.inc
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/linux-intel:"
 
-KERNEL_CONFIG_URI ?= "git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=${KMETA_BRANCH};destsuffix=${KMETA}"
+KERNEL_CONFIG_URI ?= "git://git.yoctoproject.org/yocto-kernel-cache;protocol=https;type=kmeta;name=meta;branch=${KMETA_BRANCH};destsuffix=${KMETA}"
 
 SRC_URI = " \
            ${KERNEL_CONFIG_URI} \
