@@ -2,8 +2,7 @@ require linux-intel.inc
 
 SRC_URI:prepend = "git://github.com/intel/linux-intel-lts.git;protocol=https;name=machine;branch=${KBRANCH}; \
                     "
-SRC_URI:append = " file://0001-6.6-vt-conmakehash-improve-reproducibility.patch \
-                   file://0001-6.6-lib-build_OID_registry-fix-reproducibility-issues.patch \
+SRC_URI:append = " file://0001-6.12-lib-build_OID_registry-fix-reproducibility-issues.patch \
                   "
 
 # Skip processing of this recipe if it is not explicitly specified as the
@@ -15,8 +14,8 @@ python () {
         raise bb.parse.SkipPackage("Set PREFERRED_PROVIDER_virtual/kernel to linux-intel-rt to enable it")
 }
 
-KBRANCH = "6.6/preempt-rt"
-KMETA_BRANCH = "yocto-6.6"
+KBRANCH = "6.12/linux"
+KMETA_BRANCH = "yocto-6.12"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
@@ -24,13 +23,13 @@ DEPENDS += "elfutils-native openssl-native util-linux-native"
 
 LINUX_VERSION_EXTENSION ??= "-intel-pk-${LINUX_KERNEL_TYPE}"
 
-LINUX_VERSION ?= "6.6.63"
-SRCREV_machine ?= "91eff9b39c0f16e7487480fb2f1b89446b16b055"
-SRCREV_meta ?= "693358ea6816821663168ac9063d60e52a8ee4fe"
+LINUX_VERSION ?= "6.12.16"
+SRCREV_machine ?= "934bc38849dd7c6cabd8110d3ef2bd50a7fc79c4"
+SRCREV_meta ?= "f24c58a63b7e047d2c4441dd2adc30de21c8814d"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
 
 # Functionality flags
 KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc features/security/security.scc"
 
-UPSTREAM_CHECK_GITTAGREGEX = "^lts-(?P<pver>v6.6.(\d+)-rt(\d)-preempt-rt-(\d+)T(\d+)Z)$"
+UPSTREAM_CHECK_GITTAGREGEX = "^lts-(?P<pver>v6.12.(\d+)-linux-(\d+)T(\d+)Z)$"
