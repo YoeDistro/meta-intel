@@ -1,5 +1,5 @@
-SUMMARY="ixgbe kernel driver for Intel Magnolia Park 10GbE"
-DESCRIPTION="The ixgbe driver supports 82598- and 82599-based \
+SUMMARY = "ixgbe kernel driver for Intel Magnolia Park 10GbE"
+DESCRIPTION = "The ixgbe driver supports 82598- and 82599-based \
 PCI Express* 10 Gigabit Network Connections."
 
 HOMEPAGE = "https://sourceforge.net/projects/e1000/"
@@ -19,7 +19,7 @@ CVE_PRODUCT = "linux:linux_kernel_ixgbe"
 
 S = "${WORKDIR}/${BP}/src"
 
-EXTRA_OEMAKE=' KSRC="${STAGING_KERNEL_DIR}" KOBJ="${STAGING_KERNEL_BUILDDIR}" KVER="${KERNEL_VERSION}" INSTALL_MOD_PATH="${D}"'
+EXTRA_OEMAKE = ' KSRC="${STAGING_KERNEL_DIR}" KOBJ="${STAGING_KERNEL_BUILDDIR}" KVER="${KERNEL_VERSION}" INSTALL_MOD_PATH="${D}"'
 
 KERNEL_MODULE_AUTOLOAD:append:intel-core2-32 = " ixgbe"
 KERNEL_MODULE_AUTOLOAD:append:intel-corei7-64 = " ixgbe"

@@ -34,7 +34,7 @@ do_configure() {
 	CC=gcc CFLAGS= LDFLAGS= make defconfig-iwlwifi-public KLIB_BUILD=${KBUILD_OUTPUT}
 }
 
-MODULES_INSTALL_TARGET="install"
+MODULES_INSTALL_TARGET = "install"
 
 do_install:append() {
 	## install configs and service scripts

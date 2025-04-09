@@ -1,5 +1,5 @@
-SUMMARY="ixgbevf kernel driver for Intel Magnolia Park 10GbE"
-DESCRIPTION="This virtual function driver supports kernel versions 2.6.x and newer \
+SUMMARY = "ixgbevf kernel driver for Intel Magnolia Park 10GbE"
+DESCRIPTION = "This virtual function driver supports kernel versions 2.6.x and newer \
 This driver supports 82599, X540, X550, and X552-based virtual function devices \
 that can only be activated on kernels that support SR-IOV. \
 SR-IOV requires the correct platform and OS support. \
@@ -22,7 +22,7 @@ CVE_PRODUCT = "linux:linux_kernel_ixgbe"
 
 S = "${WORKDIR}/${BP}/src"
 
-EXTRA_OEMAKE='KSRC="${STAGING_KERNEL_DIR}" KOBJ="${STAGING_KERNEL_BUILDDIR}" KVER="${KERNEL_VERSION}" INSTALL_MOD_PATH="${D}"'
+EXTRA_OEMAKE = 'KSRC="${STAGING_KERNEL_DIR}" KOBJ="${STAGING_KERNEL_BUILDDIR}" KVER="${KERNEL_VERSION}" INSTALL_MOD_PATH="${D}"'
 
 KERNEL_MODULE_AUTOLOAD:append:intel-core2-32 = " ixgbevf"
 KERNEL_MODULE_AUTOLOAD:append:intel-corei7-64 = " ixgbevf"
