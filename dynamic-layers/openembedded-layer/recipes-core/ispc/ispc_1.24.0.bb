@@ -29,7 +29,7 @@ RDEPENDS:${PN}-ptest += " python3-multiprocessing"
 PACKAGECONFIG ??= "tbb"
 PACKAGECONFIG[tbb] = "-DISPCRT_BUILD_TASK_MODEL=TBB, -DISPCRT_BUILD_TASK_MODEL=OpenMP, tbb"
 
-YFLAGS='-d -t -v -y --file-prefix-map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}'
+YFLAGS = '-d -t -v -y --file-prefix-map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}'
 
 do_configure:prepend() {
         sed -i -e 's#\${BISON_EXECUTABLE}.*#\${BISON_EXECUTABLE} ${YFLAGS} #g' ${S}/CMakeLists.txt

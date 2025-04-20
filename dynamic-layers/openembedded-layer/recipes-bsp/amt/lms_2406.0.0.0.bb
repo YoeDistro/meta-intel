@@ -19,7 +19,7 @@ PACKAGECONFIG ??= "connman"
 PACKAGECONFIG[connman]        = "-DNETWORK_CN=ON, -DNETWORK_CN=OFF, connman"
 PACKAGECONFIG[networkmanager] = "-DNETWORK_NM=ON, -DNETWORK_NM=OFF, networkmanager"
 
-REQUIRED_DISTRO_FEATURES= "systemd"
+REQUIRED_DISTRO_FEATURES = "systemd"
 
 FILES:${PN} += "${datadir}/dbus-1/system-services/*.service"
 
