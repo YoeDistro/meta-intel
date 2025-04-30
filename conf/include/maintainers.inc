@@ -13,7 +13,6 @@ RECIPE_MAINTAINER:pn-intel-compute-runtime = "Naveen Saini <naveen.kumar.saini@i
 RECIPE_MAINTAINER:pn-intel-crypto-mb = "Anuj Mittal <anuj.mittal@intel.com>"
 RECIPE_MAINTAINER:pn-intel-graphics-compiler = "Naveen Saini <naveen.kumar.saini@intel.com>"
 RECIPE_MAINTAINER:pn-intel-media-driver = "Lim Siew Hoon <siew.hoon.lim@intel.com>"
-RECIPE_MAINTAINER:pn-intel-mediasdk = "Lim Siew Hoon <siew.hoon.lim@intel.com>"
 RECIPE_MAINTAINER:pn-intel-microcode = "Anuj Mittal <anuj.mittal@intel.com>"
 RECIPE_MAINTAINER:pn-intel-vaapi-driver = "Lim Siew Hoon <siew.hoon.lim@intel.com>"
 RECIPE_MAINTAINER:pn-ipmctl = "Anuj Mittal <anuj.mittal@intel.com>"
