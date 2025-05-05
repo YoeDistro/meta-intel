@@ -1,7 +1,7 @@
-From f318522175fb2ecc6d364b995a7b1926fd158a88 Mon Sep 17 00:00:00 2001
+From 6132115dd2f1db55a6a5371618247dfaa334a035 Mon Sep 17 00:00:00 2001
 From: Lim Siew Hoon <siew.hoon.lim@intel.com>
 Date: Wed, 11 Oct 2023 15:36:21 +0800
-Subject: [PATCH] Force ARGB surface to tile4 for ACM
+Subject: [PATCH 3/7] Force ARGB surface to tile4 for ACM
 
 Upstream-Status: Submitted [https://github.com/intel/media-driver/pull/1728]
 
@@ -40,5 +40,5 @@ index a4e12edfa..11634f66e 100755
              case TILING_X:
                  gmmParams.Flags.Info.TiledX    = true;
 -- 
-2.43.2
+2.43.0
 

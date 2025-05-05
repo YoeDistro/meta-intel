@@ -1,8 +1,8 @@
-From 38e6883e54e65a73aa7795dc2ff9f072448cb3dc Mon Sep 17 00:00:00 2001
+From a32b95e58fd3e34847e799b909e08dbe5c9dc692 Mon Sep 17 00:00:00 2001
 From: Lim Siew Hoon <siew.hoon.lim@intel.com>
 Date: Fri, 2 Aug 2024 13:25:13 +0800
-Subject: [PATCH] Fix failed 4k videowalll test case and color corruption of
- video composition in Gen12 platform
+Subject: [PATCH 4/7] Fix failed 4k videowalll test case and color corruption
+ of video composition in Gen12 platform
 
 Fix failed 4k video wall test case from 16CH video only show
 1CH output and corruption observed on certain number of video
@@ -81,5 +81,5 @@ index 48a452315..4f0fc2c48 100644
      {
          MOS_FreeMemAndSetNull(pVpHalRenderParams->pColorFillParams);
 -- 
-2.43.2
+2.43.0
 
