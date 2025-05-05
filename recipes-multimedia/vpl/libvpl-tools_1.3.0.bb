@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c18ea6bb4786a26bf4eee88a7424a408 \
 SRC_URI = "git://github.com/intel/libvpl-tools.git;protocol=https;branch=main \
           "
 
-SRCREV = "1903d1b33f0317282ce95b193a764e502fa38532"
+SRCREV = "82eab13ecec99f34e0f1d5dac490611b604406c9"
 S = "${WORKDIR}/git"
 
 inherit cmake
