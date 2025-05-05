@@ -20,7 +20,7 @@ RDEPENDS:${PN} += "intel-media-driver"
 SRC_URI = "git://github.com/intel/vpl-gpu-rt.git;protocol=https;nobranch=1;lfs=0 \
           "
 
-SRCREV = "7277c25ec5362e92d2fa334e2ce356c473ba4778"
+SRCREV = "c65990e456acf901597a76b22407232679152547"
 S = "${WORKDIR}/git"
 
 FILES:${PN} += " \
