@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc
                     file://LICENSE.md;md5=488d74376edf2765f6e78d271543dde3 \
                     file://NOTICES.txt;md5=b81a52411c84df3419f20bad4d755880"
 
-SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=releases/igc-1.0.17791 \
+SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=releases/2.5.x \
            git://github.com/intel/vc-intrinsics.git;protocol=https;destsuffix=git/vc-intrinsics;name=vc;nobranch=1 \
            git://github.com/KhronosGroup/SPIRV-Tools.git;protocol=https;destsuffix=git/SPIRV-Tools;name=spirv-tools;branch=main \
            git://github.com/KhronosGroup/SPIRV-Headers.git;protocol=https;destsuffix=git/SPIRV-Headers;name=spirv-headers;branch=main \
@@ -20,8 +20,8 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;nam
 
 SRC_URI:append:class-native = " file://0001-fix-tblgen.patch"
 
-SRCREV_igc = "e03ee5bdd7cd1cb9a715e424a53ae3011e5c5e44"
-SRCREV_vc = "8d2e809368443305155370573f3c6db8279ed87d"
+SRCREV_igc = "5b21d1b10cc02ee8f7756d1690f83792b8741235"
+SRCREV_vc = "41fa58112f00960da137b8ec76168b5a0321af33"
 SRCREV_spirv-tools = "f0cc85efdbbe3a46eae90e0f915dc1509836d0fc"
 SRCREV_spirv-headers = "1c6bb2743599e6eb6f37b2969acc0aef812e32e3"
 
@@ -68,10 +68,11 @@ EOF
     chmod +x ${WORKDIR}/qemuwrapper
 }
 
-UPSTREAM_CHECK_GITTAGREGEX = "^igc-(?P<pver>(?!19\..*)\d+(\.\d+)+)$"
+
+UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>\d+(\.\d+)+)$"
 
 FILES:${PN} += " \
-                 ${libdir}/igc/NOTICES.txt \
+                 ${libdir}/igc2/NOTICES.txt \
                  "
 
 # libigc.so contains buildpaths

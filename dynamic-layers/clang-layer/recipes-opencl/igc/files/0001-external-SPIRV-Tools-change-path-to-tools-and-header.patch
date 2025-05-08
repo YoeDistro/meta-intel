@@ -13,11 +13,11 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  external/SPIRV-Tools/CMakeLists.txt | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/external/SPIRV-Tools/CMakeLists.txt b/external/SPIRV-Tools/CMakeLists.txt
-index 31108b96b..007c24bf0 100644
---- a/external/SPIRV-Tools/CMakeLists.txt
-+++ b/external/SPIRV-Tools/CMakeLists.txt
-@@ -45,8 +45,8 @@ else() #By default use build from sources
+Index: git/external/SPIRV-Tools/CMakeLists.txt
+===================================================================
+--- git.orig/external/SPIRV-Tools/CMakeLists.txt
++++ git/external/SPIRV-Tools/CMakeLists.txt
+@@ -45,8 +45,8 @@ else() #By default use build from source
   message(STATUS "[SPIRV-Tools] : Building from source")
   message(STATUS "[SPIRV-Tools] : Current source dir: ${CMAKE_CURRENT_SOURCE_DIR}")
  
