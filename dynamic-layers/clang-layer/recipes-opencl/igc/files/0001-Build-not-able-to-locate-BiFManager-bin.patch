@@ -10,11 +10,11 @@ Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
  IGC/BiFModule/CMakeLists.txt | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/IGC/BiFModule/CMakeLists.txt b/IGC/BiFModule/CMakeLists.txt
-index d59e345ce..460cd6ed2 100644
---- a/IGC/BiFModule/CMakeLists.txt
-+++ b/IGC/BiFModule/CMakeLists.txt
-@@ -644,8 +644,8 @@ set(IGC_BUILD__PROJ__BiFModuleCache_OCL       "${IGC_BUILD__PROJ__BiFModuleCache
+Index: git/IGC/BiFModule/CMakeLists.txt
+===================================================================
+--- git.orig/IGC/BiFModule/CMakeLists.txt
++++ git/IGC/BiFModule/CMakeLists.txt
+@@ -655,8 +655,8 @@ set(IGC_BUILD__PROJ__BiFModuleCache_OCL
  
  add_custom_command(
      OUTPUT "${IGC_BUILD__BIF_DIR}/OCLBiFImpl.h" "${IGC_BUILD__BIF_DIR}/OCLBiFImpl.bifbc"
@@ -25,6 +25,3 @@ index d59e345ce..460cd6ed2 100644
      COMMENT "BiF: ${IGC_BUILD__BIF_DIR}/OCLBiFImpl.bc: Spliting output .bc."
      COMMAND_EXPAND_LISTS
  )
--- 
-2.43.0
-
