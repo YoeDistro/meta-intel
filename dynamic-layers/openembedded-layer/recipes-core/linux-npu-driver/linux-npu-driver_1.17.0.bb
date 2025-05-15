@@ -32,6 +32,11 @@ EXTRA_OECMAKE += " -DCMAKE_CXX_FLAGS='-I${RECIPE_SYSROOT}/usr/include/level_zero
 
 DEPENDS = "level-zero dpkg-native pkgconfig-native"
 
+do_install() {
+    install -d ${D}${base_libdir}/firmware/updates/intel/vpu
+    install -m 0644 ${S}/firmware/bin/*.bin ${D}${base_libdir}/firmware/updates/intel/vpu
+}
+
 PACKAGES =+ "${PN}-firmware ${PN}-tests"
 
 FILES:${PN}-firmware = "${base_libdir}/firmware/updates/intel/vpu/*"
