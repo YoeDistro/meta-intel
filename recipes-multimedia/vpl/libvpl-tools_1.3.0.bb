@@ -9,6 +9,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c18ea6bb4786a26bf4eee88a7424a408 \
                     file://third-party-programs.txt;md5=ddf05049184e74942f45b0ca4cc69b8a"
 
 SRC_URI = "git://github.com/intel/libvpl-tools.git;protocol=https;branch=main \
+           file://0001-Update-vpl-inspect-to-remove-ReportedStats.patch \
+           file://0001-Add-cstdint-header-to-resolve-build-issue-with-gcc-1.patch \
           "
 
 SRCREV = "82eab13ecec99f34e0f1d5dac490611b604406c9"
