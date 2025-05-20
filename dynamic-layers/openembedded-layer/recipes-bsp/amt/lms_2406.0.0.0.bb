@@ -28,6 +28,7 @@ S = "${WORKDIR}/git"
 SYSTEMD_SERVICE:${PN} = "lms.service"
 
 SRC_URI = "git://github.com/intel/lms.git;branch=master;protocol=https \
+           file://0001-LMS-fix-build-issue-with-gcc-15.patch \
            "
 SRCREV = "388f115b2aeb3ea11499971c65f828daefd32c47"
 

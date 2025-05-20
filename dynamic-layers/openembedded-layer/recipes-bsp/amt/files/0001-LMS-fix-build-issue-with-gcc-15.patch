@@ -1,0 +1,32 @@
+From 439af27f7641185933d7810b6c4eb17086438df3 Mon Sep 17 00:00:00 2001
+From: Yogesh Tyagi <yogesh.tyagi@intel.com>
+Date: Mon, 19 May 2025 17:50:40 +0530
+Subject: [PATCH] LMS : fix build issue with gcc 15
+
+include cstdint header to resolve the below error with gcc 15
+
+| In file included from /lms/2406.0.0.0/git/MEIClient/src/MEICommand.cpp:11:
+| /lms/2406.0.0.0/git/MEIClient/Include/MEICommand.h:40:54: error: 'uint8_t' was not declared in this scope
+
+Upstream-Status: Submitted [https://github.com/intel/lms/pull/23]
+
+Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
+---
+ MEIClient/Include/MEICommand.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/MEIClient/Include/MEICommand.h b/MEIClient/Include/MEICommand.h
+index 6192d26..5332e44 100644
+--- a/MEIClient/Include/MEICommand.h
++++ b/MEIClient/Include/MEICommand.h
+@@ -12,6 +12,7 @@
+ #define __MEI_COMMAND_H__
+ #include "heci.h"
+ #include "MEIClientException.h"
++#include <cstdint>
+ #include <memory>
+ #include <vector>
+ 
+-- 
+2.43.0
+
