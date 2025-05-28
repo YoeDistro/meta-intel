@@ -10,6 +10,7 @@ SRC_URI = "git://github.com/intel/linux-npu-driver.git;protocol=https;name=linux
             git://github.com/jbeder/yaml-cpp.git;protocol=https;destsuffix=git/third_party/yaml-cpp;name=yaml-cpp;nobranch=1 \
             git://github.com/intel/level-zero-npu-extensions.git;protocol=https;destsuffix=git/third_party/level-zero-npu-extensions;name=lzvext;nobranch=1 \
             git://github.com/google/googletest.git;protocol=https;destsuffix=git/third_party/googletest;name=googletest;nobranch=1 \
+            file://0001-linux-npu-driver-fix-multilib-install-issue.patch \
         "
 
 SRCREV_linux-npu-driver = "0fe92dd0720448fb571f0ac4e5e64ef9f2ec3bd7"
@@ -29,17 +30,13 @@ EXTRA_OECMAKE += " -DCMAKE_BUILD_TYPE=Release "
 EXTRA_OECMAKE += " -DCMAKE_CXX_FLAGS_RELEASE=-O2 "
 
 EXTRA_OECMAKE += " -DCMAKE_CXX_FLAGS='-I${RECIPE_SYSROOT}/usr/include/level_zero'"
+EXTRA_OECMAKE += " -DCMAKE_INSTALL_FIRMWARE_DIR=${nonarch_base_libdir}"
 
 DEPENDS = "level-zero dpkg-native pkgconfig-native"
 
-do_install() {
-    install -d ${D}${base_libdir}/firmware/updates/intel/vpu
-    install -m 0644 ${S}/firmware/bin/*.bin ${D}${base_libdir}/firmware/updates/intel/vpu
-}
-
 PACKAGES =+ "${PN}-firmware ${PN}-tests"
 
-FILES:${PN}-firmware = "${base_libdir}/firmware/updates/intel/vpu/*"
+FILES:${PN}-firmware = "${nonarch_base_libdir}/firmware/updates/intel/vpu/*"
 FILES:${PN}-tests = "${bindir}"
 
 INSANE_SKIP:${PN} += "buildpaths"
