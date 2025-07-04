@@ -9,9 +9,9 @@ LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc
                     file://NOTICES.txt;md5=b81a52411c84df3419f20bad4d755880"
 
 SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=releases/2.10.x \
-           git://github.com/intel/vc-intrinsics.git;protocol=https;destsuffix=git/vc-intrinsics;name=vc;nobranch=1 \
-           git://github.com/KhronosGroup/SPIRV-Tools.git;protocol=https;destsuffix=git/SPIRV-Tools;name=spirv-tools;branch=main \
-           git://github.com/KhronosGroup/SPIRV-Headers.git;protocol=https;destsuffix=git/SPIRV-Headers;name=spirv-headers;branch=main \
+           git://github.com/intel/vc-intrinsics.git;protocol=https;destsuffix=${BB_GIT_DEFAULT_DESTSUFFIX}/vc-intrinsics;name=vc;nobranch=1 \
+           git://github.com/KhronosGroup/SPIRV-Tools.git;protocol=https;destsuffix=${BB_GIT_DEFAULT_DESTSUFFIX}/SPIRV-Tools;name=spirv-tools;branch=main \
+           git://github.com/KhronosGroup/SPIRV-Headers.git;protocol=https;destsuffix=${BB_GIT_DEFAULT_DESTSUFFIX}/SPIRV-Headers;name=spirv-headers;branch=main \
            file://0003-Improve-Reproducibility-for-src-package.patch \
            file://0001-BiF-CMakeLists.txt-remove-opt-from-DEPENDS.patch \
            file://0001-external-SPIRV-Tools-change-path-to-tools-and-header.patch \
@@ -29,8 +29,6 @@ SRCREV_FORMAT = "igc_vc_spirv-tools_spirv-headers"
 
 # Used to replace with relative path in reproducibility patch
 export B
-
-S = "${WORKDIR}/git"
 
 inherit cmake pkgconfig qemu python3native
 

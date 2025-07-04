@@ -12,7 +12,6 @@ SRC_URI = "git://github.com/intel/libvpl.git;protocol=https;branch=main \
            file://0001-vpl.pc.in-dont-pass-pcfiledir-to-cflags.patch \
             "
 SRCREV = "025d43d086a3e663184cb49febe86152bf05409f"
-S = "${WORKDIR}/git"
 
 inherit cmake
 DEPENDS += "libva pkgconfig-native"

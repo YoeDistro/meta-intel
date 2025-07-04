@@ -24,7 +24,6 @@ SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;nobranch=1 \
           "
 
 SRCREV = "14e2e7bcf1014186dbf1c099089c7c05cd880ae8"
-S = "${WORKDIR}/git"
 
 COMPATIBLE_HOST:x86-x32 = "null"
 

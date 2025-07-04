@@ -26,7 +26,7 @@ SRC_URI[icx-compiler.sha256sum] = "0dcbac766d5a1519d4cf393f5a85e71d19024fef65f77
 SRC_URI[compiler-linker.sha256sum] = "e00faea6d797934d62143e4aa70b727ce30f80fdf30769d22122b3051140c236"
 SRC_URI[shared-common.sha256sum] = "cf490a4a790f349da79e618359598d3b32312ca3b2639e5d4c84e1cfa2745558"
 
-S = "${WORKDIR}/${BPN}"
+S = "${UNPACKDIR}/${BPN}"
 
 inherit bin_package
 

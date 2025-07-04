@@ -19,7 +19,6 @@ SRC_URI = "git://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files.git
 SRCREV = "eeb93b7a818bb27cb6b7a2be0454f8a0a75f1bd6"
 
 DEPENDS = "iucode-tool-native"
-S = "${WORKDIR}/git"
 
 COMPATIBLE_HOST = "(i.86|x86_64).*-linux"
 PACKAGE_ARCH = "${MACHINE_ARCH}"

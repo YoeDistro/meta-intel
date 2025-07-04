@@ -8,8 +8,6 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 inherit pkgconfig cmake
 
-S = "${WORKDIR}/git"
-
 SRC_URI = "git://github.com/ospray/rkcommon.git;protocol=https;branch=master \
             "
 SRCREV = "4a00047ae5a3ac705b6b33b4a7574588d91e7953"

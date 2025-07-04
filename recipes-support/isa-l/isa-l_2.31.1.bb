@@ -7,7 +7,6 @@ SECTION = "lib"
 
 inherit autotools pkgconfig
 
-S = "${WORKDIR}/git"
 SRCREV = "c387163fcbca62701d646149564c550c78a4f985"
 SRC_URI = "git://github.com/intel/isa-l.git;branch=master;protocol=https"
 

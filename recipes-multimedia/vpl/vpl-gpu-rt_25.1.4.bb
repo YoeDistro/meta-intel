@@ -21,7 +21,6 @@ SRC_URI = "git://github.com/intel/vpl-gpu-rt.git;protocol=https;nobranch=1;lfs=0
           "
 
 SRCREV = "c65990e456acf901597a76b22407232679152547"
-S = "${WORKDIR}/git"
 
 FILES:${PN} += " \
                 ${libdir}/libmfx-gen/enctools.so \

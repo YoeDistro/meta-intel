@@ -14,7 +14,6 @@ SRC_URI = "git://github.com/intel/libvpl-tools.git;protocol=https;branch=main \
           "
 
 SRCREV = "82eab13ecec99f34e0f1d5dac490611b604406c9"
-S = "${WORKDIR}/git"
 
 inherit cmake
 DEPENDS += "libva libvpl pkgconfig-native"

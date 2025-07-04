@@ -23,8 +23,6 @@ REQUIRED_DISTRO_FEATURES = "systemd"
 
 FILES:${PN} += "${datadir}/dbus-1/system-services/*.service"
 
-S = "${WORKDIR}/git"
-
 SYSTEMD_SERVICE:${PN} = "lms.service"
 
 SRC_URI = "git://github.com/intel/lms.git;branch=master;protocol=https \

@@ -13,7 +13,6 @@ SRC_URI = "git://github.com/intel/hdcp.git;branch=master;protocol=https \
         file://0001-main-fix-hdcpd-service-failure.patch \
 "
 SRCREV = "cacc352159c5bdaf1c21846cecdd1eb7b031e1d3"
-S = "${WORKDIR}/git"
 
 REQUIRED_DISTRO_FEATURES = "systemd"
 

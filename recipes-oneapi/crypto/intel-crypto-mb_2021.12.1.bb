@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/intel/ipp-crypto;protocol=https;branch=${IPP_BRANCH}
            "
 SRCREV = "7d6ac349507258f49d00909df33d5dea4ff77f39"
 
-S = "${WORKDIR}/git/sources/ippcp/crypto_mb"
+S = "${UNPACKDIR}/${PN}-${PV}/sources/ippcp/crypto_mb"
 
 DEPENDS = "openssl"
 

@@ -9,8 +9,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=491799fd9431e57ad52cb0ef3497afce"
 
 inherit pkgconfig cmake
 
-S = "${WORKDIR}/git"
-
 SRC_URI = "git://github.com/intel/libipt.git;protocol=https;branch=stable/v2.1"
 
 SRCREV = "ffc548e5fbc2fa3e9795d4593f861e1df99cf906"

@@ -11,9 +11,8 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=1dece7821bf3fd70fe1309eaa37d52a2 \
 
 inherit pkgconfig cmake
 
-S = "${WORKDIR}/git"
-
 SRC_URI = "git://github.com/ospray/ospray.git;protocol=https;branch=master \
+           git://github.com/nothings/stb;protocol=https;destsuffix=${BB_GIT_DEFAULT_DESTSUFFIX}/apps/common/external/stb_image/stb;name=stb;nobranch=1 \
           "
 SRCREV = "85af2929937d516997451cbd52d352cf93125ed2"
 

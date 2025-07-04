@@ -9,7 +9,6 @@ SRC_URI = "git://github.com/intel/opencl-clang.git;branch=${BRANCH};protocol=htt
            file://0002-Request-native-clang-only-when-cross-compiling-464.patch \
            file://0001-cl_headers-CMakeLists.txt-use-clang-from-native-sysr.patch \
            "
-S = "${WORKDIR}/git"
 
 inherit cmake
 DEPENDS += "clang"

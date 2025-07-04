@@ -15,8 +15,6 @@ SRC_URI = "git://github.com/intel/compute-runtime.git;protocol=https;branch=rele
 
 SRCREV = "a9961bdfaa07250fd52ff930bf8f31fb4e3b7799"
 
-S = "${WORKDIR}/git"
-
 DEPENDS += " intel-graphics-compiler gmmlib libva qemu-native"
 
 RDEPENDS:${PN} += " intel-graphics-compiler gmmlib"

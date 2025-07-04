@@ -37,7 +37,7 @@ SRC_URI[openmp-common.sha256sum] = "8217001d78311cbef97dd139e684c6767932b532309c
 SRC_URI[license.sha256sum] = "9f9c8a12fc0bc82ab5b71e118e66745eff23f42224eba304068225b366cd74b6"
 SRC_URI[dev-utils.sha256sum] = "c675d960a5abca361cead9217d6e74adee499ee0a095c4e44092bd710b304d50"
 
-S = "${WORKDIR}/${BPN}"
+S = "${UNPACKDIR}/${BPN}"
 
 inherit bin_package
 

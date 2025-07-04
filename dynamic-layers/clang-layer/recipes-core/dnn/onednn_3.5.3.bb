@@ -14,7 +14,6 @@ inherit pkgconfig cmake ptest
 
 DNN_BRANCH = "rls-v${@'.'.join(d.getVar('PV').split('.')[0:2])}"
 
-S = "${WORKDIR}/git"
 SRCREV = "66f0cb9eb66affd2da3bf5f8d897376f04aae6af"
 SRC_URI = "git://github.com/oneapi-src/oneDNN.git;branch=${DNN_BRANCH};protocol=https \
            file://run-ptest \

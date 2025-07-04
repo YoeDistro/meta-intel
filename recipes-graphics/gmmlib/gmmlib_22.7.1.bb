@@ -12,8 +12,6 @@ SRC_URI = " \
 
 SRCREV = "aa4e5d6c8f1d798b78ffd7ea85296fdd3a3946b2"
 
-S = "${WORKDIR}/git"
-
 COMPATIBLE_HOST:x86-x32 = "null"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^intel-gmmlib-(?P<pver>(\d+(\.\d+)+))$"

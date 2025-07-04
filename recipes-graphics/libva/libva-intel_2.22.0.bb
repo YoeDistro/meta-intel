@@ -22,8 +22,6 @@ SRC_URI = "git://github.com/intel/libva.git;protocol=https;branch=v2.22-branch \
 
 SRCREV = "217da1c28336d6a7e9c0c4cb8f1c303968a675f1"
 
-S = "${WORKDIR}/git"
-
 UPSTREAM_CHECK_URI = "https://github.com/intel/libva/releases"
 
 DEPENDS = "libdrm"

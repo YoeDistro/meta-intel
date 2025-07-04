@@ -34,7 +34,7 @@ SRC_URI[common-devel.sha256sum] = "adbf0ea946f63946d29b7f9c750c38a42ea7a65d8c816
 SRC_URI[devel.sha256sum] = "fab2a6f15e18bfd9b4d425f2703e4e98928c57f52c4feebc9ed886f097062e84"
 SRC_URI[common-vars.sha256sum] = "ec2b67813739fa4a2895f63479a41acba2174afe2d0cb8a0c1c9119d1317d8ef"
 
-S = "${WORKDIR}/${BPN}"
+S = "${UNPACKDIR}/${BPN}"
 
 inherit bin_package
 

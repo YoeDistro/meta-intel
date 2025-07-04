@@ -21,7 +21,7 @@ SRC_URI[ipp.sha256sum] = "b51e45c6e691aa46c7136b0ab61f5abe346388433e017a30cf53fd
 SRC_URI[headers.sha256sum] = "342f37ab2f82bc9f4498435f848ee660591c2488b44d988bf6ee96b2a71fd005"
 SRC_URI[env.sha256sum] = "731e8c28a3b8b757730cd874d0941de2eb744856128f24ade59d36c12b415bf6"
 
-S = "${WORKDIR}/${BPN}"
+S = "${UNPACKDIR}/${BPN}"
 
 COMPATIBLE_HOST:libc-musl = "null"
 

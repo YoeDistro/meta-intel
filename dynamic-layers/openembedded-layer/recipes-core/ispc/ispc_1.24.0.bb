@@ -9,8 +9,6 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=da5ecffdd210b3cf776b32b41c182e87 \
 
 inherit cmake python3native ptest
 
-S = "${WORKDIR}/git"
-
 SRC_URI = "git://github.com/ispc/ispc.git;protocol=https;branch=main \
            file://0002-cmake-don-t-build-for-32-bit-targets.patch \
            file://0001-Fix-QA-Issues.patch \
