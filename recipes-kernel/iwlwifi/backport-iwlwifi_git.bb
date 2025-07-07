@@ -17,8 +17,8 @@ inherit module features_check
 # When updating this recipe, ensure that the proper firmware is included from
 # either the linux-firmware or iwlwifi-firmware repos.
 
-PV = "79"
-SRCREV = "574631d89d736fd2c76b0e2ea489270c50903e52"
+PV = "96"
+SRCREV = "d16e74cc1c76ffbfc335153daa86660f199a90da"
 
 SRC_URI = " \
            git://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/backport-iwlwifi;branch=release/core${PV} \
