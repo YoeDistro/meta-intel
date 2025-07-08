@@ -26,7 +26,6 @@ SRC_URI = " \
            file://iwlwifi.conf \
           "
 
-S = "${WORKDIR}/git"
 
 EXTRA_OEMAKE = "INSTALL_MOD_PATH=${D} KLIB_BUILD=${KBUILD_OUTPUT}"
 
@@ -39,7 +38,7 @@ MODULES_INSTALL_TARGET = "install"
 do_install:append() {
 	## install configs and service scripts
 	install -d ${D}${sysconfdir}/modprobe.d
-	install -m 0644 ${WORKDIR}/iwlwifi.conf ${D}${sysconfdir}/modprobe.d
+	install -m 0644 ${UNPACKDIR}/iwlwifi.conf ${D}${sysconfdir}/modprobe.d
 }
 
 RDEPENDS:${PN} = "linux-firmware-iwlwifi"
