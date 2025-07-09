@@ -18,6 +18,9 @@ UPSTREAM_CHECK_GITTAGREGEX = "^intel-gmmlib-(?P<pver>(\d+(\.\d+)+))$"
 
 inherit pkgconfig cmake
 
-EXTRA_OECMAKE += "-DRUN_TEST_SUITE=OFF"
+EXTRA_OECMAKE += " \
+    -DRUN_TEST_SUITE=OFF \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+    "
 
 BBCLASSEXTEND = "native nativesdk"
