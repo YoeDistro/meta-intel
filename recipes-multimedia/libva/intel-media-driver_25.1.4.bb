@@ -38,6 +38,7 @@ EXTRA_OECMAKE += " \
                    -DMEDIA_RUN_TEST_SUITE=OFF \
                    -DARCH=${MEDIA_DRIVER_ARCH} \
                    -DMEDIA_BUILD_FATAL_WARNINGS=OFF \
+                   -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
 		  "
 
 CXXFLAGS:append:x86 = " -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
