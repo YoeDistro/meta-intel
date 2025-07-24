@@ -30,7 +30,9 @@ inherit cmake dos2unix
 
 DEPENDS = "ndctl pkgconfig-native"
 
-EXTRA_OECMAKE = "-DRELEASE=ON"
+EXTRA_OECMAKE = "-DRELEASE=ON \
+                 -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+                "
 
 do_configure:prepend() {
     for dir in BaseTools MdeModulePkg MdePkg ShellPkg ; do
