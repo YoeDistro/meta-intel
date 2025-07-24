@@ -18,6 +18,7 @@ EXTRA_OECMAKE += " \
                   -DPTTC=ON \
                   -DPTSEG=ON \
                   -DCMAKE_SKIP_RPATH=ON \
+                  -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
                   "
 
 do_install:append() {
