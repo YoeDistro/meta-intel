@@ -27,6 +27,7 @@ DEPENDS = "ispc ispc-native rkcommon embree"
 
 EXTRA_OECMAKE += " \
                   -DISPC_EXECUTABLE=${STAGING_BINDIR_NATIVE}/ispc  \
+                  -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
                   "
 EXTRA_OECMAKE:intel-corei7-64 += " \
                   -DOPENVKL_ISA_AVX=OFF  \
