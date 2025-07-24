@@ -23,6 +23,7 @@ EXTRA_OECMAKE += "\
                   -DLLVM_TABLEGEN_EXE=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
                   -DCMAKE_SKIP_RPATH=TRUE \
                   -DPREFERRED_LLVM_VERSION=${LLVMVERSION} \
+                  -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
                   "
 
 do_install:append:class-native() {
