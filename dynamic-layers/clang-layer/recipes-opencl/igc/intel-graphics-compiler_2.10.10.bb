@@ -54,6 +54,7 @@ EXTRA_OECMAKE = " \
                   -DLLVM_LINK_EXE=${STAGING_BINDIR_NATIVE}/llvm-link \
                   -DCLANG_EXE=${STAGING_BINDIR_NATIVE}/clang \
                   -DCMAKE_CROSSCOMPILING_EMULATOR=${WORKDIR}/qemuwrapper \
+                  -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
                   "
 
 do_configure:prepend:class-target () {
