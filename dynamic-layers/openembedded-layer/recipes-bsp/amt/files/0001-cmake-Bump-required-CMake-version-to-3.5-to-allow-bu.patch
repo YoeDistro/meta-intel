@@ -1,0 +1,39 @@
+From e1f6129390706044112496b6f10baee5b604b4c8 Mon Sep 17 00:00:00 2001
+From: Yogesh Tyagi <yogesh.tyagi@intel.com>
+Date: Wed, 23 Jul 2025 23:48:41 +0800
+Subject: [PATCH] cmake: Bump required CMake version to 3.5 to allow builds
+ with CMake 4+
+
+This enables builds with CMake 4+, fixing:
+
+    CMake Error at CMakeLists.txt:1 (cmake_minimum_required):
+      Compatibility with CMake < 3.5 has been removed from CMake.
+
+      Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+      to tell CMake that the project requires at least <min> but has been
+      updated to work with policies introduced by <max> or earlier.
+
+      Or, add -DCMAKE_POLICY_VERSION_MINIMUM=3.5 to try configuring anyway.
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
+---
+ CIM_Framework/openwsman/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CIM_Framework/openwsman/CMakeLists.txt b/CIM_Framework/openwsman/CMakeLists.txt
+index 6e54c66..e2ffa5f 100644
+--- a/CIM_Framework/openwsman/CMakeLists.txt
++++ b/CIM_Framework/openwsman/CMakeLists.txt
+@@ -6,7 +6,7 @@ PROJECT(openwsman)
+
+ # 2.6 minimum because of CMP0005 (escaping defines)
+ # 2.8.12 minimum because CMake 3.19.7 says so
+-cmake_minimum_required(VERSION 2.8.12)
++cmake_minimum_required(VERSION 3.5)
+
+ include(CTest)
+ enable_testing()
+--
+2.37.3

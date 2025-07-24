@@ -21,12 +21,17 @@ PACKAGECONFIG[networkmanager] = "-DNETWORK_NM=ON, -DNETWORK_NM=OFF, networkmanag
 
 REQUIRED_DISTRO_FEATURES = "systemd"
 
+EXTRA_OECMAKE += " \
+                  -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+                  "
+
 FILES:${PN} += "${datadir}/dbus-1/system-services/*.service"
 
 SYSTEMD_SERVICE:${PN} = "lms.service"
 
 SRC_URI = "git://github.com/intel/lms.git;branch=master;protocol=https \
            file://0001-LMS-fix-build-issue-with-gcc-15.patch \
+           file://0001-cmake-Bump-required-CMake-version-to-3.5-to-allow-bu.patch \
            "
 SRCREV = "388f115b2aeb3ea11499971c65f828daefd32c47"
 
