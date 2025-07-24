@@ -29,6 +29,7 @@ EXTRA_OECMAKE += " -DCMAKE_CXX_FLAGS_RELEASE=-O2 "
 
 EXTRA_OECMAKE += " -DCMAKE_CXX_FLAGS='-I${RECIPE_SYSROOT}/usr/include/level_zero'"
 EXTRA_OECMAKE += " -DCMAKE_INSTALL_FIRMWARE_DIR=${nonarch_base_libdir}"
+EXTRA_OECMAKE += " -DCMAKE_POLICY_VERSION_MINIMUM=3.5"
 
 DEPENDS = "level-zero dpkg-native pkgconfig-native"
 
