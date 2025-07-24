@@ -7,7 +7,6 @@ RECIPE_MAINTAINER:pn-core-image-tiny = "Naveen Saini <naveen.kumar.saini@intel.c
 RECIPE_MAINTAINER:pn-core-image-minimal-initramfs = "Anuj Mittal <anuj.mittal@intel.com>"
 RECIPE_MAINTAINER:pn-embree = "Naveen Saini <naveen.kumar.saini@intel.com>"
 RECIPE_MAINTAINER:pn-gmmlib = "Lim Siew Hoon <siew.hoon.lim@intel.com>"
-RECIPE_MAINTAINER:pn-hdcp = "Naveen Saini <naveen.kumar.saini@intel.com>"
 RECIPE_MAINTAINER:pn-intel-cmt-cat = "Naveen Saini <naveen.kumar.saini@intel.com>"
 RECIPE_MAINTAINER:pn-intel-compute-runtime = "Naveen Saini <naveen.kumar.saini@intel.com>"
 RECIPE_MAINTAINER:pn-intel-crypto-mb = "Anuj Mittal <anuj.mittal@intel.com>"
