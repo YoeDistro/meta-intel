@@ -34,6 +34,7 @@ EXTRA_OECMAKE += " \
                    -DDNNL_ARCH_OPT_FLAGS="" \
                    -DCMAKE_SKIP_RPATH=ON \
                    -DONEDNN_BUILD_GRAPH=OFF \
+                   -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
                    "
 
 PACKAGECONFIG ??= "gpu"
