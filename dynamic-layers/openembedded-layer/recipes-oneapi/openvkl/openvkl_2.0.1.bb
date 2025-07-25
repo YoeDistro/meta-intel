@@ -33,6 +33,7 @@ EXTRA_OECMAKE:intel-corei7-64 += " \
                   -DOPENVKL_ISA_AVX=OFF  \
                   -DOPENVKL_ISA_AVX2=OFF  \
                   -DOPENVKL_ISA_AVX512SKX=OFF  \
+                  -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
                   "
 
 PACKAGES =+ "${PN}-examples"
