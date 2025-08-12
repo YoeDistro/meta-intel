@@ -1,0 +1,49 @@
+From f0885d7d97e98ad586bbacf5edf7fa4022b425b9 Mon Sep 17 00:00:00 2001
+From: Yogesh Tyagi <yogesh.tyagi@intel.com>
+Date: Mon, 11 Aug 2025 14:00:50 +0800
+Subject: [PATCH] use fully-qualified rkcommon::math::rsqrt to avoid overload
+ ambiguity
+
+Explicitly calling rkcommon::math::rsqrt() prevents conflict with the
+standard rsqrt(double) declared in bits/mathcalls.h, fixing the build
+error in Quaternion tests.
+
+Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
+
+Upstream-Status: Submitted [https://github.com/RenderKit/rkcommon/pull/16]
+---
+ tests/math/test_Quaternion.cpp | 2 +-
+ tests/math/test_rkmath.cpp     | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tests/math/test_Quaternion.cpp b/tests/math/test_Quaternion.cpp
+index 760d815..f527824 100644
+--- a/tests/math/test_Quaternion.cpp
++++ b/tests/math/test_Quaternion.cpp
+@@ -187,7 +187,7 @@ template <typename T>
+ inline void test_slerp()
+ {
+   typename T::Scalar two = 2;
+-  REQUIRE(CmpT(slerp(.5f, T(1, 0, 0, 0), T(0, 1, 0, 0)), T(rsqrt(two), rsqrt(two), 0, 0)));
++  REQUIRE(CmpT(slerp(.5f, T(1, 0, 0, 0), T(0, 1, 0, 0)), T(rkcommon::math::rsqrt(two), rkcommon::math::rsqrt(two), 0, 0)));
+ }
+ 
+ TEST_CASE("Quaternion functions", "[quat]")
+diff --git a/tests/math/test_rkmath.cpp b/tests/math/test_rkmath.cpp
+index 7f66532..fd18df4 100644
+--- a/tests/math/test_rkmath.cpp
++++ b/tests/math/test_rkmath.cpp
+@@ -49,8 +49,8 @@ TEST_CASE("rkmath rcp_safe function", "[rkmath]")
+ template <typename T>
+ inline void test_rsqrt()
+ {
+-  REQUIRE(CmpT<T>(rsqrt(T(1)), T(1)));
+-  REQUIRE(CmpT<T>(rsqrt(T(4)), T(.5)));
++  REQUIRE(CmpT<T>(rkcommon::math::rsqrt(T(1)), T(1)));
++  REQUIRE(CmpT<T>(rkcommon::math::rsqrt(T(4)), T(.5)));
+ }
+ 
+ TEST_CASE("rkmath rsqrt function", "[rkmath]")
+-- 
+2.37.3
+
