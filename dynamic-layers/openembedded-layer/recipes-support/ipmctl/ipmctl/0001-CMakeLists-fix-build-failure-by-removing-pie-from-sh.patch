@@ -1,0 +1,39 @@
+From 5b8b59a18f4a54ba912faad861f0af3fdcf127c6 Mon Sep 17 00:00:00 2001
+From: Yogesh Tyagi <yogesh.tyagi@intel.com>
+Date: Wed, 10 Sep 2025 21:15:53 +0800
+Subject: [PATCH] CMakeLists: fix build failure by removing -pie from shared
+ library targets
+
+With CMake 4.1.0 the build of libipmctl started failing with:
+
+  error: undefined reference to `main` in *.S
+
+- `-pie` is only valid when linking executables (PIE), not shared
+  libraries.
+- When applied to a shared library, the linker expects a `main`
+  symbol, causing the undefined reference error.
+- Remove `-pie` from shared libraries linker flag
+
+Upstream-Status: Submitted [https://github.com/intel/ipmctl/pull/221]
+
+Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1c07e682..d7aab78f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -156,7 +156,7 @@ endif()
+ if(UNIX)
+   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DNO_MSABI_VA_FUNCS -std=c99 -Wformat -Wformat-security -D_XOPEN_SOURCE=500 -Wall -Wfatal-errors -MMD -fPIC -fno-strict-aliasing")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wformat -Wformat-security -D_XOPEN_SOURCE=500 -Drestrict=__restrict__ -Wall -Wfatal-errors -MMD -fPIC -fno-strict-aliasing")
+-  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -z noexecstack -z relro -z now -pie")
++  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -z noexecstack -z relro -z now")
+ elseif(MSVC)
+   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /GS /DynamicBase /sdl")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /GS /DynamicBase /sdl")
+-- 
+2.37.3
+
