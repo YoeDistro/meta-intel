@@ -32,5 +32,4 @@ Dynamic additional dependencies:
 
 ## Maintainers
 
-- Anuj Mittal <anuj.mittal@intel.com>
-
+- Yogesh Tyagi <yogesh.tyagi@intel.com>
