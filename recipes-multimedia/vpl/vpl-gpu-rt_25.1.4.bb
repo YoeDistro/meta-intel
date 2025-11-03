@@ -26,7 +26,10 @@ FILES:${PN} += " \
                 ${libdir}/libmfx-gen/enctools.so \
                "
 
-inherit cmake
+inherit cmake features_check
+
+REQUIRED_DISTRO_FEATURES = "opengl"
+
 
 RREPLACES:${PN} = "onevpl-intel-gpu"
 RCONFLICTS:${PN} = "onevpl-intel-gpu"
