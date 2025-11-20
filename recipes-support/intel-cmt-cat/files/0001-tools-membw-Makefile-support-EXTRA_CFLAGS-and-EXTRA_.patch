@@ -1,0 +1,36 @@
+From f7563e09cd7b2c1e854d1179d32430a6e16ddf0d Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Thu, 20 Nov 2025 15:57:25 +0800
+Subject: [PATCH] tools/membw/Makefile: support EXTRA_CFLAGS and EXTRA_LDFLAGS
+
+Add variables EXTRA_LDFLAGS and EXTRA_CFLAGS to compile,
+just like other directories in the project
+
+Upstream-Status: Submitted [https://github.com/intel/intel-cmt-cat/pull/301]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ tools/membw/Makefile | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/tools/membw/Makefile b/tools/membw/Makefile
+index b0e2ee1..4c8dddc 100644
+--- a/tools/membw/Makefile
++++ b/tools/membw/Makefile
+@@ -52,6 +52,13 @@ CFLAGS=-W -Wall -Wextra -Wstrict-prototypes -Wmissing-prototypes \
+ 	-Winline -msse4.2 \
+ 	-fcf-protection=full
+ 
++ifneq ($(EXTRA_CFLAGS),)
++CFLAGS += $(EXTRA_CFLAGS)
++endif
++ifneq ($(EXTRA_LDFLAGS),)
++LDFLAGS += $(EXTRA_LDFLAGS)
++endif
++
+ ifeq ($(DEBUG),y)
+ CFLAGS += -O0 -g -DDEBUG
+ else
+-- 
+2.34.1
+
