@@ -30,4 +30,5 @@ BBCLASSEXTEND = "native"
 
 COMPATIBLE_HOST = "(i.86|x86_64).*-linux"
 
-UPSTREAM_CHECK_URI = "https://gitlab.com/iucode-tool/releases"
+UPSTREAM_CHECK_URI = "https://gitlab.com/iucode-tool/iucode-tool/-/tags"
+UPSTREAM_CHECK_REGEX = "v(?P<pver>\d+(\.\d+)+)"
