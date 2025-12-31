@@ -3,8 +3,8 @@ HOMEPAGE = "https://github.com/oneapi-src/level-zero"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=97957beb2f7808ffa247e5d93e6442cc"
 
-SRC_URI = "git://github.com/oneapi-src/level-zero.git;protocol=https;branch=master"
-SRCREV = "9536683855b17a21508e5b54ba358225d6a976da"
+SRC_URI = "git://github.com/oneapi-src/level-zero.git;protocol=https;nobranch=1"
+SRCREV = "e3b6efdd91d67bb03024b266094afabd39e213bf"
 
 inherit cmake
 DEPENDS += "opencl-headers"
