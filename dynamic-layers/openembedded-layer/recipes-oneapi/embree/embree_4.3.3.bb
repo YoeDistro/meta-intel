@@ -17,14 +17,16 @@ SRCREV = "5730b150471602d6dc02d9b7d8a4a6ce9ceffe16"
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
 
-DEPENDS = "tbb jpeg libpng glfw ispc-native"
+DEPENDS = "tbb jpeg libpng ispc-native"
 
 EXTRA_OECMAKE += " \
                   -DEMBREE_IGNORE_CMAKE_CXX_FLAGS=OFF  \
                   -DEMBREE_MAX_ISA=DEFAULT  \
-                  -DEMBREE_TUTORIALS=OFF  \
                   -DEMBREE_ISPC_SUPPORT=ON  \
                   -DEMBREE_ZIP_MODE=OFF  \
                   "
+# When tutorials are enabled, glvnd needs to be enabled:
+# DISTRO_FEATURES += "glvnd"
+PACKAGECONFIG[tutorial] = "-DEMBREE_TUTORIALS=ON,-DEMBREE_TUTORIALS=OFF,glfw"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>(\d+(\.\d+)+))$"
