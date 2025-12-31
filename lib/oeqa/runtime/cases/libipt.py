@@ -11,7 +11,7 @@ class LibiptTest(OERuntimeTestCase):
 
     @OEHasPackage(['libipt', 'libipt2'])
     @OEHasPackage(['libipt-test'])
-    @OEHasPackage(['yasm'])
+    @OEHasPackage(['nasm'])
     def test_libipt_can_generate_trace_packet(self):
         (status, output) = self.target.run('cd /tmp; %spttc %s/tests/loop-tnt.ptt' % 
                                            (self.libipt_bin_dir, self.libipt_bin_dir))
