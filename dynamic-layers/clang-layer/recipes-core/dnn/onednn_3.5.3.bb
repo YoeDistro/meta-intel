@@ -38,7 +38,7 @@ EXTRA_OECMAKE += " \
                    "
 
 PACKAGECONFIG ??= "gpu"
-PACKAGECONFIG[gpu] = "-DDNNL_GPU_RUNTIME=OCL, , opencl-headers virtual/opencl-icd, intel-compute-runtime"
+PACKAGECONFIG[gpu] = "-DDNNL_GPU_RUNTIME=OCL, , opencl-headers virtual/libopencl1, intel-compute-runtime"
 
 do_install:append () {
     install -d ${D}${bindir}/mkl-dnn/tests/benchdnn/inputs
