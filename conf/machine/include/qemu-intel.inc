@@ -7,6 +7,9 @@ EXTRA_IMAGEDEPENDS += "qemu-system-native qemu-helper-native:do_addto_recipe_sys
 # Build ovmf firmware for uefi support in qemu.
 EXTRA_IMAGEDEPENDS += "ovmf"
 
+# ovmf support has been removed for 32 bit machines in yocto
+EXTRA_IMAGEDEPENDS:remove:x86 = "ovmf"
+
 # runqemu uses virtio, so we have to enable the corresponding
 # kernel drivers.
 KERNEL_FEATURES_INTEL_COMMON += "cfg/virtio.scc"
