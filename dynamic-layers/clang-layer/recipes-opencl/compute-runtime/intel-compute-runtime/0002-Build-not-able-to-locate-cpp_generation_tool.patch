@@ -11,11 +11,11 @@ Signed-off-by: Dongwon Kim <dongwon.kim@intel.com>
  shared/source/built_ins/kernels/CMakeLists.txt | 10 +++++-----
  1 file changed, 5 insertions(+), 5 deletions(-)
 
-Index: git/shared/source/built_ins/kernels/CMakeLists.txt
+Index: intel-compute-runtime-25.48.36300.8/shared/source/built_ins/kernels/CMakeLists.txt
 ===================================================================
---- git.orig/shared/source/built_ins/kernels/CMakeLists.txt
-+++ git/shared/source/built_ins/kernels/CMakeLists.txt
-@@ -122,9 +122,9 @@ function(compile_builtin core_type platf
+--- intel-compute-runtime-25.48.36300.8.orig/shared/source/built_ins/kernels/CMakeLists.txt
++++ intel-compute-runtime-25.48.36300.8/shared/source/built_ins/kernels/CMakeLists.txt
+@@ -118,9 +118,9 @@ function(compile_builtin core_type platf
        endif()
        add_custom_command(
                           OUTPUT ${OUTPUT_FILE_CPP}
@@ -27,7 +27,7 @@ Index: git/shared/source/built_ins/kernels/CMakeLists.txt
        )
        list(APPEND BUILTINS_COMMANDS "${OUTPUT_FILE_CPP}")
      else()
-@@ -176,9 +176,9 @@ function(generate_cpp_spirv builtin)
+@@ -172,9 +172,9 @@ function(generate_cpp_spirv builtin)
      endif()
      add_custom_command(
                         OUTPUT ${OUTPUT_FILE_CPP}
