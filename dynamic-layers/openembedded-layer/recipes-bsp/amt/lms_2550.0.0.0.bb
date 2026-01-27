@@ -30,10 +30,8 @@ FILES:${PN} += "${datadir}/dbus-1/system-services/*.service"
 SYSTEMD_SERVICE:${PN} = "lms.service"
 
 SRC_URI = "git://github.com/intel/lms.git;branch=master;protocol=https \
-           file://0001-LMS-fix-build-issue-with-gcc-15.patch \
-           file://0001-cmake-Bump-required-CMake-version-to-3.5-to-allow-bu.patch \
            "
-SRCREV = "388f115b2aeb3ea11499971c65f828daefd32c47"
+SRCREV = "5403352b8dc8d2c9a73ccbc04525998534aa2cb8"
 
 do_install:append() {
     install -d ${D}${sysconfdir}/lms
