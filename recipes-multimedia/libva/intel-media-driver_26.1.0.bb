@@ -23,7 +23,7 @@ SRC_URI = "git://github.com/intel/media-driver.git;protocol=https;nobranch=1 \
            file://0004-Fix-failed-4k-videowalll-test-case-and-color-corrupt.patch \
           "
 
-SRCREV = "14e2e7bcf1014186dbf1c099089c7c05cd880ae8"
+SRCREV = "9e4d199d44a86d409e9922fc37c48ceb88252d35"
 
 COMPATIBLE_HOST:x86-x32 = "null"
 
