@@ -20,7 +20,7 @@ RDEPENDS:${PN} += "intel-media-driver"
 SRC_URI = "git://github.com/intel/vpl-gpu-rt.git;protocol=https;nobranch=1;lfs=0 \
           "
 
-SRCREV = "c65990e456acf901597a76b22407232679152547"
+SRCREV = "58c5fb3f1aa69c98dbb653b3707c92fc9d8dc4ff"
 
 FILES:${PN} += " \
                 ${libdir}/libmfx-gen/enctools.so \
