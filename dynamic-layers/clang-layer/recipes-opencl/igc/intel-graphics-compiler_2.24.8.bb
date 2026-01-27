@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc
                     file://LICENSE.md;md5=488d74376edf2765f6e78d271543dde3 \
                     file://NOTICES.txt;md5=b81a52411c84df3419f20bad4d755880"
 
-SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=releases/2.10.x \
+SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;name=igc;branch=releases/2.24.x \
            git://github.com/intel/vc-intrinsics.git;protocol=https;destsuffix=${BB_GIT_DEFAULT_DESTSUFFIX}/vc-intrinsics;name=vc;nobranch=1 \
            git://github.com/KhronosGroup/SPIRV-Tools.git;protocol=https;destsuffix=${BB_GIT_DEFAULT_DESTSUFFIX}/SPIRV-Tools;name=spirv-tools;branch=main \
            git://github.com/KhronosGroup/SPIRV-Headers.git;protocol=https;destsuffix=${BB_GIT_DEFAULT_DESTSUFFIX}/SPIRV-Headers;name=spirv-headers;branch=main \
@@ -16,14 +16,15 @@ SRC_URI = "git://github.com/intel/intel-graphics-compiler.git;protocol=https;nam
            file://0001-BiF-CMakeLists.txt-remove-opt-from-DEPENDS.patch \
            file://0001-external-SPIRV-Tools-change-path-to-tools-and-header.patch \
            file://0001-Build-not-able-to-locate-BiFManager-bin.patch \
+           file://0001-IRBuilderGenerator_exe-error-while-loading-shared-li.patch \
            "
 
 SRC_URI:append:class-native = " file://0001-fix-tblgen.patch"
 
-SRCREV_igc = "83925314d4fc32b017fcbfcd73e0667ba833fb8f"
-SRCREV_vc = "9d255266e1df8f1dc5d11e1fbb03213acfaa4fc7"
-SRCREV_spirv-tools = "f289d047f49fb60488301ec62bafab85573668cc"
-SRCREV_spirv-headers = "0e710677989b4326ac974fd80c5308191ed80965"
+SRCREV_igc = "2c5a85aeee1b0ddde5971fcb2e716b2732d974c5"
+SRCREV_vc = "ce05311a86a88ba79bbf592c34d2b8f1756a11d2"
+SRCREV_spirv-tools = "28a883ba4c67f58a9540fb0651c647bb02883622"
+SRCREV_spirv-headers = "01e0577914a75a2569c846778c2f93aa8e6feddd"
 
 SRCREV_FORMAT = "igc_vc_spirv-tools_spirv-headers"
 
@@ -31,8 +32,6 @@ SRCREV_FORMAT = "igc_vc_spirv-tools_spirv-headers"
 export B
 
 inherit cmake pkgconfig qemu python3native
-
-CXXFLAGS:append = " -Wno-error=nonnull"
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = "null"
@@ -57,6 +56,8 @@ EXTRA_OECMAKE = " \
                   -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
                   "
 
+EXTRA_OECMAKE += " -DCMAKE_CXX_FLAGS='-Wno-error=cpp -Wno-error=free-nonheap-object'"
+
 do_configure:prepend:class-target () {
     # Write out a qemu wrapper that will be used by cmake.
     qemu_binary="${@qemu_wrapper_cmdline(d, d.getVar('STAGING_DIR_HOST'), [d.expand('${STAGING_DIR_HOST}${libdir}'),d.expand('${STAGING_DIR_HOST}${base_libdir}')])}"
@@ -76,3 +77,4 @@ FILES:${PN} += " \
 
 # libigc.so contains buildpaths
 INSANE_SKIP:${PN} += "buildpaths"
+INSANE_SKIP:${PN}-dbg += "buildpaths"
