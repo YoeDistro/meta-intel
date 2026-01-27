@@ -13,6 +13,7 @@ inherit pkgconfig cmake
 
 SRC_URI = "git://github.com/ospray/ospray.git;protocol=https;branch=master;name=ospray  \
            git://github.com/nothings/stb;protocol=https;destsuffix=${BB_GIT_DEFAULT_DESTSUFFIX}/apps/common/external/stb_image/stb;name=stb;nobranch=1 \
+           file://0001-cmake-update-rkcommon-version-requirement-to-1.15.2.patch \
           "
 SRCREV_ospray ?= "85af2929937d516997451cbd52d352cf93125ed2"
 SRCREV_stb ?= "af1a5bc36dff44f0a019df21c271db697d51f1a6"
