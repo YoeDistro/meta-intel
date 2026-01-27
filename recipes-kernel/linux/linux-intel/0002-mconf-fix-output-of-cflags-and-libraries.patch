@@ -3,38 +3,39 @@ From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Mon, 17 Jul 2023 17:17:55 -0400
 Subject: [PATCH 2/2] mconf: fix output of cflags and libraries
 
-commit 3122c84409d578a5df8bcb1 [kconfig: refactor Makefile to reduce
-process forks] changes the way that flags are detected. They are
-no longer just echo'd and captured, they are written to a file and
-later read.
+The kconfig infrastructure has changed how flags are detected and
+output. They are no longer just echo'd and captured, they are
+written to a file and later read.
 
-We adjust our CROSS ncurses patch accordingly.
+We adjust our CROSS ncurses patch accordingly to work with the new
+infrastructure while maintaining cross-compilation support.
 
-We'll eventually be able to drop this patch, but not quite yet.
-
-Upstream-Status: Inappropriate  [OE-Specific]
+Upstream-Status: Inappropriate [OE-Specific]
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 Signed-off-by: Naveen Saini <naveen.kumar.saini@intel.com>
 ---
- scripts/kconfig/mconf-cfg.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ scripts/kconfig/mconf-cfg.sh | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/scripts/kconfig/mconf-cfg.sh b/scripts/kconfig/mconf-cfg.sh
-index 38cf8304bb31..a5ae56e08b07 100755
+index 1bc304dc2..dde985a55 100755
 --- a/scripts/kconfig/mconf-cfg.sh
 +++ b/scripts/kconfig/mconf-cfg.sh
-@@ -8,9 +8,9 @@ PKG="ncursesw"
+@@ -9,6 +9,14 @@ libs=$2
+ PKG="ncursesw"
  PKG2="ncurses"
  
- if [ "$CROSS_CURSES_LIB" != "" ]; then
--    echo libs=\'$CROSS_CURSES_LIB\'
++if [ "$CROSS_CURSES_LIB" != "" ]; then
 +    echo $CROSS_CURSES_LIB > ${libs}
-     if [ x"$CROSS_CURSES_INC" != x ]; then
--	echo cflags=\'$CROSS_CURSES_INC\'
++    if [ x"$CROSS_CURSES_INC" != x ]; then
 +	echo $CROSS_CURSES_INC > ${cflags}
-     fi
-     exit 0
- fi
++    fi
++    exit 0
++fi
++
+ if [ -n "$(command -v ${HOSTPKG_CONFIG})" ]; then
+ 	if ${HOSTPKG_CONFIG} --exists $PKG; then
+ 		${HOSTPKG_CONFIG} --cflags ${PKG} > ${cflags}
 -- 
-2.34.1
+2.43.0
 
