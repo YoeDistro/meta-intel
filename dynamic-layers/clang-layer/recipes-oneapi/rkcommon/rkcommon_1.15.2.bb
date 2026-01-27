@@ -9,9 +9,8 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57"
 inherit pkgconfig cmake
 
 SRC_URI = "git://github.com/ospray/rkcommon.git;protocol=https;branch=master \
-           file://0001-use-fully-qualified-rkcommon-math-rsqrt-to-avoid-ove.patch \
             "
-SRCREV = "4a00047ae5a3ac705b6b33b4a7574588d91e7953"
+SRCREV = "674d4cbb1fb9648820f96d05bc3e875db712ab9e"
 
 DEPENDS = "tbb"
 
