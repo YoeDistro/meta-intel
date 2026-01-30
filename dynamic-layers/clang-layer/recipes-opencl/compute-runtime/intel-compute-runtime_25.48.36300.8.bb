@@ -19,6 +19,10 @@ DEPENDS += " intel-graphics-compiler gmmlib libva qemu-native"
 
 RDEPENDS:${PN} += " intel-graphics-compiler gmmlib"
 
+# Exclude mesa's OpenCL implementation (rusticl) to avoid ICD conflicts
+RCONFLICTS:${PN} = "libopencl-mesa"
+RPROVIDES:${PN} = "virtual-opencl-icd"
+
 inherit cmake pkgconfig qemu
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
