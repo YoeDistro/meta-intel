@@ -9,7 +9,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=fcee2b5da70c8e2e58c5f4d1f2d5788a"
 
 inherit pkgconfig cmake
 
-SRC_URI = "git://github.com/intel/libipt.git;protocol=https;branch=stable/v2.2"
+SRC_URI = "git://github.com/intel/libipt.git;protocol=https;branch=stable/v2.2 \
+           file://0001-pttc-use-nasm-instead-of-yasm.patch \
+           "
 
 SRCREV = "eecdf779a35384235d3c32a6213024f53368cb60"
 
