@@ -23,6 +23,8 @@ SRCREV_FORMAT = "linux-npu-driver_npu-compiler-elf_yaml-cpp_lzvext_googletest"
 
 inherit cmake
 
+COMPATIBLE_HOST = '(x86_64).*-linux'
+COMPATIBLE_HOST:libc-musl = 'null'
 
 # Fix warning _FORTIFY_SOURCE requires compiling with optimization (-O)
 EXTRA_OECMAKE += " -DCMAKE_BUILD_TYPE=Release "
