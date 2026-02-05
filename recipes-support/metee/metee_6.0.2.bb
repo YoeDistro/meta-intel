@@ -11,6 +11,7 @@ COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 inherit cmake
 
 SRC_URI = "git://github.com/intel/metee.git;branch=master;protocol=https \
+           file://0001-Fix-sign-conversion-warnings-with-musl-ioctl.patch \
 "
 SRCREV = "93784f62070b2bc4e84b51e23c9add61f7600444"
 
