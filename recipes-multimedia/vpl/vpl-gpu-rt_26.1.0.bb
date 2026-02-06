@@ -14,7 +14,7 @@ PE = "1"
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:x86-x32 = "null"
 
-DEPENDS += "libdrm libva intel-media-driver libvpl pkgconfig-native"
+DEPENDS += "libdrm libva intel-media-driver libvpl"
 RDEPENDS:${PN} += "intel-media-driver"
 
 SRC_URI = "git://github.com/intel/vpl-gpu-rt.git;protocol=https;nobranch=1;lfs=0 \
@@ -26,7 +26,7 @@ FILES:${PN} += " \
                 ${libdir}/libmfx-gen/enctools.so \
                "
 
-inherit cmake features_check
+inherit cmake features_check pkgconfig
 
 REQUIRED_DISTRO_FEATURES = "opengl"
 

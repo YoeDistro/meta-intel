@@ -10,9 +10,9 @@ COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
 COMPATIBLE_HOST:libc-musl = "null"
 
-inherit cmake systemd features_check python3native
+inherit cmake systemd features_check python3native pkgconfig
 
-DEPENDS = "metee ace xerces-c libnl libxml2 glib-2.0 glib-2.0-native pkgconfig-native python3-packaging-native"
+DEPENDS = "metee ace xerces-c libnl libxml2 glib-2.0 glib-2.0-native python3-packaging-native"
 
 # Enable either connman or networkmanager or none but not both.
 PACKAGECONFIG ??= "connman"

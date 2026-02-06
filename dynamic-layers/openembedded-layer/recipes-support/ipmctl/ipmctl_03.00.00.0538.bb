@@ -27,9 +27,9 @@ SRCREV_ipmctl = "a71f2fb1c90dd07f9862b71c789881132193e8f9"
 SRCREV_edk2 = "46548b1adac82211d8d11da12dd914f41e7aa775"
 SRCREV_FORMAT = "ipmctl_edk2"
 
-inherit cmake dos2unix
+inherit cmake dos2unix pkgconfig
 
-DEPENDS = "ndctl pkgconfig-native"
+DEPENDS = "ndctl"
 
 EXTRA_OECMAKE = "-DRELEASE=ON \
                  -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \

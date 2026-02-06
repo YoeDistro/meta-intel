@@ -13,8 +13,9 @@ SRC_URI = "git://github.com/intel/libvpl.git;protocol=https;branch=main \
             "
 SRCREV = "778a66d6c6537f08eabb91955dbbf1bce3812894"
 
-inherit cmake
-DEPENDS += "libva pkgconfig-native"
+inherit cmake pkgconfig
+
+DEPENDS += "libva"
 
 PACKAGECONFIG ??= "tools"
 PACKAGECONFIG[tools] = "-DBUILD_TOOLS=ON, -DBUILD_TOOLS=OFF, wayland wayland-native wayland-protocols"

@@ -21,7 +21,7 @@ SRCREV_lzvext = "61e4aeb00afd2a5b6955986269eed3a713c7b562"
 SRCREV_googletest = "b514bdc898e2951020cbdca1304b75f5950d1f59"
 SRCREV_FORMAT = "linux-npu-driver_npu-compiler-elf_yaml-cpp_lzvext_googletest"
 
-inherit cmake
+inherit cmake pkgconfig
 
 COMPATIBLE_HOST = '(x86_64).*-linux'
 COMPATIBLE_HOST:libc-musl = 'null'
@@ -34,7 +34,7 @@ EXTRA_OECMAKE += " -DCMAKE_INSTALL_FIRMWARE_DIR=${nonarch_base_libdir}"
 EXTRA_OECMAKE += " -DCMAKE_POLICY_VERSION_MINIMUM=3.5"
 EXTRA_OECMAKE += " -DCMAKE_CXX_FLAGS='-I${STAGING_INCDIR}/level_zero'"
 
-DEPENDS = "level-zero dpkg-native pkgconfig-native level-zero-native"
+DEPENDS = "level-zero dpkg-native level-zero-native"
 
 PACKAGES =+ "${PN}-firmware ${PN}-tests"
 
