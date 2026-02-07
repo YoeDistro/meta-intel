@@ -17,12 +17,13 @@ inherit module features_check
 # When updating this recipe, ensure that the proper firmware is included from
 # either the linux-firmware or iwlwifi-firmware repos.
 
-PV = "79"
-SRCREV = "574631d89d736fd2c76b0e2ea489270c50903e52"
+PV = "98"
+SRCREV = "186af96a0bccf10ef82af84a4803362508765d57"
 
 SRC_URI = " \
            git://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/backport-iwlwifi;branch=release/core${PV} \
            file://0001-Makefile.real-skip-host-install-scripts.patch \
+           file://0002-backport-include-net-netlink-fix-redefinition.patch \
            file://iwlwifi.conf \
           "
 
@@ -42,7 +43,7 @@ do_install:append() {
 	install -m 0644 ${WORKDIR}/iwlwifi.conf ${D}${sysconfdir}/modprobe.d
 }
 
-RDEPENDS:${PN} = "linux-firmware-iwlwifi"
+RDEPENDS:${PN} = "linux-firmware-iwlwifi backport-iwlwifi-compat"
 
 FILES:${PN} += "${sysconfdir}/modprobe.d/iwlwifi.conf"
 

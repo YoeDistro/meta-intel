@@ -1,0 +1,44 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Yogesh Tyagi <yogesh.tyagi@intel.com>
+Date: Fri, 7 Feb 2026 09:45:00 +0000
+Subject: [PATCH] backport-include/net/netlink: fix redefinition of nla_get_uint/sint
+
+Fix compilation errors with linux-yocto 6.6.111 where nla_get_uint()
+and nla_get_sint() are already defined in kernel headers.
+
+These functions were backported to some stable 6.6 kernel variants
+(linux-yocto 6.6.111) but not others (linux-intel-rt 6.6.78), causing
+redefinition errors:
+
+  error: redefinition of 'nla_get_uint'
+  error: redefinition of 'nla_get_sint'
+
+Use kernel version 6.6.111 as threshold since:
+- linux-intel 6.6.78: needs backport definitions (< 6.6.111)
+- linux-intel-rt 6.6.78-rt51: needs backport definitions (< 6.6.111)  
+- linux-yocto 6.6.111: has kernel definitions (>= 6.6.111)
+- linux-yocto-rt 6.6.111-rt: has kernel definitions (>= 6.6.111)
+
+Upstream-Status: Pending
+
+Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
+---
+ backport-include/net/netlink.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/backport-include/net/netlink.h b/backport-include/net/netlink.h
+index 1234567..abcdefg 100644
+--- a/backport-include/net/netlink.h
++++ b/backport-include/net/netlink.h
+@@ -379,7 +379,7 @@
+ #define NLA_POLICY_BINARY_RANGE(_min, _max) NLA_POLICY_RANGE(NLA_BINARY, _min, _max)
+ #endif /* < 5.10 */
+ 
+-#if LINUX_VERSION_IS_LESS(6,7,0)
++#if LINUX_VERSION_IS_LESS(6,6,111)
+ 
+ static inline u64 nla_get_uint(const struct nlattr *nla)
+ {
+-- 
+2.34.1
+
