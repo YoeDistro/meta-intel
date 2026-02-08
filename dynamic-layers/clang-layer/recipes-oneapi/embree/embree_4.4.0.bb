@@ -11,6 +11,9 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57 \
 
 inherit pkgconfig cmake
 
+# ISPC generates binaries with embedded build paths
+INSANE_SKIP:${PN}-dbg += "buildpaths"
+
 SRC_URI = "git://github.com/embree/embree.git;protocol=https;branch=master"
 SRCREV = "ff9381774dc99fea81a932ad276677aad6a3d4dd"
 

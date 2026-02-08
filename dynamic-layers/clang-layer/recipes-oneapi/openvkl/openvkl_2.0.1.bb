@@ -40,3 +40,6 @@ PACKAGES =+ "${PN}-examples"
 FILES:${PN}-examples = "\
                      ${bindir} \
                      "
+
+INSANE_SKIP:${PN}-src += "buildpaths"
+INSANE_SKIP:${PN}-dbg += "buildpaths"
