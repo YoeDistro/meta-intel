@@ -36,4 +36,6 @@ FILES:${PN}-apps = "\
                      ${bindir} \
                      "
 
+INSANE_SKIP:${PN}-src += "buildpaths"
+INSANE_SKIP:${PN}-dbg += "buildpaths"
 UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>(\d+(\.\d+)+))$"
