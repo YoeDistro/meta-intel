@@ -1,0 +1,68 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Yogesh Tyagi <yogesh.tyagi@intel.com>
+Date: Fri, 7 Feb 2026 00:00:00 +0000
+Subject: [PATCH] superbuild: forward build options to ispc-stage2
+
+Forward the ISPCRT_BUILD_TASK_MODEL, ISPC_PREPARE_PACKAGE,
+ISPC_INCLUDE_EXAMPLES, and ISPC_INCLUDE_TESTS options to the
+ispc-stage2 ExternalProject so that builds can control the
+tasking model, packaging behavior, and disable examples/tests.
+
+Upstream-Status: Pending
+Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
+---
+ superbuild/CMakeLists.txt | 34 ++++++++++++++++++++++++++++------
+ 1 file changed, 28 insertions(+), 6 deletions(-)
+
+diff --git a/superbuild/CMakeLists.txt b/superbuild/CMakeLists.txt
+index 048754b7..d2a3e8f9 100644
+--- a/superbuild/CMakeLists.txt
++++ b/superbuild/CMakeLists.txt
+@@ -789,6 +789,30 @@ if (APPLE)
+             )
+     endif()
+ endif()
++# Forward ISPCRT_BUILD_TASK_MODEL if explicitly set
++if (DEFINED ISPCRT_BUILD_TASK_MODEL)
++    list(APPEND ISPC_COMMON_CMAKE_ARGS
++        -DISPCRT_BUILD_TASK_MODEL=${ISPCRT_BUILD_TASK_MODEL}
++        )
++endif()
++# Forward ISPC_PREPARE_PACKAGE if explicitly set
++if (DEFINED ISPC_PREPARE_PACKAGE)
++    list(APPEND ISPC_COMMON_CMAKE_ARGS
++        -DISPC_PREPARE_PACKAGE=${ISPC_PREPARE_PACKAGE}
++        )
++endif()
++# Forward ISPC_INCLUDE_EXAMPLES if explicitly set
++if (DEFINED ISPC_INCLUDE_EXAMPLES)
++    list(APPEND ISPC_COMMON_CMAKE_ARGS
++        -DISPC_INCLUDE_EXAMPLES=${ISPC_INCLUDE_EXAMPLES}
++        )
++endif()
++# Forward ISPC_INCLUDE_TESTS if explicitly set
++if (DEFINED ISPC_INCLUDE_TESTS)
++    list(APPEND ISPC_COMMON_CMAKE_ARGS
++        -DISPC_INCLUDE_TESTS=${ISPC_INCLUDE_TESTS}
++        )
++endif()
+ 
+ list(APPEND ISPC_STAGE2_CMAKE_ARGS
+     ${ISPC_COMMON_CMAKE_ARGS}
+@@ -856,8 +880,12 @@ else()
+         )
+ endif()
+ 
+-list(APPEND ISPC_STAGE2_CMAKE_TARGETS install package)
+-if (NOT ISPC_PACKAGE_EXAMPLES)
++list(APPEND ISPC_STAGE2_CMAKE_TARGETS install)
++# Only add package targets if packaging is enabled
++if (ISPC_PREPARE_PACKAGE)
++    list(APPEND ISPC_STAGE2_CMAKE_TARGETS package)
++endif()
++if (ISPC_PREPARE_PACKAGE AND NOT ISPC_PACKAGE_EXAMPLES)
+     list(APPEND ISPC_STAGE2_CMAKE_TARGETS
+         package-examples
+         )
+-- 
+2.43.0
