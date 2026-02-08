@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Yogesh Tyagi <yogesh.tyagi@intel.com>
+Date: Tue, 11 Feb 2026 22:00:00 +0000
+Subject: [PATCH] llvm: update CMake policy CMP0116 to NEW
+
+Update CMake policy CMP0116 from OLD to NEW to avoid deprecation
+warnings. CMP0116 controls how Ninja generators transform DEPFILE
+from add_custom_command(). The NEW behavior is the standard behavior
+and should be used going forward.
+
+CMake Deprecation Warning:
+  The OLD behavior for policy CMP0116 will be removed from a future
+  version of CMake. Projects should be ported to the NEW behavior.
+
+Upstream-Status: Pending
+Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
+---
+ cmake/Modules/CMakePolicy.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/Modules/CMakePolicy.cmake b/cmake/Modules/CMakePolicy.cmake
+index 1234567890..abcdef1234 100644
+--- a/cmake/Modules/CMakePolicy.cmake
++++ b/cmake/Modules/CMakePolicy.cmake
+@@ -3,7 +3,7 @@
+ # CMP0116: Ninja generators transform `DEPFILE`s from `add_custom_command()`
+ # New in CMake 3.20. https://cmake.org/cmake/help/latest/policy/CMP0116.html
+ if(POLICY CMP0116)
+-  cmake_policy(SET CMP0116 OLD)
++  cmake_policy(SET CMP0116 NEW)
+ endif()
+ 
+ # MSVC debug information format flags are selected via
+-- 
+2.34.1

@@ -1,0 +1,57 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Yogesh Tyagi <yogesh.tyagi@intel.com>
+Date: Thu, 12 Feb 2026 10:30:00 +0800
+Subject: [PATCH] GenerateBuiltins: Fix header paths for builtin compilation
+
+When using --target=x86_64-unknown-unknown, clang doesn't know where
+to find system headers like bits/libc-header-start.h. Add explicit
+-isystem paths to the builtin compilation commands to fix header
+resolution.
+
+For native builds, using the build host's sysroot is appropriate since
+the builtins are compiled to LLVM IR during the build process.
+
+Note: ispc 1.29.1 has restructured the build system and no longer uses
+explicit 32/64-bit foreach loops, so the old 32-bit exclusion patch is
+not needed.
+
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
+---
+ cmake/GenerateBuiltins.cmake | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/cmake/GenerateBuiltins.cmake b/cmake/GenerateBuiltins.cmake
+index e20d79b8..6c8a9f0e 100644
+--- a/cmake/GenerateBuiltins.cmake
++++ b/cmake/GenerateBuiltins.cmake
+@@ -112,6 +112,17 @@ function(generate_dispatcher os)
+ 
+     write_dispatch_bitcode_lib(${name} ${os})
+ 
++    # Detect multiarch tuple for system headers
++    execute_process(
++        COMMAND ${CMAKE_C_COMPILER} -print-multiarch
++        OUTPUT_VARIABLE MULTIARCH_TUPLE
++        OUTPUT_STRIP_TRAILING_WHITESPACE
++        ERROR_QUIET
++    )
++    if(NOT MULTIARCH_TUPLE)
++        set(MULTIARCH_TUPLE "x86_64-linux-gnu")
++    endif()
++
+     set(EXTRA_OPTS "")
+     if (NOT WIN32)
+         set(EXTRA_OPTS "-fPIC")
+@@ -119,7 +130,7 @@ function(generate_dispatcher os)
+ 
+     add_custom_command(
+         OUTPUT ${bc}
+-        COMMAND ${CLANGPP_EXECUTABLE} -x c ${DISP_TYPE} -I${CMAKE_SOURCE_DIR}/src ${EXTRA_OPTS} --target=x86_64-unknown-unknown -march=core2 -mtune=generic -O2 -emit-llvm ${input} -c -o ${bc}
++        COMMAND ${CLANGPP_EXECUTABLE} -x c ${DISP_TYPE} -I${CMAKE_SOURCE_DIR}/src ${EXTRA_OPTS} --target=x86_64-unknown-unknown -isystem /usr/include -isystem /usr/include/${MULTIARCH_TUPLE} -march=core2 -mtune=generic -O2 -emit-llvm ${input} -c -o ${bc}
+         DEPENDS ${input} ${CMAKE_SOURCE_DIR}/src/isa.h
+         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+     )
+-- 
+2.34.1
+
