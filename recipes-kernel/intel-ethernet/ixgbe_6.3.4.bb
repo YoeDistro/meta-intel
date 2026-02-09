@@ -2,18 +2,18 @@ SUMMARY = "ixgbe kernel driver for Intel Magnolia Park 10GbE"
 DESCRIPTION = "The ixgbe driver supports 82598- and 82599-based \
 PCI Express* 10 Gigabit Network Connections."
 
-HOMEPAGE = "https://sourceforge.net/projects/e1000/"
+HOMEPAGE = "https://github.com/intel/ethernet-linux-ixgbe"
 SECTION = "kernel/network"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/${BP}/COPYING;md5=a216b4192dc6b777b6f0db560e9a8417"
 
-SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbe%20stable/${PV}/${BP}.tar.gz \
+SRC_URI = "https://github.com/intel/ethernet-linux-ixgbe/releases/download/v${PV}/${BP}.tar.gz \
            "
 
-SRC_URI[sha256sum] = "da7e7b62ffb85a820d7541623fbef5c4abef8d1df7ac0af3f1acc3b3d76c9822"
+SRC_URI[sha256sum] = "1bb6a63bf2502bfd205ba55e48ef6486754b1823ed330cb103ac1a590544abe6"
 
-UPSTREAM_CHECK_URI = "https://sourceforge.net/projects/e1000/files/ixgbe%20stable/"
-UPSTREAM_CHECK_REGEX = "ixgbe%20stable/(?P<pver>\d+(\.\d+)+)/"
+UPSTREAM_CHECK_URI = "https://github.com/intel/ethernet-linux-ixgbe/releases"
+UPSTREAM_CHECK_REGEX = "ixgbe-(?P<pver>\d+(\.\d+)+)\.tar\.gz"
 
 CVE_PRODUCT = "linux:linux_kernel_ixgbe"
 
