@@ -1,0 +1,30 @@
+From: Yocto Builder <builder@yoctoproject.org>
+Date: Sun, 9 Feb 2025 12:00:00 +0000
+Subject: [PATCH] ixgbevf: Fix XDP compilation for kernels without XDP support
+
+The driver assumes XDP support is available based on kernel version alone
+(>= 4.16.0), but some kernels like RT kernels may not have XDP enabled
+in their configuration. This causes compilation failures with
+"field 'xdp_rxq' has incomplete type".
+
+Add a proper check for XDP support existence before enabling XDP features.
+
+Upstream-Status: Pending
+
+Signed-off-by: Yocto Builder <builder@yoctoproject.org>
+
+---
+--- a/kcompat_std_defs.h
++++ b/kcompat_std_defs.h
+@@ -77,8 +77,10 @@
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(4,16,0))
+ #define NEED_TC_CLS_CAN_OFFLOAD_AND_CHAIN0
+ #else /* >= 4,16,0 */
++#if IS_ENABLED(CONFIG_XDP_SOCKETS)
+ #define HAVE_XDP_BUFF_RXQ
+ #define HAVE_XDP_RXQ_INFO_REG_3_PARAMS
++#endif
+ #endif /* 4,16,0 */
+ 
+ /*****************************************************************************/
+

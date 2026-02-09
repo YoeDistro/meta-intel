@@ -11,9 +11,10 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/${BP}/COPYING;md5=a216b4192dc6b777b6f0db560e9a8417"
 
 SRC_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/${PV}/${BP}.tar.gz \
+           file://0001-Fix-XDP-compilation-for-kernels-without-XDP-support.patch \
            "
 
-SRC_URI[sha256sum] = "90f6cd614008839b6fc748ae0f4ad3503435f8b788318d4f40cfc83c7029025e"
+SRC_URI[sha256sum] = "73c6a27be324a48b069dbda0d1d07212a2214c71f54df57bca7177fc92b04881"
 
 UPSTREAM_CHECK_URI = "https://sourceforge.net/projects/e1000/files/ixgbevf%20stable/"
 UPSTREAM_CHECK_REGEX = "ixgbevf%20stable/(?P<pver>\d+(\.\d+)+)/"
