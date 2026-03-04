@@ -1,0 +1,48 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Yogesh Tyagi <yogesh.tyagi@intel.com>
+Date: Thu, 6 Feb 2026 00:05:37 +0800
+Subject: [PATCH] Fix sign-conversion warnings with musl ioctl
+
+musl's ioctl request macros expand to unsigned long values, causing
+sign-conversion warnings when passed to ioctl() which expects an int.
+Cast the macros explicitly to int to resolve this.
+
+Upstream-Status: Submitted [https://github.com/intel/metee/pull/22]
+Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
+---
+ src/linux/mei.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/linux/mei.c b/src/linux/mei.c
+index 1111111..2222222 100644
+--- a/src/linux/mei.c
++++ b/src/linux/mei.c
+@@ -193,7 +193,7 @@ static inline int __mei_connect(struct mei *me, struct mei_connect_client_data
+ 	int rc;
+ 
+ 	errno = 0;
+-	rc = ioctl(me->fd, IOCTL_MEI_CONNECT_CLIENT, d);
++	rc = ioctl(me->fd, (int)IOCTL_MEI_CONNECT_CLIENT, d);
+ 	me->last_err = errno;
+ 	return rc == -1 ? -me->last_err : 0;
+ }
+@@ -204,7 +204,7 @@ static inline int __mei_connect_vtag(struct mei *me,
+ 	int rc;
+ 
+ 	errno = 0;
+-	rc = ioctl(me->fd, IOCTL_MEI_CONNECT_CLIENT_VTAG, d);
++	rc = ioctl(me->fd, (int)IOCTL_MEI_CONNECT_CLIENT_VTAG, d);
+ 	me->last_err = errno;
+ 	return rc == -1 ? -me->last_err : 0;
+ }
+@@ -225,7 +225,7 @@ static inline int __mei_notify_get(struct mei *me)
+ 	int rc;
+ 
+ 	errno = 0;
+-	rc = ioctl(me->fd, IOCTL_MEI_NOTIFY_GET, &notification);
++	rc = ioctl(me->fd, (int)IOCTL_MEI_NOTIFY_GET, &notification);
+ 	me->last_err = errno;
+ 	return rc == -1 ? -me->last_err : 0;
+ }
+-- 
+2.43.0

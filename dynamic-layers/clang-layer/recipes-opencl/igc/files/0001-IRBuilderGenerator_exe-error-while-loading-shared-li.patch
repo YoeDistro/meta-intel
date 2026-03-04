@@ -1,0 +1,47 @@
+From bdfd2e76a1459498271f563ced7452083471eba5 Mon Sep 17 00:00:00 2001
+From: Yogesh Tyagi <yogesh.tyagi@intel.com>
+Date: Fri, 23 Jan 2026 21:37:19 +0530
+Subject: [PATCH] IRBuilderGenerator_exe: error while loading shared libraries:
+ libLLVM-15.so
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
+---
+ IGC/cmake/IRBuilderGeneratorCodeGen.cmake | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/IGC/cmake/IRBuilderGeneratorCodeGen.cmake b/IGC/cmake/IRBuilderGeneratorCodeGen.cmake
+index 00d5dbf0b..27de79a95 100644
+--- a/IGC/cmake/IRBuilderGeneratorCodeGen.cmake
++++ b/IGC/cmake/IRBuilderGeneratorCodeGen.cmake
+@@ -52,7 +52,7 @@ function(generate_irbuilder_headers)
+         add_custom_command(
+             OUTPUT ${DESC_HEADER_PATH}
+             COMMAND
+-                $<TARGET_FILE:IRBuilderGenerator>
++                IRBuilderGenerator
+                 --yaml-path=${ARG_YAML_PATH}
+                 --gen-desc=${DESC_HEADER_PATH}
+             COMMENT "[${ARG_NAME}] Generating descriptor header ${DESC_HEADER_PATH}"
+@@ -137,7 +137,7 @@ function(generate_irbuilder_headers)
+     add_custom_command(
+         OUTPUT ${PRIVATE_HEADER_PATH}
+         COMMAND
+-            $<TARGET_FILE:IRBuilderGenerator>
++            IRBuilderGenerator
+             --scope=private
+             ${MANGLE_NAMES_FLAG}
+             ${YAML_PATH_FLAG}
+@@ -152,7 +152,7 @@ function(generate_irbuilder_headers)
+     add_custom_command(
+         OUTPUT ${PUBLIC_HEADER_PATH}
+         COMMAND
+-            $<TARGET_FILE:IRBuilderGenerator>
++            IRBuilderGenerator
+             --scope=public
+             ${MANGLE_NAMES_FLAG}
+             ${YAML_PATH_FLAG}
+-- 
+2.43.0
+

@@ -17,11 +17,11 @@ inherit module features_check
 # When updating this recipe, ensure that the proper firmware is included from
 # either the linux-firmware or iwlwifi-firmware repos.
 
-PV = "96"
-SRCREV = "d16e74cc1c76ffbfc335153daa86660f199a90da"
+PV = "102"
+SRCREV = "483a4f9d48dfd0c4a844a1d40a7dfa6214b4a3a8"
 
 SRC_URI = " \
-           git://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/backport-iwlwifi;branch=release/core${PV} \
+           git://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/backport-iwlwifi;branch=release/core${PV};protocol=https \
            file://0001-Makefile.real-skip-host-install-scripts.patch \
            file://iwlwifi.conf \
           "

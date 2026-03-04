@@ -1,0 +1,43 @@
+From 65e5237365fc982eef2f9830fa87feafcea4044e Mon Sep 17 00:00:00 2001
+From: Yogesh Tyagi <yogesh.tyagi@intel.com>
+Date: Mon, 27 Jan 2026 21:30:00 +0000
+Subject: [PATCH] cmake: update dependency versions for upgraded components
+
+Update rkcommon from 1.14.0 to 1.15.2 and embree from 4.3.3 to
+4.4.0. Remove EXACT version matching for rkcommon to allow
+compatible newer versions.
+
+Upstream-Status: Inappropriate [OE-specific configuration]
+Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
+
+---
+ cmake/ospray_options.cmake | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/cmake/ospray_options.cmake b/cmake/ospray_options.cmake
+index f2c547a..840e339 100644
+--- a/cmake/ospray_options.cmake
++++ b/cmake/ospray_options.cmake
+@@ -12,8 +12,8 @@ set(OSPRAY_CMAKECONFIG_DIR
+     "${CMAKE_INSTALL_LIBDIR}/cmake/ospray-${OSPRAY_VERSION}")
+ 
+ set(ISPC_VERSION_REQUIRED 1.23.0)
+-set(RKCOMMON_VERSION_REQUIRED 1.14.0)
+-set(EMBREE_VERSION_REQUIRED 4.3.3)
++set(RKCOMMON_VERSION_REQUIRED 1.15.2)
++set(EMBREE_VERSION_REQUIRED 4.4.0)
+ set(OPENVKL_VERSION_REQUIRED 2.0.1)
+ set(OIDN_VERSION_REQUIRED 2.3.0)
+ set(OSPRAY_IMGUI_GIT_TAG cb16be3a3fc1f9cd146ae24d52b615f8a05fa93d) # v1.90.9
+@@ -76,7 +76,7 @@ option(OSPRAY_ENABLE_VOLUMES "Enable volume rendering using OpenVKL." ON)
+ ###########################################################
+ 
+ # rkcommon
+-find_package(rkcommon ${RKCOMMON_VERSION_REQUIRED} EXACT REQUIRED)
++find_package(rkcommon ${RKCOMMON_VERSION_REQUIRED} REQUIRED)
+ get_target_property(RKCOMMON_INCLUDE_DIRS rkcommon::rkcommon
+   INTERFACE_INCLUDE_DIRECTORIES)
+ 
+-- 
+2.43.0
+

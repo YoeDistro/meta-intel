@@ -10,10 +10,10 @@ Signed-off-by: Dongwon Kim <dongwon.kim@intel.com>
  cmake/ocloc_cmd_prefix.cmake | 14 ++++++++------
  1 file changed, 8 insertions(+), 6 deletions(-)
 
-Index: git/cmake/ocloc_cmd_prefix.cmake
+Index: intel-compute-runtime-25.48.36300.8/cmake/ocloc_cmd_prefix.cmake
 ===================================================================
---- git.orig/cmake/ocloc_cmd_prefix.cmake
-+++ git/cmake/ocloc_cmd_prefix.cmake
+--- intel-compute-runtime-25.48.36300.8.orig/cmake/ocloc_cmd_prefix.cmake
++++ intel-compute-runtime-25.48.36300.8/cmake/ocloc_cmd_prefix.cmake
 @@ -4,13 +4,15 @@
  # SPDX-License-Identifier: MIT
  #
@@ -22,16 +22,16 @@ Index: git/cmake/ocloc_cmd_prefix.cmake
 -  set(ocloc_cmd_prefix ocloc)
 -else()
 -  if(DEFINED NEO__IGC_LIBRARY_PATH)
--    set(ocloc_cmd_prefix ${CMAKE_COMMAND} -E env "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib>" $<TARGET_FILE:ocloc>)
+-    set(ocloc_cmd_prefix ${CMAKE_COMMAND} -E env "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}:${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib>" $<TARGET_FILE:ocloc>)
 +if(NOT DEFINED ocloc_cmd_prefix)
 +  if(WIN32)
 +    set(ocloc_cmd_prefix ocloc)
    else()
--    set(ocloc_cmd_prefix ${CMAKE_COMMAND} -E env "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib>" $<TARGET_FILE:ocloc>)
+-    set(ocloc_cmd_prefix ${CMAKE_COMMAND} -E env "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib>" $<TARGET_FILE:ocloc>)
 +    if(DEFINED NEO__IGC_LIBRARY_PATH)
-+      set(ocloc_cmd_prefix LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++      set(ocloc_cmd_prefix ${CMAKE_COMMAND} -E env "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}:${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib>" $<TARGET_FILE:ocloc>)
 +    else()
-+      set(ocloc_cmd_prefix LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++      set(ocloc_cmd_prefix ${CMAKE_COMMAND} -E env "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib>" $<TARGET_FILE:ocloc>)
 +    endif()
    endif()
  endif()
