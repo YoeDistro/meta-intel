@@ -10,7 +10,7 @@ class VaapiDriverTest(OERuntimeTestCase):
 
     @OEHasPackage(['gstreamer1.0-plugins-base'])
     @OEHasPackage(['gstreamer1.0-plugins-good'])
-    @OEHasPackage(['gstreamer1.0-vaapi'])
+    @OEHasPackage(['gstreamer1.0-plugins-bad'])
     @OEHasPackage(['intel-vaapi-driver'])
     def test_gstreamer_can_encode_with_intel_vaapi_driver(self):
         (status, output) = self.target.run('gst-inspect-1.0 vaapi')
