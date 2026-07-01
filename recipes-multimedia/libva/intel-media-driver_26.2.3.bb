@@ -33,6 +33,25 @@ SRCREV = "dcccc9f760fd03e34b528b70b954c301ce509901"
 BB_GIT_DEFAULT_DESTSUFFIX = "git"
 S = "${UNPACKDIR}/${BB_GIT_DEFAULT_DESTSUFFIX}"
 
+# Forcing response files (below) keeps the g++ *command line* short, but g++
+# still re-packs every option into the single COLLECT_GCC_OPTIONS environment
+# string before exec()'ing cc1plus. With 700+ absolute -I paths that one string
+# is ~175 KiB and blows past the kernel's per-string MAX_ARG_STRLEN limit
+# (128 KiB), so the build fails with:
+#   cc1plus: posix_spawn: Argument list too long
+# Ninja runs each compile from ${B} (= ${WORKDIR}/build) and every generated
+# -I path lives under ${WORKDIR}, so rewriting the absolute prefix to a
+# relative "../" leaves the includes valid while cutting each path by ~180
+# bytes -- shrinking the longest include string from ~172 KiB to ~54 KiB, well
+# under the limit. Ninja regenerates the per-file .rsp from the INCLUDES
+# variable in build.ninja on every run, so the rewrite must target build.ninja
+# itself (editing the .rsp files is undone by Ninja). Do it after configure so
+# it survives into do_compile; nothing is left dirty, so Ninja does not
+# reconfigure and regenerate the absolute paths.
+do_configure:append() {
+    sed -i -e 's| -I${WORKDIR}/| -I../|g' ${B}/build.ninja
+}
+
 COMPATIBLE_HOST:x86-x32 = "null"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^intel-media-(?P<pver>(?!600\..*)\d+(\.\d+)+)$"
