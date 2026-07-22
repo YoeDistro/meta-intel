@@ -19,7 +19,7 @@ separately."
 
 HOMEPAGE = "https://www.intel.com/content/www/us/en/developer/tools/oneapi/oneapi-toolkit-download.html"
 
-LICENSE = "EULA"
+LICENSE = "LicenseRef-EULA"
 LIC_FILES_CHKSUM = "\
     file://license.txt;md5=cff4e57efd53801fcdfcb4c8aead1245 \
 "

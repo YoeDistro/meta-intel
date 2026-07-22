@@ -4,7 +4,7 @@ is an open source project to converge Intel's development efforts \
 on OpenCL(TM) compute stacks supporting the GEN graphics hardware \
 architecture."
 
-LICENSE = "MIT & Apache-2.0"
+LICENSE = "Apache-2.0 AND MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=eca6ec6997e18db166db7109cdbe611c \
                     file://third_party/opencl_headers/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 

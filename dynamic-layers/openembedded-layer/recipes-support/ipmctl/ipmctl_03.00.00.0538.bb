@@ -11,7 +11,7 @@ Debug and troubleshoot DCPMMs."
 HOMEPAGE = "https://github.com/intel/ipmctl"
 BUGTRACKER = "https://github.com/intel/ipmctl/issues"
 
-LICENSE = "BSD-3-Clause | BSD-2-Clause"
+LICENSE = "BSD-2-Clause OR BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=72b9da60da6219d612ce30b746a0fe71  \
                     file://edk2/License.txt;md5=6123e5bf044a66db96c4ce88a36b2d08"
 

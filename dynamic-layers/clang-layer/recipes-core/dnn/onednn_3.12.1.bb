@@ -2,7 +2,7 @@ HOMEPAGE = "https://www.oneapi.com"
 SUMMARY  = "Deep Neural Network Library"
 DESCRIPTION = "This software is a user mode library that accelerates\
 deep-learning applications and frameworks on Intel architecture."
-LICENSE  = "Apache-2.0 & BSD-3-Clause & BSL-1.0"
+LICENSE  = "Apache-2.0 AND BSD-3-Clause AND BSL-1.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=05fda7e0b3a0fe6749e8443316fc9a3f \
                     file://third_party/gtest/LICENSE;md5=cbbd27594afd089daa160d3a16dd515a \
                     file://third_party/xbyak/COPYRIGHT;md5=3b9bf048d063d54cdb28964db558bcc7 \

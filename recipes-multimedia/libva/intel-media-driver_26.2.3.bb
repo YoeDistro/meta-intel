@@ -6,7 +6,7 @@ and video post processing for GEN based graphics hardware."
 HOMEPAGE = "https://github.com/intel/media-driver"
 BUGTRACKER = "https://github.com/intel/media-driver/issues"
 
-LICENSE = "MIT & BSD-3-Clause"
+LICENSE = "BSD-3-Clause AND MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=6aab5363823095ce682b155fef0231f0 \
                     file://media_driver/media_libvpx.LICENSE;md5=d5b04755015be901744a78cc30d390d4 \
                     "

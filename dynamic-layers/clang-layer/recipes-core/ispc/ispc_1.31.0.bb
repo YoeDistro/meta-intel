@@ -3,7 +3,7 @@ DESCRIPTION = "ispc is a compiler for a variant of the C programming language, \
 with extensions for single program, multiple data programming."
 HOMEPAGE = "https://github.com/ispc/ispc"
 
-LICENSE  = "BSD-3-Clause & Apache-2.0-with-LLVM-exception"
+LICENSE  = "BSD-3-Clause AND Apache-2.0 WITH LLVM-exception"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=da5ecffdd210b3cf776b32b41c182e87 \
                     file://third-party-programs.txt;md5=853c6beec84e8f9b2b56d7ad9ad7a424"
 

@@ -1,6 +1,6 @@
 SUMMARY = "User Mode Driver for Intel® NPU device"
 HOMEPAGE = "https://github.com/intel/linux-npu-driver"
-LICENSE = "MIT & Apache-2.0"
+LICENSE = "Apache-2.0 AND MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=7b256470048be42466f7d10e1d6482e6 \
                     file://third-party-programs.txt;md5=709a31be7df69741673b3d97027abe8b \
                     file://third_party/npu_compiler_elf/LICENSE;md5=5f51ea09f42b161b3013558e48d0fb20 \

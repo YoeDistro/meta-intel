@@ -9,7 +9,7 @@ for the latest Intel(R) processors with support for SSE, AVX, AVX2, and AVX-512 
 instructions."
 HOMEPAGE = "https://www.openvkl.org/"
 
-LICENSE  = "Apache-2.0 & BSD-3-Clause & MIT & Zlib"
+LICENSE  = "Apache-2.0 AND BSD-3-Clause AND MIT AND Zlib"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57 \
                     file://third-party-programs.txt;md5=69ec7caf49616c471161b921f53d5ec0 \
                     file://testing/external/half.hpp;beginline=1;endline=17;md5=4b60058493630c3bd0ef145470f04a7b"

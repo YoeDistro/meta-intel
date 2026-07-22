@@ -5,7 +5,7 @@ rendered with ray tracing. Intel Open Image Denoise is part \
 of the Intel® oneAPI Rendering Toolkit"
 HOMEPAGE = "https://www.openimagedenoise.org/"
 
-LICENSE = "Apache-2.0 & BSD-3-Clause & MIT"
+LICENSE = "Apache-2.0 AND BSD-3-Clause AND MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57 \
                     file://external/cutlass/LICENSE.txt;md5=ce85e3722fa981b4aef41101c60ed4a4 \
                     file://external/composable_kernel/LICENSE;md5=2049c7351121e693518087ea93a76da2 \

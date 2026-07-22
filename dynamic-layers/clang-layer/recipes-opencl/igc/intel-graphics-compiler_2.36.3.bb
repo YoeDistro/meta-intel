@@ -3,7 +3,7 @@ DESCRIPTION = "The Intel(R) Graphics Compiler for OpenCL(TM) is an \
 llvm based compiler for OpenCL(TM) targeting Intel Gen graphics \
 hardware architecture."
 
-LICENSE = "MIT & Apache-2.0"
+LICENSE = "Apache-2.0 AND MIT"
 LIC_FILES_CHKSUM = "file://IGC/BiFModule/Implementation/ExternalLibraries/libclc/LICENSE.TXT;md5=311cfc1a5b54bab8ed34a0b5fba4373e \
                     file://LICENSE.md;md5=488d74376edf2765f6e78d271543dde3 \
                     file://NOTICES.txt;md5=b81a52411c84df3419f20bad4d755880"

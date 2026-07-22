@@ -4,7 +4,7 @@ tracing engine for high-performance, high-fidelity visualization on \
 Intel Architecture CPUs."
 HOMEPAGE = "https://www.ospray.org/"
 
-LICENSE  = "Apache-2.0 & BSD-3-Clause & MIT & Zlib"
+LICENSE  = "Apache-2.0 AND BSD-3-Clause AND MIT AND Zlib"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=1dece7821bf3fd70fe1309eaa37d52a2 \
                     file://third-party-programs.txt;md5=e37b77e3bd997abccc359c710fb1f1db \
                     "
