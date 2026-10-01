@@ -14,6 +14,22 @@ inherit pkgconfig cmake
 # ISPC generates binaries with embedded build paths
 INSANE_SKIP:${PN}-dbg += "buildpaths"
 
+# create_isa_dummy_file.cmake generates per-ISA wrappers (*.avx2.cpp etc.) that
+# #include the original source by absolute path. These wrappers are collected
+# into -src, so rewrite the include to the debug-source path they are mapped to.
+# Done at package time (not after compile) so ninja never sees an unusable path,
+# and the original mtime is preserved so a later forced compile/install does not
+# consider the wrappers stale and try to rebuild them.
+PACKAGE_PREPROCESS_FUNCS += "embree_fix_isa_dummy_paths"
+embree_fix_isa_dummy_paths() {
+    find ${B} -name '*.cpp.*.cpp' -type f | while read f; do
+        touch -r "$f" "$f.mtime"
+        sed -i -e 's|^#include "${S}/|#include "${TARGET_DBGSRC_DIR}/|' "$f"
+        touch -r "$f.mtime" "$f"
+        rm -f "$f.mtime"
+    done
+}
+
 SRC_URI = "git://github.com/embree/embree.git;protocol=https;branch=master"
 SRCREV = "f590db83ef6559387df7f6d8725c34fb7acf851d"
 
