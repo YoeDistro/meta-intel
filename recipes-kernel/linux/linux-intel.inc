@@ -9,7 +9,6 @@ SRC_URI = " \
            ${KERNEL_CONFIG_URI} \
            file://fix-perf-reproducibility.patch \
            file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-.patch \
-           file://0002-mconf-fix-output-of-cflags-and-libraries.patch \
 	  "
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
